@@ -7,6 +7,7 @@ var _ = require('lodash');
 var esprima = require('esprima');
 var escodegen = require('escodegen');
 var React = require('react');
+var fs = require('fs');
 
 
 var repeatTemplate = _.template("_.map(<%= collection %>,function (<%= item %>,<%= item %>Index) {\n return <%= body %>}, this)");
@@ -217,4 +218,23 @@ function convertTemplateToReact(html) {
     return code;
 }
 
+/**
+ * @param {string} source
+ * @param {string} target
+ */
+function convertFile(source, target) {
+//    if (path.extname(filename) !== ".html") {
+//        console.log('invalid file, only handle html files');
+//        return;// only handle html files
+//    }
+    var html = fs.readFileSync(source).toString();
+    if (!html.match(/\<\!doctype jsx/)) {
+        console.log('invalid file, missing header');
+        return;
+    }
+    var js = convertTemplateToReact(html);
+    fs.writeFileSync(target, js);
+}
+
 module.exports.convertTemplateToReact = convertTemplateToReact;
+module.exports.convertFile = convertFile;

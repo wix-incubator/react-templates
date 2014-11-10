@@ -2,7 +2,7 @@
   "name": "react-templates",
   "version": "0.0.0",
   "description": "Light weight templates for react -> write html get valid react code",
-  "main": "reactTemplates.js",
+  "main": "./src/reactTemplates.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
