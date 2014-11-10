@@ -194,7 +194,7 @@ function convertHtmlToReact(node, context) {
 }
 
 function extractDefinesFromJSXTag(html, defines) {
-    html = html.replace(/\<\!doctype jsx\s*(.*?)\s*\>/, function(full, reqStr) {
+    html = html.replace(/\<\!doctype jsx\s*(.*?)\s*\>/i, function(full, reqStr) {
         var match = true;
         while (match) {
             match = false;
@@ -240,7 +240,7 @@ function convertFile(source, target) {
 //        return;// only handle html files
 //    }
     var html = fs.readFileSync(source).toString();
-    if (!html.match(/\<\!doctype jsx/)) {
+    if (!html.match(/\<\!doctype jsx/i)) {
         console.log('invalid file, missing header');
         return;
     }
