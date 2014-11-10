@@ -1,0 +1,24 @@
+{
+  "name": "react-templates",
+  "version": "0.0.0",
+  "description": "Light weight templates for react -> write html get valid react code",
+  "main": "reactTemplates.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wix/react-templates.git"
+  },
+  "author": "Avi Marcus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wix/react-templates/issues"
+  },
+  "homepage": "https://github.com/wix/react-templates",
+  "dependencies": {
+    "cheerio": "^0.18.0",
+    "escodegen": "^1.4.1",
+    "esprima": "^1.2.2"
+  }
+}
