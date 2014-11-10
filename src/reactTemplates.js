@@ -15,7 +15,7 @@ var ifTemplate = _.template("((<%= condition %>)?(<%= body %>):null)");
 var classSetTemplate = _.template("React.addons.classSet(<%= classSet %>)");
 var tagTemplate = _.template("<%= name %>.apply(this,_.flatten([<%= props %>].concat([<%= children %>])))");
 var commentTemplate = _.template(" /* <%= data %> */ ");
-var templateTemplate = _.template("define([<%= requirePaths %>], function (<%= requireNames %>) {\n <%= injectedFunctions %>\nreturn <%= body %>\n});");
+var templateTemplate = _.template("define([<%= requirePaths %>], function (<%= requireNames %>) {\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
 
 var templateProp = "rt-repeat";
 var ifProp = "rt-if";
