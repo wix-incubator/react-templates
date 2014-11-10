@@ -112,6 +112,9 @@ function generateProps(node, context) {
                 }
                 var res = str.split(":");
                 res[0] = res[0].trim();
+                if (res[0].indexOf("-") != -1) {
+                    res[0] = "\"" + res[0] + "\"";
+                }
                 res[1] = res[1].trim();
                 return res;
             }));
@@ -143,6 +146,11 @@ function defaultContext() {
     };
 }
 
+function addIfNotThere(array, obj) {
+    if (!_.contains(array, obj)) {
+        array.push(obj);
+    }
+}
 
 function convertHtmlToReact(node, context) {
     if (node.type === "tag") {
@@ -155,7 +163,8 @@ function convertHtmlToReact(node, context) {
         if (node.attribs[templateProp]) {
             data.item = node.attribs[templateProp].split(" in ")[0].trim();
             data.collection = node.attribs[templateProp].split(" in ")[1].trim();
-            context.boundParams.push(data.item);
+            addIfNotThere(context.boundParams, data.item);
+            addIfNotThere(context.boundParams, data.item + "Index");
         }
         data.props = generateProps(node, context);
         if (node.attribs[ifProp]) {
