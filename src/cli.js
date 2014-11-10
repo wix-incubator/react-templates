@@ -14,8 +14,8 @@ if (process.argv.length > 2) {
 }
 
 function handleSingleFile(filename) {
-    if (path.extname(filename) !== ".html") {
-        console.log('invalid file, only handle html files');
+    if (path.extname(filename) !== ".rt") {
+        console.log('invalid file, only handle rt files');
         return;// only handle html files
     }
     var html = fs.readFileSync(filename).toString();
@@ -24,5 +24,5 @@ function handleSingleFile(filename) {
         return;
     }
     var js = reactTemplates.convertTemplateToReact(html);
-    fs.writeFileSync(filename.replace(".html", ".js"), js);
+    fs.writeFileSync(filename + '.js', js);
 }
