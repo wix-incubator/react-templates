@@ -53,7 +53,7 @@ function convertText(txt) {
         var start = txt.indexOf('{');
         var pre = txt.substr(0,start);
         if (pre) {
-            res += (first?"":"+") + JSON.stringify(pre);
+            res += (first ? "" : "+") + JSON.stringify(pre);
             first = false;
         }
         var curlyCounter = 1;
@@ -175,9 +175,8 @@ function convertHtmlToReact(node, context) {
     } else if (node.type === "text") {
         if (node.data.trim()) {
             return convertText(node.data.trim());
-        } else {
-            return "";
         }
+        return "";
     }
 }
 

@@ -1,4 +1,31 @@
 <!doctype jsx>
-<div>
+<div className="nav">
+    <div jsx-repeat="category in this.props.model.nav">
+        <div className="category-title">{category.name}</div>
 
+        <div className="category-entries">
+            <div jsx-if="category.items.length > 0">
+                <div jsx-repeat="entry in category.items">
+                    <div jsx-if="entry.type == 'query'"
+                         className="{this.cs({selected: entry.name == this.props.model.selected.name, navlink: true})}"
+                         onClick="=>this.props.controller.onQueryItemClicked(entry)">{entry.name}</div>
+                <div jsx-if="entry.type == 'tree'">
+                    <ul>
+                        <li jsx-repeat="node in entry.model">
+                            <div onClick="=>this.props.controller.onTreeItemClicked(entry, node)"
+                                 className="{this.cs({selected: this.isNodeSelected(entry, node), treelink1: true})}">{node.title}</div>
+                <ul jsx-if="node.children.length > 0">
+                    <li jsx-repeat="child in node.children" onClick="=>this.props.controller.onTreeItemClicked(entry, child)">
+                        <div className="{this.cs({selected: this.isNodeSelected(entry, child), treelink2: true})}">{child.title}</div>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+
+<button className="new-item-btn" jsx-repeat="typeInfo in category.newTypes" onClick="=>this.openAddItem(typeInfo.collectionId, typeInfo.typeName)"><span>Add {typeInfo.friendlyName}</span></button>
+</div>
 </div>
