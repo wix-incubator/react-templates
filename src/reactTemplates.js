@@ -1,12 +1,11 @@
 /**
  * Created by avim on 11/9/2014.
  */
+'use strict';
 var cheerio = require('cheerio');
-var fs = require('fs');
 var _ = require('lodash');
 var esprima = require('esprima');
 var escodegen = require('escodegen');
-var path = require('path');
 var React = require('react');
 
 
@@ -15,14 +14,14 @@ var ifTemplate = _.template("((<%= condition %>)?(<%= body %>):null)");
 var classSetTemplate = _.template("React.addons.classSet(<%= classSet %>)");
 var tagTemplate = _.template("<%= name %>.apply(this,_.flatten([<%= props %>].concat([<%= children %>])))");
 var commentTemplate = _.template(" /* <%= data %> */ ");
-var templateTemplate = _.template("define([<%= requirePaths %>], function (<%= requireNames %>) {\n <%= injectedFunctions %>\nreturn <%= body %>\n});")
+var templateTemplate = _.template("define([<%= requirePaths %>], function (<%= requireNames %>) {\n <%= injectedFunctions %>\nreturn <%= body %>\n});");
 
 var templateProp = "rt-repeat";
 var ifProp = "rt-if";
 var classSetProp = "rt-class";
 
 var reactSupportedAttributes = ['accept', 'acceptCharset', 'accessKey', 'action', 'allowFullScreen', 'allowTransparency', 'alt', 'async', 'autoComplete', 'autoPlay', 'cellPadding', 'cellSpacing', 'charSet', 'checked', 'classID', 'className', 'cols', 'colSpan', 'content', 'contentEditable', 'contextMenu', 'controls', 'coords', 'crossOrigin', 'data', 'dateTime', 'defer', 'dir', 'disabled', 'download', 'draggable', 'encType', 'form', 'formNoValidate', 'frameBorder', 'height', 'hidden', 'href', 'hrefLang', 'htmlFor', 'httpEquiv', 'icon', 'id', 'label', 'lang', 'list', 'loop', 'manifest', 'max', 'maxLength', 'media', 'mediaGroup', 'method', 'min', 'multiple', 'muted', 'name', 'noValidate', 'open', 'pattern', 'placeholder', 'poster', 'preload', 'radioGroup', 'readOnly', 'rel', 'required', 'role', 'rows', 'rowSpan', 'sandbox', 'scope', 'scrolling', 'seamless', 'selected', 'shape', 'size', 'sizes', 'span', 'spellCheck', 'src', 'srcDoc', 'srcSet', 'start', 'step', 'style', 'tabIndex', 'target', 'title', 'type', 'useMap', 'value', 'width', 'wmode'];
-var attributesMapping = {'class':'className','rt-class':'className'};
+var attributesMapping = {'class': 'className', 'rt-class': 'className'};
 _.forEach(reactSupportedAttributes,function (attributeReactName) {
     if (attributeReactName !== attributeReactName.toLowerCase()) {
         attributesMapping[attributeReactName.toLowerCase()] = attributeReactName;
@@ -35,7 +34,7 @@ function concatChildren(children) {
     var first = true;
     _.forEach(children, function (child) {
         if (child.indexOf(" /*") !== 0 && child) {
-            res += (first?"":",") + child;
+            res += (first ? "" : ",") + child;
             first = false;
         } else {
             res += child;
@@ -44,7 +43,7 @@ function concatChildren(children) {
     return res;
 }
 
-var curlyMap = {'{':1, '}': -1};
+var curlyMap = {'{': 1, '}': -1};
 
 function convertText(txt) {
     txt = txt.trim();
@@ -64,13 +63,13 @@ function convertText(txt) {
         if (curlyCounter !== 0) {
             throw "Failed to parse text";
         } else {
-            res += (first?"":"+") + txt.substr(start+1,end-start-2);
+            res += (first ? "" : "+") + txt.substr(start + 1, end - start - 2);
             first = false;
             txt = txt.substr(end);
         }
     }
     if (txt) {
-        res += (first?"":"+") + JSON.stringify(txt);
+        res += (first ? "" : "+") + JSON.stringify(txt);
     }
 
     return res;
@@ -81,28 +80,28 @@ function isStringOnlyCode(txt) {
     return txt.length && txt.charAt(0) === '{' && txt.charAt(txt.length - 1) === '}';
 }
 
-function generateProps(node,context) {
+function generateProps(node, context) {
     var props = {};
-    _.forOwn(node.attribs, function (val,key) {
+    _.forOwn(node.attribs, function (val, key) {
         var propKey = attributesMapping[key.toLowerCase()] || key;
         if (props.hasOwnProperty(propKey)) {
-            throw "duplicate definition of "+propKey+" "+JSON.stringify(node.attribs);
+            throw "duplicate definition of " + propKey + " " + JSON.stringify(node.attribs);
         }
         if (key.indexOf("on") === 0 && !isStringOnlyCode(val)) {
             var funcParts = val.split("=>");
-            var evtParams = funcParts[0].replace("(","").replace(")","").trim();
+            var evtParams = funcParts[0].replace("(", "").replace(")", "").trim();
             var funcBody = funcParts[1].trim();
-            var generatedFuncName = "generated"+(context.injectedFunctions.length + 1);
+            var generatedFuncName = "generated" + (context.injectedFunctions.length + 1);
             var params = context.boundParams;
             if (evtParams.trim().length > 0) {
                 params = params.concat(evtParams.trim());
             }
 
-            var funcText = "function "+generatedFuncName+"("+ params.join(",");
-            funcText += ") {\n"+funcBody+"\n}\n";
+            var funcText = "function " + generatedFuncName + "(" + params.join(",");
+            funcText += ") {\n" + funcBody + "\n}\n";
             context.injectedFunctions.push(funcText);
-            props[propKey] = generatedFuncName+".bind("+(["this"].concat(context.boundParams)).join(",")+")";
-        } else if (key === "style"  && !isStringOnlyCode(val)) {
+            props[propKey] = generatedFuncName + ".bind(" + (["this"].concat(context.boundParams)).join(",") + ")";
+        } else if (key === "style" && !isStringOnlyCode(val)) {
             var styleParts = val.trim().split(";");
             styleParts = _.compact(_.map(styleParts, function (str) {
                 str = str.trim();
@@ -121,35 +120,34 @@ function generateProps(node,context) {
             });
             props[propKey] = "{" + styleArray.join(",") + "}";
         } else if (key === classSetProp) {
-            props[propKey] = classSetTemplate({classSet:val});
+            props[propKey] = classSetTemplate({classSet: val});
         } else if (key.indexOf("rt-") !== 0) {
             props[propKey] = convertText(val);
         }
-
     });
 
-    return "{"+ _.map(props, function (val,key) {
-        return JSON.stringify(key) + " : "+val;
-    }).join(",")+"}";
+    return "{" + _.map(props, function (val, key) {
+        return JSON.stringify(key) + " : " + val;
+    }).join(",") + "}";
 }
 
-function convertTagNameToConsstructor(tagName) {
-    return React.DOM.hasOwnProperty(tagName)?"React.DOM."+tagName:tagName;
+function convertTagNameToConstructor(tagName) {
+    return React.DOM.hasOwnProperty(tagName) ? "React.DOM." + tagName : tagName;
 }
 
 function defaultContext() {
     return {
         boundParams: [],
         injectedFunctions: []
-    }
+    };
 }
 
 
-function convertHtmlToReact(node,context) {
+function convertHtmlToReact(node, context) {
     if (node.type === "tag") {
         context.boundParams = _.clone(context.boundParams);
 
-        var data = {name: convertTagNameToConsstructor(node.name)};
+        var data = {name: convertTagNameToConstructor(node.name)};
         if (node.attribs[templateProp]) {
             data.item = node.attribs[templateProp].split(" in ")[0].trim();
             data.collection = node.attribs[templateProp].split(" in ")[1].trim();
@@ -183,7 +181,7 @@ function convertHtmlToReact(node,context) {
     }
 }
 
-function extractDefinesFromJSXTag(html,defines) {
+function extractDefinesFromJSXTag(html, defines) {
     html = html.replace(/\<\!doctype jsx\s*(.*?)\s*\>/, function(full, reqStr) {
         var match = true;
         while (match) {
@@ -200,40 +198,24 @@ function extractDefinesFromJSXTag(html,defines) {
 }
 
 function convertTemplateToReact(html) {
-    var defines = {"react":"React","lodash":"_"};
-    html = extractDefinesFromJSXTag(html,defines);
-    var rootNode = cheerio.load(html.trim(),{lowerCaseTags:false,lowerCaseAttributeNames:false,xmlMode:true});
+    var defines = {react: "React", lodash: "_"};
+    html = extractDefinesFromJSXTag(html, defines);
+    var rootNode = cheerio.load(html.trim(), {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true});
     var context = defaultContext();
-    var body = convertHtmlToReact(rootNode.root()[0].children[0],context);
-    var requirePaths = _(defines).keys().map(function (reqName) {return '"'+reqName+'"'}).value().join(",");
-    var requireVars =  _(defines).values().value().join(",");
-    var data = {"body":body,injectedFunctions:"",requireNames:requireVars,requirePaths:requirePaths};
+    var body = convertHtmlToReact(rootNode.root()[0].children[0], context);
+    var requirePaths = _(defines).keys().map(function (reqName) {return '"' + reqName + '"'}).value().join(",");
+    var requireVars = _(defines).values().value().join(",");
+    var data = {body: body, injectedFunctions: "", requireNames: requireVars, requirePaths: requirePaths};
     data.injectedFunctions = context.injectedFunctions.join("\n");
     var code = templateTemplate(data);
     try {
         var tree = esprima.parse(code, {range: true, tokens: true, comment: true});
         tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
-        code = escodegen.generate(tree,{comment:true});
+        code = escodegen.generate(tree, {comment: true});
     } catch (e) {
 
     }
     return code;
 }
 
-function handleSingleFile(filename) {
-    if (path.extname(filename) !== ".html") {
-        return;// only handle html files
-    }
-    var html = fs.readFileSync(filename).toString();
-    if (!html.match(/\<\!doctype jsx/)) {
-        return;
-    }
-    var js = convertTemplateToReact(html);
-    fs.writeFileSync(filename.replace(".html",".js"),js);
-}
-
-if (process.argv.length > 2) {
-    _.forEach(process.argv.slice(2),handleSingleFile);
-} else {
-    console.log("Usage:node reactTemplates.js <filename>");
-}
+module.exports.convertTemplateToReact = convertTemplateToReact;
