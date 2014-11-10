@@ -146,7 +146,10 @@ function defaultContext() {
 
 function convertHtmlToReact(node, context) {
     if (node.type === "tag") {
-        context.boundParams = _.clone(context.boundParams);
+        context = {
+            boundParams: _.clone(context.boundParams),
+            injectedFunctions: context.injectedFunctions
+        };
 
         var data = {name: convertTagNameToConstructor(node.name)};
         if (node.attribs[templateProp]) {
@@ -154,12 +157,12 @@ function convertHtmlToReact(node, context) {
             data.collection = node.attribs[templateProp].split(" in ")[1].trim();
             context.boundParams.push(data.item);
         }
-        data.props = generateProps(node,context);
+        data.props = generateProps(node, context);
         if (node.attribs[ifProp]) {
             data.condition = node.attribs[ifProp].trim();
         }
-        data.children = concatChildren(_.map(node.children,function (child) {
-            return convertHtmlToReact(child,context);
+        data.children = concatChildren(_.map(node.children, function (child) {
+            return convertHtmlToReact(child, context);
         }));
 
         data.body = tagTemplate(data);
@@ -203,7 +206,7 @@ function convertTemplateToReact(html) {
     var rootNode = cheerio.load(html.trim(), {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true});
     var context = defaultContext();
     var body = convertHtmlToReact(rootNode.root()[0].children[0], context);
-    var requirePaths = _(defines).keys().map(function (reqName) {return '"' + reqName + '"'}).value().join(",");
+    var requirePaths = _(defines).keys().map(function (reqName) {return '"' + reqName + '"';}).value().join(",");
     var requireVars = _(defines).values().value().join(",");
     var data = {body: body, injectedFunctions: "", requireNames: requireVars, requirePaths: requirePaths};
     data.injectedFunctions = context.injectedFunctions.join("\n");
