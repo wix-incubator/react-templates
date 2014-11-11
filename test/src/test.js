@@ -4,6 +4,7 @@ var reactTemplates = require('../../src/reactTemplates');
 var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
+var React = require('react');
 
 var dataPath = path.resolve(__dirname, '..', 'data');
 
@@ -24,5 +25,34 @@ test('conversion test', function (t) {
             fs.writeFileSync(filename + '.actual.js', actual);
         }
     }
+});
+
+test('html tests', function (t) {
+    var files = ['scope.rt'];
+    t.plan(files.length);
+
+    files.forEach(check);
+
+    function check(testFile) {
+        var filename = path.join(dataPath, testFile);
+        var html = fs.readFileSync(filename).toString();
+        var expected = fs.readFileSync(filename + '.html').toString().replace(/\r/g,"");
+//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
+        var code = reactTemplates.convertTemplateToReact(html).replace(/\r/g,"");
+        var define = function (req,content) {
+            return content(React, _);
+        };
+        console.log(code);
+        var comp = React.createFactory(React.createClass({
+            render: eval(code)
+        }));
+        var actual = React.renderToStaticMarkup(comp());
+        console.log(actual);
+        t.equal(actual, expected);
+        if (actual !== expected) {
+            fs.writeFileSync(filename + '.actual.js', actual);
+        }
+    }
+
 });
 
