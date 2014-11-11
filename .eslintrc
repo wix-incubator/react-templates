@@ -118,7 +118,7 @@
         "new-cap": 2,
         "semi": 2,
         "use-isnan": 2,
-        "quotes": [0, "single"],
+        "quotes": [1, "single", "avoid-escape"],
         "max-params": [0, 3],
         "max-statements": [0, 10],
         "complexity": [0, 11],
