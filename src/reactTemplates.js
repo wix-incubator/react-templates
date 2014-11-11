@@ -45,6 +45,10 @@ function concatChildren(children) {
     return res;
 }
 
+function convertToCamelCase(str) {
+    return str.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
+}
+
 var curlyMap = {'{': 1, '}': -1};
 
 function convertText(txt) {
@@ -72,6 +76,9 @@ function convertText(txt) {
     }
     if (txt) {
         res += (first ? '' : '+') + JSON.stringify(txt);
+    }
+    if (res === "") {
+        res = "true";
     }
 
     return res;
@@ -117,15 +124,12 @@ function generateProps(node, context) {
                 }
                 var res = str.split(':');
                 res[0] = res[0].trim();
-                if (res[0].indexOf('-') !== -1) {
-                    res[0] = '"' + res[0] + '"';
-                }
                 res[1] = res[1].trim();
                 return res;
             }));
             var styleArray = [];
             _.forEach(styleParts, function (stylePart) {
-                styleArray.push(stylePart[0] + ' : ' + convertText(stylePart[1]));
+                styleArray.push(convertToCamelCase(stylePart[0]) + ' : ' + convertText(stylePart[1]));
             });
             props[propKey] = '{' + styleArray.join(',') + '}';
         } else if (key === classSetProp) {

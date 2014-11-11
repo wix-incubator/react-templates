@@ -39,10 +39,13 @@ test('html tests', function (t) {
         var expected = fs.readFileSync(filename + '.html').toString().replace(/\r/g,"");
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
         var code = reactTemplates.convertTemplateToReact(html).replace(/\r/g,"");
-        var define = function (req,content) {
-            return content(React, _);
+        var defineMap = {"react":React,"lodash":_};
+        var define = function (requirementsNames,content) {
+            var requirements = _.map(requirementsNames,function (reqName) {
+                return defineMap[reqName];
+            });
+            return content.apply(this,requirements);
         };
-        console.log(code);
         var comp = React.createFactory(React.createClass({
             render: eval(code)
         }));
@@ -50,7 +53,7 @@ test('html tests', function (t) {
         console.log(actual);
         t.equal(actual, expected);
         if (actual !== expected) {
-            fs.writeFileSync(filename + '.actual.js', actual);
+            fs.writeFileSync(filename + '.actual.html', actual);
         }
     }
 

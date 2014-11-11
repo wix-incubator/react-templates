@@ -12,7 +12,7 @@ define([
                 return React.DOM.div.apply(this, _.flatten([{}].concat([React.DOM.span.apply(this, _.flatten([{
                             'style': {
                                 width: 'auto',
-                                'line-height': '5px'
+                                lineHeight: '5px'
                             },
                             'onClick': generated1.bind(this, items, itemsIndex)
                         }].concat(['Mock'])))])));
