@@ -20,6 +20,7 @@ var templateTemplate = _.template("define([<%= requirePaths %>], function (<%= r
 var templateProp = 'rt-repeat';
 var ifProp = 'rt-if';
 var classSetProp = 'rt-class';
+var scopeProp = 'rt-scope';
 
 var reactSupportedAttributes = ['accept', 'acceptCharset', 'accessKey', 'action', 'allowFullScreen', 'allowTransparency', 'alt', 'async', 'autoComplete', 'autoPlay', 'cellPadding', 'cellSpacing', 'charSet', 'checked', 'classID', 'className', 'cols', 'colSpan', 'content', 'contentEditable', 'contextMenu', 'controls', 'coords', 'crossOrigin', 'data', 'dateTime', 'defer', 'dir', 'disabled', 'download', 'draggable', 'encType', 'form', 'formNoValidate', 'frameBorder', 'height', 'hidden', 'href', 'hrefLang', 'htmlFor', 'httpEquiv', 'icon', 'id', 'label', 'lang', 'list', 'loop', 'manifest', 'max', 'maxLength', 'media', 'mediaGroup', 'method', 'min', 'multiple', 'muted', 'name', 'noValidate', 'open', 'pattern', 'placeholder', 'poster', 'preload', 'radioGroup', 'readOnly', 'rel', 'required', 'role', 'rows', 'rowSpan', 'sandbox', 'scope', 'scrolling', 'seamless', 'selected', 'shape', 'size', 'sizes', 'span', 'spellCheck', 'src', 'srcDoc', 'srcSet', 'start', 'step', 'style', 'tabIndex', 'target', 'title', 'type', 'useMap', 'value', 'width', 'wmode'];
 var attributesMapping = {'class': 'className', 'rt-class': 'className'};
@@ -81,6 +82,19 @@ function isStringOnlyCode(txt) {
     return txt.length && txt.charAt(0) === '{' && txt.charAt(txt.length - 1) === '}';
 }
 
+function generateInjectedFunc(context,body,extraParams) {
+    var generatedFuncName = "generated" + (context.injectedFunctions.length + 1);
+    var params = context.boundParams;
+    if (extraParams && extraParams.trim().length > 0) {
+        params = params.concat(extraParams.trim());
+    }
+
+    var funcText = "function " + generatedFuncName + "(" + params.join(",");
+    funcText += ") {\n" + body + "\n}\n";
+    context.injectedFunctions.push(funcText);
+    return generatedFuncName;
+}
+
 function generateProps(node, context) {
     var props = {};
     _.forOwn(node.attribs, function (val, key) {
@@ -92,18 +106,10 @@ function generateProps(node, context) {
             var funcParts = val.split('=>');
             var evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
             var funcBody = funcParts[1].trim();
-            var generatedFuncName = 'generated' + (context.injectedFunctions.length + 1);
-            var params = context.boundParams;
-            if (evtParams.trim().length > 0) {
-                params = params.concat(evtParams.trim());
-            }
-
-            var funcText = 'function ' + generatedFuncName + '(' + params.join(',');
-            funcText += ') {\n' + funcBody + '\n}\n';
-            context.injectedFunctions.push(funcText);
-            props[propKey] = generatedFuncName + '.bind(' + (['this'].concat(context.boundParams)).join(',') + ')';
-        } else if (key === 'style' && !isStringOnlyCode(val)) {
-            var styleParts = val.trim().split(';');
+            var generatedFuncName = generateInjectedFunc(context,funcBody,evtParams);
+            props[propKey] = generatedFuncName + ".bind(" + (["this"].concat(context.boundParams)).join(",") + ")";
+        } else if (key === "style" && !isStringOnlyCode(val)) {
+            var styleParts = val.trim().split(";");
             styleParts = _.compact(_.map(styleParts, function (str) {
                 str = str.trim();
                 if (!str || str.indexOf(':') === -1) {
@@ -159,6 +165,12 @@ function convertHtmlToReact(node, context) {
         };
 
         var data = {name: convertTagNameToConstructor(node.name)};
+        if (node.attribs[scopeProp]) {
+            data.scopeName = node.attribs[scopeProp].split(" as ")[1].trim();
+            data.scopeValue = node.attribs[scopeProp].split(" as ")[0].trim();
+            addIfNotThere(context.boundParams, data.scopeName);
+        }
+
         if (node.attribs[templateProp]) {
             data.item = node.attribs[templateProp].split(' in ')[0].trim();
             data.collection = node.attribs[templateProp].split(' in ')[1].trim();
@@ -180,6 +192,13 @@ function convertHtmlToReact(node, context) {
         }
         if (node.attribs[ifProp]) {
             data.body = ifTemplate(data);
+        }
+        if (node.attribs[scopeProp]) {
+            var generatedFuncName = generateInjectedFunc(context,"return "+data.body);
+            var scopeParams = _.map(context.boundParams, function (param) {
+                return param === data.scopeName?data.scopeValue:param;
+            });
+            data.body = generatedFuncName + ".apply(this, [" + scopeParams.join(",") + "])";
         }
         return data.body;
     } else if (node.type === 'comment') {
