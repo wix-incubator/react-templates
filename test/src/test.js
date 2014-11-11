@@ -56,3 +56,21 @@ test('html tests', function (t) {
 
 });
 
+test('util.isStale', function (t) {
+    t.plan(2);
+    var a = path.join(dataPath, 'a.tmp');
+    var b = path.join(dataPath, 'b.tmp');
+
+    var mtime1 = new Date(1995, 11, 17, 3, 24, 0);
+    fs.utimesSync(a, mtime1, mtime1);
+
+    var mtime2 = new Date(1995, 11, 17, 3, 24, 1);
+    fs.utimesSync(b, mtime2, mtime2);
+
+    var util = require('../../src/util');
+    var actual = util.isStale(a, b);
+    t.equal(actual, false);
+    actual = util.isStale(b, a);
+    t.equal(actual, true);
+});
+

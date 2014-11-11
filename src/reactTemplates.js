@@ -263,6 +263,13 @@ function convertFile(source, target) {
 //        console.log('invalid file, only handle html files');
 //        return;// only handle html files
 //    }
+    var util = require('./util');
+
+    if (!util.isStale(source, target)) {
+        console.log('target file ' + target + ' is up to date, skipping');
+//        return;
+    }
+
     var html = fs.readFileSync(source).toString();
     if (!html.match(/\<\!doctype jsx/i)) {
         throw new Error('invalid file, missing header');
