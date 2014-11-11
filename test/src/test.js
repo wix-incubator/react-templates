@@ -5,6 +5,7 @@ var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
 var React = require('react');
+var cheerio = require('cheerio');
 
 var dataPath = path.resolve(__dirname, '..', 'data');
 
@@ -26,6 +27,10 @@ test('conversion test', function (t) {
         }
     }
 });
+
+function normalizeHtml(html) {
+    return cheerio.load(html,{normalizeWhitespace:true}).html();
+}
 
 test('html tests', function (t) {
     var files = ['scope.rt'];
@@ -50,13 +55,13 @@ test('html tests', function (t) {
             render: eval(code)
         }));
         var actual = React.renderToStaticMarkup(comp());
-        console.log(actual);
+        actual = normalizeHtml(actual);
+        expected = normalizeHtml(actual);
         t.equal(actual, expected);
         if (actual !== expected) {
             fs.writeFileSync(filename + '.actual.html', actual);
         }
     }
-
 });
 
 test('util.isStale', function (t) {
