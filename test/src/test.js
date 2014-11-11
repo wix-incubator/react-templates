@@ -61,6 +61,9 @@ test('util.isStale', function (t) {
     var a = path.join(dataPath, 'a.tmp');
     var b = path.join(dataPath, 'b.tmp');
 
+    fs.writeFileSync(a, 'actual');
+    fs.writeFileSync(b, 'actual');
+
     var mtime1 = new Date(1995, 11, 17, 3, 24, 0);
     fs.utimesSync(a, mtime1, mtime1);
 
@@ -72,5 +75,8 @@ test('util.isStale', function (t) {
     t.equal(actual, false);
     actual = util.isStale(b, a);
     t.equal(actual, true);
+
+    fs.unlinkSync(a);
+    fs.unlinkSync(b);
 });
 
