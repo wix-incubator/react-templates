@@ -29,7 +29,7 @@ test('conversion test', function (t) {
 });
 
 function normalizeHtml(html) {
-    return cheerio.load(html,{normalizeWhitespace:true}).html();
+    return cheerio.load(html,{normalizeWhitespace:true}).html().replace(/\>\s+\</g,"><");
 }
 
 test('html tests', function (t) {
@@ -56,7 +56,8 @@ test('html tests', function (t) {
         }));
         var actual = React.renderToStaticMarkup(comp());
         actual = normalizeHtml(actual);
-        expected = normalizeHtml(actual);
+        expected = normalizeHtml(expected);
+        console.log(actual,expected)
         t.equal(actual, expected);
         if (actual !== expected) {
             fs.writeFileSync(filename + '.actual.html', actual);

@@ -10,7 +10,7 @@ var React = require('react');
 var fs = require('fs');
 
 
-var repeatTemplate = _.template('_.map(<%= collection %>,function (<%= item %>,<%= item %>Index) {\n return <%= body %>}, this)');
+var repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
 var ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
 var classSetTemplate = _.template('React.addons.classSet(<%= classSet %>)');
 var tagTemplate = _.template('<%= name %>.apply(this,_.flatten([<%= props %>].concat([<%= children %>])))');
@@ -47,6 +47,10 @@ function concatChildren(children) {
 
 function convertToCamelCase(str) {
     return str.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
+}
+
+function capitalize(str) {
+    return str[0].toUpperCase() + str.slice(1);
 }
 
 var curlyMap = {'{': 1, '}': -1};
@@ -89,8 +93,8 @@ function isStringOnlyCode(txt) {
     return txt.length && txt.charAt(0) === '{' && txt.charAt(txt.length - 1) === '}';
 }
 
-function generateInjectedFunc(context,body,extraParams) {
-    var generatedFuncName = "generated" + (context.injectedFunctions.length + 1);
+function generateInjectedFunc(context, namePrefix, body, extraParams) {
+    var generatedFuncName = namePrefix.replace(",","") + (context.injectedFunctions.length + 1);
     var params = context.boundParams;
     if (extraParams && extraParams.trim().length > 0) {
         params = params.concat(extraParams.trim());
@@ -113,7 +117,7 @@ function generateProps(node, context) {
             var funcParts = val.split('=>');
             var evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
             var funcBody = funcParts[1].trim();
-            var generatedFuncName = generateInjectedFunc(context,funcBody,evtParams);
+            var generatedFuncName = generateInjectedFunc(context, key, funcBody,evtParams);
             props[propKey] = generatedFuncName + ".bind(" + (["this"].concat(context.boundParams)).join(",") + ")";
         } else if (key === "style" && !isStringOnlyCode(val)) {
             var styleParts = val.trim().split(";");
@@ -192,13 +196,18 @@ function convertHtmlToReact(node, context) {
         data.body = tagTemplate(data);
 
         if (node.attribs[templateProp]) {
+            data.repeatFunction = generateInjectedFunc(context,"repeat"+capitalize(data.item),"return "+data.body);
+            data.repeatBinds = ["this"].concat(_.reject(context.boundParams, function (param) {
+                return (param === data.item || param === data.item+"Index");
+            }));
+            console.log(data.repeatBinds);
             data.body = repeatTemplate(data);
         }
         if (node.attribs[ifProp]) {
             data.body = ifTemplate(data);
         }
         if (node.attribs[scopeProp]) {
-            var generatedFuncName = generateInjectedFunc(context,"return "+data.body);
+            var generatedFuncName = generateInjectedFunc(context,"scope"+capitalize(data.scopeName),"return "+data.body);
             var scopeParams = _.map(context.boundParams, function (param) {
                 return param === data.scopeName?data.scopeValue:param;
             });
