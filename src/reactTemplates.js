@@ -108,7 +108,6 @@ function generateProps(node, context) {
                 str = str.trim();
                 if (!str || str.indexOf(':') === -1) {
                     return null;
-
                 }
                 var res = str.split(':');
                 res[0] = res[0].trim();
@@ -253,5 +252,8 @@ function convertFile(source, target) {
     fs.writeFileSync(target, js);
 }
 
-module.exports.convertTemplateToReact = convertTemplateToReact;
-module.exports.convertFile = convertFile;
+module.exports = {
+    convertTemplateToReact: convertTemplateToReact,
+    convertFile: convertFile,
+    _test: {}
+};

@@ -7,7 +7,7 @@ var path = require('path');
 
 var dataPath = path.resolve(__dirname, '..', 'data');
 
-test('timing test', function (t) {
+test('conversion test', function (t) {
     var files = ['div.rt', 'test.rt', 'repeat.rt'];
     t.plan(files.length);
 
@@ -21,7 +21,7 @@ test('timing test', function (t) {
         var actual = reactTemplates.convertTemplateToReact(html);
         t.equal(actual, expected);
         if (actual !== expected) {
-            fs.writeFileSync(filename + ".actual.js", actual);
+            fs.writeFileSync(filename + '.actual.js', actual);
         }
     }
 });

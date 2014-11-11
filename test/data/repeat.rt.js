@@ -2,6 +2,7 @@ define([
     'react',
     'lodash'
 ], function (React, _) {
+    'use strict';
     function generated1(items, itemsIndex, evt) {
         this.happend(evt);
         return false;
