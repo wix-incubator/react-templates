@@ -110,6 +110,9 @@ function generateProps(node, context) {
         }
         if (key.indexOf('on') === 0 && !isStringOnlyCode(val)) {
             var funcParts = val.split('=>');
+            if (funcParts.length !== 2) {
+                throw 'when using "on" events, use lambda "(p1,p2)=>body" notation or use {} to return a callback function. error: [' + key + '="' + val + '"]';
+            }
             var evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
             var funcBody = funcParts[1].trim();
             var params = context.boundParams;
