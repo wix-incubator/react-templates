@@ -13,7 +13,8 @@ var fs = require('fs');
 var repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
 var ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
 var classSetTemplate = _.template('React.addons.classSet(<%= classSet %>)');
-var tagTemplate = _.template('<%= name %>.apply(this,_.flatten([<%= props %>].concat([<%= children %>])))');
+var simpleTagTemplate = _.template('<%= name %>(<%= props %><%= children %>)');
+var tagTemplate = _.template('<%= name %>.apply(this,_.flatten([<%= props %><%= children %>]))');
 var commentTemplate = _.template(' /* <%= data %> */ ');
 var templateTemplate = _.template("define([<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
 
@@ -33,11 +34,9 @@ _.forEach(reactSupportedAttributes,function (attributeReactName) {
 
 function concatChildren(children) {
     var res = '';
-    var first = true;
     _.forEach(children, function (child) {
         if (child.indexOf(' /*') !== 0 && child) {
-            res += (first ? '' : ',') + child;
-            first = false;
+            res += ',' + child;
         } else {
             res += child;
         }
@@ -165,6 +164,12 @@ function addIfNotThere(array, obj) {
     }
 }
 
+function hasNonSimpleChildren(node) {
+  return _.any(node.children,function (child) {
+    return child.type === 'tag' && child.attribs[templateProp];
+  });
+}
+
 function convertHtmlToReact(node, context) {
     if (node.type === 'tag') {
         context = {
@@ -193,7 +198,11 @@ function convertHtmlToReact(node, context) {
             return convertHtmlToReact(child, context);
         }));
 
-        data.body = tagTemplate(data);
+        if (hasNonSimpleChildren(node)) {
+          data.body = tagTemplate(data);
+        } else {
+          data.body = simpleTagTemplate(data);
+        }
 
         if (node.attribs[templateProp]) {
             data.repeatFunction = generateInjectedFunc(context,"repeat"+capitalize(data.item),"return "+data.body);

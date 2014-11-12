@@ -18,9 +18,9 @@ test('conversion test', function (t) {
     function check(testFile) {
         var filename = path.join(dataPath, testFile);
         var html = fs.readFileSync(filename).toString();
-        var expected = fs.readFileSync(filename + '.js').toString().replace(/\r/g,"");
+        var expected = fs.readFileSync(filename + '.js').toString().replace(/\r/g,"").trim();
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertTemplateToReact(html).replace(/\r/g,"");
+        var actual = reactTemplates.convertTemplateToReact(html).replace(/\r/g,"").trim();
         t.equal(actual, expected);
         if (actual !== expected) {
             fs.writeFileSync(filename + '.actual.js', actual);
@@ -29,7 +29,10 @@ test('conversion test', function (t) {
 });
 
 function normalizeHtml(html) {
-    return cheerio.load(html,{normalizeWhitespace:true}).html().replace(/\>\s+\</g,"><");
+    return cheerio.load(html,{normalizeWhitespace:true}).html()
+      .replace(/\>\s+/mg,">")
+      .replace(/\s+\</mg,"<")
+      .replace(/\>\s+\</mg,"><");
 }
 
 test('html tests', function (t) {
@@ -88,4 +91,3 @@ test('util.isStale', function (t) {
     fs.unlinkSync(a);
     fs.unlinkSync(b);
 });
-
