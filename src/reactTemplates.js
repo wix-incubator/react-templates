@@ -92,13 +92,9 @@ function isStringOnlyCode(txt) {
     return txt.length && txt.charAt(0) === '{' && txt.charAt(txt.length - 1) === '}';
 }
 
-function generateInjectedFunc(context, namePrefix, body, extraParams) {
+function generateInjectedFunc(context, namePrefix, body, params) {
+    params = params || context.boundParams;
     var generatedFuncName = namePrefix.replace(",","") + (context.injectedFunctions.length + 1);
-    var params = context.boundParams;
-    if (extraParams && extraParams.trim().length > 0) {
-        params = params.concat(extraParams.trim());
-    }
-
     var funcText = "function " + generatedFuncName + "(" + params.join(",");
     funcText += ") {\n" + body + "\n}\n";
     context.injectedFunctions.push(funcText);
@@ -116,7 +112,7 @@ function generateProps(node, context) {
             var funcParts = val.split('=>');
             var evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
             var funcBody = funcParts[1].trim();
-            var generatedFuncName = generateInjectedFunc(context, key, funcBody,evtParams);
+            var generatedFuncName = generateInjectedFunc(context, key, funcBody,context.boundParams.concat([evtParams]));
             props[propKey] = generatedFuncName + ".bind(" + (["this"].concat(context.boundParams)).join(",") + ")";
         } else if (key === "style" && !isStringOnlyCode(val)) {
             var styleParts = val.trim().split(";");
@@ -179,9 +175,18 @@ function convertHtmlToReact(node, context) {
 
         var data = {name: convertTagNameToConstructor(node.name)};
         if (node.attribs[scopeProp]) {
-            data.scopeName = node.attribs[scopeProp].split(" as ")[1].trim();
-            data.scopeValue = node.attribs[scopeProp].split(" as ")[0].trim();
-            addIfNotThere(context.boundParams, data.scopeName);
+            data.scopeMapping = {};
+            data.scopeName = "";
+            _.each(context.boundParams,function (boundParam) {
+              data.scopeMapping[boundParam] = boundParam;
+            });
+            _.each(node.attribs[scopeProp].split(";"),function (scopePart) {
+              var scopeSubParts = scopePart.split(" as ");
+              var scopeName = scopeSubParts[1].trim();
+              addIfNotThere(context.boundParams, scopeName);
+              data.scopeName += capitalize(scopeName);
+              data.scopeMapping[scopeName] = scopeSubParts[0].trim();
+            });
         }
 
         if (node.attribs[templateProp]) {
@@ -216,11 +221,8 @@ function convertHtmlToReact(node, context) {
             data.body = ifTemplate(data);
         }
         if (node.attribs[scopeProp]) {
-            var generatedFuncName = generateInjectedFunc(context,"scope"+capitalize(data.scopeName),"return "+data.body);
-            var scopeParams = _.map(context.boundParams, function (param) {
-                return param === data.scopeName?data.scopeValue:param;
-            });
-            data.body = generatedFuncName + ".apply(this, [" + scopeParams.join(",") + "])";
+            var generatedFuncName = generateInjectedFunc(context,"scope"+data.scopeName,"return "+data.body,_.keys(data.scopeMapping));
+            data.body = generatedFuncName + ".apply(this, [" + _.values(data.scopeMapping).join(",") + "])";
         }
         return data.body;
     } else if (node.type === 'comment') {
