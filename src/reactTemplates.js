@@ -112,7 +112,11 @@ function generateProps(node, context) {
             var funcParts = val.split('=>');
             var evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
             var funcBody = funcParts[1].trim();
-            var generatedFuncName = generateInjectedFunc(context, key, funcBody,context.boundParams.concat([evtParams]));
+            var params = context.boundParams;
+            if (evtParams.trim() !== '') {
+                params = params.concat([evtParams.trim()]);
+            }
+            var generatedFuncName = generateInjectedFunc(context, key, funcBody, params);
             props[propKey] = generatedFuncName + ".bind(" + (["this"].concat(context.boundParams)).join(",") + ")";
         } else if (key === "style" && !isStringOnlyCode(val)) {
             var styleParts = val.trim().split(";");
@@ -214,7 +218,6 @@ function convertHtmlToReact(node, context) {
             data.repeatBinds = ["this"].concat(_.reject(context.boundParams, function (param) {
                 return (param === data.item || param === data.item+"Index");
             }));
-            console.log(data.repeatBinds);
             data.body = repeatTemplate(data);
         }
         if (node.attribs[ifProp]) {

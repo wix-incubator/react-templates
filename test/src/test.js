@@ -36,7 +36,7 @@ function normalizeHtml(html) {
 }
 
 test('html tests', function (t) {
-    var files = ['scope.rt'];
+    var files = ['scope.rt', 'lambda.rt'];
     t.plan(files.length);
 
     files.forEach(check);
@@ -60,7 +60,6 @@ test('html tests', function (t) {
         var actual = React.renderToStaticMarkup(comp());
         actual = normalizeHtml(actual);
         expected = normalizeHtml(expected);
-        console.log(actual,expected)
         t.equal(actual, expected);
         if (actual !== expected) {
             fs.writeFileSync(filename + '.actual.html', actual);

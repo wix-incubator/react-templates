@@ -1,0 +1,6 @@
+<!DOCTYPE jsx>
+<div rt-scope="{value:'event did not happen because onClick not called'} as data"
+     onMouseDown="(evt) => data.value = 'event did happen though it should not'"
+     onClick="() => data.value = 'event did happen though it should not'">
+    {data.value}
+</div>
