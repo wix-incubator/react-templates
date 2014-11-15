@@ -31,11 +31,11 @@ Writing any html is a valid template. This does not apply to event handlers ("on
 ## {} to identify JS expression
 In html attributes and text, you can replace context by a javascript expression. You do this by wrapping it in {}. If this is inside an attribute, it still needs to be wrapped by quotes. In text, you can just use it.
 
-Sample:
+###### Sample:
 ```
 <a href="{this.state.linkRef}">{this.state.linkText}</a>
 ```
-Compiled:
+###### Compiled:
 ```
 define([
     'react',
@@ -52,11 +52,12 @@ define([
 ## rt-if
 This gives you the ability to add conditions to a sub-tree of html. If the condition is evaluated to true, the subree will be returned, otherwise, it will not be calculated. It is implemented by a trinary expression
 
-Sample:
+
+###### Sample:
 ```
 <div rt-if="this.state.resultCode === 200">Success!</div>
 ```
-Complied:
+###### Compiled:
 ```
 define([
     'react',
@@ -72,11 +73,11 @@ define([
 ## rt-repeat
 Repeats a node with its subtree for each item in an array. This is implemented by creating a method that is passed to a map method as a callback. It creates a real context for the iterated variable. It will create an item*Index* variable to represent the index of the item. If the definition is "myNum in this.getMyNumbers()", than there will be 2 variables in the scope: myNum and myNumIndex
 
-Sample:
+###### Sample:
 ```
 <div rt-repeat="myNum in this.getMyNumbers()">{myNumIndex}. myNum</div>
 ```
-Complied:
+###### Compiled:
 ```
 define([
     'react',
@@ -95,14 +96,14 @@ define([
 ## rt-scope
 This directive creates a new javascript scope. It actually creates a new method for this scope, and calls it with its current context. The syntax is `rt-scope="expr1 as var1; expr2 as var2`. This gives a convenience method to shorten stuff up in a scope and make the code more readable. It also helps to execute an expression only once in a scope instead of every chunk that needs it.
 
-Sample:
+###### Sample:
 ```
 <div rt-repeat="rpt in array">
     <div rt-scope="')' as separator; rpt.val as val">{rptIndex}{separator} {val}</div>
     <div>'rpt' exists here, but not 'separator' and 'val'</div>
 </div>
 ```
-Complied:
+###### Compiled:
 ```
 define([
     'react',
@@ -131,7 +132,7 @@ In order to reduce the boiler-plate code when programatically setting class name
 1. In react templates, you can use the "class" attribute the same as you'd do in html. If you like, you can even have execution context within
 2. You cannot use class and rt-class on the same html element
 
-Sample:
+###### Sample:
 ```
 <div rt-scope="{blue: true, selected: this.isSelected()} as classes">
     These are logically equivalent
@@ -140,7 +141,7 @@ Sample:
     <div class="blue{this.isSelected() ? ' selected' : ''}">Using the class attribute</div>
 </div>
 ```
-Complied:
+###### Compiled:
 ```
 define([
     'react',
@@ -167,7 +168,7 @@ define([
 ## style
 In order to make it closer to html, we allow the settings of inline styles. In addition, this will take care of changing the styles from hyphen-style to camelCase style. If you'd like, you can still return an object from evaluation context. Please note that if you do it inline, you'll need to open single curly braces for the js context, and another for the object. Also, you'll need to use camelCase if using it that way
 
-Sample:
+###### Sample:
 ```
 <div>
     These are really equivalent
@@ -175,7 +176,7 @@ Sample:
     <div style="{{'color': 'white', 'lineHeight': this.state.lineHeight + 'px'}}">Inline</div>
 </div>
 ```
-Complied:
+###### Compiled:
 ```
 define([
     'react',
@@ -201,11 +202,11 @@ define([
 ## event handlers
 TODO: Section text
 
-Sample:
+###### Sample:
 ```
 
 ```
-Complied:
+###### Compiled:
 ```
 
 ```
@@ -213,11 +214,11 @@ Complied:
 ## doctype rt, require dependencies, and calling other components
 TODO: Section text
 
-Sample:
+###### Sample:
 ```
 
 ```
-Complied:
+###### Compiled:
 ```
 
 ```
