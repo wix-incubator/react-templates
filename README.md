@@ -47,3 +47,48 @@ define([
     };
 });
 ```
+*Note: within the special **"rt-"** directives, simple strings don't make sense, as all those directives apply on some execution context. Therefore, in these directives, there won't be a need to add the {} to identify execution context*
+
+## rt-if
+This gives you the ability to add conditions to a sub-tree of html. If the condition is evaluated to true, the subree will be returned, otherwise, it will not be calculated. It is implemented by a trinary expression
+
+Sample:
+```
+<div rt-if="this.state.resultCode === 200">Success!</div>
+```
+Complied:
+```
+define([
+    'react',
+    'lodash'
+], function (React, _) {
+    'use strict';
+    return function () {
+        return this.state.resultCode === 200 ? React.DOM.div({}, 'Success!') : null;
+    };
+});
+```
+
+## section
+Section text
+
+Sample:
+```
+
+```
+Complied:
+```
+
+```
+
+## section
+Section text
+
+Sample:
+```
+
+```
+Complied:
+```
+
+```
