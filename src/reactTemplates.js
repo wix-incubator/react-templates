@@ -184,15 +184,15 @@ function convertHtmlToReact(node, context) {
         if (node.attribs[scopeProp]) {
             data.scopeMapping = {};
             data.scopeName = '';
-            _.each(context.boundParams,function (boundParam) {
-              data.scopeMapping[boundParam] = boundParam;
+            _.each(context.boundParams, function (boundParam) {
+                data.scopeMapping[boundParam] = boundParam;
             });
-            _.each(node.attribs[scopeProp].split(';'),function (scopePart) {
-              var scopeSubParts = scopePart.split(' as ');
-              var scopeName = scopeSubParts[1].trim();
-              addIfNotThere(context.boundParams, scopeName);
-              data.scopeName += capitalize(scopeName);
-              data.scopeMapping[scopeName] = scopeSubParts[0].trim();
+            _.each(node.attribs[scopeProp].split(';'), function (scopePart) {
+                var scopeSubParts = scopePart.split(' as ');
+                var scopeName = scopeSubParts[1].trim();
+                addIfNotThere(context.boundParams, scopeName);
+                data.scopeName += capitalize(scopeName);
+                data.scopeMapping[scopeName] = scopeSubParts[0].trim();
             });
         }
 
@@ -217,9 +217,9 @@ function convertHtmlToReact(node, context) {
         }
 
         if (node.attribs[templateProp]) {
-            data.repeatFunction = generateInjectedFunc(context,'repeat'+capitalize(data.item),'return '+data.body);
+            data.repeatFunction = generateInjectedFunc(context, 'repeat' + capitalize(data.item), 'return ' + data.body);
             data.repeatBinds = ['this'].concat(_.reject(context.boundParams, function (param) {
-                return (param === data.item || param === data.item+'Index');
+                return (param === data.item || param === data.item + 'Index');
             }));
             data.body = repeatTemplate(data);
         }
@@ -227,7 +227,7 @@ function convertHtmlToReact(node, context) {
             data.body = ifTemplate(data);
         }
         if (node.attribs[scopeProp]) {
-            var generatedFuncName = generateInjectedFunc(context,'scope'+data.scopeName,'return '+data.body,_.keys(data.scopeMapping));
+            var generatedFuncName = generateInjectedFunc(context, 'scope' + data.scopeName, 'return ' + data.body, _.keys(data.scopeMapping));
             data.body = generatedFuncName + '.apply(this, [' + _.values(data.scopeMapping).join(',') + '])';
         }
         return data.body;
