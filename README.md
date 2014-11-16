@@ -45,7 +45,7 @@ In html attributes and text, you can replace context by a javascript expression.
 <a href="{this.state.linkRef}">{this.state.linkText}</a>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -67,7 +67,7 @@ This gives you the ability to add conditions to a sub-tree of html. If the condi
 <div rt-if="this.state.resultCode === 200">Success!</div>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -87,7 +87,7 @@ Repeats a node with its subtree for each item in an array. This is implemented b
 <div rt-repeat="myNum in this.getMyNumbers()">{myNumIndex}. myNum</div>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -113,7 +113,7 @@ This directive creates a new javascript scope. It actually creates a new method 
 </div>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -151,7 +151,7 @@ In order to reduce the boiler-plate code when programatically setting class name
 </div>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -186,7 +186,7 @@ In order to make it closer to html, we allow the settings of inline styles. In a
 </div>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -218,7 +218,7 @@ React event handlers accept function pointers. Therefore, when using event, you 
 </div>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -251,7 +251,7 @@ In many cases, you'd like to use either library code, or other components within
 
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash',
