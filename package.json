@@ -1,8 +1,11 @@
 {
   "name": "react-templates",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Light weight templates for react -> write html get valid react code",
   "main": "./src/reactTemplates.js",
+  "bin": {
+    "rt": "./bin/rt.js"
+  },
   "scripts": {
     "test": "node test/src/test.js"
   },
@@ -17,6 +20,7 @@
   },
   "homepage": "https://github.com/wix/react-templates",
   "dependencies": {
+    "chalk": "^0.5.1",
     "cheerio": "^0.18.0",
     "escodegen": "^1.4.1",
     "esprima": "^1.2.2",
