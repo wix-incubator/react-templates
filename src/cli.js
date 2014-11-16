@@ -8,15 +8,23 @@ var _ = require('lodash');
 var path = require('path');
 var reactTemplates = require('./reactTemplates');
 var pkg = require('../package.json');
+var options = {commonJS: false};
 
 if (process.argv.length > 2) {
-    if (process.argv.indexOf('-v') !== -1 || process.argv.indexOf('--version') !== -1) {
-        console.log(pkg.version);
-    } else if (process.argv.indexOf('-h') !== -1 || process.argv.indexOf('--help') !== -1) {
-        printHelp();
-    } else {
-        _.forEach(process.argv.slice(2), handleSingleFile);
-    }
+    var files = [];
+    _.forEach(process.argv.slice(2),function (param) {
+        if (param === '-v' || param === '--version') {
+            console.log(pkg.version);
+        } else if (param === '-h' || param === '--help') {
+            printHelp();
+        } else if (param === '--common') {
+            options.commonJS = true;
+        } else {
+            files.push(param);
+        }
+    });
+    _.forEach(files,handleSingleFile);
+
 } else {
     printHelp();
 }
@@ -41,7 +49,7 @@ function handleSingleFile(filename) {
 //    var js = reactTemplates.convertTemplateToReact(html);
 //    fs.writeFileSync(filename + '.js', js);
     try {
-        reactTemplates.convertFile(filename, filename + '.js');
+        reactTemplates.convertFile(filename, filename + '.js', options);
     } catch (e) {
         console.log('Error processing file: ' + filename + ', ' + e.description);
     }

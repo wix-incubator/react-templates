@@ -1,0 +1,11 @@
+<!DOCTYPE rt PlaygroundSample="./playgroundSample">
+<div>
+    <form>
+        <textarea valueLink="{this.linkState('templateHTML')}" class="large-text-area"></textarea>
+        <br/>
+        <textarea valueLink="{this.linkState('templateProps')}" class="large-text-area"></textarea>
+    </form>
+    <PlaygroundSample renderFunc="{this.templateFunc}" stateString="{this.state.templateProps}">
+
+    </PlaygroundSample>
+</div>
