@@ -1,4 +1,4 @@
-<!DOCTYPE jsx>
+<!DOCTYPE rt>
 <p>
     <div rt-repeat="items in this.props.things">
         <span style="width:auto;line-height: 5px;"

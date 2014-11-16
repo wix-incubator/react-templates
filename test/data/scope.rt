@@ -1,4 +1,4 @@
-<!DOCTYPE jsx>
+<!DOCTYPE rt>
 <div>
     <div rt-scope="['a','b','c'] as items">
         <span rt-repeat="item in items">Item:#{itemIndex} = {item}</span>
