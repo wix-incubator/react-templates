@@ -27,26 +27,59 @@ function generateTemplateFunction(html) {
     } catch (e) {
         return emptyFunc
     }
-
 }
+
+function generateRenderFunc(renderFunc) {
+    return function() {
+        var res = null;
+        try {
+            res = renderFunc.apply(this)
+        } catch (e) {
+
+        }
+        return React.DOM.div.apply(this, _.flatten([
+            {},
+            res
+        ]));
+    }
+}
+var z = {getInitialState: function() {return {name:"reactTemplates"}}};
 
 var Playground = React.createClass({
 
     displayName: 'Playground',
     mixins: [React.addons.LinkedStateMixin],
 
+    updateSample: function (state) {
+
+        this.sampleFunc = generateTemplateFunction(state.templateHTML);
+        this.sampleRender = generateRenderFunc(this.sampleFunc);
+        var classBase = {};
+        try {
+            console.log(state.templateProps);
+            classBase = eval("("+state.templateProps+")");
+            /*if (typeof classBase !== 'Object') {
+                throw "failed to eval";
+            }*/
+        } catch (e) {
+            classBase = {};
+        }
+        classBase.render = this.sampleRender;
+        console.log(classBase);
+        this.sample = React.createClass(classBase);
+    },
+
     getInitialState: function () {
         var currentState = {
             templateHTML: '<div>\n hello {this.state.name}\n</div>',
-            templateProps: JSON.stringify({name:"reactTemplates"})
+            templateProps: '{getInitialState: function () {return {name:"reactTemplates"}}}'
         };
-        this.templateFunc = generateTemplateFunction(currentState.templateHTML);
-        console.log(this.templateFunc);
+        this.updateSample(currentState);
         return currentState;
     },
     componentWillUpdate: function (nextProps,nextState) {
-        if (nextState.templateHTML !== this.state.templateHTML) {
-            this.templateFunc = generateTemplateFunction(nextState.templateHTML)
+        if (nextState.templateHTML !== this.state.templateHTML || nextState.templateProps !== this.state.templateProps) {
+            this.updateSample(nextState);
         }
     },
 

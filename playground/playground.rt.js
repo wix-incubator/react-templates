@@ -9,8 +9,5 @@ module.exports = function () {
     }), React.DOM.br({}), React.DOM.textarea({
         'valueLink': this.linkState('templateProps'),
         'className': 'large-text-area'
-    })), PlaygroundSample({
-        'renderFunc': this.templateFunc,
-        'stateString': this.state.templateProps
-    }));
+    })), this.sample({}));
 };
