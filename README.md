@@ -25,6 +25,15 @@ React templates compiles a *.rt file (react template file - extended HTML format
 ###### Why not use JSX?
 Some love jsx, some don't. We don't. Well, not that we don't like it, but it seems to fit only components with very little html inside, which could be done by creating elements in code. Also, we like to separate code and html. It just feels right.
 
+## Usage
+**src/cli.js < filename.rt >**
+*(you might need to provide execution permission to the file)*
+
+Note that in most cases, this package will be wrapped in a grunt task, so the cli will not be used directly
+TODO: pointer to the grunt repository
+
+# Template directives and syntax
+
 ## Any valid HTML is a template
 Writing any html is a valid template. This does not apply to event handlers ("on" methods). See the section about event handlers
 
@@ -71,7 +80,7 @@ define([
 ```
 
 ## rt-repeat
-Repeats a node with its subtree for each item in an array. This is implemented by creating a method that is passed to a map method as a callback. It creates a real context for the iterated variable. It will create an item*Index* variable to represent the index of the item. If the definition is "myNum in this.getMyNumbers()", than there will be 2 variables in the scope: myNum and myNumIndex
+Repeats a node with its subtree for each item in an array. This is implemented by creating a method that is passed to a map call as a callback. It creates a real context for the iterated variable. The syntax is `rt-repeat="itemVar in arrayExpr"`. Within the scope of the element, `itemVar` will be available in javascript context, and also an `itemVarIndex` will be created to represent the index of the item. If the definition is `myNum in this.getMyNumbers()`, than there will be 2 variables in the scope: `myNum` and `myNumIndex`. This naming is used to allow nesting of repeat expression with access to all levels.
 
 ###### Sample:
 ```
@@ -200,25 +209,61 @@ define([
 ```
 
 ## event handlers
-TODO: Section text
+React event handlers accept function pointers. Therefore, when using event, you can just open an execution context and provide a pointer to a method. This would look like `onClick="{this.myClickHandler}"`. However, sometimes there's very little to do on click, or we just want to call a method with bound parameters. In that case, you can use a lambda notation, which will result in creating a react template creating a method for the handler. It does not have a performance impact, as the method is created once, and just bound to the context instead of created again. The lambda notation will look like this `onClick="(evt) => console.log(evt)"`. In this example, **evt** was the name you choose for the first argument that will be passed into your inline method. With browser events, this will most likely be the react synthetic event. However, if you expect a property that starts with **on**Something, then react-templates will treat it as an event handler. So if you have an event handler called **onBoxSelected** that will trigger an event with a row and column params, you can write `onBoxSelected="(row, col)=>this.doSomething(row,col)"`. You can use a no-param version as well `onClick="()=>console.log('just wanted to know it clicked')"`
 
 ###### Sample:
 ```
-
+<div rt-repeat="item in items">
+    <div onClick="()=>this.itemSelected(item)" onMouseDown="{this.mouseDownHandler}">
+</div>
 ```
 ###### Compiled:
 ```
-
+define([
+    'react',
+    'lodash'
+], function (React, _) {
+    'use strict';
+    function onClick1(item, itemIndex) {
+        this.itemSelected(item);
+    }
+    function repeatItem2(item, itemIndex) {
+        return React.DOM.div({}, React.DOM.div({
+            'onClick': onClick1.bind(this, item, itemIndex),
+            'onMouseDown': this.mouseDownHandler
+        }));
+    }
+    return function () {
+        return _.map(items, repeatItem2.bind(this));
+    };
+});
 ```
 
 ## doctype rt, require dependencies, and calling other components
-TODO: Section text
+In many cases, you'd like to use either library code, or other components within your template. In order to do so, you can define a doctype and indicate dependencies. You do so by `<!doctype rt depVarName="depVarPath">`. After that, you will have **depVarName** in your scope. You can import react components and use them afterwords in the template as tag names. For example `<MySlider prop1="val1" onMyChange="{this.onSliderMoved}">`. This will also support nesting `<MyContainer><div>child</div><div>another</div></MyContainer>`. You will then be able to find the children in **this.props.children**.
 
 ###### Sample:
 ```
+<!doctype rt MyComp="comps/myComp" utils="utils/utils">
+<MyComp rt-repeat="item in items">
+    <div>{utils.toLower(item.name)}</div>
+</MyComp>
 
 ```
 ###### Compiled:
 ```
-
+define([
+    'react',
+    'lodash',
+    'comps/myComp',
+    'utils/utils'
+], function (React, _, MyComp, utils) {
+    'use strict';
+    function repeatItem1(item, itemIndex) {
+        return MyComp({}, React.DOM.div({}, utils.toLower(item.name)));
+    }
+    return function () {
+        return _.map(items, repeatItem1.bind(this));
+    };
+});
 ```
