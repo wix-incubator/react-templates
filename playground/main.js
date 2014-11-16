@@ -44,6 +44,8 @@ function generateRenderFunc(renderFunc) {
     }
 }
 var z = {getInitialState: function() {return {name:"reactTemplates"}}};
+var templateHTML =  '<div>\n   Have {_.filter(this.state.todos, {done:true}).length} todos done, \n   and {_.filter(this.state.todos, {done:false}).length} not done\n  <br/>\n   <div rt-repeat="todo in this.state.todos" key="{todo.key}">\n      <button onClick="()=>this.setState({todos:_.reject(this.state.todos, todo)})">Remove</button>\n      <input type="checkbox" checked="{todo.done}" onChange="()=>var td = _.cloneDeep(this.state.todos); td[todoIndex].done = !td[todoIndex].done, this.setState({todos:td})"/>\n      <span style="{todo.done ? {\'text-decoration\':\'line-through\'} : {} }">{todo.value}</span>\n   </div>\n   <input key="myinput" type="text" onKeyDown="(e) => if (e.keyCode == 13) { this.add(); }" valueLink="{this.linkState(\'edited\')}"/>\n        <button onClick="(e)=>e.preventDefault(); this.add()" >Add</button><br/>\n   <button onClick="(e)=>e.preventDefault(); this.setState({todos: _.filter(this.state.todos, {done:false})})">Clear done</button>\n</div>';
+var templateProps = '{\nmixins: [React.addons.LinkedStateMixin],\ngetInitialState: function () {\n return {edited: "", todos: [], counter: 0};\n},\nadd: function () {\n this.setState({todos: this.state.todos.concat({value: this.state.edited, done: false,key:this.state.counter}), edited: "", counter: this.state.counter+1})\n}\n}';
 
 var Playground = React.createClass({
 
@@ -71,8 +73,8 @@ var Playground = React.createClass({
 
     getInitialState: function () {
         var currentState = {
-            templateHTML: '<div>\n hello {this.state.name}\n</div>',
-            templateProps: '{getInitialState: function () {return {name:"reactTemplates"}}}'
+            templateHTML:templateHTML,
+            templateProps: templateProps
         };
         this.updateSample(currentState);
         return currentState;
