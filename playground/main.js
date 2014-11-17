@@ -1,6 +1,13 @@
 var reactTemplates = require('../src/reactTemplates');
 var playgroundTemplate = require('./playground.rt.js');
+var htmlMode = require('codemirror/mode/htmlmixed/htmlmixed');
+var javascriptMode = require('codemirror/mode/javascript/javascript');
+var xmlMode = require('codemirror/mode/xml/xml');
+var cssMode = require('codemirror/mode/css/css');
+var vbScriptMode = require('codemirror/mode/vbscript/vbscript');
+
 var React = require('react/addons');
+
 var _ = require('lodash');
 
 
@@ -35,10 +42,10 @@ function generateRenderFunc(renderFunc) {
         try {
             res = renderFunc.apply(this)
         } catch (e) {
-
+            res = React.DOM.div.apply(this,[{style:{color:"red"}},"Exception:"+e.message]);
         }
         return React.DOM.div.apply(this, _.flatten([
-            {},
+            {key:"result"},
             res
         ]));
     }
@@ -55,20 +62,23 @@ var Playground = React.createClass({
     updateSample: function (state) {
 
         this.sampleFunc = generateTemplateFunction(state.templateHTML);
+        this.validHTML = this.sampleFunc !== emptyFunc;
         this.sampleRender = generateRenderFunc(this.sampleFunc);
         var classBase = {};
         try {
+            this.validProps = true;
             console.log(state.templateProps);
             classBase = eval("("+state.templateProps+")");
-            /*if (typeof classBase !== 'Object') {
+            if (!_.isObject(classBase)) {
                 throw "failed to eval";
-            }*/
+            }
         } catch (e) {
             classBase = {};
+            this.validProps = false;
         }
         classBase.render = this.sampleRender;
         console.log(classBase);
-        this.sample = React.createClass(classBase);
+        this.sample = React.createFactory(React.createClass(classBase));
     },
 
     getInitialState: function () {

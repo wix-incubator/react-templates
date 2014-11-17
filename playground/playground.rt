@@ -1,11 +1,30 @@
-<!DOCTYPE rt PlaygroundSample="./playgroundSample">
+<!DOCTYPE rt CodeEditor="react-code-mirror">
 <div>
+    <div class="code-area">
     <form>
-        <textarea valueLink="{this.linkState('templateHTML')}" class="large-text-area"></textarea>
-        <br/>
-        <textarea valueLink="{this.linkState('templateProps')}" class="large-text-area"></textarea>
-    </form>
-    <this.sample>
+        <CodeEditor class="large-text-area" style="border: {this.validHTML? '1px solid black':'2px solid red'};"
 
-    </this.sample>
+            value="{this.state.templateHTML}"
+            mode="htmlmixed"
+            smartIndent="{true}"
+            lineNumbers="{true}"
+            onChange="(evt) => this.setState({'templateHTML':evt.target.value})"
+        />
+        <br/>
+        <CodeEditor class="large-text-area" style="border: {this.validProps? '1px solid black':'2px solid red'};"
+                value="{this.state.templateProps}"
+                mode="javascript"
+                theme="solarized"
+                smartIndent="{true}"
+                lineNumbers="{true}"
+                onChange="(evt) => this.setState({'templateProps':evt.target.value})"
+         />
+    </form>
+    </div>
+    <div class="result-area">
+        <this.sample>
+
+        </this.sample>
+    </div>
+
 </div>

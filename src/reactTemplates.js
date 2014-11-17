@@ -130,7 +130,7 @@ function generateProps(node, context) {
                 }
                 var res = str.split(':');
                 res[0] = res[0].trim();
-                res[1] = res[1].trim();
+                res[1] = res.slice(1).join(':').trim();
                 return res;
             }));
             var styleArray = [];

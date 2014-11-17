@@ -3,6 +3,18 @@
 }
 
 .large-text-area {
-    width:800px;
+    width:600px;
     height:300px;
+}
+
+.code-area {
+    width:620px;
+    height:620px;
+    float:left;
+}
+
+.result-area {
+    width: 400px;
+    height: 600px;
+    float:left;
 }
