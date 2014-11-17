@@ -4,7 +4,7 @@
   "description": "Light weight templates for react -> write html get valid react code",
   "main": "./src/reactTemplates.js",
   "bin": {
-    "rt": "./bin/rt.js"
+    "rt": "./src/cli.js"
   },
   "scripts": {
     "test": "node test/src/test.js"

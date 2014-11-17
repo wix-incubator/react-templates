@@ -168,9 +168,9 @@ function addIfNotThere(array, obj) {
 }
 
 function hasNonSimpleChildren(node) {
-  return _.any(node.children,function (child) {
-    return child.type === 'tag' && child.attribs[templateProp];
-  });
+    return _.any(node.children, function (child) {
+        return child.type === 'tag' && child.attribs[templateProp];
+    });
 }
 
 function convertHtmlToReact(node, context) {
