@@ -41,11 +41,11 @@ Writing any html is a valid template. This does not apply to event handlers ("on
 In html attributes and text, you can replace context by a javascript expression. You do this by wrapping it in {}. If this is inside an attribute, it still needs to be wrapped by quotes. In text, you can just use it.
 
 ###### Sample:
-```
+```html
 <a href="{this.state.linkRef}">{this.state.linkText}</a>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -63,11 +63,11 @@ This gives you the ability to add conditions to a sub-tree of html. If the condi
 
 
 ###### Sample:
-```
+```html
 <div rt-if="this.state.resultCode === 200">Success!</div>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -83,11 +83,11 @@ define([
 Repeats a node with its subtree for each item in an array. This is implemented by creating a method that is passed to a map call as a callback. It creates a real context for the iterated variable. The syntax is `rt-repeat="itemVar in arrayExpr"`. Within the scope of the element, `itemVar` will be available in javascript context, and also an `itemVarIndex` will be created to represent the index of the item. If the definition is `myNum in this.getMyNumbers()`, than there will be 2 variables in the scope: `myNum` and `myNumIndex`. This naming is used to allow nesting of repeat expression with access to all levels.
 
 ###### Sample:
-```
+```html
 <div rt-repeat="myNum in this.getMyNumbers()">{myNumIndex}. myNum</div>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -106,14 +106,14 @@ define([
 This directive creates a new javascript scope. It actually creates a new method for this scope, and calls it with its current context. The syntax is `rt-scope="expr1 as var1; expr2 as var2`. This gives a convenience method to shorten stuff up in a scope and make the code more readable. It also helps to execute an expression only once in a scope instead of every chunk that needs it.
 
 ###### Sample:
-```
+```html
 <div rt-repeat="rpt in array">
     <div rt-scope="')' as separator; rpt.val as val">{rptIndex}{separator} {val}</div>
     <div>'rpt' exists here, but not 'separator' and 'val'</div>
 </div>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -142,7 +142,7 @@ In order to reduce the boiler-plate code when programatically setting class name
 2. You cannot use class and rt-class on the same html element
 
 ###### Sample:
-```
+```html
 <div rt-scope="{blue: true, selected: this.isSelected()} as classes">
     These are logically equivalent
     <div rt-class="classes">Reference</div>
@@ -151,7 +151,7 @@ In order to reduce the boiler-plate code when programatically setting class name
 </div>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -178,7 +178,7 @@ define([
 In order to make it closer to html, we allow the settings of inline styles. In addition, this will take care of changing the styles from hyphen-style to camelCase style. If you'd like, you can still return an object from evaluation context. Please note that if you do it inline, you'll need to open single curly braces for the js context, and another for the object. Also, you'll need to use camelCase if using it that way
 
 ###### Sample:
-```
+```html
 <div>
     These are really equivalent
     <div style="color:white; line-height:{this.state.lineHeight}px">Inline</div>
@@ -186,7 +186,7 @@ In order to make it closer to html, we allow the settings of inline styles. In a
 </div>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -212,13 +212,13 @@ define([
 React event handlers accept function pointers. Therefore, when using event, you can just open an execution context and provide a pointer to a method. This would look like `onClick="{this.myClickHandler}"`. However, sometimes there's very little to do on click, or we just want to call a method with bound parameters. In that case, you can use a lambda notation, which will result in creating a react template creating a method for the handler. It does not have a performance impact, as the method is created once, and just bound to the context instead of created again. The lambda notation will look like this `onClick="(evt) => console.log(evt)"`. In this example, **evt** was the name you choose for the first argument that will be passed into your inline method. With browser events, this will most likely be the react synthetic event. However, if you expect a property that starts with **on**Something, then react-templates will treat it as an event handler. So if you have an event handler called **onBoxSelected** that will trigger an event with a row and column params, you can write `onBoxSelected="(row, col)=>this.doSomething(row,col)"`. You can use a no-param version as well `onClick="()=>console.log('just wanted to know it clicked')"`
 
 ###### Sample:
-```
+```html
 <div rt-repeat="item in items">
     <div onClick="()=>this.itemSelected(item)" onMouseDown="{this.mouseDownHandler}">
 </div>
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash'
@@ -243,7 +243,7 @@ define([
 In many cases, you'd like to use either library code, or other components within your template. In order to do so, you can define a doctype and indicate dependencies. You do so by `<!doctype rt depVarName="depVarPath">`. After that, you will have **depVarName** in your scope. You can import react components and use them afterwords in the template as tag names. For example `<MySlider prop1="val1" onMyChange="{this.onSliderMoved}">`. This will also support nesting `<MyContainer><div>child</div><div>another</div></MyContainer>`. You will then be able to find the children in **this.props.children**.
 
 ###### Sample:
-```
+```html
 <!doctype rt MyComp="comps/myComp" utils="utils/utils">
 <MyComp rt-repeat="item in items">
     <div>{utils.toLower(item.name)}</div>
@@ -251,7 +251,7 @@ In many cases, you'd like to use either library code, or other components within
 
 ```
 ###### Compiled:
-```
+```javascript
 define([
     'react',
     'lodash',

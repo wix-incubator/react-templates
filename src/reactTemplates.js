@@ -16,8 +16,8 @@ var classSetTemplate = _.template('React.addons.classSet(<%= classSet %>)');
 var simpleTagTemplate = _.template('<%= name %>(<%= props %><%= children %>)');
 var tagTemplate = _.template('<%= name %>.apply(this,_.flatten([<%= props %><%= children %>]))');
 var commentTemplate = _.template(' /* <%= data %> */ ');
-var templateTemplate = _.template("define([<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
-
+var templateAMDTemplate = _.template("define([<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
+var templateCommonJSTemplate = _.template("<%= vars %>\n\n'use strict';\n <%= injectedFunctions %>\nmodule.exports = function(){ return <%= body %>};\n");
 var templateProp = 'rt-repeat';
 var ifProp = 'rt-if';
 var classSetProp = 'rt-class';
@@ -261,8 +261,9 @@ function extractDefinesFromJSXTag(html, defines) {
  * @param {string} html
  * @return {string}
  */
-function convertTemplateToReact(html) {
+function convertTemplateToReact(html,options) {
 //    var x = cheerio.load(html);
+    options = options || {};
     var defines = {react: 'React', lodash: '_'};
     html = extractDefinesFromJSXTag(html, defines);
     var rootNode = cheerio.load(html.trim(), {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true});
@@ -270,9 +271,10 @@ function convertTemplateToReact(html) {
     var body = convertHtmlToReact(rootNode.root()[0].children[0], context);
     var requirePaths = _(defines).keys().map(function (reqName) { return '"' + reqName + '"'; }).value().join(',');
     var requireVars = _(defines).values().value().join(',');
-    var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths};
+    var vars = _(defines).map(function (reqVar,reqPath) {return "var "+reqVar+" = require('"+reqPath+"');"}).join("\n");
+    var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars:vars};
     data.injectedFunctions = context.injectedFunctions.join('\n');
-    var code = templateTemplate(data);
+    var code = options.commonJS ? templateCommonJSTemplate(data) : templateAMDTemplate(data);
     try {
         var tree = esprima.parse(code, {range: true, tokens: true, comment: true});
         tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
@@ -288,7 +290,7 @@ function convertTemplateToReact(html) {
  * @param {string} source
  * @param {string} target
  */
-function convertFile(source, target) {
+function convertFile(source, target, options) {
 //    if (path.extname(filename) !== ".html") {
 //        console.log('invalid file, only handle html files');
 //        return;// only handle html files
@@ -304,7 +306,7 @@ function convertFile(source, target) {
     if (!html.match(/\<\!doctype rt/i)) {
         throw new Error('invalid file, missing header');
     }
-    var js = convertTemplateToReact(html);
+    var js = convertTemplateToReact(html, options);
     fs.writeFileSync(target, js);
 }
 
