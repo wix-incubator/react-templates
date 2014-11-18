@@ -3,18 +3,22 @@
 }
 
 .large-text-area {
-    width:600px;
     height:300px;
+    margin: 10px;
 }
 
 .code-area {
-    width:620px;
+    width: 50%;
     height:620px;
     float:left;
 }
 
 .result-area {
-    width: 400px;
-    height: 600px;
+    width: 50%;
+    height: 620px;
     float:left;
+}
+
+.sample-view {
+    margin:10px;
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE rt CodeEditor="react-code-mirror">
 <div>
     <div class="code-area">
-    <form>
+        <h2>Template:</h2>
         <CodeEditor class="large-text-area" style="border: {this.validHTML? '1px solid black':'2px solid red'};"
 
             value="{this.state.templateHTML}"
@@ -11,6 +11,7 @@
             onChange="(evt) => this.setState({'templateHTML':evt.target.value})"
         />
         <br/>
+        <h2>Class:</h2>
         <CodeEditor class="large-text-area" style="border: {this.validProps? '1px solid black':'2px solid red'};"
                 value="{this.state.templateProps}"
                 mode="javascript"
@@ -19,12 +20,24 @@
                 lineNumbers="{true}"
                 onChange="(evt) => this.setState({'templateProps':evt.target.value})"
          />
-    </form>
     </div>
-    <div class="result-area">
-        <this.sample>
+    <div key="result-area" class="result-area">
+        <h2>Generated code:</h2>
+        <CodeEditor class="large-text-area" style="border:1px solid black;"
+                    value="{this.templateSource}"
+                    mode="javascript"
+                    theme="solarized"
+                    smartIndent="{true}"
+                    lineNumbers="{true}"
+                    readOnly="{true}"
+                />
+        <br/>
+        <h2>Preview:</h2>
+        <div class="sample-view">
+            <this.sample key="sample">
+            </this.sample>
+        </div>
 
-        </this.sample>
     </div>
 
 </div>

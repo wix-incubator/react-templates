@@ -19,9 +19,17 @@ function emptyFunc() {
     return null;
 }
 
-function generateTemplateFunction(html) {
+function generateTemplateSource(html) {
+    var code = null;
     try {
-        var code = reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g,""));
+        code = reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g, ""));
+    } catch (e) {
+    }
+    return code;
+}
+
+function generateTemplateFunction(code) {
+    try {
         var defineMap = {"react":React,"lodash":_};
         var define = function (requirementsNames,content) {
             var requirements = _.map(requirementsNames,function (reqName) {
@@ -60,8 +68,8 @@ var Playground = React.createClass({
     mixins: [React.addons.LinkedStateMixin],
 
     updateSample: function (state) {
-
-        this.sampleFunc = generateTemplateFunction(state.templateHTML);
+        this.templateSource = generateTemplateSource(state.templateHTML);
+        this.sampleFunc = generateTemplateFunction(this.templateSource);
         this.validHTML = this.sampleFunc !== emptyFunc;
         this.sampleRender = generateRenderFunc(this.sampleFunc);
         var classBase = {};
