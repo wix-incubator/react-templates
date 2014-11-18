@@ -1,5 +1,5 @@
+'use strict';
 module.exports = function (grunt) {
-    'use strict';
     grunt.initConfig({
         clean: {
             main: {
@@ -9,7 +9,8 @@ module.exports = function (grunt) {
         eslint: {
             all: {
                 src: [
-                    'src/**/*.js'
+                    'src/**/*.js', 'playground/**/*.js',
+                    '!playground/main.browser.js'
                 ]
             },
             teamcity: {
@@ -48,6 +49,7 @@ module.exports = function (grunt) {
     });
 
     grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-eslint');
 
     grunt.registerTask('default', ['eslint', 'build_sources', 'check', 'build']);
     grunt.registerTask('test', ['jasmine_node']);

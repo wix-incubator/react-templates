@@ -246,6 +246,7 @@ function extractDefinesFromJSXTag(html, defines) {
         var match = true;
         while (match) {
             match = false;
+            /*eslint no-loop-func:0*/
             reqStr = reqStr.replace(/\s*(\w+)\s*\=\s*\"([^\"]*)\"\s*/, function(full, varName, reqPath) {
                 defines[reqPath] = varName;
                 match = true;
@@ -259,7 +260,7 @@ function extractDefinesFromJSXTag(html, defines) {
 
 /**
  * @param {string} html
- * @param {{commonJS:boolean}} options
+ * @param {{commonJS:boolean}?} options
  * @return {string}
  */
 function convertTemplateToReact(html, options) {
