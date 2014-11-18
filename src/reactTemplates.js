@@ -259,9 +259,10 @@ function extractDefinesFromJSXTag(html, defines) {
 
 /**
  * @param {string} html
+ * @param {{commonJS:boolean}} options
  * @return {string}
  */
-function convertTemplateToReact(html,options) {
+function convertTemplateToReact(html, options) {
 //    var x = cheerio.load(html);
     options = options || {};
     var defines = {react: 'React', lodash: '_'};
@@ -271,8 +272,8 @@ function convertTemplateToReact(html,options) {
     var body = convertHtmlToReact(rootNode.root()[0].children[0], context);
     var requirePaths = _(defines).keys().map(function (reqName) { return '"' + reqName + '"'; }).value().join(',');
     var requireVars = _(defines).values().value().join(',');
-    var vars = _(defines).map(function (reqVar,reqPath) {return "var "+reqVar+" = require('"+reqPath+"');"}).join("\n");
-    var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars:vars};
+    var vars = _(defines).map(function (reqVar, reqPath) { return 'var ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
+    var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars: vars};
     data.injectedFunctions = context.injectedFunctions.join('\n');
     var code = options.commonJS ? templateCommonJSTemplate(data) : templateAMDTemplate(data);
     try {
@@ -288,6 +289,7 @@ function convertTemplateToReact(html,options) {
 
 /**
  * @param {string} source
+ * @param {{commonJS:boolean}} options
  * @param {string} target
  */
 function convertFile(source, target, options) {
@@ -297,7 +299,7 @@ function convertFile(source, target, options) {
 //    }
     var util = require('./util');
 
-    if (!util.isStale(source, target)) {
+    if (!options.force && !util.isStale(source, target)) {
         console.log('target file ' + chalk.cyan(target) + ' is up to date, skipping');
 //        return;
     }
