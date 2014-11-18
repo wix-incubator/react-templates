@@ -56,7 +56,7 @@ define([
     };
 });
 ```
-*Note: within the special **"rt-"** directives, simple strings don't make sense, as all those directives apply on some execution context. Therefore, in these directives, there won't be a need to add the {} to identify execution context*
+*Note*: within the special **"rt-"** directives (see below), simple strings don't make sense, as all these directives are used for specifying execution instructions. Therefore, in these directives, you should not use {}
 
 ## rt-if
 This gives you the ability to add conditions to a sub-tree of html. If the condition is evaluated to true, the subree will be returned, otherwise, it will not be calculated. It is implemented by a trinary expression
