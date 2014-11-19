@@ -290,7 +290,7 @@ function convertTemplateToReact(html, options) {
 
 /**
  * @param {string} source
- * @param {{commonJS:boolean}} options
+ * @param {{commonJS:boolean}?} options
  * @param {string} target
  */
 function convertFile(source, target, options) {
@@ -298,6 +298,7 @@ function convertFile(source, target, options) {
 //        console.log('invalid file, only handle html files');
 //        return;// only handle html files
 //    }
+    options = options || {};
     var util = require('./util');
 
     if (!options.force && !util.isStale(source, target)) {
