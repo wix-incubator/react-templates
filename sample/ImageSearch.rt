@@ -1,4 +1,4 @@
-<!doctype jsx InfiniteScroll="InfiniteScroll">
+<!doctype rt InfiniteScroll="InfiniteScroll">
 <div className="innerContainer">
     <div className="searchbox">
         <input type="text" valueLink="{this.linkState('searchTerm')}" onKeyDown="(e) => if (e.keyCode == 13) { this.search(); return false; }"></input>
