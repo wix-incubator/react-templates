@@ -1,13 +1,11 @@
-<!DOCTYPE rt CodeEditor="react-code-mirror">
+<!DOCTYPE rt CodeEditor="./aceEditor">
 <div>
     <div class="code-area">
         <h2>Template:</h2>
         <CodeEditor class="large-text-area" style="border: {this.validHTML? '1px solid black':'2px solid red'};"
 
             value="{this.state.templateHTML}"
-            mode="htmlmixed"
-            smartIndent="{true}"
-            lineNumbers="{true}"
+            mode="html"
             onChange="(evt) => this.setState({'templateHTML':evt.target.value})"
         />
         <br/>
@@ -15,9 +13,6 @@
         <CodeEditor class="large-text-area" style="border: {this.validProps? '1px solid black':'2px solid red'};"
                 value="{this.state.templateProps}"
                 mode="javascript"
-                theme="solarized"
-                smartIndent="{true}"
-                lineNumbers="{true}"
                 onChange="(evt) => this.setState({'templateProps':evt.target.value})"
          />
     </div>
@@ -26,9 +21,6 @@
         <CodeEditor class="large-text-area" style="border:1px solid black;"
                     value="{this.templateSource}"
                     mode="javascript"
-                    theme="solarized"
-                    smartIndent="{true}"
-                    lineNumbers="{true}"
                     readOnly="{true}"
                 />
         <br/>

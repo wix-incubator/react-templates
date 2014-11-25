@@ -2,11 +2,6 @@
 /*eslint-env browser*/
 var reactTemplates = require('../src/reactTemplates');
 var playgroundTemplate = require('./playground.rt.js');
-var htmlMode = require('codemirror/mode/htmlmixed/htmlmixed');
-var javascriptMode = require('codemirror/mode/javascript/javascript');
-var xmlMode = require('codemirror/mode/xml/xml');
-var cssMode = require('codemirror/mode/css/css');
-var vbScriptMode = require('codemirror/mode/vbscript/vbscript');
 
 var React = require('react/addons');
 

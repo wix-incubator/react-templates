@@ -33,8 +33,6 @@ module.exports = function (grunt) {
             grunt: ['conf/tasks/test']
         },
         browserify: {
-            options: {
-            },
             dist: {
                 files: {
                     'web/bundle.js': ['web/browser.js']
@@ -42,7 +40,7 @@ module.exports = function (grunt) {
             },
             pg: {
                 files: {
-                    'playground/main.browser2.js': ['playground/main.js']
+                    'playground/main.browser.js': ['playground/main.js']
                 }
             }
         }
