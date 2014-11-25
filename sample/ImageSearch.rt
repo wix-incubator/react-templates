@@ -1,16 +1,16 @@
 <!doctype rt InfiniteScroll="InfiniteScroll">
-<div className="innerContainer">
-    <div className="searchbox">
+<div class="innerContainer">
+    <div class="searchbox">
         <input type="text" valueLink="{this.linkState('searchTerm')}" onKeyDown="(e) => if (e.keyCode == 13) { this.search(); return false; }"></input>
         <button onClick="() =>  this.search(); return false;">Search</button>
     </div>
-    <InfiniteScroll className="fixed" onLoadMore="{this.loadMore}" threshold="{150}">
+    <InfiniteScroll class="fixed" onLoadMore="{this.loadMore}" threshold="{150}">
         <div rt-repeat="row in [0, 1, 2]" key="{row}">
-            <a rt-repeat="i in this.state.items[row]" href="{i.originalContext}" target="blank" className="container fadeInDown" key="{i.id}">
+            <a rt-repeat="i in this.state.items[row]" href="{i.originalContext}" target="blank" class="container fadeInDown" key="{i.id}">
                 <div style="padding-top: {Math.floor(100/i.ratio)}%; background-color: grey"></div>
-                <div className="imgContainer">
+                <div class="imgContainer">
                     <img width="100%" src="{i.url}"/>
-                    <div className="title">{i.title}</div>
+                    <div class="title">{i.title}</div>
                 </div>
             </a>
         </div>

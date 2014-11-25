@@ -84,7 +84,7 @@ Repeats a node with its subtree for each item in an array. This is implemented b
 
 ###### Sample:
 ```html
-<div rt-repeat="myNum in this.getMyNumbers()">{myNumIndex}. myNum</div>
+<div rt-repeat="myNum in this.getMyNumbers()">{myNumIndex}. {myNum}</div>
 ```
 ###### Compiled:
 ```javascript
@@ -94,7 +94,7 @@ define([
 ], function (React, _) {
     'use strict';
     function repeatMyNum1(myNum, myNumIndex) {
-        return React.DOM.div({}, myNumIndex + '. myNum');
+        return React.DOM.div({}, myNumIndex + '. ' + myNum);
     }
     return function () {
         return _.map(this.getMyNumbers(), repeatMyNum1.bind(this));
