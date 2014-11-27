@@ -1,24 +1,41 @@
-.hidden {
-    display:none;
+/*.hidden {*/
+/*display: none;*/
+/*}*/
+
+body {
+    padding: 20px;
+}
+
+.hiddenTab {
+    /*width: 0;*/
+    /*height: 0;*/
 }
 
 .large-text-area {
-    height:300px;
+    height: 400px;
     margin: 10px;
 }
 
 .code-area {
     width: 50%;
-    height:620px;
-    float:left;
+    height: 620px;
+    float: left;
 }
 
 .result-area {
     width: 50%;
     height: 620px;
-    float:left;
+    float: left;
 }
 
 .sample-view {
-    margin:10px;
+    margin: 10px;
+}
+
+.sample-view button {
+    margin: 5px;
+}
+
+.sample-view input[type=checkbox] {
+    margin-right: 5px;
 }
