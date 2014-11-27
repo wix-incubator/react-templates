@@ -81,10 +81,10 @@ test('util.isStale', function (t) {
     var mtime2 = new Date(1995, 11, 17, 3, 24, 1);
     fs.utimesSync(b, mtime2, mtime2);
 
-    var util = require('../../src/util');
-    var actual = util.isStale(a, b);
+    var util = require('../../src/fsUtil');
+    var actual = fsUtil.isStale(a, b);
     t.equal(actual, false);
-    actual = util.isStale(b, a);
+    actual = fsUtil.isStale(b, a);
     t.equal(actual, true);
 
     fs.unlinkSync(a);

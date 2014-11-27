@@ -225,7 +225,11 @@ function hasNonSimpleChildren(node) {
 
 function convertHtmlToReact(node, context) {
     if (node.type === 'tag') {
-        context = _.cloneDeep(context);
+        context = {
+            boundParams: _.clone(context.boundParams),
+            injectedFunctions: context.injectedFunctions,
+            html: context.html
+        };
 
         var data = {name: convertTagNameToConstructor(node.name)};
         if (node.attribs[scopeProp]) {
