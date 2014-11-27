@@ -72,7 +72,8 @@ function convertText(txt) {
         if (curlyCounter !== 0) {
             throw 'Failed to parse text';
         } else {
-            res += (first ? '' : '+') + txt.substr(start + 1, end - start - 2);
+            var needsParens = start !== 0 || end !== txt.length -1;
+            res += (first ? '' : '+') + (needsParens?'(':'')+txt.substr(start + 1, end - start - 2)+(needsParens?')':'');
             first = false;
             txt = txt.substr(end);
         }
