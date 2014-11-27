@@ -36,7 +36,7 @@ function normalizeHtml(html) {
 }
 
 test('html tests', function (t) {
-    var files = ['scope.rt', 'lambda.rt'];
+    var files = ['scope.rt', 'lambda.rt','eval.rt'];
     t.plan(files.length);
 
     files.forEach(check);
