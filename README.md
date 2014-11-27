@@ -11,6 +11,10 @@ Light weight templates for [React](http://facebook.github.io/react/index.html). 
 ## How does it work
 React templates compiles a *.rt file (react template file - extended HTML format) into a JavaScript file. This file - which currently utilizes RequireJS format - returns a function. This function, when invoked, returns a virtual React DOM (based on React.DOM elements and custom user components). A common use case would be that a regular React component would require a JavaScript file generated from a template, and then perform `func.apply(this)`, causing the template to have that component as its context.
 
+## playground
+http://wix.github.io/react-templates/
+
+
 ###### Basic concepts for react templates
 * Any valid HTML is a template (and comments)
 * {} to identify JS expression
