@@ -6,9 +6,11 @@
 //var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
-var reactTemplates = require('./reactTemplates');
+var api = require('./api');
+var context = require('./context');
+var shell = require('./shell');
 var pkg = require('../package.json');
-var options = {commonJS: false, force: false};
+var options = {commonJS: false, force: false, json: false};
 
 if (process.argv.length > 2) {
     var files = [];
@@ -21,6 +23,8 @@ if (process.argv.length > 2) {
             options.commonJS = true;
         } else if (param === '-f' || param === '--force') {
             options.force = true;
+        } else if (param === '-j' || param === '--json') { // TODO use optionator
+            context.options.format = 'json';
         } else {
             files.push(param);
         }
@@ -40,6 +44,8 @@ function printHelp() {
     console.log('Options:');
     console.log('  -v, --version        Outputs the version number.');
     console.log('  -h, --help           Show help.');
+    console.log('  -j, --json           Report output format. [stylish,json]');
+//    console.log('  -ft, --format        Report output format. [stylish,json]');
     console.log('  --common             Use Common JS output. default: false');
 }
 
@@ -56,8 +62,18 @@ function handleSingleFile(filename) {
 //    var js = reactTemplates.convertTemplateToReact(html);
 //    fs.writeFileSync(filename + '.js', js);
     try {
-        reactTemplates.convertFile(filename, filename + '.js', options);
+        api.convertFile(filename, filename + '.js', options);
     } catch (e) {
-        console.log('Error processing file: ' + filename + ', ' + e.description);
+        context.error(e.message, filename, e.line || -1, -1, e.index || -1);
+//        if (options.json) {
+//            context.error(e.message, filename, e.line || -1, -1, e.index || -1);
+//            console.log(JSON.stringify(context.getMessages(), undefined, 2));
+//        } else {
+//            console.log('Error processing file: ' + filename + ', ' + e.message + ' line: ' + e.line || -1);
+//        }
+        // if (options.stack)
+        // console.log(e.stack);
     }
+
+    shell.printResults(context);
 }

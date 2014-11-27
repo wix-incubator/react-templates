@@ -7,8 +7,7 @@ var _ = require('lodash');
 var esprima = require('esprima');
 var escodegen = require('escodegen');
 var React = require('react');
-var fs = require('fs');
-var chalk = require('chalk');
+var stringUtils = require('./stringUtils');
 
 var repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
 var ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
@@ -18,6 +17,7 @@ var tagTemplate = _.template('<%= name %>.apply(this,_.flatten([<%= props %><%= 
 var commentTemplate = _.template(' /* <%= data %> */ ');
 var templateAMDTemplate = _.template("/*eslint new-cap:0,no-unused-vars:0*/\ndefine([<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
 var templateCommonJSTemplate = _.template("<%= vars %>\n\n'use strict';\n <%= injectedFunctions %>\nmodule.exports = function(){ return <%= body %>};\n");
+
 var templateProp = 'rt-repeat';
 var ifProp = 'rt-if';
 var classSetProp = 'rt-class';
@@ -25,12 +25,11 @@ var scopeProp = 'rt-scope';
 
 var reactSupportedAttributes = ['accept', 'acceptCharset', 'accessKey', 'action', 'allowFullScreen', 'allowTransparency', 'alt', 'async', 'autoComplete', 'autoPlay', 'cellPadding', 'cellSpacing', 'charSet', 'checked', 'classID', 'className', 'cols', 'colSpan', 'content', 'contentEditable', 'contextMenu', 'controls', 'coords', 'crossOrigin', 'data', 'dateTime', 'defer', 'dir', 'disabled', 'download', 'draggable', 'encType', 'form', 'formNoValidate', 'frameBorder', 'height', 'hidden', 'href', 'hrefLang', 'htmlFor', 'httpEquiv', 'icon', 'id', 'label', 'lang', 'list', 'loop', 'manifest', 'max', 'maxLength', 'media', 'mediaGroup', 'method', 'min', 'multiple', 'muted', 'name', 'noValidate', 'open', 'pattern', 'placeholder', 'poster', 'preload', 'radioGroup', 'readOnly', 'rel', 'required', 'role', 'rows', 'rowSpan', 'sandbox', 'scope', 'scrolling', 'seamless', 'selected', 'shape', 'size', 'sizes', 'span', 'spellCheck', 'src', 'srcDoc', 'srcSet', 'start', 'step', 'style', 'tabIndex', 'target', 'title', 'type', 'useMap', 'value', 'width', 'wmode'];
 var attributesMapping = {'class': 'className', 'rt-class': 'className'};
-_.forEach(reactSupportedAttributes,function (attributeReactName) {
+_.forEach(reactSupportedAttributes, function (attributeReactName) {
     if (attributeReactName !== attributeReactName.toLowerCase()) {
         attributesMapping[attributeReactName.toLowerCase()] = attributeReactName;
     }
 });
-
 
 function concatChildren(children) {
     var res = '';
@@ -44,23 +43,15 @@ function concatChildren(children) {
     return res;
 }
 
-function convertToCamelCase(str) {
-    return str.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
-}
-
-function capitalize(str) {
-    return str[0].toUpperCase() + str.slice(1);
-}
-
 var curlyMap = {'{': 1, '}': -1};
 
-function convertText(txt) {
+function convertText(node, context, txt) {
     txt = txt.trim();
     var res = '';
     var first = true;
     while (txt.indexOf('{') !== -1) {
         var start = txt.indexOf('{');
-        var pre = txt.substr(0,start);
+        var pre = txt.substr(0, start);
         if (pre) {
             res += (first ? '' : '+') + JSON.stringify(pre);
             first = false;
@@ -70,7 +61,7 @@ function convertText(txt) {
             curlyCounter += curlyMap[txt.charAt(end)] || 0;
         }
         if (curlyCounter !== 0) {
-            throw 'Failed to parse text';
+            throw buildError("Failed to parse text '" + txt + "'", context, node);
         } else {
             res += (first ? '' : '+') + txt.substr(start + 1, end - start - 2);
             first = false;
@@ -87,6 +78,10 @@ function convertText(txt) {
     return res;
 }
 
+/**
+ * @param {string} txt
+ * @return {boolean}
+ */
 function isStringOnlyCode(txt) {
     txt = txt.trim();
     return txt.length && txt.charAt(0) === '{' && txt.charAt(txt.length - 1) === '}';
@@ -94,24 +89,83 @@ function isStringOnlyCode(txt) {
 
 function generateInjectedFunc(context, namePrefix, body, params) {
     params = params || context.boundParams;
-    var generatedFuncName = namePrefix.replace(',','') + (context.injectedFunctions.length + 1);
+    var generatedFuncName = namePrefix.replace(',', '') + (context.injectedFunctions.length + 1);
     var funcText = 'function ' + generatedFuncName + '(' + params.join(',');
     funcText += ') {\n' + body + '\n}\n';
     context.injectedFunctions.push(funcText);
     return generatedFuncName;
 }
 
+
+function getLine(html, node) {
+    if (!node) {
+        return 0;
+    }
+    return html.substring(0, node.startIndex).split('\n').length - 1;
+}
+
+//function getLine(node) {
+//    if (!node) {
+//        return 0;
+//    }
+//    var line = 0;
+//    var prev = node.prev;
+//    while (prev) {
+//        var nl = prev.data.split('\n').length - 1;
+//        line += nl;
+//        prev = prev.prev;
+//    }
+//
+//    line += getLine(node.parent);
+//    return line + 1;
+//}
+
+//function RTCodeError(message, line) {
+//    this.name = 'RTCodeError';
+//    this.message = message || '';
+//    this.line = line || -1;
+//}
+//RTCodeError.prototype = Error.prototype;
+
+// Redefine properties on Error to be enumerable
+Object.defineProperty(Error.prototype, 'message', { configurable: true, enumerable: true });
+Object.defineProperty(Error.prototype, 'stack', { configurable: true, enumerable: true });
+//Object.defineProperty(Error.prototype, 'line', { configurable: true, enumerable: true });
+
+function RTCodeError(message, index, line) {
+    Error.captureStackTrace(this, RTCodeError);
+    this.name = 'RTCodeError';
+    this.message = message || '';
+    this.index = index || -1;
+    this.line = line || -1;
+}
+
+RTCodeError.prototype = Object.create(Error.prototype);
+
+/**
+ * @param {string} msg
+ * @param {*} context
+ * @param {*} node
+ * @return {RTCodeError}
+ */
+function buildError(msg, context, node) {
+    var line = getLine(context.html, node);
+    return new RTCodeError(msg, node.startIndex, line);
+}
+
+
 function generateProps(node, context) {
+//    console.log(node);
     var props = {};
     _.forOwn(node.attribs, function (val, key) {
         var propKey = attributesMapping[key.toLowerCase()] || key;
         if (props.hasOwnProperty(propKey)) {
-            throw 'duplicate definition of ' + propKey + ' ' + JSON.stringify(node.attribs);
+            throw buildError('duplicate definition of ' + propKey + ' ' + JSON.stringify(node.attribs), context, node);
         }
         if (key.indexOf('on') === 0 && !isStringOnlyCode(val)) {
             var funcParts = val.split('=>');
             if (funcParts.length !== 2) {
-                throw 'when using "on" events, use lambda "(p1,p2)=>body" notation or use {} to return a callback function. error: [' + key + '="' + val + '"]';
+                throw buildError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [" + key + "='" + val + "']", context, node);
             }
             var evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
             var funcBody = funcParts[1].trim();
@@ -135,13 +189,13 @@ function generateProps(node, context) {
             }));
             var styleArray = [];
             _.forEach(styleParts, function (stylePart) {
-                styleArray.push(convertToCamelCase(stylePart[0]) + ' : ' + convertText(stylePart[1]));
+                styleArray.push(stringUtils.convertToCamelCase(stylePart[0]) + ' : ' + convertText(node, context, stylePart[1]));
             });
             props[propKey] = '{' + styleArray.join(',') + '}';
         } else if (key === classSetProp) {
             props[propKey] = classSetTemplate({classSet: val});
         } else if (key.indexOf('rt-') !== 0) {
-            props[propKey] = convertText(val);
+            props[propKey] = convertText(node, context, val);
         }
     });
 
@@ -157,14 +211,9 @@ function convertTagNameToConstructor(tagName) {
 function defaultContext() {
     return {
         boundParams: [],
-        injectedFunctions: []
+        injectedFunctions: [],
+        html: ''
     };
-}
-
-function addIfNotThere(array, obj) {
-    if (!_.contains(array, obj)) {
-        array.push(obj);
-    }
 }
 
 function hasNonSimpleChildren(node) {
@@ -175,10 +224,7 @@ function hasNonSimpleChildren(node) {
 
 function convertHtmlToReact(node, context) {
     if (node.type === 'tag') {
-        context = {
-            boundParams: _.clone(context.boundParams),
-            injectedFunctions: context.injectedFunctions
-        };
+        context = _.cloneDeep(context);
 
         var data = {name: convertTagNameToConstructor(node.name)};
         if (node.attribs[scopeProp]) {
@@ -189,18 +235,25 @@ function convertHtmlToReact(node, context) {
             });
             _.each(node.attribs[scopeProp].split(';'), function (scopePart) {
                 var scopeSubParts = scopePart.split(' as ');
+                if (scopeSubParts.length < 2) {
+                    throw buildError("invalid scope part '" + scopePart + "'", context, node);
+                }
                 var scopeName = scopeSubParts[1].trim();
-                addIfNotThere(context.boundParams, scopeName);
-                data.scopeName += capitalize(scopeName);
+                stringUtils.addIfNotThere(context.boundParams, scopeName);
+                data.scopeName += stringUtils.capitalize(scopeName);
                 data.scopeMapping[scopeName] = scopeSubParts[0].trim();
             });
         }
 
         if (node.attribs[templateProp]) {
-            data.item = node.attribs[templateProp].split(' in ')[0].trim();
-            data.collection = node.attribs[templateProp].split(' in ')[1].trim();
-            addIfNotThere(context.boundParams, data.item);
-            addIfNotThere(context.boundParams, data.item + 'Index');
+            var arr = node.attribs[templateProp].split(' in ');
+            if (arr.length !== 2) {
+                throw buildError("rt-repeat invalid 'in' expression '" + node.attribs[templateProp] + "'", context, node);
+            }
+            data.item = arr[0].trim();
+            data.collection = arr[1].trim();
+            stringUtils.addIfNotThere(context.boundParams, data.item);
+            stringUtils.addIfNotThere(context.boundParams, data.item + 'Index');
         }
         data.props = generateProps(node, context);
         if (node.attribs[ifProp]) {
@@ -211,13 +264,13 @@ function convertHtmlToReact(node, context) {
         }));
 
         if (hasNonSimpleChildren(node)) {
-          data.body = tagTemplate(data);
+            data.body = tagTemplate(data);
         } else {
-          data.body = simpleTagTemplate(data);
+            data.body = simpleTagTemplate(data);
         }
 
         if (node.attribs[templateProp]) {
-            data.repeatFunction = generateInjectedFunc(context, 'repeat' + capitalize(data.item), 'return ' + data.body);
+            data.repeatFunction = generateInjectedFunc(context, 'repeat' + stringUtils.capitalize(data.item), 'return ' + data.body);
             data.repeatBinds = ['this'].concat(_.reject(context.boundParams, function (param) {
                 return (param === data.item || param === data.item + 'Index');
             }));
@@ -235,19 +288,19 @@ function convertHtmlToReact(node, context) {
         return (commentTemplate(node));
     } else if (node.type === 'text') {
         if (node.data.trim()) {
-            return convertText(node.data.trim());
+            return convertText(node, context, node.data.trim());
         }
         return '';
     }
 }
 
 function extractDefinesFromJSXTag(html, defines) {
-    html = html.replace(/\<\!doctype rt\s*(.*?)\s*\>/i, function(full, reqStr) {
+    html = html.replace(/\<\!doctype rt\s*(.*?)\s*\>/i, function (full, reqStr) {
         var match = true;
         while (match) {
             match = false;
             /*eslint no-loop-func:0*/
-            reqStr = reqStr.replace(/\s*(\w+)\s*\=\s*\"([^\"]*)\"\s*/, function(full, varName, reqPath) {
+            reqStr = reqStr.replace(/\s*(\w+)\s*\=\s*\"([^\"]*)\"\s*/, function (full, varName, reqPath) {
                 defines[reqPath] = varName;
                 match = true;
                 return '';
@@ -264,13 +317,21 @@ function extractDefinesFromJSXTag(html, defines) {
  * @return {string}
  */
 function convertTemplateToReact(html, options) {
-//    var x = cheerio.load(html);
+    var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = options || {};
     var defines = {react: 'React', lodash: '_'};
     html = extractDefinesFromJSXTag(html, defines);
-    var rootNode = cheerio.load(html.trim(), {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true});
     var context = defaultContext();
-    var body = convertHtmlToReact(rootNode.root()[0].children[0], context);
+    context.html = html;
+    var rootTags = _.filter(rootNode.root()[0].children, function (i) { return i.type === 'tag'; });
+    if (!rootTags || rootTags.length === 0) {
+        throw new RTCodeError('Document should have a root element');
+    }
+    if (rootTags.length > 1) {
+        throw buildError('Document should have a single root element', context, rootTags[1]);
+    }
+    var firstTag = rootTags[0];
+    var body = convertHtmlToReact(firstTag, context);
     var requirePaths = _(defines).keys().map(function (reqName) { return '"' + reqName + '"'; }).value().join(',');
     var requireVars = _(defines).values().value().join(',');
     var vars = _(defines).map(function (reqVar, reqPath) { return 'var ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
@@ -288,34 +349,7 @@ function convertTemplateToReact(html, options) {
     return code;
 }
 
-/**
- * @param {string} source
- * @param {{commonJS:boolean}?} options
- * @param {string} target
- */
-function convertFile(source, target, options) {
-//    if (path.extname(filename) !== ".html") {
-//        console.log('invalid file, only handle html files');
-//        return;// only handle html files
-//    }
-    options = options || {};
-    var util = require('./util');
-
-    if (!options.force && !util.isStale(source, target)) {
-        console.log('target file ' + chalk.cyan(target) + ' is up to date, skipping');
-//        return;
-    }
-
-    var html = fs.readFileSync(source).toString();
-    if (!html.match(/\<\!doctype rt/i)) {
-        throw new Error('invalid file, missing header');
-    }
-    var js = convertTemplateToReact(html, options);
-    fs.writeFileSync(target, js);
-}
-
 module.exports = {
     convertTemplateToReact: convertTemplateToReact,
-    convertFile: convertFile,
     _test: {}
 };

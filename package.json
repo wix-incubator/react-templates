@@ -1,6 +1,6 @@
 {
   "name": "react-templates",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "Light weight templates for react -> write html get valid react code",
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local"
@@ -28,12 +28,14 @@
     "escodegen": "^1.4.1",
     "esprima": "^1.2.2",
     "lodash": "^2.4.1",
-    "react": "^0.12.0"
+    "react": "^0.12.0",
+    "text-table": "^0.2.0"
   },
   "devDependencies": {
     "brace": "^0.4.0",
     "grunt": "^0.4.5",
     "grunt-browserify": "^3.2.0",
+    "grunt-contrib-watch": "^0.6.1",
     "grunt-eslint": "^2.0.0",
     "tape": "^3.0.2"
   }
