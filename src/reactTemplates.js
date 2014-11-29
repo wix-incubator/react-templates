@@ -11,6 +11,7 @@ var stringUtils = require('./stringUtils');
 
 var repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
 var ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
+var propsTemplate = _.template('_.merge({}, <%= generatedProps %>, <%= rtProps %>)');
 var classSetTemplate = _.template('React.addons.classSet(<%= classSet %>)');
 var simpleTagTemplate = _.template('<%= name %>(<%= props %><%= children %>)');
 var tagTemplate = _.template('<%= name %>.apply(this,_.flatten([<%= props %><%= children %>]))');
@@ -22,6 +23,7 @@ var templateProp = 'rt-repeat';
 var ifProp = 'rt-if';
 var classSetProp = 'rt-class';
 var scopeProp = 'rt-scope';
+var propsProp = 'rt-props';
 
 var reactSupportedAttributes = ['accept', 'acceptCharset', 'accessKey', 'action', 'allowFullScreen', 'allowTransparency', 'alt', 'async', 'autoComplete', 'autoPlay', 'cellPadding', 'cellSpacing', 'charSet', 'checked', 'classID', 'className', 'cols', 'colSpan', 'content', 'contentEditable', 'contextMenu', 'controls', 'coords', 'crossOrigin', 'data', 'dateTime', 'defer', 'dir', 'disabled', 'download', 'draggable', 'encType', 'form', 'formNoValidate', 'frameBorder', 'height', 'hidden', 'href', 'hrefLang', 'htmlFor', 'httpEquiv', 'icon', 'id', 'label', 'lang', 'list', 'loop', 'manifest', 'max', 'maxLength', 'media', 'mediaGroup', 'method', 'min', 'multiple', 'muted', 'name', 'noValidate', 'open', 'pattern', 'placeholder', 'poster', 'preload', 'radioGroup', 'readOnly', 'rel', 'required', 'role', 'rows', 'rowSpan', 'sandbox', 'scope', 'scrolling', 'seamless', 'selected', 'shape', 'size', 'sizes', 'span', 'spellCheck', 'src', 'srcDoc', 'srcSet', 'start', 'step', 'style', 'tabIndex', 'target', 'title', 'type', 'useMap', 'value', 'width', 'wmode'];
 var attributesMapping = {'class': 'className', 'rt-class': 'className'};
@@ -261,6 +263,9 @@ function convertHtmlToReact(node, context) {
             stringUtils.addIfNotThere(context.boundParams, data.item + 'Index');
         }
         data.props = generateProps(node, context);
+        if (node.attribs[propsProp]) {
+            data.props = propsTemplate({generatedProps: data.props, rtProps: node.attribs[propsProp]});
+        }
         if (node.attribs[ifProp]) {
             data.condition = node.attribs[ifProp].trim();
         }
