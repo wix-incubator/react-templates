@@ -5,7 +5,7 @@
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local"
   },
-  "main": "./src/reactTemplates.js",
+  "main": "./src/api.js",
   "bin": {
     "rt": "./src/cli.js"
   },
