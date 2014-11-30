@@ -8,7 +8,8 @@ var brace = require('brace');
 
 require('brace/mode/javascript');
 require('brace/mode/html');
-require('brace/theme/monokai');
+//require('brace/theme/monokai');
+require('brace/theme/solarized_light');
 
 var editor = React.createClass({
     displayName: 'BraceEditor',
