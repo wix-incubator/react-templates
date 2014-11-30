@@ -118,5 +118,25 @@ var Playground = React.createClass({
     }
 });
 
-var elem = React.createElement(Playground, {direction: 'horizontal'}); //vertical
-React.render(elem, document.getElementById('playground'));
+window.playground = React.render(Playground({"direction":'vertical'}), document.getElementById('playground'));
+/*
+function generateRandomId() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = _.random(0,15);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
+
+
+if (window.location.hash) {
+    var firebase = new Firebase('https://co5qowu8b6k.firebaseio-demo.com/'+window.location.hash);
+    firebase.on('value',function (snapshot) {
+        window.playground.setState(snapshot.val());
+        firebase.goOffline();
+    });
+}*/
+
+
+
