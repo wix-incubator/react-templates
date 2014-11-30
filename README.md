@@ -21,6 +21,7 @@ http://wix.github.io/react-templates/
 * rt-if
 * rt-repeat
 * rt-scope
+* rt-props
 * rt-class
 * style
 * event handlers
@@ -136,6 +137,34 @@ define([
     }
     return function () {
         return _.map(array, repeatRpt2.bind(this));
+    };
+});
+```
+
+## rt-props
+This directive is used to inject properties to an element programmatically. It will merge the properties with the properties received in the template. This option allows the code writer to build properties based on some app logic and pass them to the template. It is also useful when passing properties set on the component to an element within the template. The expected value of this attribute is an expression returning an object. The keys will be the properties and the values will be the property values.
+
+###### Sample:
+```html
+<input style="height:10px;width:3px;" rt-props="{style:{width:'5px'},type:'text'}"/>
+```
+###### Compiled:
+```javascript
+define([
+    'react',
+    'lodash'
+], function (React, _) {
+    'use strict';
+    return function () {
+        return React.DOM.input(_.merge({}, {
+            'style': {
+                height: '10px',
+                width: '3px'
+            }
+        }, {
+            style: { width: '5px' },
+            type: 'text'
+        }));
     };
 });
 ```

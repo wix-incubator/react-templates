@@ -36,7 +36,7 @@ function normalizeHtml(html) {
 }
 
 test('html tests', function (t) {
-    var files = ['scope.rt', 'lambda.rt','eval.rt'];
+    var files = ['scope.rt', 'lambda.rt','eval.rt', 'props.rt'];
     t.plan(files.length);
 
     files.forEach(check);
@@ -81,7 +81,7 @@ test('util.isStale', function (t) {
     var mtime2 = new Date(1995, 11, 17, 3, 24, 1);
     fs.utimesSync(b, mtime2, mtime2);
 
-    var util = require('../../src/fsUtil');
+    var fsUtil = require('../../src/fsUtil');
     var actual = fsUtil.isStale(a, b);
     t.equal(actual, false);
     actual = fsUtil.isStale(b, a);
