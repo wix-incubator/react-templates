@@ -48,7 +48,6 @@ function concatChildren(children) {
 var curlyMap = {'{': 1, '}': -1};
 
 function convertText(node, context, txt) {
-    txt = txt.trim();
     var res = '';
     var first = true;
     while (txt.indexOf('{') !== -1) {
@@ -192,13 +191,13 @@ function generateProps(node, context) {
             }));
             var styleArray = [];
             _.forEach(styleParts, function (stylePart) {
-                styleArray.push(stringUtils.convertToCamelCase(stylePart[0]) + ' : ' + convertText(node, context, stylePart[1]));
+                styleArray.push(stringUtils.convertToCamelCase(stylePart[0]) + ' : ' + convertText(node, context, stylePart[1].trim()));
             });
             props[propKey] = '{' + styleArray.join(',') + '}';
         } else if (key === classSetProp) {
             props[propKey] = classSetTemplate({classSet: val});
         } else if (key.indexOf('rt-') !== 0) {
-            props[propKey] = convertText(node, context, val);
+            props[propKey] = convertText(node, context, val.trim());
         }
     });
 
@@ -298,7 +297,7 @@ function convertHtmlToReact(node, context) {
         return (commentTemplate(node));
     } else if (node.type === 'text') {
         if (node.data.trim()) {
-            return convertText(node, context, node.data.trim());
+            return convertText(node, context, node.data);
         }
         return '';
     }

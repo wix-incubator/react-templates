@@ -26,6 +26,6 @@ define([
                 height: '100%',
                 border: '0'
             }
-        }))), React.DOM.div({}, 'editor', !this.props.editorState.previewMode ? React.DOM.div({}, 'left bar') : null));
+        }))), React.DOM.div({}, 'editor\n        ', !this.props.editorState.previewMode ? React.DOM.div({}, 'left bar') : null));
     };
 });
