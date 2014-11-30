@@ -1,6 +1,6 @@
 <!DOCTYPE rt CodeEditor="./aceEditor">
 <div>
-    <div id="myTab" role="tabpanel" class="code-area">
+    <div id="myTab" role="tabpanel" class="code-area" style="float: {this.props.direction === 'horizontal' ? 'left' : 'none'}">
         <!-- Nav tabs -->
         <ul class="nav nav-pills" role="tablist">
             <li role="presentation" class="active"><a href="#template" aria-controls="template" role="tab" data-toggle="tab">Template</a></li>
@@ -32,8 +32,7 @@
             </div>
         </div>
     </div>
-    <div key="result-area" class="result-area well">
-        <br/>
+    <div key="result-area" class="result-area well" style="float: {this.props.direction === 'horizontal' ? 'left' : 'none'}; margin-top: 48px;">
         <h2>Preview:</h2>
         <form class="sample-view" onSubmit="(e) => e.preventDefault();">
             <this.sample key="sample">

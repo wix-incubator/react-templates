@@ -18,13 +18,13 @@ body {
 
 .code-area {
     width: 50%;
-    height: 620px;
+    /*height: 620px;*/
     float: left;
 }
 
 .result-area {
     width: 50%;
-    height: 620px;
+    /*height: 620px;*/
     float: left;
 }
 

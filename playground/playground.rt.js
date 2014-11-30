@@ -15,7 +15,8 @@ module.exports = function () {
     return React.DOM.div({}, React.DOM.div({
         'id': 'myTab',
         'role': 'tabpanel',
-        'className': 'code-area'
+        'className': 'code-area',
+        'style': { float: this.props.direction === 'horizontal' ? 'left' : 'none' }
     }    /*  Nav tabs  */, React.DOM.ul({
         'className': 'nav nav-pills',
         'role': 'tablist'
@@ -69,8 +70,12 @@ module.exports = function () {
         'readOnly': true
     })))), React.DOM.div({
         'key': 'result-area',
-        'className': 'result-area well'
-    }, React.DOM.br({}), React.DOM.h2({}, 'Preview:'), React.DOM.form({
+        'className': 'result-area well',
+        'style': {
+            float: this.props.direction === 'horizontal' ? 'left' : 'none',
+            marginTop: '48px'
+        }
+    }, React.DOM.h2({}, 'Preview:'), React.DOM.form({
         'className': 'sample-view',
         'onSubmit': onSubmit3.bind(this)
     }, this.sample({ 'key': 'sample' }))));

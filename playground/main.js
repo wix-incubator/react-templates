@@ -118,4 +118,5 @@ var Playground = React.createClass({
     }
 });
 
-React.render(Playground(), document.getElementById('playground'));
+var elem = React.createElement(Playground, {direction: 'horizontal'}); //vertical
+React.render(elem, document.getElementById('playground'));
