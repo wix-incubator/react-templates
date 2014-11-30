@@ -1,13 +1,13 @@
 {
   "name": "react-templates",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Light weight templates for react -> write html get valid react code",
   "publishConfig": {
     "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local"
   },
-  "main": "./src/api.js",
+  "main": "./src/cli.js",
   "bin": {
-    "rt": "./src/cli.js"
+    "rt": "./bin/rt.js"
   },
   "scripts": {
     "test": "node test/src/test.js"
