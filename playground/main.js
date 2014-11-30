@@ -10,7 +10,7 @@ var _ = require('lodash');
 
 var html = '<div>hello</div>';
 var res = reactTemplates.convertTemplateToReact(html.trim());
-console.log(res);
+//console.log(res);
 
 function emptyFunc() {
     return null;

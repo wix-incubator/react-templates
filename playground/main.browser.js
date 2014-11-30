@@ -68913,13 +68913,14 @@ var editor = React.createClass({
     },
     componentDidMount: function () {
         this.editor = brace.edit(this.state.editorId);
+//        this.editor.setTheme('ace/theme/monokai');
+        this.editor.setTheme('ace/theme/solarized_light');
         if (this.props.mode !== 'html') {
             this.editor.getSession().setMode('ace/mode/javascript');
         } else {
             this.editor.getSession().setMode('ace/mode/html');
         }
         this.editor.getSession().setUseWorker(false);
-        this.editor.setTheme('ace/theme/monokai');
 
         var value = this.props.valueLink ? this.props.valueLink() : this.props.value;
         this.editor.setValue(value, 0);
@@ -68935,6 +68936,7 @@ var editor = React.createClass({
                 }
             }.bind(this));
         }
+        this.editor.clearSelection();
     },
     componentWillUnmount: function () {
         this.editor.destroy();
@@ -68955,7 +68957,7 @@ var _ = require('lodash');
 
 var html = '<div>hello</div>';
 var res = reactTemplates.convertTemplateToReact(html.trim());
-console.log(res);
+//console.log(res);
 
 function emptyFunc() {
     return null;
