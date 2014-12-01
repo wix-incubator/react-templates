@@ -43,11 +43,24 @@ module.exports = function (grunt) {
                     'playground/main.browser.js': ['playground/main.js']
                 }
             }
+        },
+
+        node_tap: {
+            default_options: {
+                options: {
+                    outputType: 'tap',
+                    outputTo: 'console'
+                },
+                files: {
+                    'tests': ['./test/src/*.js']
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-eslint');
+    grunt.loadNpmTasks('grunt-node-tap');
 
     grunt.registerTask('default', ['eslint', 'build_sources', 'check', 'build']);
     grunt.registerTask('test', ['jasmine_node']);
