@@ -68933,6 +68933,34 @@ var editor = React.createClass({
 module.exports = editor;
 },{"brace":1,"brace/mode/html":2,"brace/mode/javascript":3,"brace/theme/solarized_light":5,"lodash":113,"react/addons":114}],277:[function(require,module,exports){
 'use strict';
+var examplesTemplate = require('./examples.rt.js');
+var React = require('react/addons');
+var _ = require('lodash');
+
+var Examples = React.createClass({
+
+    displayName: 'Examples',
+    mixins: [React.addons.LinkedStateMixin],
+
+    render: function () {
+        return examplesTemplate.apply(this);
+    }
+});
+
+module.exports = Examples;
+},{"./examples.rt.js":278,"lodash":113,"react/addons":114}],278:[function(require,module,exports){
+var React = require('react');
+var _ = require('lodash');
+var playground = require('./playground');
+'use strict';
+module.exports = function () {
+    return React.DOM.div({ 'id': 'examples' }, React.DOM.div({ 'className': 'example' }, React.DOM.h3({}, 'A Simple Component'), React.DOM.p({}, '\n            React components implement a ', React.DOM.code({}, 'render()'), ' method that takes input data and\n            returns what to display. This example uses an XML-like syntax called\n            JSX. Input data that is passed into the component can be accessed by\n            ', React.DOM.code({}, 'render()'), ' via ', React.DOM.code({}, 'this.props'), '.\n        '), React.DOM.p({}, React.DOM.strong({}, 'JSX is optional and not required to use React.'), ' Try\n                                                                            clicking on "Compiled JS" to see the raw JavaScript code produced by\n                                                                            the JSX compiler.\n        '), React.DOM.div({ 'id': 'helloExample' }), playground({
+        'direction': 'horizontal',
+        'style': { display: 'block' }
+    })), React.DOM.div({ 'className': 'example' }, React.DOM.h3({}, 'A Stateful Component'), React.DOM.p({}, '\n            In addition to taking input data (accessed via ', React.DOM.code({}, 'this.props'), '), a\n            component can maintain internal state data (accessed via ', React.DOM.code({}, 'this.state'), ').\n            When a component\'s state data changes, the rendered markup will be\n            updated by re-invoking ', React.DOM.code({}, 'render()'), '.\n        '), React.DOM.div({ 'id': 'timerExample' })), React.DOM.div({ 'className': 'example' }, React.DOM.h3({}, 'An Application'), React.DOM.p({}, '\n            Using ', React.DOM.code({}, 'props'), ' and ', React.DOM.code({}, 'state'), ', we can put together a small Todo application.\n            This example uses ', React.DOM.code({}, 'state'), ' to track the current list of items as well as\n            the text that the user has entered. Although event handlers appear to be\n            rendered inline, they will be collected and implemented using event\n            delegation.\n        '), React.DOM.div({ 'id': 'todoExample' })), React.DOM.div({ 'className': 'example' }, React.DOM.h3({}, 'A Component Using External Plugins'), React.DOM.p({}, '\n            React is flexible and provides hooks that allow you to interface with\n            other libraries and frameworks. This example uses Showdown, an external\n            Markdown library, to convert the textarea\'s value in real-time.\n        '), React.DOM.div({ 'id': 'markdownExample' })));
+};
+},{"./playground":280,"lodash":113,"react":275}],279:[function(require,module,exports){
+'use strict';
 /*eslint-env browser*/
 var reactTemplates = require('../src/reactTemplates');
 
@@ -68944,11 +68972,9 @@ var html = '<div>hello</div>';
 var res = reactTemplates.convertTemplateToReact(html.trim());
 //console.log(res);
 
-var Playground = require('./playground.js');
-window.playground = React.render(Playground({"direction":'vertical'}), document.getElementById('playground'));
 
-//var Examples = require('./examples.js');
-//React.render(Examples(), document.getElementById('home-section'));
+var Examples = require('./examples.js');
+React.render(Examples(), document.getElementById('home-section'));
 
 
 /*
@@ -68973,7 +68999,7 @@ if (window.location.hash) {
 
 
 
-},{"../src/reactTemplates":280,"./playground.js":278,"lodash":113,"react/addons":114}],278:[function(require,module,exports){
+},{"../src/reactTemplates":282,"./examples.js":277,"lodash":113,"react/addons":114}],280:[function(require,module,exports){
 'use strict';
 /*eslint-env browser*/
 var reactTemplates = require('../src/reactTemplates');
@@ -69118,7 +69144,7 @@ if (window.location.hash) {
 
 
 
-},{"../src/reactTemplates":280,"./playground.rt.js":279,"lodash":113,"react/addons":114}],279:[function(require,module,exports){
+},{"../src/reactTemplates":282,"./playground.rt.js":281,"lodash":113,"react/addons":114}],281:[function(require,module,exports){
 var React = require('react');
 var _ = require('lodash');
 var CodeEditor = require('./aceEditor');
@@ -69197,7 +69223,7 @@ module.exports = function () {
         'onSubmit': onSubmit3.bind(this)
     }, this.sample({ 'key': 'sample' }))));
 };
-},{"./aceEditor":276,"lodash":113,"react":275}],280:[function(require,module,exports){
+},{"./aceEditor":276,"lodash":113,"react":275}],282:[function(require,module,exports){
 /**
  * Created by avim on 11/9/2014.
  */
@@ -69568,7 +69594,7 @@ module.exports = {
     _test: {}
 };
 
-},{"./stringUtils":281,"cheerio":8,"escodegen":70,"esprima":87,"lodash":113,"react":275}],281:[function(require,module,exports){
+},{"./stringUtils":283,"cheerio":8,"escodegen":70,"esprima":87,"lodash":113,"react":275}],283:[function(require,module,exports){
 'use strict';
 var _ = require('lodash');
 
@@ -69603,4 +69629,4 @@ module.exports = {
     capitalize: capitalize,
     addIfNotThere: addIfNotThere
 };
-},{"lodash":113}]},{},[277]);
+},{"lodash":113}]},{},[279]);

@@ -41,6 +41,11 @@ module.exports = function (grunt) {
                 files: {
                     'playground/main.browser.js': ['playground/main.js']
                 }
+            },
+            home: {
+                files: {
+                    'playground/home-main.browser.js': ['playground/home-main.js']
+                }
             }
         },
         node_tap: {
@@ -96,6 +101,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('build', ['rt', 'browserify:pg']);
+    grunt.registerTask('home', ['rt', 'browserify:home']);
 
     grunt.registerTask('all', ['default', 'test']);
 };

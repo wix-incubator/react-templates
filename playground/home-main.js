@@ -10,11 +10,9 @@ var html = '<div>hello</div>';
 var res = reactTemplates.convertTemplateToReact(html.trim());
 //console.log(res);
 
-var Playground = require('./playground.js');
-window.playground = React.render(Playground({"direction":'vertical'}), document.getElementById('playground'));
 
-//var Examples = require('./examples.js');
-//React.render(Examples(), document.getElementById('home-section'));
+var Examples = require('./examples.js');
+React.render(Examples(), document.getElementById('home-section'));
 
 
 /*
