@@ -5,7 +5,7 @@ Light weight templates for [React](http://facebook.github.io/react/index.html). 
 * No runtime libraries. No magic. Just simple pre-compilation to a clear React code
 * Super easy to write panels. By panels we mean components that have a lot of HTML code and non-reusable logic
 * Very good separation of presentation and logic. Almost no HTML within the component file
-* Declerative coding for presentation. HTML that you write and inspect look similar
+* Declarative coding for presentation. HTML that you write and inspect look similar
 * Easy syntax. Similar to HTML. All IDEs recognize this format
 
 ## How does it work
