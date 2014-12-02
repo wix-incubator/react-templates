@@ -74,5 +74,5 @@ module.exports = function () {
     }, React.DOM.h2({}, 'Preview:'), React.DOM.form({
         'className': 'sample-view',
         'onSubmit': onSubmit3.bind(this)
-    }, this.sample({ 'key': 'sample' }))));
+    }, this.sample({ 'key': 'sample' }))), React.DOM.br({ 'style': { clear: 'both' } }));
 };

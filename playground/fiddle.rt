@@ -1,0 +1,8 @@
+<!DOCTYPE rt playGround="./PlayGround.js">
+<div>
+    <h1>React Templates fiddle</h1>
+    <h2>Play with react templates and save/share your results</h2>
+    <button class="btn btn-lg btn-primary" onClick="(evt)=>evt.preventDefault();this.save()">Save fiddle</button>
+    <br>
+    <playGround ref="playground" direction="vertical"/>
+</div>

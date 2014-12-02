@@ -7,11 +7,6 @@ var React = require('react/addons');
 
 var _ = require('lodash');
 
-
-var html = '<div>hello</div>';
-var res = reactTemplates.convertTemplateToReact(html.trim());
-//console.log(res);
-
 function emptyFunc() {
     return null;
 }
@@ -27,7 +22,7 @@ function generateTemplateSource(html) {
 
 function generateTemplateFunction(code) {
     try {
-        var defineMap = {react: React, lodash: _};
+        var defineMap = {"react/addons": React, lodash: _};
         var define = function (requirementsNames, content) {
             var requirements = _.map(requirementsNames,function (reqName) {
                 return defineMap[reqName];
@@ -95,14 +90,13 @@ var Playground = React.createClass({
             this.validProps = false;
         }
         classBase.render = this.sampleRender;
-        console.log(classBase);
         this.sample = React.createFactory(React.createClass(classBase));
     },
 
     getInitialState: function () {
         var currentState = {
-            templateHTML: templateHTML,
-            templateProps: templateProps
+            templateHTML: this.props.templateHTML || templateHTML,
+            templateProps: this.props.templateProps || templateProps
         };
         this.updateSample(currentState);
         return currentState;
@@ -119,25 +113,3 @@ var Playground = React.createClass({
 });
 
 module.exports = Playground;
-
-/*
-function generateRandomId() {
-    var d = new Date().getTime();
-    var uuid = 'xxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = _.random(0,15);
-        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-    });
-    return uuid;
-};
-
-
-if (window.location.hash) {
-    var firebase = new Firebase('https://co5qowu8b6k.firebaseio-demo.com/'+window.location.hash);
-    firebase.on('value',function (snapshot) {
-        window.playground.setState(snapshot.val());
-        firebase.goOffline();
-    });
-}*/
-
-
-

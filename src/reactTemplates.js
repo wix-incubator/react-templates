@@ -6,7 +6,7 @@ var cheerio = require('cheerio');
 var _ = require('lodash');
 var esprima = require('esprima');
 var escodegen = require('escodegen');
-var React = require('react');
+var React = require('react/addons');
 var stringUtils = require('./stringUtils');
 
 var repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
@@ -332,7 +332,7 @@ function extractDefinesFromJSXTag(html, defines) {
 function convertTemplateToReact(html, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = options || {};
-    var defines = {react: 'React', lodash: '_'};
+    var defines = {"react/addons": 'React', lodash: '_'};
     html = extractDefinesFromJSXTag(html, defines);
     var context = defaultContext();
     context.html = html;

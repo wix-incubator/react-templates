@@ -1,0 +1,6 @@
+<!DOCTYPE rt playGround="./PlayGround.js">
+<div>
+    <h1>React Templates</h1>
+    <playGround ref="playground" direction="horizontal" rt-props="this.state.samples[0]"/>
+    <playGround ref="playground" direction="horizontal" rt-props="this.state.samples[1]"/>
+</div>

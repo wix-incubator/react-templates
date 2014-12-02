@@ -35,16 +35,61 @@ module.exports = function (grunt) {
             grunt: ['conf/tasks/test']
         },
         browserify: {
-            options: {
-            },
+//            libs: {
+//                files: {
+//                    'playground/libs.browser.js': ['playground/libs.js']
+//                },
+//                options: {
+//                    alias: [
+//                        'react:react/addons'
+//                    ],
+//                    shim: {
+//                        "react/addons": {
+//                            path: 'react/addons',
+//                            exports: 'React',
+//                            depends: {
+//                                lodash: '_'
+//                            }
+//                        },
+//                        "../src/reactTemplates": {
+//                            path: '../src/reactTemplates.js',
+//                            exports: 'reactTemplates',
+//                            depends: {
+//                                lodash: '_'
+//                            }
+//                        },
+//                        "lodash": {
+//                            path: 'lodash',
+//                            exports: '_'
+//                        },
+//                        "brace": {
+//                            path: 'brace',
+//                            exports: 'brace',
+//                            depends: {
+//                                lodash: '_'
+//                            }
+//                        }
+//                    }
+//
+//                }
+//            },
             pg: {
                 files: {
                     'playground/main.browser.js': ['playground/main.js']
-                }
-            },
-            home: {
-                files: {
-                    'playground/home-main.browser.js': ['playground/home-main.js']
+                },
+                options: {
+                    transform: ['brfs'],
+                    alias: [
+                        'react:react/addons'
+                    ]
+//                    exclude:['react','react/addons','../src/reactTemplates','lodash','brace','brace/mode/javascript','brace/mode/html','brace/theme/solarized_light'],
+//                    external: [
+//                        'react/addons',
+//                        '../src/reactTemplates',
+//                        'lodash',
+//                        'brace'
+//                    ]
+
                 }
             }
         },
