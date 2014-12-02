@@ -12,26 +12,63 @@ var shell = require('./shell');
 var pkg = require('../package.json');
 var options = {commonJS: false, force: false, json: false};
 
-if (process.argv.length > 2) {
-    var files = [];
-    _.forEach(process.argv.slice(2),function (param) {
+//if (process.argv.length > 2) {
+//    var files = [];
+//    _.forEach(process.argv.slice(2),function (param) {
+//        if (param === '-v' || param === '--version') {
+//            console.log(pkg.version);
+//        } else if (param === '-h' || param === '--help') {
+//            printHelp();
+//        } else if (param === '-c' || param === '--common') {
+//            options.commonJS = true;
+//        } else if (param === '-f' || param === '--force') {
+//            options.force = true;
+//        } else if (param === '-j' || param === '--json') { // TODO use optionator
+//            context.options.format = 'json';
+//        } else if (param !== '--no-color') {
+//            files.push(param);
+//        }
+//    });
+//    _.forEach(files, handleSingleFile);
+//    shell.printResults(context);
+//} else {
+//    printHelp();
+//}
+
+function parseOptions(args) {
+    var parsedOptions = {_: [], version: false, commonJS: false, force: false, format: 'stylish'};
+    _.forEach(args, function (param) {
         if (param === '-v' || param === '--version') {
-            console.log(pkg.version);
+            parsedOptions.version = true;
         } else if (param === '-h' || param === '--help') {
             printHelp();
         } else if (param === '-c' || param === '--common') {
-            options.commonJS = true;
+            parsedOptions.commonJS = true;
         } else if (param === '-f' || param === '--force') {
-            options.force = true;
+            parsedOptions.force = true;
         } else if (param === '-j' || param === '--json') { // TODO use optionator
+            parsedOptions.format = 'json';
             context.options.format = 'json';
-        } else {
-            files.push(param);
+        } else if (param !== '--no-color') {
+            parsedOptions._.push(param);
         }
     });
-    _.forEach(files, handleSingleFile);
-} else {
-    printHelp();
+    return parsedOptions;
+}
+
+function executeOptions(currentOptions) {
+    var ret = 0;
+    if (currentOptions.help) {
+        printHelp();
+    } else if (currentOptions.version) {
+        console.log(pkg.version);
+    } else {
+        _.forEach(currentOptions._, function (f) {
+            handleSingleFile(f, currentOptions);
+        });
+        ret = shell.printResults(context);
+    }
+    return ret;
 }
 
 function printHelp() {
@@ -47,11 +84,12 @@ function printHelp() {
     console.log('  -j, --json           Report output format. [stylish,json]');
 //    console.log('  -ft, --format        Report output format. [stylish,json]');
     console.log('  --common             Use Common JS output. default: false');
+    console.log('  -f --force           Force creation of output. default: false');
 }
 
-function handleSingleFile(filename) {
+function handleSingleFile(filename, currentOptions) {
     if (path.extname(filename) !== '.rt') {
-        console.log('invalid file, only handle rt files');
+        context.error('invalid file, only handle rt files', filename);
         return;// only handle html files
     }
 //    var html = fs.readFileSync(filename).toString();
@@ -62,7 +100,7 @@ function handleSingleFile(filename) {
 //    var js = reactTemplates.convertTemplateToReact(html);
 //    fs.writeFileSync(filename + '.js', js);
     try {
-        api.convertFile(filename, filename + '.js', options);
+        api.convertFile(filename, filename + '.js', currentOptions, context);
     } catch (e) {
         context.error(e.message, filename, e.line || -1, -1, e.index || -1);
 //        if (options.json) {
@@ -74,6 +112,20 @@ function handleSingleFile(filename) {
         // if (options.stack)
         // console.log(e.stack);
     }
-
-    shell.printResults(context);
 }
+
+/**
+ * Executes the CLI based on an array of arguments that is passed in.
+ * @param {string|Array|Object} args The arguments to process.
+ * @returns {int} The exit code for the operation.
+ */
+function execute(args) {
+    if (args.length > 2) {
+        var opts = parseOptions(args.slice(2));
+        return executeOptions(opts);
+    }
+    printHelp();
+    return 0;
+}
+
+module.exports = {execute: execute, executeOptions: executeOptions};

@@ -9,8 +9,9 @@ var convertTemplateToReact = reactTemplates.convertTemplateToReact;
  * @param {string} source
  * @param {{commonJS:boolean}?} options
  * @param {string} target
+ * @param {CONTEXT} context
  */
-function convertFile(source, target, options) {
+function convertFile(source, target, options, context) {
 //    if (path.extname(filename) !== ".html") {
 //        console.log('invalid file, only handle html files');
 //        return;// only handle html files
@@ -19,7 +20,7 @@ function convertFile(source, target, options) {
     var fsUtil = require('./fsUtil');
 
     if (!options.force && !fsUtil.isStale(source, target)) {
-        console.log('target file ' + chalk.cyan(target) + ' is up to date, skipping');
+        context.info('target file ' + chalk.cyan(target) + ' is up to date, skipping');
         return;
     }
 
@@ -34,5 +35,6 @@ function convertFile(source, target, options) {
 module.exports = {
 //    convertTemplateToReact: convertTemplateToReact,
     convertFile: convertFile,
+    context: require('./context'),
     _test: {}
 };

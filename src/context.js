@@ -49,10 +49,7 @@ var context = {
         context.messages = [];
     },
     hasErrors: function () {
-        var firstError = _.find(context.messages, function(message) {
-            return message.level === MESSAGE_LEVEL.ERROR;
-        });
-        return !!firstError;
+        return _.some(context.messages, {level: MESSAGE_LEVEL.ERROR});
     },
     options: {
         verbose: false,

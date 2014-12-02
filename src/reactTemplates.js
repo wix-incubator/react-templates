@@ -98,7 +98,11 @@ function generateInjectedFunc(context, namePrefix, body, params) {
     return generatedFuncName;
 }
 
-
+/**
+ * @param {string} html
+ * @param node
+ * @return {number}
+ */
 function getLine(html, node) {
     if (!node) {
         return 0;
@@ -360,5 +364,6 @@ function convertTemplateToReact(html, options) {
 
 module.exports = {
     convertTemplateToReact: convertTemplateToReact,
+    RTCodeError: RTCodeError,
     _test: {}
 };

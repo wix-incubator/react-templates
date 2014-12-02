@@ -9,6 +9,36 @@ var cheerio = require('cheerio');
 
 var dataPath = path.resolve(__dirname, '..', 'data');
 
+test('invalid tests', function (t) {
+    var files = [
+        {file: 'invalid-scope.rt', issue: new reactTemplates.RTCodeError('invalid scope part \'a in a in a\'', 14, 1)}
+    ];
+    t.plan(files.length);
+
+    files.forEach(check);
+
+    function check(testFile) {
+        var filename = path.join(dataPath, testFile.file);
+        var html = fs.readFileSync(filename).toString();
+        var error = null;
+        try {
+            reactTemplates.convertTemplateToReact(html);
+        } catch (e) {
+            error = e;
+        }
+        t.deepEqual(errorEqual(error), errorEqual(testFile.issue), 'Expect convertTemplateToReact to throw an error');
+    }
+});
+
+function errorEqual(err) {
+    return {
+        index: err.index,
+        line: err.line,
+        message: err.message,
+        name: err.name
+    };
+}
+
 test('conversion test', function (t) {
     var files = ['div.rt', 'test.rt', 'repeat.rt'];
     t.plan(files.length);
@@ -36,7 +66,7 @@ function normalizeHtml(html) {
 }
 
 test('html tests', function (t) {
-    var files = ['scope.rt', 'lambda.rt','eval.rt', 'props.rt'];
+    var files = ['scope.rt', 'lambda.rt', 'eval.rt', 'props.rt'];
     t.plan(files.length);
 
     files.forEach(check);
@@ -49,10 +79,10 @@ test('html tests', function (t) {
         var code = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '');
         var defineMap = {react: React, lodash: _};
         var define = function (requirementsNames, content) {
-            var requirements = _.map(requirementsNames,function (reqName) {
+            var requirements = _.map(requirementsNames, function (reqName) {
                 return defineMap[reqName];
             });
-            return content.apply(this,requirements);
+            return content.apply(this, requirements);
         };
         var comp = React.createFactory(React.createClass({
             render: eval(code)

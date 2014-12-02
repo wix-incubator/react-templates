@@ -29,17 +29,22 @@ module.exports = function (warnings, config) {
         return n === 1 ? single : plural;
     }
 
-//                    context.report(JSON.stringify(warnings, undefined, 2));
+    function lineText(line) {
+        return line < 1 ? '' : line;
+    }
+
+    // context.report(JSON.stringify(warnings, undefined, 2));
     var output = table(
         warnings.map(function (message) {
             return [
                 '',
-//                                message.line || 0,
-//                                message.column || 0,
+                message.file,
+                lineText(message.line || 0),
+                lineText(message.column || 0),
                 getMessageType(message),
-//                            message.message.replace(/\.$/, ""),
+                // message.message.replace(/\.$/, ""),
                 message.msg
-//                            chalk.gray(message.ruleId)
+                // chalk.gray(message.ruleId)
             ];
         }),
         {
