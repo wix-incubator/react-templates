@@ -13,10 +13,6 @@ var res = reactTemplates.convertTemplateToReact(html.trim());
 var Playground = require('./playground.js');
 window.playground = React.render(Playground({"direction":'vertical'}), document.getElementById('playground'));
 
-//var Examples = require('./examples.js');
-//React.render(Examples(), document.getElementById('home-section'));
-
-
 /*
 function generateRandomId() {
     var d = new Date().getTime();

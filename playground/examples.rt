@@ -25,6 +25,7 @@
             updated by re-invoking <code>render()</code>.
         </p>
         <div id="timerExample"></div>
+        <playground direction="horizontal" style="display: block"></playground>
     </div>
     <div class="example">
         <h3>An Application</h3>
@@ -36,6 +37,7 @@
             delegation.
         </p>
         <div id="todoExample"></div>
+        <playground direction="horizontal" style="display: block"></playground>
     </div>
     <div class="example">
         <h3>A Component Using External Plugins</h3>
@@ -45,5 +47,6 @@
             Markdown library, to convert the textarea&#39;s value in real-time.
         </p>
         <div id="markdownExample"></div>
+        <playground direction="horizontal" style="display: block"></playground>
     </div>
 </div>
