@@ -10,7 +10,9 @@ module.exports = function (grunt) {
             all: {
                 src: [
                     'src/**/*.js', 'playground/**/*.js',
-                    '!playground/main.browser.js'
+                    '!playground/main.browser.js',
+                    '!playground/bundle/**',
+                    '!playground/**/*.rt.js'
                 ]
             },
             teamcity: {
@@ -33,10 +35,7 @@ module.exports = function (grunt) {
             grunt: ['conf/tasks/test']
         },
         browserify: {
-            dist: {
-                files: {
-                    'web/bundle.js': ['web/browser.js']
-                }
+            options: {
             },
             pg: {
                 files: {
@@ -44,7 +43,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-
         node_tap: {
             default_options: {
                 options: {
@@ -52,22 +50,52 @@ module.exports = function (grunt) {
                     outputTo: 'console'
                 },
                 files: {
-                    'tests': ['./test/src/*.js']
+                    tests: ['./test/src/*.js']
+                }
+            }
+        },
+        watch: {
+            rt: {
+                files: [
+                    'playground/**/*.rt'
+                ],
+                tasks: ['rt'],
+                options: {
+                    spawn: false
+                }
+            },
+            playground: {
+                files: [
+                    'playground/**/*.js'
+                ],
+                tasks: ['browserify:pg'],
+                options: {
+                    spawn: false
                 }
             }
         }
     });
 
     grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-eslint');
     grunt.loadNpmTasks('grunt-node-tap');
 
-    grunt.registerTask('default', ['eslint', 'build_sources', 'check', 'build']);
-    grunt.registerTask('test', ['jasmine_node']);
+    grunt.registerTask('default', ['eslint']);
+    grunt.registerTask('test', ['node_tap']);
 
-    grunt.registerTask('teamcity-check', ['eslint:teamcity'/*, 'scsslint'*/]);
-    grunt.registerTask('teamcity', ['build_sources', 'teamcity-check', 'packages:teamcity', 'static-upload-to-s3']);
-    grunt.registerTask('teamcity-test', ['jasmine_node', 'karma:teamcity', 'cssTest']);
+    grunt.registerTask('teamcity', ['eslint:teamcity']);
 
-    grunt.registerTask('all', ['install', 'default', 'test']);
+    grunt.registerTask('rt', function () {
+        var reactTemplates = require('./src/cli');
+        var files = grunt.file.expand('playground/**/*.rt');
+        var conf = {commonJS: true, force: true};
+        conf._ = files;
+        var ret = reactTemplates.executeOptions(conf);
+        return ret === 0;
+    });
+
+    grunt.registerTask('build', ['rt', 'browserify:pg']);
+
+    grunt.registerTask('all', ['default', 'test']);
 };
