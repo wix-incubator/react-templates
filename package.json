@@ -36,7 +36,7 @@
     "grunt": "^0.4.5",
     "grunt-browserify": "^3.2.0",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-eslint": "^2.0.0",
+    "grunt-eslint": "^2.1.0",
     "grunt-node-tap": "^0.1.61",
     "tape": "^3.0.2"
   }

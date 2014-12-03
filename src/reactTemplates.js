@@ -64,8 +64,8 @@ function convertText(node, context, txt) {
         if (curlyCounter !== 0) {
             throw buildError("Failed to parse text '" + txt + "'", context, node);
         } else {
-            var needsParens = start !== 0 || end !== txt.length -1;
-            res += (first ? '' : '+') + (needsParens?'(':'')+txt.substr(start + 1, end - start - 2)+(needsParens?')':'');
+            var needsParens = start !== 0 || end !== txt.length - 1;
+            res += (first ? '' : '+') + (needsParens ? '(' : '') + txt.substr(start + 1, end - start - 2) + (needsParens ? ')' : '');
             first = false;
             txt = txt.substr(end);
         }
@@ -332,7 +332,7 @@ function extractDefinesFromJSXTag(html, defines) {
 function convertTemplateToReact(html, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = options || {};
-    var defines = {"react/addons": 'React', lodash: '_'};
+    var defines = {'react/addons': 'React', lodash: '_'};
     html = extractDefinesFromJSXTag(html, defines);
     var context = defaultContext();
     context.html = html;

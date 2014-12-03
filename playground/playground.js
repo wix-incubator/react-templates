@@ -22,12 +22,12 @@ function generateTemplateSource(html) {
 
 function generateTemplateFunction(code) {
     try {
-        var defineMap = {"react/addons": React, lodash: _};
+        var defineMap = {'react/addons': React, lodash: _};
         var define = function (requirementsNames, content) {
-            var requirements = _.map(requirementsNames,function (reqName) {
+            var requirements = _.map(requirementsNames, function (reqName) {
                 return defineMap[reqName];
             });
-            return content.apply(this,requirements);
+            return content.apply(this, requirements);
         };
         /*eslint no-eval:0*/
         var res = eval(code);

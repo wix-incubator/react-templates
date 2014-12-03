@@ -1,6 +1,7 @@
 /**
  * Created by avim on 12/2/2014.
  */
+'use strict';
 var React = require('react/addons');
 var _ = require('lodash');
 var fiddleTemplate = require('./fiddle.rt.js');
@@ -11,10 +12,10 @@ function generateRandomId() {
         return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
     return uuid;
-};
+}
 
 var Fiddle = React.createClass({
-    displayName: "Fiddle",
+    displayName: 'Fiddle',
     componentDidMount: function () {
         if (window.location.hash) {
             var newHash = window.location.hash.replace("#", "");
@@ -37,7 +38,7 @@ var Fiddle = React.createClass({
         var firebase = new Firebase('https://reacttemplates.firebaseio-demo.com/');
         firebase.child("fiddles").child(newHash).set(playgroundState, function () {
             Firebase.goOffline();
-            alert("saved the fiddle, you can share your url")
+            alert("saved the fiddle, you can share your url");
         }.bind(this));
 
     },
