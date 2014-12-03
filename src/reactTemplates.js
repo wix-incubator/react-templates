@@ -332,7 +332,7 @@ function extractDefinesFromJSXTag(html, defines) {
 function convertTemplateToReact(html, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = options || {};
-    var defines = {'react/addons': 'React', lodash: '_'};
+    var defines = {'react': 'React', lodash: '_'};
     html = extractDefinesFromJSXTag(html, defines);
     var context = defaultContext();
     context.html = html;
