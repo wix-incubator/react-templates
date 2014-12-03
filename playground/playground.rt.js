@@ -1,4 +1,4 @@
-var React = require('react');
+var React = require('react/addons');
 var _ = require('lodash');
 var CodeEditor = require('./aceEditor');
 'use strict';

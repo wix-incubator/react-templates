@@ -85,6 +85,7 @@ test('html tests', function (t) {
             return content.apply(this, requirements);
         };
         var comp = React.createFactory(React.createClass({
+            /* eslint no-eval:0 */
             render: eval(code)
         }));
         var actual = React.renderToStaticMarkup(comp());

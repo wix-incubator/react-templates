@@ -1,6 +1,6 @@
 /*eslint new-cap:0,no-unused-vars:0*/
 define([
-    'react',
+    'react/addons',
     'lodash'
 ], function (React, _) {
     'use strict';
