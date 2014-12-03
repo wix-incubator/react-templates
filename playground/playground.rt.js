@@ -13,7 +13,7 @@ function onSubmit3(e) {
 }
 module.exports = function () {
     return React.DOM.div({}, React.DOM.div({
-        'id': 'myTab',
+        'id': this.props.id + '-myTab',
         'role': 'tabpanel',
         'className': 'code-area ' + (this.props.direction === 'horizontal' && 'horizontal' || 'vertical')
     }    /*  Nav tabs  */, React.DOM.ul({
@@ -23,44 +23,44 @@ module.exports = function () {
         'role': 'presentation',
         'className': 'active'
     }, React.DOM.a({
-        'href': '#template',
+        'href': '#' + this.props.id + '-template',
         'aria-controls': 'template',
         'role': 'tab',
         'data-toggle': 'tab'
-    }, 'Template')), React.DOM.li({ 'role': 'presentation' }, React.DOM.a({
-        'href': '#classCode',
+    }, 'Template')), this.state.templateProps != '{}' ? React.DOM.li({ 'role': 'presentation' }, React.DOM.a({
+        'href': '#' + this.props.id + '-classCode',
         'aria-controls': 'classCode',
         'role': 'tab',
         'data-toggle': 'tab'
-    }, 'Class')), React.DOM.li({ 'role': 'presentation' }, React.DOM.a({
-        'href': '#generatedCode',
+    }, 'Class')) : null, React.DOM.li({ 'role': 'presentation' }, React.DOM.a({
+        'href': '#' + this.props.id + '-generatedCode',
         'aria-controls': 'generatedCode',
         'role': 'tab',
         'data-toggle': 'tab'
     }, 'Generated code')))    /*  Tab panes  */, React.DOM.div({ 'className': 'tab-content' }, React.DOM.div({
         'role': 'tabpanel',
         'className': 'tab-pane active',
-        'id': 'template'
+        'id': this.props.id + '-template'
     }, CodeEditor({
         'className': 'large-text-area',
         'style': { border: this.validHTML ? '1px solid black' : '2px solid red' },
         'value': this.state.templateHTML,
         'mode': 'html',
         'onChange': onChange1.bind(this)
-    })), React.DOM.div({
+    })), this.state.templateProps != '{}' ? React.DOM.div({
         'role': 'tabpanel',
         'className': 'tab-pane',
-        'id': 'classCode'
+        'id': this.props.id + '-classCode'
     }, CodeEditor({
         'className': 'large-text-area',
         'style': { border: this.validProps ? '1px solid black' : '2px solid red' },
         'value': this.state.templateProps,
         'mode': 'javascript',
         'onChange': onChange2.bind(this)
-    })), React.DOM.div({
+    })) : null, React.DOM.div({
         'role': 'tabpanel',
         'className': 'tab-pane',
-        'id': 'generatedCode'
+        'id': this.props.id + '-generatedCode'
     }, CodeEditor({
         'className': 'large-text-area',
         'style': { border: '1px solid black' },

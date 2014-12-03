@@ -1,29 +1,29 @@
 <!DOCTYPE rt CodeEditor="./aceEditor">
 <div>
-    <div id="myTab" role="tabpanel" class="code-area {(this.props.direction === 'horizontal' && 'horizontal') ||'vertical'}">
+    <div id="{this.props.id}-myTab" role="tabpanel" class="code-area {(this.props.direction === 'horizontal' && 'horizontal') ||'vertical'}">
         <!-- Nav tabs -->
         <ul class="nav nav-pills" role="tablist">
-            <li role="presentation" class="active"><a href="#template" aria-controls="template" role="tab" data-toggle="tab">Template</a></li>
-            <li role="presentation"><a href="#classCode" aria-controls="classCode" role="tab" data-toggle="tab">Class</a></li>
-            <li role="presentation"><a href="#generatedCode" aria-controls="generatedCode" role="tab" data-toggle="tab">Generated code</a></li>
+            <li role="presentation" class="active"><a href="#{this.props.id}-template" aria-controls="template" role="tab" data-toggle="tab">Template</a></li>
+            <li rt-if="this.state.templateProps != '{}'" role="presentation"><a href="#{this.props.id}-classCode" aria-controls="classCode" role="tab" data-toggle="tab">Class</a></li>
+            <li role="presentation"><a href="#{this.props.id}-generatedCode" aria-controls="generatedCode" role="tab" data-toggle="tab">Generated code</a></li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="template">
+            <div role="tabpanel" class="tab-pane active" id="{this.props.id}-template">
                 <CodeEditor class="large-text-area" style="border: {this.validHTML? '1px solid black':'2px solid red'};"
                             value="{this.state.templateHTML}"
                             mode="html"
                             onChange="(evt) => this.setState({'templateHTML':evt.target.value})"
                         />
             </div>
-            <div role="tabpanel" class="tab-pane" id="classCode">
+            <div rt-if="this.state.templateProps != '{}'" role="tabpanel" class="tab-pane" id="{this.props.id}-classCode">
                 <CodeEditor class="large-text-area" style="border: {this.validProps? '1px solid black':'2px solid red'};"
                             value="{this.state.templateProps}"
                             mode="javascript"
                             onChange="(evt) => this.setState({'templateProps':evt.target.value})"
                         />
             </div>
-            <div role="tabpanel" class="tab-pane" id="generatedCode">
+            <div role="tabpanel" class="tab-pane" id="{this.props.id}-generatedCode">
                 <CodeEditor class="large-text-area" style="border:1px solid black;"
                             value="{this.templateSource}"
                             mode="javascript"

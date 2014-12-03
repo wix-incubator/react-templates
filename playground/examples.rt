@@ -1,20 +1,11 @@
 <!doctype rt playground="./playground">
 <div id="examples">
     <div class="example">
-        <h3>A Simple Component</h3>
+        <h3>Hello world in react templates</h3>
         <p>
-            React components implement a <code>render()</code> method that takes input data and
-            returns what to display. This example uses an XML-like syntax called
-            JSX. Input data that is passed into the component can be accessed by
-            <code>render()</code> via <code>this.props</code>.
+            Simple hello world html transformed into react javascript code
         </p>
-        <p>
-            <strong>JSX is optional and not required to use React.</strong> Try
-                                                                            clicking on &quot;Compiled JS&quot; to see the raw JavaScript code produced by
-                                                                            the JSX compiler.
-        </p>
-        <div id="helloExample"></div>
-        <playground direction="horizontal" style="display: block"></playground>
+        <playground id="helloExample" rt-props="this.state.samples[0]" direction="horizontal" style="display: block"></playground>
     </div>
     <div class="example">
         <h3>A Stateful Component</h3>
@@ -25,7 +16,7 @@
             updated by re-invoking <code>render()</code>.
         </p>
         <div id="timerExample"></div>
-        <playground direction="horizontal" style="display: block"></playground>
+        <playground id="example2" rt-props="this.state.samples[1]" direction="horizontal" style="display: block"></playground>
     </div>
     <div class="example">
         <h3>An Application</h3>
@@ -37,7 +28,7 @@
             delegation.
         </p>
         <div id="todoExample"></div>
-        <playground direction="horizontal" style="display: block"></playground>
+        <playground id="example3" direction="horizontal" style="display: block"></playground>
     </div>
     <div class="example">
         <h3>A Component Using External Plugins</h3>
@@ -47,6 +38,6 @@
             Markdown library, to convert the textarea&#39;s value in real-time.
         </p>
         <div id="markdownExample"></div>
-        <playground direction="horizontal" style="display: block"></playground>
+        <playground id="example4" direction="horizontal" style="display: block"></playground>
     </div>
 </div>

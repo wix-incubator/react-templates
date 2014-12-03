@@ -11,7 +11,9 @@ module.exports = function (grunt) {
                 src: [
                     'src/**/*.js', 'playground/**/*.js',
                     '!playground/main.browser.js',
+                    '!playground/home-main.browser.js',
                     '!playground/bundle/**',
+                    '!playground/tmp/**',
                     '!playground/**/*.rt.js'
                 ]
             },
@@ -79,9 +81,7 @@ module.exports = function (grunt) {
                 },
                 options: {
                     transform: ['brfs'],
-                    alias: [
-                        'react:react/addons'
-                    ]
+                    alias: ['react:react/addons']
 //                    exclude:['react','react/addons','../src/reactTemplates','lodash','brace','brace/mode/javascript','brace/mode/html','brace/theme/solarized_light'],
 //                    external: [
 //                        'react/addons',
@@ -89,7 +89,15 @@ module.exports = function (grunt) {
 //                        'lodash',
 //                        'brace'
 //                    ]
-
+                }
+            },
+            home: {
+                files: {
+                    'playground/home-main.browser.js': ['playground/home-main.js']
+                },
+                options: {
+                    transform: ['brfs'],
+                    alias: ['react:react/addons']
                 }
             }
         },
@@ -116,9 +124,9 @@ module.exports = function (grunt) {
             },
             playground: {
                 files: [
-                    'playground/**/*.js'
+                    'playground/**/*.js', '!playground/*.browser.js'
                 ],
-                tasks: ['browserify:pg'],
+                tasks: ['browserify:home'], /*'browserify:pg', */
                 options: {
                     spawn: false
                 }

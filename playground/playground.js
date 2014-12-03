@@ -71,7 +71,14 @@ var Playground = React.createClass({
 
     displayName: 'Playground',
     mixins: [React.addons.LinkedStateMixin],
-
+    propTypes: {
+        direction: React.PropTypes.string
+    },
+    getDefaultProps: function() {
+        return {
+            direction: 'horizontal' //vertical
+        };
+    },
     updateSample: function (state) {
         this.templateSource = generateTemplateSource(state.templateHTML);
         this.sampleFunc = generateTemplateFunction(this.templateSource);
@@ -92,7 +99,6 @@ var Playground = React.createClass({
         classBase.render = this.sampleRender;
         this.sample = React.createFactory(React.createClass(classBase));
     },
-
     getInitialState: function () {
         var currentState = {
             templateHTML: this.props.templateHTML || templateHTML,
