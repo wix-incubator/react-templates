@@ -6,6 +6,9 @@ var React = require('react/addons');
 var _ = require('lodash');
 var fiddleTemplate = require('./fiddle.rt.js');
 
+/*global Firebase:true,alert:true*/
+/*eslint no-alert:0*/
+
 function generateRandomId() {
     var uuid = 'xxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = _.random(0, 15);
@@ -18,9 +21,9 @@ var Fiddle = React.createClass({
     displayName: 'Fiddle',
     componentDidMount: function () {
         if (window.location.hash) {
-            var newHash = window.location.hash.replace("#", "");
+            var newHash = window.location.hash.replace('#', '');
             var firebase = new Firebase('https://reacttemplates.firebaseio-demo.com/');
-            firebase.child("fiddles").child(newHash).on('value', function (snapshot) {
+            firebase.child('fiddles').child(newHash).on('value', function (snapshot) {
                 this.refs.playground.setState(snapshot.val());
                 Firebase.goOffline();
             }.bind(this));
@@ -36,9 +39,9 @@ var Fiddle = React.createClass({
 
         var playgroundState = this.refs.playground.state;
         var firebase = new Firebase('https://reacttemplates.firebaseio-demo.com/');
-        firebase.child("fiddles").child(newHash).set(playgroundState, function () {
+        firebase.child('fiddles').child(newHash).set(playgroundState, function () {
             Firebase.goOffline();
-            alert("saved the fiddle, you can share your url");
+            alert('saved the fiddle, you can share your url');
         }.bind(this));
 
     },
