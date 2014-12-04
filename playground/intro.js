@@ -5,9 +5,10 @@
 var React = require('react/addons');
 var _ = require('lodash');
 var introTemplate = require('./intro.rt.js');
-var path = require('path');
+//var path = require('path');
 var fs = require('fs');
 
+/*eslint no-path-concat:0*/
 var helloCode = fs.readFileSync(__dirname + '/samples/hello.code').toString();
 var helloRT = fs.readFileSync(__dirname + '/samples/hello.rt').toString();
 var todoCode = fs.readFileSync(__dirname + '/samples/todo.code').toString();

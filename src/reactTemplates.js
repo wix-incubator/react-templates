@@ -30,11 +30,11 @@ var propsProp = 'rt-props';
 var defaultOptions = {commonJS: false, version: false, force: false, format: 'stylish', targetVersion: '0.12.1'};
 
 function shouldUseCreateElement(context) {
-    switch(context.options.targetVersion) {
-        case "0.11.2":
-        case "0.11.1":
-        case "0.11.0":
-        case "0.10.0":
+    switch (context.options.targetVersion) {
+        case '0.11.2':
+        case '0.11.1':
+        case '0.11.0':
+        case '0.10.0':
             return false;
         default:
             return true;
@@ -150,6 +150,7 @@ function getLine(html, node) {
 //RTCodeError.prototype = Error.prototype;
 
 // Redefine properties on Error to be enumerable
+/*eslint no-extend-native:0*/
 Object.defineProperty(Error.prototype, 'message', { configurable: true, enumerable: true });
 Object.defineProperty(Error.prototype, 'stack', { configurable: true, enumerable: true });
 //Object.defineProperty(Error.prototype, 'line', { configurable: true, enumerable: true });
@@ -229,12 +230,12 @@ function generateProps(node, context) {
 function convertTagNameToConstructor(tagName, context) {
     var isHtmlTag = _.contains(reactDOMSupport[context.options.targetVersion], tagName);
     if (shouldUseCreateElement(context)) {
-        return isHtmlTag ? "'"+tagName + "'": tagName;
+        return isHtmlTag ? "'" + tagName + "'" : tagName;
     }
     return isHtmlTag ? 'React.DOM.' + tagName : tagName;
 }
 
-function defaultContext(html,options) {
+function defaultContext(html, options) {
     return {
         boundParams: [],
         injectedFunctions: [],
@@ -299,9 +300,9 @@ function convertHtmlToReact(node, context) {
         }));
 
         if (hasNonSimpleChildren(node)) {
-            data.body = shouldUseCreateElement(context)?tagTemplateCreateElement(data):tagTemplate(data);
+            data.body = shouldUseCreateElement(context) ? tagTemplateCreateElement(data) : tagTemplate(data);
         } else {
-            data.body = shouldUseCreateElement(context)?simpleTagTemplateCreateElement(data):simpleTagTemplate(data);
+            data.body = shouldUseCreateElement(context) ? simpleTagTemplateCreateElement(data) : simpleTagTemplate(data);
         }
 
         if (node.attribs[templateProp]) {
@@ -353,7 +354,7 @@ function extractDefinesFromJSXTag(html, defines) {
  */
 function convertTemplateToReact(html, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
-    options = _.defaults({},options,defaultOptions);
+    options = _.defaults({}, options, defaultOptions);
     var defines = {'react/addons': 'React', lodash: '_'};
     html = extractDefinesFromJSXTag(html, defines);
     var context = defaultContext(html, options);
