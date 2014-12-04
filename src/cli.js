@@ -10,84 +10,35 @@ var api = require('./api');
 var context = require('./context');
 var shell = require('./shell');
 var pkg = require('../package.json');
-var options = {commonJS: false, force: false, json: false};
-
-//if (process.argv.length > 2) {
-//    var files = [];
-//    _.forEach(process.argv.slice(2),function (param) {
-//        if (param === '-v' || param === '--version') {
-//            console.log(pkg.version);
-//        } else if (param === '-h' || param === '--help') {
-//            printHelp();
-//        } else if (param === '-c' || param === '--common') {
-//            options.commonJS = true;
-//        } else if (param === '-f' || param === '--force') {
-//            options.force = true;
-//        } else if (param === '-j' || param === '--json') { // TODO use optionator
-//            context.options.format = 'json';
-//        } else if (param !== '--no-color') {
-//            files.push(param);
-//        }
-//    });
-//    _.forEach(files, handleSingleFile);
-//    shell.printResults(context);
-//} else {
-//    printHelp();
-//}
-
-function parseOptions(args) {
-    var parsedOptions = {_: [], version: false, commonJS: false, force: false, format: 'stylish'};
-    _.forEach(args, function (param) {
-        if (param === '-v' || param === '--version') {
-            parsedOptions.version = true;
-        } else if (param === '-h' || param === '--help') {
-            printHelp();
-        } else if (param === '-c' || param === '--common') {
-            parsedOptions.commonJS = true;
-        } else if (param === '-f' || param === '--force') {
-            parsedOptions.force = true;
-        } else if (param === '-j' || param === '--json') { // TODO use optionator
-            parsedOptions.format = 'json';
-            context.options.format = 'json';
-        } else if (param !== '--no-color') {
-            parsedOptions._.push(param);
-        }
-    });
-    return parsedOptions;
-}
+//var defaultOptions = {commonJS: false, force: false, json: false};
+var options = require('./options');
 
 function executeOptions(currentOptions) {
     var ret = 0;
-    if (currentOptions.help) {
-        printHelp();
-    } else if (currentOptions.version) {
-        console.log(pkg.version);
+    var files = currentOptions._;
+    if (currentOptions.version) {
+        console.log('v' + pkg.version);
+    } else if (currentOptions.help) {
+        if  (files.length) {
+            console.log(options.generateHelpForOption(files[0]));
+        } else {
+            console.log(options.generateHelp());
+        }
+    } else if (!files.length) {
+        console.log(options.generateHelp());
     } else {
-        _.forEach(currentOptions._, function (f) {
-            handleSingleFile(f, currentOptions);
-        });
+        context.options.format = currentOptions.format;
+        _.forEach(files, handleSingleFile.bind(this, currentOptions));
         ret = shell.printResults(context);
     }
     return ret;
 }
 
-function printHelp() {
-    console.log(pkg.name + ' ' + pkg.version);
-    console.log(pkg.description);
-    console.log('');
-    console.log('Usage:');
-    console.log('  $ rt <filename>[,<filename>] [<args>]');
-    console.log('');
-    console.log('Options:');
-    console.log('  -v, --version        Outputs the version number.');
-    console.log('  -h, --help           Show help.');
-    console.log('  -j, --json           Report output format. [stylish,json]');
-//    console.log('  -ft, --format        Report output format. [stylish,json]');
-    console.log('  --common             Use Common JS output. default: false');
-    console.log('  -f --force           Force creation of output. default: false');
-}
-
-function handleSingleFile(filename, currentOptions) {
+/**
+ * @param {*} currentOptions
+ * @param {string} filename file name to process
+ */
+function handleSingleFile(currentOptions, filename) {
     if (path.extname(filename) !== '.rt') {
         context.error('invalid file, only handle rt files', filename);
         return;// only handle html files
@@ -103,13 +54,13 @@ function handleSingleFile(filename, currentOptions) {
         api.convertFile(filename, filename + '.js', currentOptions, context);
     } catch (e) {
         context.error(e.message, filename, e.line || -1, -1, e.index || -1);
-//        if (options.json) {
+//        if (defaultOptions.json) {
 //            context.error(e.message, filename, e.line || -1, -1, e.index || -1);
 //            console.log(JSON.stringify(context.getMessages(), undefined, 2));
 //        } else {
 //            console.log('Error processing file: ' + filename + ', ' + e.message + ' line: ' + e.line || -1);
 //        }
-        // if (options.stack)
+        // if (defaultOptions.stack)
         // console.log(e.stack);
     }
 }
@@ -120,12 +71,15 @@ function handleSingleFile(filename, currentOptions) {
  * @returns {int} The exit code for the operation.
  */
 function execute(args) {
-    if (args.length > 2) {
-        var opts = parseOptions(args.slice(2));
-        return executeOptions(opts);
+    var currentOptions;
+    try {
+        currentOptions = options.parse(args);
+    } catch (error) {
+        console.error(error.message);
+        return 1;
     }
-    printHelp();
-    return 0;
+    console.log(currentOptions);
+    return executeOptions(currentOptions);
 }
 
 module.exports = {execute: execute, executeOptions: executeOptions};

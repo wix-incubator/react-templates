@@ -38,12 +38,12 @@ module.exports = function (warnings, config) {
         warnings.map(function (message) {
             return [
                 '',
-                message.file,
+                message.file || '',
                 lineText(message.line || 0),
                 lineText(message.column || 0),
                 getMessageType(message),
                 // message.message.replace(/\.$/, ""),
-                message.msg
+                message.msg || ''
                 // chalk.gray(message.ruleId)
             ];
         }),
@@ -58,18 +58,18 @@ module.exports = function (warnings, config) {
 
     var buf = [];
 
-    buf.push(output + '\n');
+    buf.push(output);
 
     var grouped = _.groupBy(warnings, 'level');
 
     var errCount = grouped.ERROR ? grouped.ERROR.length : 0;
     var warnCount = grouped.WARN ? grouped.WARN.length : 0;
-    var infoCount = grouped.INFO ? grouped.INFO.length : 0;
+    //var infoCount = grouped.INFO ? grouped.INFO.length : 0;
 
 //    buf.push(errCount + ' ' + warnCount + ' ' + infoCount + '\n');
 
     if (errCount === 0 && warnCount === 0) {
-        buf.push('React templates done\n');
+        buf.push(chalk.green('React templates done'));
     } else {
         var msg = [];
         if (errCount > 0) {
@@ -77,11 +77,11 @@ module.exports = function (warnings, config) {
         } else {
             msg.push(warnCount + ' ' + pluralize(warnCount, 'warning', 'warnings'));
         }
-        buf.push(chalk.red.bold(UNICODE_HEAVY_MULTIPLICATION_X + ' ' + msg.join(', ')) + '\n');
+        buf.push(chalk.red.bold(UNICODE_HEAVY_MULTIPLICATION_X + ' ' + msg.join(', ')));
         if (errCount > 0) {
-            buf.push('React templates failed due to errors\n');
+            buf.push(chalk.red('React templates failed due to errors'));
         } else {
-            buf.push('React templates done with warnings\n');
+            buf.push(chalk.yellow('React templates done with warnings'));
         }
     }
 
@@ -92,5 +92,5 @@ module.exports = function (warnings, config) {
 //        buf.push(chalk.red.bold(UNICODE_HEAVY_MULTIPLICATION_X + ' ' + warnings.length + ' ' + pluralize(warnings.length, 'problem', 'problems')) + '\n');
 //        buf.push('React templates done with warnings\n');
 //    }
-    return buf.join('');
+    return buf.join('\n');
 };

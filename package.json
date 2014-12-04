@@ -28,6 +28,7 @@
     "escodegen": "^1.4.1",
     "esprima": "^1.2.2",
     "lodash": "^2.4.1",
+    "optionator": "^0.4.0",
     "text-table": "^0.2.0"
   },
   "devDependencies": {
