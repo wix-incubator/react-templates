@@ -5,6 +5,6 @@ define([
 ], function (React, _) {
     'use strict';
     return function () {
-        return React.DOM.div({});
+        return React.createElement('div', {});
     };
 });

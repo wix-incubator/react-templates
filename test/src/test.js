@@ -4,7 +4,7 @@ var reactTemplates = require('../../src/reactTemplates');
 var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
-var React = require('react');
+var React = require('react/addons');
 var cheerio = require('cheerio');
 
 var dataPath = path.resolve(__dirname, '..', 'data');
@@ -19,7 +19,7 @@ test('invalid tests', function (t) {
 
     function check(testFile) {
         var filename = path.join(dataPath, testFile.file);
-        var html = fs.readFileSync(filename).toString();
+        var html = fs.readFileSync(filename).toString().replace(/\r/g, '').trim();
         var error = null;
         try {
             reactTemplates.convertTemplateToReact(html);
@@ -47,7 +47,7 @@ test('conversion test', function (t) {
 
     function check(testFile) {
         var filename = path.join(dataPath, testFile);
-        var html = fs.readFileSync(filename).toString();
+        var html = fs.readFileSync(filename).toString().replace(/\r/g, '').trim();
         var expected = fs.readFileSync(filename + '.js').toString().replace(/\r/g, '').trim();
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
         var actual = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '').trim();
@@ -77,7 +77,7 @@ test('html tests', function (t) {
         var expected = fs.readFileSync(filename + '.html').toString().replace(/\r/g, '');
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
         var code = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '');
-        var defineMap = {react: React, lodash: _};
+        var defineMap = {"react/addons": React, lodash: _};
         var define = function (requirementsNames, content) {
             var requirements = _.map(requirementsNames, function (reqName) {
                 return defineMap[reqName];

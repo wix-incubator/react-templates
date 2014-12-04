@@ -6,7 +6,7 @@ var cheerio = require('cheerio');
 var _ = require('lodash');
 var esprima = require('esprima');
 var escodegen = require('escodegen');
-var React = require('react/addons');
+var reactDOMSupport = require('./reactDOMSupport');
 var stringUtils = require('./stringUtils');
 
 var repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
@@ -15,6 +15,8 @@ var propsTemplate = _.template('_.merge({}, <%= generatedProps %>, <%= rtProps %
 var classSetTemplate = _.template('React.addons.classSet(<%= classSet %>)');
 var simpleTagTemplate = _.template('<%= name %>(<%= props %><%= children %>)');
 var tagTemplate = _.template('<%= name %>.apply(this,_.flatten([<%= props %><%= children %>]))');
+var simpleTagTemplateCreateElement = _.template('React.createElement(<%= name %>,<%= props %><%= children %>)');
+var tagTemplateCreateElement = _.template('React.createElement.apply(this,_.flatten([<%= name %>,<%= props %><%= children %>]))');
 var commentTemplate = _.template(' /* <%= data %> */ ');
 var templateAMDTemplate = _.template("/*eslint new-cap:0,no-unused-vars:0*/\ndefine([<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
 var templateCommonJSTemplate = _.template("<%= vars %>\n\n'use strict';\n <%= injectedFunctions %>\nmodule.exports = function(){ return <%= body %>};\n");
@@ -24,6 +26,20 @@ var ifProp = 'rt-if';
 var classSetProp = 'rt-class';
 var scopeProp = 'rt-scope';
 var propsProp = 'rt-props';
+
+var defaultOptions = {commonJS: false, version: false, force: false, format: 'stylish', targetVersion: '0.12.1'};
+
+function shouldUseCreateElement(context) {
+    switch(context.options.targetVersion) {
+        case "0.11.2":
+        case "0.11.1":
+        case "0.11.0":
+        case "0.10.0":
+            return false;
+        default:
+            return true;
+    }
+}
 
 var reactSupportedAttributes = ['accept', 'acceptCharset', 'accessKey', 'action', 'allowFullScreen', 'allowTransparency', 'alt', 'async', 'autoComplete', 'autoPlay', 'cellPadding', 'cellSpacing', 'charSet', 'checked', 'classID', 'className', 'cols', 'colSpan', 'content', 'contentEditable', 'contextMenu', 'controls', 'coords', 'crossOrigin', 'data', 'dateTime', 'defer', 'dir', 'disabled', 'download', 'draggable', 'encType', 'form', 'formNoValidate', 'frameBorder', 'height', 'hidden', 'href', 'hrefLang', 'htmlFor', 'httpEquiv', 'icon', 'id', 'label', 'lang', 'list', 'loop', 'manifest', 'max', 'maxLength', 'media', 'mediaGroup', 'method', 'min', 'multiple', 'muted', 'name', 'noValidate', 'open', 'pattern', 'placeholder', 'poster', 'preload', 'radioGroup', 'readOnly', 'rel', 'required', 'role', 'rows', 'rowSpan', 'sandbox', 'scope', 'scrolling', 'seamless', 'selected', 'shape', 'size', 'sizes', 'span', 'spellCheck', 'src', 'srcDoc', 'srcSet', 'start', 'step', 'style', 'tabIndex', 'target', 'title', 'type', 'useMap', 'value', 'width', 'wmode'];
 var attributesMapping = {'class': 'className', 'rt-class': 'className'};
@@ -210,15 +226,20 @@ function generateProps(node, context) {
     }).join(',') + '}';
 }
 
-function convertTagNameToConstructor(tagName) {
-    return React.DOM.hasOwnProperty(tagName) ? 'React.DOM.' + tagName : tagName;
+function convertTagNameToConstructor(tagName, context) {
+    var isHtmlTag = _.contains(reactDOMSupport[context.options.targetVersion], tagName);
+    if (shouldUseCreateElement(context)) {
+        return isHtmlTag ? "'"+tagName + "'": tagName;
+    }
+    return isHtmlTag ? 'React.DOM.' + tagName : tagName;
 }
 
-function defaultContext() {
+function defaultContext(html,options) {
     return {
         boundParams: [],
         injectedFunctions: [],
-        html: ''
+        html: html,
+        options: options
     };
 }
 
@@ -233,10 +254,11 @@ function convertHtmlToReact(node, context) {
         context = {
             boundParams: _.clone(context.boundParams),
             injectedFunctions: context.injectedFunctions,
-            html: context.html
+            html: context.html,
+            options: context.options
         };
 
-        var data = {name: convertTagNameToConstructor(node.name)};
+        var data = {name: convertTagNameToConstructor(node.name, context)};
         if (node.attribs[scopeProp]) {
             data.scopeMapping = {};
             data.scopeName = '';
@@ -277,9 +299,9 @@ function convertHtmlToReact(node, context) {
         }));
 
         if (hasNonSimpleChildren(node)) {
-            data.body = tagTemplate(data);
+            data.body = shouldUseCreateElement(context)?tagTemplateCreateElement(data):tagTemplate(data);
         } else {
-            data.body = simpleTagTemplate(data);
+            data.body = shouldUseCreateElement(context)?simpleTagTemplateCreateElement(data):simpleTagTemplate(data);
         }
 
         if (node.attribs[templateProp]) {
@@ -331,11 +353,10 @@ function extractDefinesFromJSXTag(html, defines) {
  */
 function convertTemplateToReact(html, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
-    options = options || {};
+    options = _.defaults({},options,defaultOptions);
     var defines = {'react/addons': 'React', lodash: '_'};
     html = extractDefinesFromJSXTag(html, defines);
-    var context = defaultContext();
-    context.html = html;
+    var context = defaultContext(html, options);
     var rootTags = _.filter(rootNode.root()[0].children, function (i) { return i.type === 'tag'; });
     if (!rootTags || rootTags.length === 0) {
         throw new RTCodeError('Document should have a root element');

@@ -28,7 +28,6 @@
     "escodegen": "^1.4.1",
     "esprima": "^1.2.2",
     "lodash": "^2.4.1",
-    "react": "^0.12.0",
     "text-table": "^0.2.0"
   },
   "devDependencies": {
@@ -39,6 +38,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-eslint": "^2.1.0",
     "grunt-node-tap": "^0.1.61",
+    "react": "^0.12.0",
     "tape": "^3.0.2"
   }
 }

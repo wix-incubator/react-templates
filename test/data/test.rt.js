@@ -5,20 +5,20 @@ define([
 ], function (React, _) {
     'use strict';
     return function () {
-        return React.DOM.div({}, React.DOM.div({
+        return React.createElement('div', {}, React.createElement('div', {
             'style': {
                 position: 'relative',
                 textAlign: 'center',
                 top: this.props.config.previewTop,
                 height: this.props.config.previewHeight
             }
-        }, React.DOM.div({
+        }, React.createElement('div', {
             'style': {
                 margin: 'auto',
                 height: '100%',
                 width: this.props.config.previewWidth || '100%'
             }
-        }, React.DOM.iframe({
+        }, React.createElement('iframe', {
             'id': 'preview',
             'src': 'http://localhost/sites/412?ds=true',
             'style': {
@@ -26,6 +26,6 @@ define([
                 height: '100%',
                 border: '0'
             }
-        }))), React.DOM.div({}, 'editor\n        ', !this.props.editorState.previewMode ? React.DOM.div({}, 'left bar') : null));
+        }))), React.createElement('div', {}, 'editor\n        ', !this.props.editorState.previewMode ? React.createElement('div', {}, 'left bar') : null));
     };
 });

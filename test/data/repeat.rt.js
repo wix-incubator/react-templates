@@ -13,7 +13,7 @@ define([
         return false;
     }
     function repeatItems3(items, itemsIndex) {
-        return React.DOM.div({}, React.DOM.span({
+        return React.createElement('div', {}, React.createElement('span', {
             'style': {
                 width: 'auto',
                 lineHeight: '5px'
@@ -23,7 +23,8 @@ define([
         }, 'Mock'));
     }
     return function () {
-        return React.DOM.p.apply(this, _.flatten([
+        return React.createElement.apply(this, _.flatten([
+            'p',
             {},
             _.map(this.props.things, repeatItems3.bind(this))
         ]));
