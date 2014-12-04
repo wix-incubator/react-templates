@@ -1,0 +1,68 @@
+body {
+    /*padding: 20px;*/
+    font-family: "Helvetica", "Arial", "FreeSans", "Verdana", "Tahoma", "Lucida Sans", "Lucida Sans Unicode", "Luxi Sans", sans-serif;
+    background: #f6f6f6 url(../img/initializing.png) 50% 50% no-repeat;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    font-size: 14px;
+}
+
+#header {
+    height: 48px;
+    /*background: #4679bd;*/
+    background: #222;
+}
+
+#header-title {
+    color: #00d8ff;
+    font-size: 24px;
+    line-height: 50px;
+    height: 50px;
+    display: inline-block;
+}
+
+.hiddenTab {
+    /*width: 0;*/
+    /*height: 0;*/
+}
+
+.large-text-area {
+    height: 400px;
+    margin: 10px;
+}
+
+.result-area {
+    width: 50%;
+    float: left;
+    margin-top: 48px;
+}
+
+.sample-view {
+    margin: 10px;
+}
+
+.sample-view button {
+    margin: 5px;
+}
+
+.sample-view input[type=checkbox] {
+    margin-right: 5px;
+}
+
+.playground {
+}
+
+.code-area {
+    /*background-color: rgb(181, 181, 181);*/
+    width: 50%;
+    height: 50%;
+    /*height: 166px;*/
+    display: inline-block;
+    float: left;
+    /*margin: 2px;*/
+    /*padding: 10px;*/
+}
+
+/*position: relative; min-height: 100%;*/

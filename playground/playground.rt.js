@@ -27,7 +27,7 @@ module.exports = function () {
         'aria-controls': 'template',
         'role': 'tab',
         'data-toggle': 'tab'
-    }, 'Template')), this.state.templateProps != '{}' ? React.DOM.li({ 'role': 'presentation' }, React.DOM.a({
+    }, 'Template')), this.props.codeVisible ? React.DOM.li({ 'role': 'presentation' }, React.DOM.a({
         'href': '#' + this.props.id + '-classCode',
         'aria-controls': 'classCode',
         'role': 'tab',
@@ -47,7 +47,7 @@ module.exports = function () {
         'value': this.state.templateHTML,
         'mode': 'html',
         'onChange': onChange1.bind(this)
-    })), this.state.templateProps != '{}' ? React.DOM.div({
+    })), this.props.codeVisible ? React.DOM.div({
         'role': 'tabpanel',
         'className': 'tab-pane',
         'id': this.props.id + '-classCode'

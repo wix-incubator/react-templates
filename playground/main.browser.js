@@ -21485,38 +21485,34 @@ exports.Mode = Mode;
 });
 
 },{"../worker/javascript":7}],4:[function(require,module,exports){
-(function (global){
-module.exports = get_blob()
+module.exports = Blob
 
-function get_blob() {
-  if(global.Blob) {
-    try {
-      new Blob(['asdf'], {type: 'text/plain'})
-      return Blob
-    } catch(err) {}
+var Buffer = require('buffer').Buffer
+  , str = {}.toString.call.bind({}.toString)
+
+function Blob(parts, properties) {
+  properties = properties || {}
+  this.type = properties.type || ''
+  var size = 0
+  for(var i = 0, len = parts.length; i < len; ++i) {
+    size += typeof parts[i] === 'string' ? Buffer.byteLength(parts[i]) :
+            str(parts[i]).indexOf('ArrayBuffer') > -1 ? parts[i].byteLength :
+            parts[i].buffer ? parts[i].buffer.byteLength :
+            parts[i].length
   }
-
-  var Builder = global.WebKitBlobBuilder ||
-                global.MozBlobBuilder ||
-                global.MSBlobBuilder
-
-  return function(parts, bag) {
-    var builder = new Builder
-      , endings = bag.endings
-      , type = bag.type
-
-    if(endings) for(var i = 0, len = parts.length; i < len; ++i) {
-      builder.append(parts[i], endings)
-    } else for(var i = 0, len = parts.length; i < len; ++i) {
-      builder.append(parts[i])
-    }
-
-    return type ? builder.getBlob(type) : builder.getBlob()
-  }
+  this.size = size
 }
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],5:[function(require,module,exports){
+var cons = Blob
+  , proto = cons.prototype
+
+proto.slice = function(start, end) {
+  var b = new Blob([], {type: this.type})
+  b.size = (end || this.size) - (start || 0)
+  return b
+}
+
+},{"buffer":89}],5:[function(require,module,exports){
 ace.define("ace/theme/solarized_light",["require","exports","module","ace/lib/dom"], function(acequire, exports, module) {
 
 exports.isDark = false;
@@ -25079,7 +25075,7 @@ function renderComment(elem) {
 
 },{"domelementtype":35,"entities":36}],35:[function(require,module,exports){
 module.exports=require(33)
-},{"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\CSSselect\\node_modules\\domutils\\node_modules\\domelementtype\\index.js":33}],36:[function(require,module,exports){
+},{"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/CSSselect/node_modules/domutils/node_modules/domelementtype/index.js":33}],36:[function(require,module,exports){
 var encode = require("./lib/encode.js"),
     decode = require("./lib/decode.js");
 
@@ -26871,7 +26867,7 @@ module.exports = {
 
 },{"./CollectingHandler.js":44,"./FeedHandler.js":45,"./Parser.js":46,"./ProxyHandler.js":47,"./Stream.js":48,"./Tokenizer.js":49,"./WritableStream.js":50,"domelementtype":52,"domhandler":53,"domutils":56}],52:[function(require,module,exports){
 module.exports=require(33)
-},{"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\CSSselect\\node_modules\\domutils\\node_modules\\domelementtype\\index.js":33}],53:[function(require,module,exports){
+},{"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/CSSselect/node_modules/domutils/node_modules/domelementtype/index.js":33}],53:[function(require,module,exports){
 var ElementType = require("domelementtype");
 
 var re_whitespace = /\s+/g;
@@ -27125,7 +27121,7 @@ Object.keys(domLvl1).forEach(function(key) {
 
 },{}],56:[function(require,module,exports){
 arguments[4][26][0].apply(exports,arguments)
-},{"./lib/helpers":57,"./lib/legacy":58,"./lib/manipulation":59,"./lib/querying":60,"./lib/stringify":61,"./lib/traversal":62,"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\CSSselect\\node_modules\\domutils\\index.js":26}],57:[function(require,module,exports){
+},{"./lib/helpers":57,"./lib/legacy":58,"./lib/manipulation":59,"./lib/querying":60,"./lib/stringify":61,"./lib/traversal":62,"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/CSSselect/node_modules/domutils/index.js":26}],57:[function(require,module,exports){
 // removeSubsets
 // Given an array of nodes, remove any member that is contained by another.
 exports.removeSubsets = function(nodes) {
@@ -27270,25 +27266,25 @@ exports.uniqueSort = function(nodes) {
 
 },{}],58:[function(require,module,exports){
 module.exports=require(28)
-},{"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\CSSselect\\node_modules\\domutils\\lib\\legacy.js":28,"domelementtype":52}],59:[function(require,module,exports){
+},{"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/CSSselect/node_modules/domutils/lib/legacy.js":28,"domelementtype":52}],59:[function(require,module,exports){
 module.exports=require(29)
-},{"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\CSSselect\\node_modules\\domutils\\lib\\manipulation.js":29}],60:[function(require,module,exports){
+},{"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/CSSselect/node_modules/domutils/lib/manipulation.js":29}],60:[function(require,module,exports){
 module.exports=require(30)
-},{"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\CSSselect\\node_modules\\domutils\\lib\\querying.js":30,"domelementtype":52}],61:[function(require,module,exports){
+},{"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/CSSselect/node_modules/domutils/lib/querying.js":30,"domelementtype":52}],61:[function(require,module,exports){
 module.exports=require(31)
-},{"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\CSSselect\\node_modules\\domutils\\lib\\stringify.js":31,"domelementtype":52}],62:[function(require,module,exports){
+},{"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/CSSselect/node_modules/domutils/lib/stringify.js":31,"domelementtype":52}],62:[function(require,module,exports){
 module.exports=require(32)
-},{"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\CSSselect\\node_modules\\domutils\\lib\\traversal.js":32}],63:[function(require,module,exports){
+},{"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/CSSselect/node_modules/domutils/lib/traversal.js":32}],63:[function(require,module,exports){
 module.exports=require(38)
-},{"../maps/decode.json":64,"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\entities\\lib\\decode_codepoint.js":38}],64:[function(require,module,exports){
+},{"../maps/decode.json":64,"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/entities/lib/decode_codepoint.js":38}],64:[function(require,module,exports){
 module.exports=require(40)
-},{"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\entities\\maps\\decode.json":40}],65:[function(require,module,exports){
+},{"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/entities/maps/decode.json":40}],65:[function(require,module,exports){
 module.exports=require(41)
-},{"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\entities\\maps\\entities.json":41}],66:[function(require,module,exports){
+},{"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/entities/maps/entities.json":41}],66:[function(require,module,exports){
 module.exports=require(42)
-},{"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\entities\\maps\\legacy.json":42}],67:[function(require,module,exports){
+},{"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/entities/maps/legacy.json":42}],67:[function(require,module,exports){
 module.exports=require(43)
-},{"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\entities\\maps\\xml.json":43}],68:[function(require,module,exports){
+},{"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/entities/maps/xml.json":43}],68:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -34123,16 +34119,41 @@ module.exports={
   "scripts": {
     "test": "make test"
   },
-  "readme": "# cheerio [![Build Status](https://secure.travis-ci.org/cheeriojs/cheerio.svg?branch=master)](http://travis-ci.org/cheeriojs/cheerio)\n\nFast, flexible, and lean implementation of core jQuery designed specifically for the server.\n\n## Introduction\nTeach your server HTML.\n\n```js\nvar cheerio = require('cheerio'),\n    $ = cheerio.load('<h2 class=\"title\">Hello world</h2>');\n\n$('h2.title').text('Hello there!');\n$('h2').addClass('welcome');\n\n$.html();\n//=> <h2 class=\"title welcome\">Hello there!</h2>\n```\n\n## Installation\n`npm install cheerio`\n\n## Features\n__&#10084; Familiar syntax:__\nCheerio implements a subset of core jQuery. Cheerio removes all the DOM inconsistencies and browser cruft from the jQuery library, revealing its truly gorgeous API.\n\n__&#991; Blazingly fast:__\nCheerio works with a very simple, consistent DOM model. As a result parsing, manipulating, and rendering are incredibly efficient. Preliminary end-to-end benchmarks suggest that cheerio is about __8x__ faster than JSDOM.\n\n__&#10049; Incredibly flexible:__\nCheerio wraps around @FB55's forgiving [htmlparser2](https://github.com/fb55/htmlparser2/). Cheerio can parse nearly any HTML or XML document.\n\n## What about JSDOM?\nI wrote cheerio because I found myself increasingly frustrated with JSDOM. For me, there were three main sticking points that I kept running into again and again:\n\n__&#8226; JSDOM's built-in parser is too strict:__\n  JSDOM's bundled HTML parser cannot handle many popular sites out there today.\n\n__&#8226; JSDOM is too slow:__\nParsing big websites with JSDOM has a noticeable delay.\n\n__&#8226; JSDOM feels too heavy:__\nThe goal of JSDOM is to provide an identical DOM environment as what we see in the browser. I never really needed all this, I just wanted a simple, familiar way to do HTML manipulation.\n\n## When I would use JSDOM\n\nCheerio will not solve all your problems. I would still use JSDOM if I needed to work in a browser-like environment on the server, particularly if I wanted to automate functional tests.\n\n## API\n\n### Markup example we'll be using:\n\n```html\n<ul id=\"fruits\">\n  <li class=\"apple\">Apple</li>\n  <li class=\"orange\">Orange</li>\n  <li class=\"pear\">Pear</li>\n</ul>\n```\n\nThis is the HTML markup we will be using in all of the API examples.\n\n### Loading\nFirst you need to load in the HTML. This step in jQuery is implicit, since jQuery operates on the one, baked-in DOM. With Cheerio, we need to pass in the HTML document.\n\nThis is the _preferred_ method:\n\n```js\nvar cheerio = require('cheerio'),\n    $ = cheerio.load('<ul id=\"fruits\">...</ul>');\n```\n\nOptionally, you can also load in the HTML by passing the string as the context:\n\n```js\n$ = require('cheerio');\n$('ul', '<ul id=\"fruits\">...</ul>');\n```\n\nOr as the root:\n\n```js\n$ = require('cheerio');\n$('li', 'ul', '<ul id=\"fruits\">...</ul>');\n```\n\nYou can also pass an extra object to `.load()` if you need to modify any\nof the default parsing options:\n\n```js\n$ = cheerio.load('<ul id=\"fruits\">...</ul>', {\n    normalizeWhitespace: true,\n    xmlMode: true\n});\n```\n\nThese parsing options are taken directly from [htmlparser2](https://github.com/fb55/htmlparser2/wiki/Parser-options), therefore any options that can be used in `htmlparser2` are valid in cheerio as well. The default options are:\n\n```js\n{\n    normalizeWhitespace: false,\n    xmlMode: false,\n    decodeEntities: true\n}\n\n```\n\nFor a full list of options and their effects, see [this](https://github.com/fb55/DomHandler) and\n[htmlparser2's options](https://github.com/fb55/htmlparser2/wiki/Parser-options).\n\n### Selectors\n\nCheerio's selector implementation is nearly identical to jQuery's, so the API is very similar.\n\n#### $( selector, [context], [root] )\n`selector` searches within the `context` scope which searches within the `root` scope. `selector` and `context` can be an string expression, DOM Element, array of DOM elements, or cheerio object. `root` is typically the HTML document string.\n\nThis selector method is the starting point for traversing and manipulating the document. Like jQuery, it's the primary method for selecting elements in the document, but unlike jQuery it's built on top of the CSSSelect library, which implements most of the Sizzle selectors.\n\n```js\n$('.apple', '#fruits').text()\n//=> Apple\n\n$('ul .pear').attr('class')\n//=> pear\n\n$('li[class=orange]').html()\n//=> <li class=\"orange\">Orange</li>\n```\n\n### Attributes\nMethods for getting and modifying attributes.\n\n#### .attr( name, value )\nMethod for getting and setting attributes. Gets the attribute value for only the first element in the matched set. If you set an attribute's value to `null`, you remove that attribute. You may also pass a `map` and `function` like jQuery.\n\n```js\n$('ul').attr('id')\n//=> fruits\n\n$('.apple').attr('id', 'favorite').html()\n//=> <li class=\"apple\" id=\"favorite\">Apple</li>\n```\n\n> See http://api.jquery.com/attr/ for more information\n\n#### .data( name, value )\nMethod for getting and setting data attributes. Gets or sets the data attribute value for only the first element in the matched set.\n\n```js\n$('<div data-apple-color=\"red\"></div>').data()\n//=> { appleColor: 'red' }\n\n$('<div data-apple-color=\"red\"></div>').data('data-apple-color')\n//=> 'red'\n\nvar apple = $('.apple').data('kind', 'mac')\napple.data('kind')\n//=> 'mac'\n```\n\n> See http://api.jquery.com/data/ for more information\n\n#### .val( [value] )\nMethod for getting and setting the value of input, select, and textarea. Note: Support for `map`, and `function` has not been added yet.\n\n```js\n$('input[type=\"text\"]').val()\n//=> input_text\n\n$('input[type=\"text\"]').val('test').html()\n//=> <input type=\"text\" value=\"test\"/>\n```\n\n#### .removeAttr( name )\nMethod for removing attributes by `name`.\n\n```js\n$('.pear').removeAttr('class').html()\n//=> <li>Pear</li>\n```\n\n#### .hasClass( className )\nCheck to see if *any* of the matched elements have the given `className`.\n\n```js\n$('.pear').hasClass('pear')\n//=> true\n\n$('apple').hasClass('fruit')\n//=> false\n\n$('li').hasClass('pear')\n//=> true\n```\n\n#### .addClass( className )\nAdds class(es) to all of the matched elements. Also accepts a `function` like jQuery.\n\n```js\n$('.pear').addClass('fruit').html()\n//=> <li class=\"pear fruit\">Pear</li>\n\n$('.apple').addClass('fruit red').html()\n//=> <li class=\"apple fruit red\">Apple</li>\n```\n\n> See http://api.jquery.com/addClass/ for more information.\n\n#### .removeClass( [className] )\nRemoves one or more space-separated classes from the selected elements. If no `className` is defined, all classes will be removed. Also accepts a `function` like jQuery.\n\n```js\n$('.pear').removeClass('pear').html()\n//=> <li class=\"\">Pear</li>\n\n$('.apple').addClass('red').removeClass().html()\n//=> <li class=\"\">Apple</li>\n```\n\n> See http://api.jquery.com/removeClass/ for more information.\n\n#### .toggleClass( className, [switch] )\nAdd or remove class(es) from the matched elements, depending on either the class's presence or the value of the switch argument. Also accepts a `function` like jQuery.\n\n```js\n$('.apple.green').toggleClass('fruit green red').html()\n//=> <li class=\"apple fruit red\">Apple</li>\n\n$('.apple.green').toggleClass('fruit green red', true).html()\n//=> <li class=\"apple green fruit red\">Apple</li>\n```\n\n> See http://api.jquery.com/toggleClass/ for more information.\n\n#### .is( selector )\n#### .is( element )\n#### .is( selection )\n#### .is( function(index) )\nChecks the current list of elements and returns `true` if _any_ of the elements match the selector. If using an element or Cheerio selection, returns `true` if _any_ of the elements match. If using a predicate function, the function is executed in the context of the selected element, so `this` refers to the current element.\n\n\n### Traversing\n\n#### .find(selector)\n#### .find(selection)\n#### .find(node)\nGet the descendants of each element in the current set of matched elements, filtered by a selector, jQuery object, or element.\n\n```js\n$('#fruits').find('li').length\n//=> 3\n$('#fruits').find($('.apple')).length\n//=> 1\n```\n\n#### .parent([selector])\nGet the parent of each element in the current set of matched elements, optionally filtered by a selector.\n\n```js\n$('.pear').parent().attr('id')\n//=> fruits\n```\n\n#### .parents([selector])\nGet a set of parents filtered by `selector` of each element in the current set of match elements.\n```js\n$('.orange').parents().length\n// => 2\n$('.orange').parents('#fruits').length\n// => 1\n```\n\n#### .parentsUntil([selector][,filter])\nGet the ancestors of each element in the current set of matched elements, up to but not including the element matched by the selector, DOM node, or cheerio object.\n```js\n$('.orange').parentsUntil('#food').length\n// => 1\n```\n\n#### .closest(selector)\nFor each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.\n\n```js\n$('.orange').closest()\n// => []\n$('.orange').closest('.apple')\n// => []\n$('.orange').closest('li')\n// => [<li class=\"orange\">Orange</li>]\n$('.orange').closest('#fruits')\n// => [<ul id=\"fruits\"> ... </ul>]\n```\n\n#### .next([selector])\nGets the next sibling of the first selected element, optionally filtered by a selector.\n\n```js\n$('.apple').next().hasClass('orange')\n//=> true\n```\n\n#### .nextAll()\nGets all the following siblings of the first selected element.\n\n```js\n$('.apple').nextAll()\n//=> [<li class=\"orange\">Orange</li>, <li class=\"pear\">Pear</li>]\n```\n\n#### .nextUntil()\nGets all the following siblings up to but not including the element matched by the selector.\n\n```js\n$('.apple').nextUntil('.pear')\n//=> [<li class=\"orange\">Orange</li>]\n```\n\n#### .prev([selector])\nGets the previous sibling of the first selected element optionally filtered by a selector.\n\n```js\n$('.orange').prev().hasClass('apple')\n//=> true\n```\n\n#### .prevAll()\nGets all the preceding siblings of the first selected element.\n\n```js\n$('.pear').prevAll()\n//=> [<li class=\"orange\">Orange</li>, <li class=\"apple\">Apple</li>]\n```\n\n#### .prevUntil()\nGets all the preceding siblings up to but not including the element matched by the selector.\n\n```js\n$('.pear').prevUntil('.apple')\n//=> [<li class=\"orange\">Orange</li>]\n```\n\n#### .slice( start, [end] )\nGets the elements matching the specified range\n\n```js\n$('li').slice(1).eq(0).text()\n//=> 'Orange'\n\n$('li').slice(1, 2).length\n//=> 1\n```\n\n#### .siblings( selector )\nGets the first selected element's siblings, excluding itself.\n\n```js\n$('.pear').siblings().length\n//=> 2\n\n$('.pear').siblings('.orange').length\n//=> 1\n\n```\n\n#### .children( selector )\nGets the children of the first selected element.\n\n```js\n$('#fruits').children().length\n//=> 3\n\n$('#fruits').children('.pear').text()\n//=> Pear\n```\n\n#### .contents()\nGets the children of each element in the set of matched elements, including text and comment nodes.\n\n```js\n$('#fruits').contents().length\n//=> 3\n```\n\n#### .each( function(index, element) )\nIterates over a cheerio object, executing a function for each matched element. When the callback is fired, the function is fired in the context of the DOM element, so `this` refers to the current element, which is equivalent to the function parameter `element`. To break out of the `each` loop early, return with `false`.\n\n```js\nvar fruits = [];\n\n$('li').each(function(i, elem) {\n  fruits[i] = $(this).text();\n});\n\nfruits.join(', ');\n//=> Apple, Orange, Pear\n```\n\n#### .map( function(index, element) )\nPass each element in the current matched set through a function, producing a new Cheerio object containing the return values. The function can return an individual data item or an array of data items to be inserted into the resulting set. If an array is returned, the elements inside the array are inserted into the set. If the function returns null or undefined, no element will be inserted.\n\n```js\n$('li').map(function(i, el) {\n  // this === el\n  return $(this).text();\n}).get().join(' ');\n//=> \"apple orange pear\"\n```\n\n#### .filter( selector ) <br /> .filter( selection ) <br /> .filter( element ) <br /> .filter( function(index) )\n\nIterates over a cheerio object, reducing the set of selector elements to those that match the selector or pass the function's test. When a Cheerio selection is specified, return only the elements contained in that selection. When an element is specified, return only that element (if it is contained in the original selection). If using the function method, the function is executed in the context of the selected element, so `this` refers to the current element.\n\nSelector:\n\n```js\n$('li').filter('.orange').attr('class');\n//=> orange\n```\n\nFunction:\n\n```js\n$('li').filter(function(i, el) {\n  // this === el\n  return $(this).attr('class') === 'orange';\n}).attr('class')\n//=> orange\n```\n\n#### .not( selector ) <br /> .not( selection ) <br /> .not( element ) <br /> .not( function(index, elem) )\n\nRemove elements from the set of matched elements. Given a jQuery object that represents a set of DOM elements, the `.not()` method constructs a new jQuery object from a subset of the matching elements. The supplied selector is tested against each element; the elements that don't match the selector will be included in the result. The `.not()` method can take a function as its argument in the same way that `.filter()` does. Elements for which the function returns true are excluded from the filtered set; all other elements are included.\n\nSelector:\n\n```js\n$('li').not('.apple').length;\n//=> 2\n```\n\nFunction:\n\n```js\n$('li').filter(function(i, el) {\n  // this === el\n  return $(this).attr('class') === 'orange';\n}).length;\n//=> 2\n```\n\n#### .has( selector ) <br /> .has( element )\n\nFilters the set of matched elements to only those which have the given DOM element as a descendant or which have a descendant that matches the given selector. Equivalent to `.filter(':has(selector)')`.\n\nSelector:\n\n```js\n$('ul').has('.pear').attr('id');\n//=> fruits\n```\n\nElement:\n\n```js\n$('ul').has($('.pear')[0]).attr('id');\n//=> fruits\n```\n\n#### .first()\nWill select the first element of a cheerio object\n\n```js\n$('#fruits').children().first().text()\n//=> Apple\n```\n\n#### .last()\nWill select the last element of a cheerio object\n\n```js\n$('#fruits').children().last().text()\n//=> Pear\n```\n\n#### .eq( i )\nReduce the set of matched elements to the one at the specified index. Use `.eq(-i)` to count backwards from the last selected element.\n\n```js\n$('li').eq(0).text()\n//=> Apple\n\n$('li').eq(-1).text()\n//=> Pear\n```\n\n#### .get( [i] )\n\nRetrieve the DOM elements matched by the Cheerio object. If an index is specified, retrieve one of the elements matched by the Cheerio object:\n\n```js\n$('li').get(0).tagName\n//=> li\n```\n\nIf no index is specified, retrieve all elements matched by the Cheerio object:\n\n```js\n$('li').get().length\n//=> 3\n```\n\n#### .index()\n#### .index( selector )\n#### .index( nodeOrSelection )\n\nSearch for a given element from among the matched elements.\n\n```\n$('.pear').index()\n//=> 2\n$('.orange').index('li')\n//=> 1\n$('.apple').index($('#fruit, li'))\n//=> 1\n```\n\n#### .end()\nEnd the most recent filtering operation in the current chain and return the set of matched elements to its previous state.\n\n```js\n$('li').eq(0).end().length\n//=> 3\n```\n\n#### .add( selector [, context] )\n#### .add( element )\n#### .add( elements )\n#### .add( html )\n#### .add( selection )\nAdd elements to the set of matched elements.\n\n```js\n$('.apple').add('.orange').length\n//=> 2\n```\n\n#### .addBack( [filter] )\n\nAdd the previous set of elements on the stack to the current set, optionally filtered by a selector.\n\n```js\n$('li').eq(0).addBack('.orange').length\n//=> 2\n```\n\n### Manipulation\nMethods for modifying the DOM structure.\n\n#### .append( content, [content, ...] )\nInserts content as the *last* child of each of the selected elements.\n\n```js\n$('ul').append('<li class=\"plum\">Plum</li>')\n$.html()\n//=>  <ul id=\"fruits\">\n//      <li class=\"apple\">Apple</li>\n//      <li class=\"orange\">Orange</li>\n//      <li class=\"pear\">Pear</li>\n//      <li class=\"plum\">Plum</li>\n//    </ul>\n```\n\n#### .prepend( content, [content, ...] )\nInserts content as the *first* child of each of the selected elements.\n\n```js\n$('ul').prepend('<li class=\"plum\">Plum</li>')\n$.html()\n//=>  <ul id=\"fruits\">\n//      <li class=\"plum\">Plum</li>\n//      <li class=\"apple\">Apple</li>\n//      <li class=\"orange\">Orange</li>\n//      <li class=\"pear\">Pear</li>\n//    </ul>\n```\n\n#### .after( content, [content, ...] )\nInsert content next to each element in the set of matched elements.\n\n```js\n$('.apple').after('<li class=\"plum\">Plum</li>')\n$.html()\n//=>  <ul id=\"fruits\">\n//      <li class=\"apple\">Apple</li>\n//      <li class=\"plum\">Plum</li>\n//      <li class=\"orange\">Orange</li>\n//      <li class=\"pear\">Pear</li>\n//    </ul>\n```\n\n#### .before( content, [content, ...] )\nInsert content previous to each element in the set of matched elements.\n\n```js\n$('.apple').before('<li class=\"plum\">Plum</li>')\n$.html()\n//=>  <ul id=\"fruits\">\n//      <li class=\"plum\">Plum</li>\n//      <li class=\"apple\">Apple</li>\n//      <li class=\"orange\">Orange</li>\n//      <li class=\"pear\">Pear</li>\n//    </ul>\n```\n\n#### .remove( [selector] )\nRemoves the set of matched elements from the DOM and all their children. `selector` filters the set of matched elements to be removed.\n\n```js\n$('.pear').remove()\n$.html()\n//=>  <ul id=\"fruits\">\n//      <li class=\"apple\">Apple</li>\n//      <li class=\"orange\">Orange</li>\n//    </ul>\n```\n\n#### .replaceWith( content )\nReplaces matched elements with `content`.\n\n```js\nvar plum = $('<li class=\"plum\">Plum</li>')\n$('.pear').replaceWith(plum)\n$.html()\n//=> <ul id=\"fruits\">\n//     <li class=\"apple\">Apple</li>\n//     <li class=\"orange\">Orange</li>\n//     <li class=\"plum\">Plum</li>\n//   </ul>\n```\n\n#### .empty()\nEmpties an element, removing all its children.\n\n```js\n$('ul').empty()\n$.html()\n//=>  <ul id=\"fruits\"></ul>\n```\n\n#### .html( [htmlString] )\nGets an html content string from the first selected element. If `htmlString` is specified, each selected element's content is replaced by the new content.\n\n```js\n$('.orange').html()\n//=> Orange\n\n$('#fruits').html('<li class=\"mango\">Mango</li>').html()\n//=> <li class=\"mango\">Mango</li>\n```\n\n#### .text( [textString] )\nGet the combined text contents of each element in the set of matched elements, including their descendants.. If `textString` is specified, each selected element's content is replaced by the new text content.\n\n```js\n$('.orange').text()\n//=> Orange\n\n$('ul').text()\n//=>  Apple\n//    Orange\n//    Pear\n```\n\n#### .css( [propertName] ) <br /> .css( [ propertyNames] ) <br /> .css( [propertyName], [value] ) <br /> .css( [propertName], [function] ) <br /> .css( [properties] )\n\nGet the value of a style property for the first element in the set of matched elements or set one or more CSS properties for every matched element.\n\n### Rendering\nWhen you're ready to render the document, you can use the `html` utility function:\n\n```js\n$.html()\n//=>  <ul id=\"fruits\">\n//      <li class=\"apple\">Apple</li>\n//      <li class=\"orange\">Orange</li>\n//      <li class=\"pear\">Pear</li>\n//    </ul>\n```\n\nIf you want to return the outerHTML you can use `$.html(selector)`:\n\n```js\n$.html('.pear')\n//=> <li class=\"pear\">Pear</li>\n```\n\nBy default, `html` will leave some tags open. Sometimes you may instead want to render a valid XML document. For example, you might parse the following XML snippet:\n\n```xml\n$ = cheerio.load('<media:thumbnail url=\"http://www.foo.com/keyframe.jpg\" width=\"75\" height=\"50\" time=\"12:05:01.123\"/>');\n```\n\n... and later want to render to XML. To do this, you can use the 'xml' utility function:\n\n```js\n$.xml()\n//=>  <media:thumbnail url=\"http://www.foo.com/keyframe.jpg\" width=\"75\" height=\"50\" time=\"12:05:01.123\"/>\n```\n\n\n### Miscellaneous\nDOM element methods that don't fit anywhere else\n\n#### .clone() ####\nClone the cheerio object.\n\n```js\nvar moreFruit = $('#fruits').clone()\n```\n\n### Utilities\n\n#### $.root\n\nSometimes you need to work with the top-level root element. To query it, you can use `$.root()`.\n\n```js\n$.root().append('<ul id=\"vegetables\"></ul>').html();\n//=> <ul id=\"fruits\">...</ul><ul id=\"vegetables\"></ul>\n```\n\n#### $.contains( container, contained )\nChecks to see if the `contained` DOM element is a descendent of the `container` DOM element.\n\n#### $.parseHTML( data [, context ] [, keepScripts ] )\nParses a string into an array of DOM nodes. The `context` argument has no meaning for Cheerio, but it is maintained for API compatability.\n\n### The \"DOM Node\" object\n\nCheerio collections are made up of objects that bear some resemblence to [browser-based DOM nodes](https://developer.mozilla.org/en-US/docs/Web/API/Node). You can expect them to define the following properties:\n\n- `tagName`\n- `parentNode`\n- `previousSibling`\n- `nextSibling`\n- `nodeValue`\n- `firstChild`\n- `childNodes`\n- `lastChild`\n\n## Screencasts\n\nhttp://vimeo.com/31950192\n\n> This video tutorial is a follow-up to Nettut's \"How to Scrape Web Pages with Node.js and jQuery\", using cheerio instead of JSDOM + jQuery. This video shows how easy it is to use cheerio and how much faster cheerio is than JSDOM + jQuery.\n\n## Test Coverage\n\nCheerio has high-test coverage, you can view the report [here](https://s3.amazonaws.com/MattMueller/Coverage/cheerio.html).\n\n## Testing\n\nTo run the test suite, download the repository, then within the cheerio directory, run:\n\n```shell\nmake setup\nmake test\n```\n\nThis will download the development packages and run the test suite.\n\n## Contributors\n\nThese are some of the contributors that have made cheerio possible:\n\n```\nproject  : cheerio\n repo age : 2 years, 6 months\n active   : 285 days\n commits  : 762\n files    : 36\n authors  :\n   293  Matt Mueller            38.5%\n   133  Matthew Mueller         17.5%\n    92  Mike Pennisi            12.1%\n    54  David Chambers          7.1%\n    30  kpdecker                3.9%\n    19  Felix Böhm             2.5%\n    17  fb55                    2.2%\n    15  Siddharth Mahendraker   2.0%\n    11  Adam Bretz              1.4%\n     8  Nazar Leush             1.0%\n     7  ironchefpython          0.9%\n     6  Jarno Leppänen         0.8%\n     5  Ben Sheldon             0.7%\n     5  Jos Shepherd            0.7%\n     5  Ryan Schmukler          0.7%\n     5  Steven Vachon           0.7%\n     4  Maciej Adwent           0.5%\n     4  Amir Abu Shareb         0.5%\n     3  jeremy.dentel@brandingbrand.com 0.4%\n     3  Andi Neck               0.4%\n     2  steve                   0.3%\n     2  alexbardas              0.3%\n     2  finspin                 0.3%\n     2  Ali Farhadi             0.3%\n     2  Chris Khoo              0.3%\n     2  Rob Ashton              0.3%\n     2  Thomas Heymann          0.3%\n     2  Jaro Spisak             0.3%\n     2  Dan Dascalescu          0.3%\n     2  Torstein Thune          0.3%\n     2  Wayne Larsen            0.3%\n     1  Timm Preetz             0.1%\n     1  Xavi                    0.1%\n     1  Alex Shaindlin          0.1%\n     1  mattym                  0.1%\n     1  Felix Böhm            0.1%\n     1  Farid Neshat            0.1%\n     1  Dmitry Mazuro           0.1%\n     1  Jeremy Hubble           0.1%\n     1  nevermind               0.1%\n     1  Manuel Alabor           0.1%\n     1  Matt Liegey             0.1%\n     1  Chris O'Hara            0.1%\n     1  Michael Holroyd         0.1%\n     1  Michiel De Mey          0.1%\n     1  Ben Atkin               0.1%\n     1  Rich Trott              0.1%\n     1  Rob \"Hurricane\" Ashton  0.1%\n     1  Robin Gloster           0.1%\n     1  Simon Boudrias          0.1%\n     1  Sindre Sorhus           0.1%\n     1  xiaohwan                0.1%\n```\n\n## Cheerio in the real world\n\nAre you using cheerio in production? Add it to the [wiki](https://github.com/cheeriojs/cheerio/wiki/Cheerio-in-Production)!\n\n## Special Thanks\n\nThis library stands on the shoulders of some incredible developers. A special thanks to:\n\n__&#8226; @FB55 for node-htmlparser2 & CSSSelect:__\nFelix has a knack for writing speedy parsing engines. He completely re-wrote both @tautologistic's `node-htmlparser` and @harry's `node-soupselect` from the ground up, making both of them much faster and more flexible. Cheerio would not be possible without his foundational work\n\n__&#8226; @jQuery team for jQuery:__\nThe core API is the best of its class and despite dealing with all the browser inconsistencies the code base is extremely clean and easy to follow. Much of cheerio's implementation and documentation is from jQuery. Thanks guys.\n\n__&#8226; @visionmedia:__\nThe style, the structure, the open-source\"-ness\" of this library comes from studying TJ's style and using many of his libraries. This dude consistently pumps out high-quality libraries and has always been more than willing to help or answer questions. You rock TJ.\n\n## License\n\n(The MIT License)\n\nCopyright (c) 2012 Matt Mueller &lt;mattmuelle@gmail.com&gt;\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n'Software'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n",
-  "readmeFilename": "Readme.md",
+  "gitHead": "c4f52db9d0e2011a968ba097c85f434f3a05b7f0",
   "bugs": {
     "url": "https://github.com/cheeriojs/cheerio/issues"
   },
   "homepage": "https://github.com/cheeriojs/cheerio",
   "_id": "cheerio@0.18.0",
   "_shasum": "4e1c06377e725b740e996e0dfec353863de677fa",
-  "_from": "cheerio@",
-  "_resolved": "http://registry.npmjs.org/cheerio/-/cheerio-0.18.0.tgz"
+  "_from": "cheerio@^0.18.0",
+  "_npmVersion": "2.1.3",
+  "_nodeVersion": "0.10.31",
+  "_npmUser": {
+    "name": "jugglinmike",
+    "email": "mike@mikepennisi.com"
+  },
+  "maintainers": [
+    {
+      "name": "mattmueller",
+      "email": "mattmuelle@gmail.com"
+    },
+    {
+      "name": "davidchambers",
+      "email": "dc@davidchambers.me"
+    },
+    {
+      "name": "jugglinmike",
+      "email": "mike@mikepennisi.com"
+    }
+  ],
+  "dist": {
+    "shasum": "4e1c06377e725b740e996e0dfec353863de677fa",
+    "tarball": "http://registry.npmjs.org/cheerio/-/cheerio-0.18.0.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/cheerio/-/cheerio-0.18.0.tgz",
+  "readme": "ERROR: No README data found!"
 }
 
 },{}],70:[function(require,module,exports){
@@ -37144,13 +37165,6 @@ module.exports={
     };
 
     // API:
-    // return type of current node
-    Controller.prototype.type = function () {
-        var node = this.current();
-        return node.type || this.__current.wrap;
-    };
-
-    // API:
     // return array of parent elements
     Controller.prototype.parents = function parents() {
         var i, iz, result;
@@ -37613,7 +37627,7 @@ module.exports={
         return tree;
     }
 
-    exports.version = '1.8.0';
+    exports.version = '1.7.1';
     exports.Syntax = Syntax;
     exports.traverse = traverse;
     exports.replace = replace;
@@ -37772,8 +37786,7 @@ module.exports={
 
 },{}],73:[function(require,module,exports){
 /*
-  Copyright (C) 2013-2014 Yusuke Suzuki <utatane.tea@gmail.com>
-  Copyright (C) 2014 Ivan Nikulin <ifaaan@gmail.com>
+  Copyright (C) 2013 Yusuke Suzuki <utatane.tea@gmail.com>
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
@@ -37799,7 +37812,7 @@ module.exports={
 (function () {
     'use strict';
 
-    var Regex, NON_ASCII_WHITESPACES;
+    var Regex;
 
     // See `tools/generate-identifier-regex.js`.
     Regex = {
@@ -37812,9 +37825,7 @@ module.exports={
     }
 
     function isHexDigit(ch) {
-        return isDecimalDigit(ch) ||    // 0..9
-            (97 <= ch && ch <= 102) ||  // a..f
-            (65 <= ch && ch <= 70);     // A..F
+        return isDecimalDigit(ch) || (97 <= ch && ch <= 102) || (65 <= ch && ch <= 70);
     }
 
     function isOctalDigit(ch) {
@@ -37823,17 +37834,9 @@ module.exports={
 
     // 7.2 White Space
 
-    NON_ASCII_WHITESPACES = [
-        0x1680, 0x180E,
-        0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A,
-        0x202F, 0x205F,
-        0x3000,
-        0xFEFF
-    ];
-
     function isWhiteSpace(ch) {
         return (ch === 0x20) || (ch === 0x09) || (ch === 0x0B) || (ch === 0x0C) || (ch === 0xA0) ||
-            (ch >= 0x1680 && NON_ASCII_WHITESPACES.indexOf(ch) >= 0);
+            (ch >= 0x1680 && [0x1680, 0x180E, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000, 0xFEFF].indexOf(ch) >= 0);
     }
 
     // 7.3 Line Terminators
@@ -37845,18 +37848,18 @@ module.exports={
     // 7.6 Identifier Names and Identifiers
 
     function isIdentifierStart(ch) {
-        return (ch >= 97 && ch <= 122) ||     // a..z
+        return (ch === 36) || (ch === 95) ||  // $ (dollar) and _ (underscore)
             (ch >= 65 && ch <= 90) ||         // A..Z
-            (ch === 36) || (ch === 95) ||     // $ (dollar) and _ (underscore)
+            (ch >= 97 && ch <= 122) ||        // a..z
             (ch === 92) ||                    // \ (backslash)
             ((ch >= 0x80) && Regex.NonAsciiIdentifierStart.test(String.fromCharCode(ch)));
     }
 
     function isIdentifierPart(ch) {
-        return (ch >= 97 && ch <= 122) ||     // a..z
+        return (ch === 36) || (ch === 95) ||  // $ (dollar) and _ (underscore)
             (ch >= 65 && ch <= 90) ||         // A..Z
+            (ch >= 97 && ch <= 122) ||        // a..z
             (ch >= 48 && ch <= 57) ||         // 0..9
-            (ch === 36) || (ch === 95) ||     // $ (dollar) and _ (underscore)
             (ch === 92) ||                    // \ (backslash)
             ((ch >= 0x80) && Regex.NonAsciiIdentifierPart.test(String.fromCharCode(ch)));
     }
@@ -40348,7 +40351,7 @@ function amdefine(module, requireFn) {
 
 module.exports = amdefine;
 
-}).call(this,require('_process'),"/node_modules\\escodegen\\node_modules\\source-map\\node_modules\\amdefine\\amdefine.js")
+}).call(this,require('_process'),"/node_modules/escodegen/node_modules/source-map/node_modules/amdefine/amdefine.js")
 },{"_process":97,"path":96}],86:[function(require,module,exports){
 module.exports={
   "name": "escodegen",
@@ -40416,7 +40419,7 @@ module.exports={
     "url": "https://github.com/Constellation/escodegen/issues"
   },
   "_id": "escodegen@1.4.1",
-  "_from": "escodegen@"
+  "_from": "escodegen@^1.4.1"
 }
 
 },{}],87:[function(require,module,exports){
@@ -48936,7 +48939,7 @@ function hasOwnProperty(obj, prop) {
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./support/isBuffer":111,"_process":97,"inherits":94}],113:[function(require,module,exports){
 module.exports=require(68)
-},{"c:\\projects\\react-templates\\node_modules\\cheerio\\node_modules\\lodash\\dist\\lodash.js":68}],114:[function(require,module,exports){
+},{"/Users/idok/Projects/react-templates/node_modules/cheerio/node_modules/lodash/dist/lodash.js":68}],114:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -53314,7 +53317,7 @@ if ("production" !== process.env.NODE_ENV) {
 
 // Version exists only in the open-source version of React, not in Facebook's
 // internal version.
-React.version = '0.12.1';
+React.version = '0.12.0';
 
 module.exports = React;
 
@@ -55996,7 +55999,7 @@ var ReactCompositeComponentMixin = {
       boundMethod.__reactBoundArguments = null;
       var componentName = component.constructor.displayName;
       var _bind = boundMethod.bind;
-      boundMethod.bind = function(newThis ) {for (var args=[],$__0=1,$__1=arguments.length;$__0<$__1;$__0++) args.push(arguments[$__0]);
+      boundMethod.bind = function(newThis ) {var args=Array.prototype.slice.call(arguments,1);
         // User is trying to bind() an autobound method; we effectively will
         // ignore the value of "this" that the user is trying to use, so
         // let's warn.
@@ -58345,7 +58348,7 @@ var ReactDefaultPerf = {
   },
 
   measure: function(moduleName, fnName, func) {
-    return function() {for (var args=[],$__0=0,$__1=arguments.length;$__0<$__1;$__0++) args.push(arguments[$__0]);
+    return function() {var args=Array.prototype.slice.call(arguments,0);
       var totalTime;
       var rv;
       var start;
@@ -68836,7 +68839,7 @@ var emptyFunction = require("./emptyFunction");
 var warning = emptyFunction;
 
 if ("production" !== process.env.NODE_ENV) {
-  warning = function(condition, format ) {for (var args=[],$__0=2,$__1=arguments.length;$__0<$__1;$__0++) args.push(arguments[$__0]);
+  warning = function(condition, format ) {var args=Array.prototype.slice.call(arguments,2);
     if (format === undefined) {
       throw new Error(
         '`warning(condition, format, ...args)` requires a warning ' +
@@ -68855,13 +68858,11 @@ module.exports = warning;
 
 }).call(this,require('_process'))
 },{"./emptyFunction":234,"_process":97}],274:[function(require,module,exports){
-module.exports = require('./lib/React');
-
-},{"./lib/React":143}],275:[function(require,module,exports){
 'use strict';
 /*eslint-env browser*/
 var reactTemplates = require('../src/reactTemplates');
 var playgroundTemplate = require('./playground.rt.js');
+var pgFiddleTemplate = require('./playground-fiddle.rt.js');
 
 var React = require('react/addons');
 
@@ -68882,12 +68883,12 @@ function generateTemplateSource(html) {
 
 function generateTemplateFunction(code) {
     try {
-        var defineMap = {"react/addons": React, lodash: _};
+        var defineMap = {'react/addons': React, lodash: _};
         var define = function (requirementsNames, content) {
-            var requirements = _.map(requirementsNames,function (reqName) {
+            var requirements = _.map(requirementsNames, function (reqName) {
                 return defineMap[reqName];
             });
-            return content.apply(this,requirements);
+            return content.apply(this, requirements);
         };
         /*eslint no-eval:0*/
         var res = eval(code);
@@ -68931,7 +68932,18 @@ var Playground = React.createClass({
 
     displayName: 'Playground',
     mixins: [React.addons.LinkedStateMixin],
-
+    propTypes: {
+        direction: React.PropTypes.string,
+        codeVisible: React.PropTypes.bool,
+        fiddle: React.PropTypes.bool
+    },
+    getDefaultProps: function() {
+        return {
+            direction: 'horizontal', //vertical
+            codeVisible: true,
+            fiddle: false
+        };
+    },
     updateSample: function (state) {
         this.templateSource = generateTemplateSource(state.templateHTML);
         this.sampleFunc = generateTemplateFunction(this.templateSource);
@@ -68952,7 +68964,6 @@ var Playground = React.createClass({
         classBase.render = this.sampleRender;
         this.sample = React.createFactory(React.createClass(classBase));
     },
-
     getInitialState: function () {
         var currentState = {
             templateHTML: this.props.templateHTML || templateHTML,
@@ -68968,13 +68979,14 @@ var Playground = React.createClass({
     },
 
     render: function () {
-        return playgroundTemplate.apply(this);
+        var template = this.props.fiddle ? pgFiddleTemplate : playgroundTemplate;
+        return template.apply(this);
     }
 });
 
 module.exports = Playground;
 
-},{"../src/reactTemplates":283,"./playground.rt.js":282,"lodash":113,"react/addons":"react/addons"}],276:[function(require,module,exports){
+},{"../src/reactTemplates":284,"./playground-fiddle.rt.js":281,"./playground.rt.js":283,"lodash":113,"react/addons":undefined}],275:[function(require,module,exports){
 /**
  * Created by avim on 11/25/2014.
  */
@@ -69042,13 +69054,17 @@ var editor = React.createClass({
 });
 
 module.exports = editor;
-},{"brace":1,"brace/mode/html":2,"brace/mode/javascript":3,"brace/theme/solarized_light":5,"lodash":113,"react/addons":"react/addons"}],277:[function(require,module,exports){
+},{"brace":1,"brace/mode/html":2,"brace/mode/javascript":3,"brace/theme/solarized_light":5,"lodash":113,"react/addons":undefined}],276:[function(require,module,exports){
 /**
  * Created by avim on 12/2/2014.
  */
+'use strict';
 var React = require('react/addons');
 var _ = require('lodash');
 var fiddleTemplate = require('./fiddle.rt.js');
+
+/*global Firebase:true,alert:true*/
+/*eslint no-alert:0*/
 
 function generateRandomId() {
     var uuid = 'xxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -69056,15 +69072,15 @@ function generateRandomId() {
         return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
     return uuid;
-};
+}
 
 var Fiddle = React.createClass({
-    displayName: "Fiddle",
+    displayName: 'Fiddle',
     componentDidMount: function () {
         if (window.location.hash) {
-            var newHash = window.location.hash.replace("#", "");
+            var newHash = window.location.hash.replace('#', '');
             var firebase = new Firebase('https://reacttemplates.firebaseio-demo.com/');
-            firebase.child("fiddles").child(newHash).on('value', function (snapshot) {
+            firebase.child('fiddles').child(newHash).on('value', function (snapshot) {
                 this.refs.playground.setState(snapshot.val());
                 Firebase.goOffline();
             }.bind(this));
@@ -69080,9 +69096,9 @@ var Fiddle = React.createClass({
 
         var playgroundState = this.refs.playground.state;
         var firebase = new Firebase('https://reacttemplates.firebaseio-demo.com/');
-        firebase.child("fiddles").child(newHash).set(playgroundState, function () {
+        firebase.child('fiddles').child(newHash).set(playgroundState, function () {
             Firebase.goOffline();
-            alert("saved the fiddle, you can share your url")
+            alert('saved the fiddle, you can share your url');
         }.bind(this));
 
     },
@@ -69098,54 +69114,69 @@ module.exports = Fiddle;
 
 
 
-},{"./fiddle.rt.js":278,"lodash":113,"react/addons":"react/addons"}],278:[function(require,module,exports){
+},{"./fiddle.rt.js":277,"lodash":113,"react/addons":undefined}],277:[function(require,module,exports){
 var React = require('react/addons');
 var _ = require('lodash');
-var playGround = require('./PlayGround.js');
+var playground = require('./playground.js');
 'use strict';
 function onClick1(evt) {
     evt.preventDefault();
     this.save();
 }
 module.exports = function () {
-    return React.DOM.div({}, React.DOM.h1({}, 'React Templates fiddle'), React.DOM.h2({}, 'Play with react templates and save/share your results'), React.DOM.button({
-        'className': 'btn btn-lg btn-primary',
+    return React.DOM.div({}, React.DOM.div({ 'id': 'header' }, React.DOM.div({ 'id': 'header-title' }, React.DOM.img({
+        'className': 'nav-logo',
+        'src': 'https://facebook.github.io/react/img/logo.svg',
+        'width': '36',
+        'height': '36'
+    }), '\n            RTFIddle\n        '), React.DOM.div({
+        'style': {
+            paddingLeft: '20px',
+            display: 'inline-block'
+        }
+    }, React.DOM.button({
+        'className': 'btn',
         'onClick': onClick1.bind(this)
-    }, 'Save fiddle'), React.DOM.br({}, playGround({
+    }, 'Save fiddle'))), React.DOM.div({}    /* <h1>React Templates fiddle</h1> */
+          /* <h2>Play with react templates and save/share your results</h2> */
+          /* <button class="btn btn-lg btn-primary" onClick="(evt)=>evt.preventDefault();this.save()">Save fiddle</button> */
+          /* <br /> */, playground({
         'ref': 'playground',
-        'direction': 'vertical'
+        'direction': 'vertical',
+        'fiddle': true
     })));
 };
-},{"./PlayGround.js":275,"lodash":113,"react/addons":"react/addons"}],279:[function(require,module,exports){
+},{"./playground.js":282,"lodash":113,"react/addons":undefined}],278:[function(require,module,exports){
 (function (Buffer){
 /**
  * Created by avim on 12/2/2014.
  */
+'use strict';
 var React = require('react/addons');
 var _ = require('lodash');
 var introTemplate = require('./intro.rt.js');
 var path = require('path');
 
 
-var helloCode = Buffer("ew0KDQp9","base64").toString();
-var helloRT = Buffer("PGgxPkhlbGxvIHdvcmxkPC9oMT4NCg==","base64").toString();
-var todoCode = Buffer("ew0KICAgIG1peGluczogW1JlYWN0LmFkZG9ucy5MaW5rZWRTdGF0ZU1peGluXSwNCiAgICAgICAgZ2V0SW5pdGlhbFN0YXRlOiBmdW5jdGlvbiAoKSB7DQogICAgcmV0dXJuIHsNCiAgICAgICAgZWRpdGVkOiAnJywgdG9kb3M6IFtdLCBjb3VudGVyOiAwfTsNCiAgICB9LA0KICAgIGFkZDogZnVuY3Rpb24gKCkgew0KICAgICAgICBpZiAodGhpcy5zdGF0ZS5lZGl0ZWQudHJpbSgpLmxlbmd0aCA9PT0gMCkgew0KICAgICAgICAgICAgcmV0dXJuOw0KICAgICAgICB9DQogICAgICAgIHZhciBuZXdUb2RvID0ge3ZhbHVlOiB0aGlzLnN0YXRlLmVkaXRlZCwgZG9uZTogZmFsc2UsIGtleTogdGhpcy5zdGF0ZS5jb3VudGVyfTsNCiAgICAgICAgdGhpcy5zZXRTdGF0ZSh7dG9kb3M6IHRoaXMuc3RhdGUudG9kb3MuY29uY2F0KG5ld1RvZG8pLCBlZGl0ZWQ6ICcnLCBjb3VudGVyOiB0aGlzLnN0YXRlLmNvdW50ZXIgKyAxfSk7DQogICAgfSwNCiAgICByZW1vdmU6IGZ1bmN0aW9uICh0b2RvKSB7DQogICAgICAgIHRoaXMuc2V0U3RhdGUoe3RvZG9zOiBfLnJlamVjdCh0aGlzLnN0YXRlLnRvZG9zLCB0b2RvKX0pOw0KICAgIH0sDQogICAgdG9nZ2xlQ2hlY2tlZDogZnVuY3Rpb24gKGluZGV4KSB7DQogICAgICAgIHZhciB0b2RvcyA9IF8uY2xvbmVEZWVwKHRoaXMuc3RhdGUudG9kb3MpOw0KICAgICAgICB0b2Rvc1tpbmRleF0uZG9uZSA9ICF0b2Rvc1tpbmRleF0uZG9uZTsNCiAgICAgICAgdGhpcy5zZXRTdGF0ZSh7dG9kb3M6IHRvZG9zfSk7DQogICAgfSwNCiAgICBjbGVhckRvbmU6IGZ1bmN0aW9uICgpIHsNCiAgICAgICAgdGhpcy5zZXRTdGF0ZSh7dG9kb3M6IF8uZmlsdGVyKHRoaXMuc3RhdGUudG9kb3MsIHtkb25lOiBmYWxzZX0pfSk7DQogICAgfQ0KfQ==","base64").toString();
-var todoRT = Buffer("PGRpdj4NCiAgICBIYXZlIHtfLmZpbHRlcih0aGlzLnN0YXRlLnRvZG9zLCB7ZG9uZTp0cnVlfSkubGVuZ3RofSB0b2RvcyBkb25lLA0KICAgIGFuZCB7Xy5maWx0ZXIodGhpcy5zdGF0ZS50b2Rvcywge2RvbmU6ZmFsc2V9KS5sZW5ndGh9IG5vdCBkb25lDQogICAgPGJyLz4NCiAgICA8ZGl2IHJ0LXJlcGVhdD0idG9kbyBpbiB0aGlzLnN0YXRlLnRvZG9zIiBrZXk9Int0b2RvLmtleX0iPg0KICAgICAgICA8YnV0dG9uIG9uQ2xpY2s9IigpPT50aGlzLnJlbW92ZSh0b2RvKSI+eDwvYnV0dG9uPg0KICAgICAgICA8aW5wdXQgdHlwZT0iY2hlY2tib3giIGNoZWNrZWQ9Int0b2RvLmRvbmV9IiBvbkNoYW5nZT0iKCk9PnRoaXMudG9nZ2xlQ2hlY2tlZCh0b2RvSW5kZXgpIi8+DQogICAgICAgIDxzcGFuIHN0eWxlPSJ0ZXh0LWRlY29yYXRpb246IHt0b2RvLmRvbmUgPyAnbGluZS10aHJvdWdoJzogJ25vbmUnfSI+e3RvZG8udmFsdWV9PC9zcGFuPg0KICAgIDwvZGl2Pg0KICAgIDxpbnB1dCBrZXk9Im15aW5wdXQiIHR5cGU9InRleHQiIG9uS2V5RG93bj0iKGUpID0+IGlmIChlLmtleUNvZGUgPT0gMTMpIHsgZS5wcmV2ZW50RGVmYXVsdCgpOyB0aGlzLmFkZCgpOyB9IiB2YWx1ZUxpbms9Int0aGlzLmxpbmtTdGF0ZSgnZWRpdGVkJyl9Ii8+DQogICAgPGJ1dHRvbiBvbkNsaWNrPSIoKT0+dGhpcy5hZGQoKSI+QWRkPC9idXR0b24+PGJyLz4NCiAgICA8YnV0dG9uIG9uQ2xpY2s9IigpPT50aGlzLmNsZWFyRG9uZSgpIj5DbGVhciBkb25lPC9idXR0b24+DQo8L2Rpdj4=","base64").toString();
+var helloCode = Buffer("e30=","base64").toString();
+var helloRT = Buffer("PGgxPkhlbGxvIHdvcmxkPC9oMT4K","base64").toString();
+var todoCode = Buffer("ewogICAgbWl4aW5zOiBbUmVhY3QuYWRkb25zLkxpbmtlZFN0YXRlTWl4aW5dLAogICAgICAgIGdldEluaXRpYWxTdGF0ZTogZnVuY3Rpb24gKCkgewogICAgcmV0dXJuIHsKICAgICAgICBlZGl0ZWQ6ICcnLCB0b2RvczogW10sIGNvdW50ZXI6IDB9OwogICAgfSwKICAgIGFkZDogZnVuY3Rpb24gKCkgewogICAgICAgIGlmICh0aGlzLnN0YXRlLmVkaXRlZC50cmltKCkubGVuZ3RoID09PSAwKSB7CiAgICAgICAgICAgIHJldHVybjsKICAgICAgICB9CiAgICAgICAgdmFyIG5ld1RvZG8gPSB7dmFsdWU6IHRoaXMuc3RhdGUuZWRpdGVkLCBkb25lOiBmYWxzZSwga2V5OiB0aGlzLnN0YXRlLmNvdW50ZXJ9OwogICAgICAgIHRoaXMuc2V0U3RhdGUoe3RvZG9zOiB0aGlzLnN0YXRlLnRvZG9zLmNvbmNhdChuZXdUb2RvKSwgZWRpdGVkOiAnJywgY291bnRlcjogdGhpcy5zdGF0ZS5jb3VudGVyICsgMX0pOwogICAgfSwKICAgIHJlbW92ZTogZnVuY3Rpb24gKHRvZG8pIHsKICAgICAgICB0aGlzLnNldFN0YXRlKHt0b2RvczogXy5yZWplY3QodGhpcy5zdGF0ZS50b2RvcywgdG9kbyl9KTsKICAgIH0sCiAgICB0b2dnbGVDaGVja2VkOiBmdW5jdGlvbiAoaW5kZXgpIHsKICAgICAgICB2YXIgdG9kb3MgPSBfLmNsb25lRGVlcCh0aGlzLnN0YXRlLnRvZG9zKTsKICAgICAgICB0b2Rvc1tpbmRleF0uZG9uZSA9ICF0b2Rvc1tpbmRleF0uZG9uZTsKICAgICAgICB0aGlzLnNldFN0YXRlKHt0b2RvczogdG9kb3N9KTsKICAgIH0sCiAgICBjbGVhckRvbmU6IGZ1bmN0aW9uICgpIHsKICAgICAgICB0aGlzLnNldFN0YXRlKHt0b2RvczogXy5maWx0ZXIodGhpcy5zdGF0ZS50b2Rvcywge2RvbmU6IGZhbHNlfSl9KTsKICAgIH0KfQ==","base64").toString();
+var todoRT = Buffer("PGRpdj4KICAgIEhhdmUge18uZmlsdGVyKHRoaXMuc3RhdGUudG9kb3MsIHtkb25lOnRydWV9KS5sZW5ndGh9IHRvZG9zIGRvbmUsCiAgICBhbmQge18uZmlsdGVyKHRoaXMuc3RhdGUudG9kb3MsIHtkb25lOmZhbHNlfSkubGVuZ3RofSBub3QgZG9uZQogICAgPGJyLz4KICAgIDxkaXYgcnQtcmVwZWF0PSJ0b2RvIGluIHRoaXMuc3RhdGUudG9kb3MiIGtleT0ie3RvZG8ua2V5fSI+CiAgICAgICAgPGJ1dHRvbiBvbkNsaWNrPSIoKT0+dGhpcy5yZW1vdmUodG9kbykiPng8L2J1dHRvbj4KICAgICAgICA8aW5wdXQgdHlwZT0iY2hlY2tib3giIGNoZWNrZWQ9Int0b2RvLmRvbmV9IiBvbkNoYW5nZT0iKCk9PnRoaXMudG9nZ2xlQ2hlY2tlZCh0b2RvSW5kZXgpIi8+CiAgICAgICAgPHNwYW4gc3R5bGU9InRleHQtZGVjb3JhdGlvbjoge3RvZG8uZG9uZSA/ICdsaW5lLXRocm91Z2gnOiAnbm9uZSd9Ij57dG9kby52YWx1ZX08L3NwYW4+CiAgICA8L2Rpdj4KICAgIDxpbnB1dCBrZXk9Im15aW5wdXQiIHR5cGU9InRleHQiIG9uS2V5RG93bj0iKGUpID0+IGlmIChlLmtleUNvZGUgPT0gMTMpIHsgZS5wcmV2ZW50RGVmYXVsdCgpOyB0aGlzLmFkZCgpOyB9IiB2YWx1ZUxpbms9Int0aGlzLmxpbmtTdGF0ZSgnZWRpdGVkJyl9Ii8+CiAgICA8YnV0dG9uIG9uQ2xpY2s9IigpPT50aGlzLmFkZCgpIj5BZGQ8L2J1dHRvbj48YnIvPgogICAgPGJ1dHRvbiBvbkNsaWNrPSIoKT0+dGhpcy5jbGVhckRvbmUoKSI+Q2xlYXIgZG9uZTwvYnV0dG9uPgo8L2Rpdj4=","base64").toString();
 var samples = [
-    [helloCode,helloRT],
-    [todoCode,todoRT]
+    [helloCode, helloRT],
+    [todoCode, todoRT]
 ];
-samples = _.map(samples,function (tuple) {
-    return {templateProps:tuple[0],templateHTML:tuple[1]}
+samples = _.map(samples, function (tuple) {
+    return {templateProps: tuple[0], templateHTML: tuple[1]};
 });
 
 
 var intro = React.createClass({
-    displayName:"Intro",
-    getInitialState: function (){
+    displayName: 'Intro',
+    getInitialState: function () {
         return {
-            samples:samples
-        }
+            samples: samples
+        };
     },
     render: function () {
         return introTemplate.apply(this);
@@ -69155,8 +69186,8 @@ var intro = React.createClass({
 module.exports = intro;
 
 }).call(this,require("buffer").Buffer)
-},{"./intro.rt.js":280,"buffer":89,"lodash":113,"path":96,"react/addons":"react/addons"}],280:[function(require,module,exports){
-var React = require('react');
+},{"./intro.rt.js":279,"buffer":89,"lodash":113,"path":96,"react/addons":undefined}],279:[function(require,module,exports){
+var React = require('react/addons');
 var _ = require('lodash');
 var playGround = require('./PlayGround.js');
 'use strict';
@@ -69169,24 +69200,68 @@ module.exports = function () {
         'direction': 'horizontal'
     }, this.state.samples[1])));
 };
-},{"./PlayGround.js":275,"lodash":113,"react":274}],281:[function(require,module,exports){
+},{"./PlayGround.js":274,"lodash":113,"react/addons":undefined}],280:[function(require,module,exports){
 /**
  * Created by avim on 12/2/2014.
  */
+'use strict';
 var React = require('react/addons');
 var fiddle = require('./fiddle.js');
 var intro = require('./intro.js');
 
 window.initFiddle = function () {
     window.fiddle = React.render(fiddle(), document.getElementById('container'));
-}
+};
 
 window.initIntro = function () {
     window.intro = React.render(intro(), document.getElementById('container'));
-}
+};
 
-},{"./fiddle.js":277,"./intro.js":279,"react/addons":"react/addons"}],282:[function(require,module,exports){
-var React = require('react');
+},{"./fiddle.js":276,"./intro.js":278,"react/addons":undefined}],281:[function(require,module,exports){
+var React = require('react/addons');
+var _ = require('lodash');
+var CodeEditor = require('./aceEditor');
+'use strict';
+function onChange1(evt) {
+    this.setState({ 'templateHTML': evt.target.value });
+}
+function onChange2(evt) {
+    this.setState({ 'templateProps': evt.target.value });
+}
+function onSubmit3(e) {
+    e.preventDefault();
+}
+module.exports = function () {
+    return React.DOM.div({ 'className': 'playground' }, React.DOM.div({ 'className': 'code-area' }, CodeEditor({
+        'className': 'large-text-area',
+        'style': { border: this.validHTML ? '1px solid black' : '2px solid red' },
+        'value': this.state.templateHTML,
+        'mode': 'html',
+        'onChange': onChange1.bind(this)
+    })), React.DOM.div({ 'className': 'code-area' }, CodeEditor({
+        'className': 'large-text-area',
+        'style': { border: this.validProps ? '1px solid black' : '2px solid red' },
+        'value': this.state.templateProps,
+        'mode': 'javascript',
+        'onChange': onChange2.bind(this)
+    })), React.DOM.div({ 'className': 'code-area' }, CodeEditor({
+        'className': 'large-text-area',
+        'style': { border: '1px solid black' },
+        'value': this.templateSource,
+        'mode': 'javascript',
+        'readOnly': true
+    })), React.DOM.div({
+        'key': 'result-area',
+        'className': 'result-area'
+    }, React.DOM.h2({}, 'Preview:'), React.DOM.form({
+        'className': 'sample-view',
+        'onSubmit': onSubmit3.bind(this)
+    }, this.sample({ 'key': 'sample' }))), React.DOM.br({ 'style': { clear: 'both' } }));
+};
+},{"./aceEditor":275,"lodash":113,"react/addons":undefined}],282:[function(require,module,exports){
+module.exports=require(274)
+},{"../src/reactTemplates":284,"./playground-fiddle.rt.js":281,"./playground.rt.js":283,"/Users/idok/Projects/react-templates/playground/PlayGround.js":274,"lodash":113,"react/addons":undefined}],283:[function(require,module,exports){
+var React = require('react/addons');
 var _ = require('lodash');
 var CodeEditor = require('./aceEditor');
 'use strict';
@@ -69201,7 +69276,7 @@ function onSubmit3(e) {
 }
 module.exports = function () {
     return React.DOM.div({}, React.DOM.div({
-        'id': 'myTab',
+        'id': this.props.id + '-myTab',
         'role': 'tabpanel',
         'className': 'code-area ' + (this.props.direction === 'horizontal' && 'horizontal' || 'vertical')
     }    /*  Nav tabs  */, React.DOM.ul({
@@ -69211,44 +69286,44 @@ module.exports = function () {
         'role': 'presentation',
         'className': 'active'
     }, React.DOM.a({
-        'href': '#template',
+        'href': '#' + this.props.id + '-template',
         'aria-controls': 'template',
         'role': 'tab',
         'data-toggle': 'tab'
-    }, 'Template')), React.DOM.li({ 'role': 'presentation' }, React.DOM.a({
-        'href': '#classCode',
+    }, 'Template')), this.props.codeVisible ? React.DOM.li({ 'role': 'presentation' }, React.DOM.a({
+        'href': '#' + this.props.id + '-classCode',
         'aria-controls': 'classCode',
         'role': 'tab',
         'data-toggle': 'tab'
-    }, 'Class')), React.DOM.li({ 'role': 'presentation' }, React.DOM.a({
-        'href': '#generatedCode',
+    }, 'Class')) : null, React.DOM.li({ 'role': 'presentation' }, React.DOM.a({
+        'href': '#' + this.props.id + '-generatedCode',
         'aria-controls': 'generatedCode',
         'role': 'tab',
         'data-toggle': 'tab'
     }, 'Generated code')))    /*  Tab panes  */, React.DOM.div({ 'className': 'tab-content' }, React.DOM.div({
         'role': 'tabpanel',
         'className': 'tab-pane active',
-        'id': 'template'
+        'id': this.props.id + '-template'
     }, CodeEditor({
         'className': 'large-text-area',
         'style': { border: this.validHTML ? '1px solid black' : '2px solid red' },
         'value': this.state.templateHTML,
         'mode': 'html',
         'onChange': onChange1.bind(this)
-    })), React.DOM.div({
+    })), this.props.codeVisible ? React.DOM.div({
         'role': 'tabpanel',
         'className': 'tab-pane',
-        'id': 'classCode'
+        'id': this.props.id + '-classCode'
     }, CodeEditor({
         'className': 'large-text-area',
         'style': { border: this.validProps ? '1px solid black' : '2px solid red' },
         'value': this.state.templateProps,
         'mode': 'javascript',
         'onChange': onChange2.bind(this)
-    })), React.DOM.div({
+    })) : null, React.DOM.div({
         'role': 'tabpanel',
         'className': 'tab-pane',
-        'id': 'generatedCode'
+        'id': this.props.id + '-generatedCode'
     }, CodeEditor({
         'className': 'large-text-area',
         'style': { border: '1px solid black' },
@@ -69264,7 +69339,7 @@ module.exports = function () {
         'onSubmit': onSubmit3.bind(this)
     }, this.sample({ 'key': 'sample' }))), React.DOM.br({ 'style': { clear: 'both' } }));
 };
-},{"./aceEditor":276,"lodash":113,"react":274}],283:[function(require,module,exports){
+},{"./aceEditor":275,"lodash":113,"react/addons":undefined}],284:[function(require,module,exports){
 /**
  * Created by avim on 11/9/2014.
  */
@@ -69331,8 +69406,8 @@ function convertText(node, context, txt) {
         if (curlyCounter !== 0) {
             throw buildError("Failed to parse text '" + txt + "'", context, node);
         } else {
-            var needsParens = start !== 0 || end !== txt.length -1;
-            res += (first ? '' : '+') + (needsParens?'(':'')+txt.substr(start + 1, end - start - 2)+(needsParens?')':'');
+            var needsParens = start !== 0 || end !== txt.length - 1;
+            res += (first ? '' : '+') + (needsParens ? '(' : '') + txt.substr(start + 1, end - start - 2) + (needsParens ? ')' : '');
             first = false;
             txt = txt.substr(end);
         }
@@ -69599,7 +69674,7 @@ function extractDefinesFromJSXTag(html, defines) {
 function convertTemplateToReact(html, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = options || {};
-    var defines = {"react/addons": 'React', lodash: '_'};
+    var defines = {'react/addons': 'React', lodash: '_'};
     html = extractDefinesFromJSXTag(html, defines);
     var context = defaultContext();
     context.html = html;
@@ -69635,7 +69710,7 @@ module.exports = {
     _test: {}
 };
 
-},{"./stringUtils":284,"cheerio":8,"escodegen":70,"esprima":87,"lodash":113,"react/addons":"react/addons"}],284:[function(require,module,exports){
+},{"./stringUtils":285,"cheerio":8,"escodegen":70,"esprima":87,"lodash":113,"react/addons":undefined}],285:[function(require,module,exports){
 'use strict';
 var _ = require('lodash');
 
@@ -69673,4 +69748,4 @@ module.exports = {
 },{"lodash":113}],"react/addons":[function(require,module,exports){
 module.exports = require('./lib/ReactWithAddons');
 
-},{"./lib/ReactWithAddons":204}]},{},[281]);
+},{"./lib/ReactWithAddons":204}]},{},[280]);

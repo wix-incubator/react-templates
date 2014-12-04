@@ -1,8 +1,19 @@
-<!DOCTYPE rt playGround="./PlayGround.js">
+<!DOCTYPE rt playground="./playground.js">
 <div>
-    <h1>React Templates fiddle</h1>
-    <h2>Play with react templates and save/share your results</h2>
-    <button class="btn btn-lg btn-primary" onClick="(evt)=>evt.preventDefault();this.save()">Save fiddle</button>
-    <br>
-    <playGround ref="playground" direction="vertical"/>
+    <div id="header">
+        <div id="header-title">
+            <img class="nav-logo" src="https://facebook.github.io/react/img/logo.svg" width="36" height="36" />
+            RTFIddle
+        </div>
+        <div style="padding-left: 20px; display: inline-block">
+            <button class="btn" onClick="(evt)=>evt.preventDefault();this.save()">Save fiddle</button>
+        </div>
+    </div>
+    <div>
+        <!--<h1>React Templates fiddle</h1>-->
+        <!--<h2>Play with react templates and save/share your results</h2>-->
+        <!--<button class="btn btn-lg btn-primary" onClick="(evt)=>evt.preventDefault();this.save()">Save fiddle</button>-->
+        <!--<br />-->
+        <playground ref="playground" direction="vertical" fiddle="{true}" />
+    </div>
 </div>

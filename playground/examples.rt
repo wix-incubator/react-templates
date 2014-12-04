@@ -5,7 +5,7 @@
         <p>
             Simple hello world html transformed into react javascript code
         </p>
-        <playground id="helloExample" rt-props="this.state.samples[0]" direction="horizontal" style="display: block"></playground>
+        <playground id="helloExample" rt-props="this.state.samples[0]" direction="horizontal" codeVisible="{false}" style="display: block"></playground>
     </div>
     <div class="example">
         <h3>A Stateful Component</h3>

@@ -2,6 +2,7 @@
 /*eslint-env browser*/
 var reactTemplates = require('../src/reactTemplates');
 var playgroundTemplate = require('./playground.rt.js');
+var pgFiddleTemplate = require('./playground-fiddle.rt.js');
 
 var React = require('react/addons');
 
@@ -72,11 +73,15 @@ var Playground = React.createClass({
     displayName: 'Playground',
     mixins: [React.addons.LinkedStateMixin],
     propTypes: {
-        direction: React.PropTypes.string
+        direction: React.PropTypes.string,
+        codeVisible: React.PropTypes.bool,
+        fiddle: React.PropTypes.bool
     },
     getDefaultProps: function() {
         return {
-            direction: 'horizontal' //vertical
+            direction: 'horizontal', //vertical
+            codeVisible: true,
+            fiddle: false
         };
     },
     updateSample: function (state) {
@@ -114,7 +119,8 @@ var Playground = React.createClass({
     },
 
     render: function () {
-        return playgroundTemplate.apply(this);
+        var template = this.props.fiddle ? pgFiddleTemplate : playgroundTemplate;
+        return template.apply(this);
     }
 });
 

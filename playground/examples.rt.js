@@ -6,6 +6,7 @@ module.exports = function () {
     return React.DOM.div({ 'id': 'examples' }, React.DOM.div({ 'className': 'example' }, React.DOM.h3({}, 'Hello world in react templates'), React.DOM.p({}, '\n            Simple hello world html transformed into react javascript code\n        '), playground(_.merge({}, {
         'id': 'helloExample',
         'direction': 'horizontal',
+        'codeVisible': false,
         'style': { display: 'block' }
     }, this.state.samples[0]))), React.DOM.div({ 'className': 'example' }, React.DOM.h3({}, 'A Stateful Component'), React.DOM.p({}, '\n            In addition to taking input data (accessed via ', React.DOM.code({}, 'this.props'), '), a\n            component can maintain internal state data (accessed via ', React.DOM.code({}, 'this.state'), ').\n            When a component\'s state data changes, the rendered markup will be\n            updated by re-invoking ', React.DOM.code({}, 'render()'), '.\n        '), React.DOM.div({ 'id': 'timerExample' }), playground(_.merge({}, {
         'id': 'example2',

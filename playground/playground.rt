@@ -4,7 +4,7 @@
         <!-- Nav tabs -->
         <ul class="nav nav-pills" role="tablist">
             <li role="presentation" class="active"><a href="#{this.props.id}-template" aria-controls="template" role="tab" data-toggle="tab">Template</a></li>
-            <li rt-if="this.state.templateProps != '{}'" role="presentation"><a href="#{this.props.id}-classCode" aria-controls="classCode" role="tab" data-toggle="tab">Class</a></li>
+            <li rt-if="this.props.codeVisible" role="presentation"><a href="#{this.props.id}-classCode" aria-controls="classCode" role="tab" data-toggle="tab">Class</a></li>
             <li role="presentation"><a href="#{this.props.id}-generatedCode" aria-controls="generatedCode" role="tab" data-toggle="tab">Generated code</a></li>
         </ul>
         <!-- Tab panes -->
@@ -16,7 +16,7 @@
                             onChange="(evt) => this.setState({'templateHTML':evt.target.value})"
                         />
             </div>
-            <div rt-if="this.state.templateProps != '{}'" role="tabpanel" class="tab-pane" id="{this.props.id}-classCode">
+            <div rt-if="this.props.codeVisible" role="tabpanel" class="tab-pane" id="{this.props.id}-classCode">
                 <CodeEditor class="large-text-area" style="border: {this.validProps? '1px solid black':'2px solid red'};"
                             value="{this.state.templateProps}"
                             mode="javascript"

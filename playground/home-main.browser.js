@@ -68972,6 +68972,7 @@ module.exports = function () {
     return React.DOM.div({ 'id': 'examples' }, React.DOM.div({ 'className': 'example' }, React.DOM.h3({}, 'Hello world in react templates'), React.DOM.p({}, '\n            Simple hello world html transformed into react javascript code\n        '), playground(_.merge({}, {
         'id': 'helloExample',
         'direction': 'horizontal',
+        'codeVisible': false,
         'style': { display: 'block' }
     }, this.state.samples[0]))), React.DOM.div({ 'className': 'example' }, React.DOM.h3({}, 'A Stateful Component'), React.DOM.p({}, '\n            In addition to taking input data (accessed via ', React.DOM.code({}, 'this.props'), '), a\n            component can maintain internal state data (accessed via ', React.DOM.code({}, 'this.state'), ').\n            When a component\'s state data changes, the rendered markup will be\n            updated by re-invoking ', React.DOM.code({}, 'render()'), '.\n        '), React.DOM.div({ 'id': 'timerExample' }), playground(_.merge({}, {
         'id': 'example2',
@@ -68987,7 +68988,7 @@ module.exports = function () {
         'style': { display: 'block' }
     })));
 };
-},{"./playground":278,"lodash":113,"react/addons":undefined}],277:[function(require,module,exports){
+},{"./playground":279,"lodash":113,"react/addons":undefined}],277:[function(require,module,exports){
 'use strict';
 /*eslint-env browser*/
 var reactTemplates = require('../src/reactTemplates');
@@ -69027,11 +69028,69 @@ if (window.location.hash) {
 
 
 
-},{"../src/reactTemplates":280,"./examples.js":275,"lodash":113,"react/addons":undefined}],278:[function(require,module,exports){
+},{"../src/reactTemplates":281,"./examples.js":275,"lodash":113,"react/addons":undefined}],278:[function(require,module,exports){
+var React = require('react/addons');
+var _ = require('lodash');
+var CodeEditor = require('./aceEditor');
+'use strict';
+function onChange1(evt) {
+    this.setState({ 'templateHTML': evt.target.value });
+}
+function onChange2(evt) {
+    this.setState({ 'templateProps': evt.target.value });
+}
+function onSubmit3(e) {
+    e.preventDefault();
+}
+module.exports = function () {
+    return React.DOM.div({}, React.DOM.div({
+        'style': {
+            position: 'relative',
+            minHeight: '100%'
+        }
+    }, CodeEditor({
+        'className': 'large-text-area',
+        'style': { border: this.validHTML ? '1px solid black' : '2px solid red' },
+        'value': this.state.templateHTML,
+        'mode': 'html',
+        'onChange': onChange1.bind(this)
+    })), React.DOM.div({
+        'style': {
+            position: 'relative',
+            minHeight: '100%'
+        }
+    }, CodeEditor({
+        'className': 'large-text-area',
+        'style': { border: this.validProps ? '1px solid black' : '2px solid red' },
+        'value': this.state.templateProps,
+        'mode': 'javascript',
+        'onChange': onChange2.bind(this)
+    })), React.DOM.div({
+        'style': {
+            position: 'relative',
+            minHeight: '100%'
+        }
+    }, CodeEditor({
+        'className': 'large-text-area',
+        'style': { border: '1px solid black' },
+        'value': this.templateSource,
+        'mode': 'javascript',
+        'readOnly': true
+    })), React.DOM.div({
+        'key': 'result-area',
+        'className': 'result-area well ' + (this.props.direction === 'horizontal' && 'horizontal' || 'vertical'),
+        'style': { marginTop: '48px' }
+    }, React.DOM.h2({}, 'Preview:'), React.DOM.form({
+        'className': 'sample-view',
+        'onSubmit': onSubmit3.bind(this)
+    }, this.sample({ 'key': 'sample' }))), React.DOM.br({ 'style': { clear: 'both' } }));
+};
+},{"./aceEditor":274,"lodash":113,"react/addons":undefined}],279:[function(require,module,exports){
 'use strict';
 /*eslint-env browser*/
 var reactTemplates = require('../src/reactTemplates');
 var playgroundTemplate = require('./playground.rt.js');
+var pgFiddleTemplate = require('./playground-fiddle.rt.js');
 
 var React = require('react/addons');
 
@@ -69102,11 +69161,15 @@ var Playground = React.createClass({
     displayName: 'Playground',
     mixins: [React.addons.LinkedStateMixin],
     propTypes: {
-        direction: React.PropTypes.string
+        direction: React.PropTypes.string,
+        codeVisible: React.PropTypes.bool,
+        fiddle: React.PropTypes.bool
     },
     getDefaultProps: function() {
         return {
-            direction: 'horizontal' //vertical
+            direction: 'horizontal', //vertical
+            codeVisible: true,
+            fiddle: false
         };
     },
     updateSample: function (state) {
@@ -69144,13 +69207,14 @@ var Playground = React.createClass({
     },
 
     render: function () {
-        return playgroundTemplate.apply(this);
+        var template = this.props.fiddle ? pgFiddleTemplate : playgroundTemplate;
+        return template.apply(this);
     }
 });
 
 module.exports = Playground;
 
-},{"../src/reactTemplates":280,"./playground.rt.js":279,"lodash":113,"react/addons":undefined}],279:[function(require,module,exports){
+},{"../src/reactTemplates":281,"./playground-fiddle.rt.js":278,"./playground.rt.js":280,"lodash":113,"react/addons":undefined}],280:[function(require,module,exports){
 var React = require('react/addons');
 var _ = require('lodash');
 var CodeEditor = require('./aceEditor');
@@ -69180,7 +69244,7 @@ module.exports = function () {
         'aria-controls': 'template',
         'role': 'tab',
         'data-toggle': 'tab'
-    }, 'Template')), this.state.templateProps != '{}' ? React.DOM.li({ 'role': 'presentation' }, React.DOM.a({
+    }, 'Template')), this.props.codeVisible ? React.DOM.li({ 'role': 'presentation' }, React.DOM.a({
         'href': '#' + this.props.id + '-classCode',
         'aria-controls': 'classCode',
         'role': 'tab',
@@ -69200,7 +69264,7 @@ module.exports = function () {
         'value': this.state.templateHTML,
         'mode': 'html',
         'onChange': onChange1.bind(this)
-    })), this.state.templateProps != '{}' ? React.DOM.div({
+    })), this.props.codeVisible ? React.DOM.div({
         'role': 'tabpanel',
         'className': 'tab-pane',
         'id': this.props.id + '-classCode'
@@ -69229,7 +69293,7 @@ module.exports = function () {
         'onSubmit': onSubmit3.bind(this)
     }, this.sample({ 'key': 'sample' }))), React.DOM.br({ 'style': { clear: 'both' } }));
 };
-},{"./aceEditor":274,"lodash":113,"react/addons":undefined}],280:[function(require,module,exports){
+},{"./aceEditor":274,"lodash":113,"react/addons":undefined}],281:[function(require,module,exports){
 /**
  * Created by avim on 11/9/2014.
  */
@@ -69600,7 +69664,7 @@ module.exports = {
     _test: {}
 };
 
-},{"./stringUtils":281,"cheerio":8,"escodegen":70,"esprima":87,"lodash":113,"react/addons":undefined}],281:[function(require,module,exports){
+},{"./stringUtils":282,"cheerio":8,"escodegen":70,"esprima":87,"lodash":113,"react/addons":undefined}],282:[function(require,module,exports){
 'use strict';
 var _ = require('lodash');
 
