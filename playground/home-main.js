@@ -24,7 +24,7 @@ requirejs.config({
     }
 });
 
-requirejs(['jquery', 'react', './Examples'], function ($, React, Examples) {
+requirejs(['jquery', 'react', './examples'], function ($, React, Examples) {
     'use strict';
     //var Examples = require('./examples.js');
     React.render(Examples(), document.getElementById('home-section'));
