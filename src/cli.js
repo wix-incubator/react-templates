@@ -16,6 +16,8 @@ var options = require('./options');
 function executeOptions(currentOptions) {
     var ret = 0;
     var files = currentOptions._;
+    context.options.format = currentOptions.format || 'stylish';
+
     if (currentOptions.version) {
         console.log('v' + pkg.version);
     } else if (currentOptions.help) {
@@ -27,7 +29,6 @@ function executeOptions(currentOptions) {
     } else if (!files.length) {
         console.log(options.generateHelp());
     } else {
-        context.options.format = currentOptions.format;
         _.forEach(files, handleSingleFile.bind(this, currentOptions));
         ret = shell.printResults(context);
     }
