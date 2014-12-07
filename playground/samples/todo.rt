@@ -1,9 +1,9 @@
 <div>
-    Have {_.filter(this.state.todos, {done:true}).length} todos done,
-    and {_.filter(this.state.todos, {done:false}).length} not done
+    <strong>{_.filter(this.state.todos, {done:true}).length}</strong> done,
+    <strong>{_.filter(this.state.todos, {done:false}).length}</strong> pending
     <br/>
     <div rt-repeat="todo in this.state.todos" key="{todo.key}">
-        <button onClick="()=>this.remove(todo)">x</button>
+        <button onClick="()=>this.remove(todo)" title="Remove Todo">x</button>
         <input type="checkbox" checked="{todo.done}" onChange="()=>this.toggleChecked(todoIndex)"/>
         <span style="text-decoration: {todo.done ? 'line-through': 'none'}">{todo.value}</span>
     </div>

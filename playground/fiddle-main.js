@@ -5,9 +5,8 @@ requirejs.config({
         jquery: 'http://code.jquery.com/jquery-1.11.0.min',
         firebase: 'https://cdn.firebase.com/js/client/2.0.5/firebase',
         react: 'http://fb.me/react-with-addons-0.12.1',
-        text: 'libs/requirejs-plugins/text',
-        json: 'libs/requirejs-plugins/json'
         //ace: '../ace-builds-1.1.8/src-min/ace',
+        fiddle: './fiddle'
         //'react/addons': 'http://fb.me/react-with-addons-0.12.1'
     },
     shim: {
@@ -24,10 +23,8 @@ requirejs.config({
     }
 });
 
-requirejs(['jquery', 'react', './Examples'], function ($, React, Examples) {
+requirejs(['jquery', 'react', 'fiddle'], function ($, React, fiddle) {
     'use strict';
-    //var Examples = require('./examples.js');
-    React.render(Examples(), document.getElementById('home-section'));
-    //window.fiddle = React.render(fiddle(), document.getElementById('container'));
+    window.fiddle = React.render(fiddle(), document.getElementById('container'));
 });
 

@@ -1,5 +1,5 @@
 <!DOCTYPE rt CodeEditor="./aceEditor">
-<div>
+<div class="playground">
     <div id="{this.props.id}-myTab" role="tabpanel" class="code-area {(this.props.direction === 'horizontal' && 'horizontal') ||'vertical'}">
         <!-- Nav tabs -->
         <ul class="nav nav-pills" role="tablist">

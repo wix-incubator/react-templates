@@ -10,8 +10,7 @@ module.exports = function (grunt) {
             all: {
                 src: [
                     'src/**/*.js', 'playground/**/*.js',
-                    '!playground/main.browser.js',
-                    '!playground/home-main.browser.js',
+                    '!playground/rt-main.browser.js',
                     '!playground/bundle/**',
                     '!playground/tmp/**',
                     '!playground/**/*.rt.js'
@@ -37,63 +36,9 @@ module.exports = function (grunt) {
             grunt: ['conf/tasks/test']
         },
         browserify: {
-//            libs: {
-//                files: {
-//                    'playground/libs.browser.js': ['playground/libs.js']
-//                },
-//                options: {
-//                    alias: [
-//                        'react:react/addons'
-//                    ],
-//                    shim: {
-//                        "react/addons": {
-//                            path: 'react/addons',
-//                            exports: 'React',
-//                            depends: {
-//                                lodash: '_'
-//                            }
-//                        },
-//                        "../src/reactTemplates": {
-//                            path: '../src/reactTemplates.js',
-//                            exports: 'reactTemplates',
-//                            depends: {
-//                                lodash: '_'
-//                            }
-//                        },
-//                        "lodash": {
-//                            path: 'lodash',
-//                            exports: '_'
-//                        },
-//                        "brace": {
-//                            path: 'brace',
-//                            exports: 'brace',
-//                            depends: {
-//                                lodash: '_'
-//                            }
-//                        }
-//                    }
-//
-//                }
-//            },
-            pg: {
+            rt: {
                 files: {
-                    'playground/main.browser.js': ['playground/main.js']
-                },
-                options: {
-                    transform: ['brfs'],
-                    alias: ['react:react/addons']
-//                    exclude:['react','react/addons','../src/reactTemplates','lodash','brace','brace/mode/javascript','brace/mode/html','brace/theme/solarized_light'],
-//                    external: [
-//                        'react/addons',
-//                        '../src/reactTemplates',
-//                        'lodash',
-//                        'brace'
-//                    ]
-                }
-            },
-            home: {
-                files: {
-                    'playground/home-main.browser.js': ['playground/home-main.js']
+                    'playground/rt-main.browser.js': ['playground/rt-main.js']
                 },
                 options: {
                     transform: ['brfs'],
@@ -121,15 +66,6 @@ module.exports = function (grunt) {
                 options: {
                     spawn: false
                 }
-            },
-            playground: {
-                files: [
-                    'playground/**/*.js', '!playground/*.browser.js'
-                ],
-                tasks: ['browserify:home'], /*'browserify:pg', */
-                options: {
-                    spawn: false
-                }
             }
         }
     });
@@ -147,9 +83,8 @@ module.exports = function (grunt) {
     grunt.registerTask('rt', function () {
         var reactTemplates = require('./src/cli');
         var files = grunt.file.expand('playground/*.rt');
-        var conf = {commonJS: true, force: true};
-        conf._ = files;
-        var ret = reactTemplates.executeOptions(conf);
+        var conf = {common: false, force: true, _: files};
+        var ret = reactTemplates.execute(conf);
         return ret === 0;
     });
 

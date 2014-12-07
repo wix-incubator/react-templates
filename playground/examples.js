@@ -1,35 +1,41 @@
 'use strict';
-var examplesTemplate = require('./examples.rt.js');
-var React = require('react/addons');
-var _ = require('lodash');
-var fs = require('fs');
+define(['lodash', 'react', './examples.rt',
+        'text!./samples/hello.code', 'text!./samples/hello.rt',
+        'text!./samples/todo.code', 'text!./samples/todo.rt',
+        'text!./samples/rt-if.code', 'text!./samples/rt-if.rt',
+        'text!./samples/rt-props.code', 'text!./samples/rt-props.rt',
+        'text!./samples/rt-repeat.code', 'text!./samples/rt-repeat.rt',
+        'text!./samples/weather.code', 'text!./samples/weather.rt'
+], function (_, React, examplesTemplate, helloCode, helloRT, todoCode, todoRT, rtIfCode, rtIfRT, rtPropsCode, rtPropsRT, rtRepeatCode, rtRepeatRT, weatherCode, weatherRT) {
+    var samples = {
+        hello: [helloCode, helloRT],
+        todo: [todoCode, todoRT],
+        props: [rtPropsCode, rtPropsRT],
+        rtIf: [rtIfCode, rtIfRT],
+        repeat: [rtRepeatCode, rtRepeatRT],
+        weather: [weatherCode, weatherRT]
+    };
+    //samples = _.map(samples, function (tuple) {
+    //    return {templateProps: tuple[0], templateHTML: tuple[1]};
+    //});
+    Object.keys(samples).forEach(function (k) {
+        samples[k] = {templateProps: samples[k][0], templateHTML: samples[k][1]};
+    });
 
-var helloCode = fs.readFileSync(__dirname + '/samples/hello.code').toString();
-var helloRT = fs.readFileSync(__dirname + '/samples/hello.rt').toString();
-var todoCode = fs.readFileSync(__dirname + '/samples/todo.code').toString();
-var todoRT = fs.readFileSync(__dirname + '/samples/todo.rt').toString();
+    var Examples = React.createClass({
+        displayName: 'Examples',
+        mixins: [React.addons.LinkedStateMixin],
 
-var samples = [
-    [helloCode, helloRT],
-    [todoCode, todoRT]
-];
-samples = _.map(samples, function (tuple) {
-    return {templateProps: tuple[0], templateHTML: tuple[1]};
+        getInitialState: function () {
+            return {
+                samples: samples
+            };
+        },
+
+        render: function () {
+            return examplesTemplate.apply(this);
+        }
+    });
+
+    return Examples;
 });
-
-var Examples = React.createClass({
-    displayName: 'Examples',
-    mixins: [React.addons.LinkedStateMixin],
-
-    getInitialState: function () {
-        return {
-            samples: samples
-        };
-    },
-
-    render: function () {
-        return examplesTemplate.apply(this);
-    }
-});
-
-module.exports = Examples;

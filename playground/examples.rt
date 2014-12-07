@@ -5,39 +5,41 @@
         <p>
             Simple hello world html transformed into react javascript code
         </p>
-        <playground id="helloExample" rt-props="this.state.samples[0]" direction="horizontal" codeVisible="{false}" style="display: block"></playground>
+        <playground id="helloExample" rt-props="this.state.samples.hello" direction="horizontal" codeVisible="{false}"></playground>
     </div>
     <div class="example">
-        <h3>A Stateful Component</h3>
+        <h3>This shows the use of rt-if</h3>
         <p>
-            In addition to taking input data (accessed via <code>this.props</code>), a
-            component can maintain internal state data (accessed via <code>this.state</code>).
-            When a component&#39;s state data changes, the rendered markup will be
-            updated by re-invoking <code>render()</code>.
+            This shows the use of rt-if
         </p>
-        <div id="timerExample"></div>
-        <playground id="example2" rt-props="this.state.samples[1]" direction="horizontal" style="display: block"></playground>
+        <playground id="ifExample" rt-props="this.state.samples.rtIf" direction="horizontal"></playground>
     </div>
     <div class="example">
-        <h3>An Application</h3>
+        <h3>This shows the use of rt-repeat</h3>
         <p>
-            Using <code>props</code> and <code>state</code>, we can put together a small Todo application.
-            This example uses <code>state</code> to track the current list of items as well as
-            the text that the user has entered. Although event handlers appear to be
-            rendered inline, they will be collected and implemented using event
-            delegation.
+            This shows the use of rt-repeat, to show multiple items, and the use of rt-scope to create a reusable name for multiple calculations
         </p>
-        <div id="todoExample"></div>
-        <playground id="example3" direction="horizontal" style="display: block"></playground>
+        <playground id="repeatExample" rt-props="this.state.samples.repeat" direction="horizontal"></playground>
     </div>
     <div class="example">
-        <h3>A Component Using External Plugins</h3>
+        <h3>This shows the use of rt-props</h3>
         <p>
-            React is flexible and provides hooks that allow you to interface with
-            other libraries and frameworks. This example uses Showdown, an external
-            Markdown library, to convert the textarea&#39;s value in real-time.
+            This shows the use of rt-props. It is used in this component to pass all the original properties set on this component (except the ones used for the component logic - onClick and eventId) to the element that will actually represent this component
         </p>
-        <div id="markdownExample"></div>
-        <playground id="example4" direction="horizontal" style="display: block"></playground>
+        <playground id="propsExample" rt-props="this.state.samples.props" direction="horizontal"></playground>
+    </div>
+    <div class="example">
+        <h3>Improved todo list</h3>
+        <p>
+            This shows the use of rt-props. It is used in this component to pass all the original properties set on this component (except the ones used for the component logic - onClick and eventId) to the element that will actually represent this component
+        </p>
+        <playground id="todoExample" rt-props="this.state.samples.todo" direction="horizontal"></playground>
+    </div>
+    <div class="example">
+        <h3>Weather</h3>
+        <p>
+            This example shows working with async events, usage of regular event handler function pointers instead of lambda expression, and working with 2 way binding
+        </p>
+        <playground id="weatherExample" rt-props="this.state.samples.weather" direction="horizontal"></playground>
     </div>
 </div>

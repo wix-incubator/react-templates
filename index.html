@@ -117,57 +117,6 @@
         </section>
         <hr class="home-divider" />
         <section id="home-section" class="home-section">
-            <!--<div id="examples">-->
-                <!--<div class="example">-->
-                    <!--<h3>A Simple Component</h3>-->
-                    <!--<p>-->
-                        <!--React components implement a <code>render()</code> method that takes input data and-->
-                        <!--returns what to display. This example uses an XML-like syntax called-->
-                        <!--JSX. Input data that is passed into the component can be accessed by-->
-                        <!--<code>render()</code> via <code>this.props</code>.-->
-                    <!--</p>-->
-                    <!--<p>-->
-                        <!--<strong>JSX is optional and not required to use React.</strong> Try-->
-                                                                                        <!--clicking on &quot;Compiled JS&quot; to see the raw JavaScript code produced by-->
-                                                                                        <!--the JSX compiler.-->
-                    <!--</p>-->
-                    <!--<div id="helloExample"></div>-->
-                <!--</div>-->
-                <!--<div class="example">-->
-                    <!--<h3>A Stateful Component</h3>-->
-                    <!--<p>-->
-                        <!--In addition to taking input data (accessed via <code>this.props</code>), a-->
-                        <!--component can maintain internal state data (accessed via <code>this.state</code>).-->
-                        <!--When a component&#39;s state data changes, the rendered markup will be-->
-                        <!--updated by re-invoking <code>render()</code>.-->
-                    <!--</p>-->
-                    <!--<div id="timerExample"></div>-->
-                <!--</div>-->
-                <!--<div class="example">-->
-                    <!--<h3>An Application</h3>-->
-                    <!--<p>-->
-                        <!--Using <code>props</code> and <code>state</code>, we can put together a small Todo application.-->
-                        <!--This example uses <code>state</code> to track the current list of items as well as-->
-                        <!--the text that the user has entered. Although event handlers appear to be-->
-                        <!--rendered inline, they will be collected and implemented using event-->
-                        <!--delegation.-->
-                    <!--</p>-->
-                    <!--<div id="todoExample"></div>-->
-                <!--</div>-->
-                <!--<div class="example">-->
-                    <!--<h3>A Component Using External Plugins</h3>-->
-                    <!--<p>-->
-                        <!--React is flexible and provides hooks that allow you to interface with-->
-                        <!--other libraries and frameworks. This example uses Showdown, an external-->
-                        <!--Markdown library, to convert the textarea&#39;s value in real-time.-->
-                    <!--</p>-->
-                    <!--<div id="markdownExample"></div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<script type="text/javascript" src="js/examples/hello.js"></script>-->
-            <!--<script type="text/javascript" src="js/examples/timer.js"></script>-->
-            <!--<script type="text/javascript" src="js/examples/todo.js"></script>-->
-            <!--<script type="text/javascript" src="js/examples/markdown.js"></script>-->
         </section>
         <hr class="home-divider" />
         <section class="home-bottom-section">
@@ -193,9 +142,10 @@
 </div>
 <div id="fb-root"></div>
 
-<!--<script src="playground/bundle/reactTemplates.bundle.js"></script>-->
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-<script src="playground/home-main.browser.js"></script>
+<script src="playground/libs/ace-builds-1.1.8/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="playground/rt-main.browser.js"></script>
+<script data-main="playground/home-main.js" src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.js"></script>
 </body>
 </html>

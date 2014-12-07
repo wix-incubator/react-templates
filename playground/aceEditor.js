@@ -2,14 +2,7 @@
  * Created by avim on 11/25/2014.
  */
 'use strict';
-var React = require('react/addons');
-var _ = require('lodash');
-var brace = require('brace');
-
-require('brace/mode/javascript');
-require('brace/mode/html');
-//require('brace/theme/monokai');
-require('brace/theme/solarized_light');
+define(['react', 'lodash'/*, 'ace'*/], function (React, _/*, ace*/) {
 
 var editor = React.createClass({
     displayName: 'BraceEditor',
@@ -33,7 +26,7 @@ var editor = React.createClass({
         }
     },
     componentDidMount: function () {
-        this.editor = brace.edit(this.state.editorId);
+        this.editor = ace.edit(this.state.editorId);
 //        this.editor.setTheme('ace/theme/monokai');
         this.editor.setTheme('ace/theme/solarized_light');
         if (this.props.mode !== 'html') {
@@ -64,4 +57,5 @@ var editor = React.createClass({
     }
 });
 
-module.exports = editor;
+return editor;
+});

@@ -1,13 +1,12 @@
 {
     mixins: [React.addons.LinkedStateMixin],
-        getInitialState: function () {
-    return {
-        edited: '', todos: [], counter: 0};
+    getInitialState: function () {
+        return {edited: '', todos: [], counter: 0};
     },
     add: function () {
-        if (this.state.edited.trim().length === 0) {
-            return;
-        }
+    if (this.state.edited.trim().length === 0) {
+        return;
+    }
         var newTodo = {value: this.state.edited, done: false, key: this.state.counter};
         this.setState({todos: this.state.todos.concat(newTodo), edited: '', counter: this.state.counter + 1});
     },

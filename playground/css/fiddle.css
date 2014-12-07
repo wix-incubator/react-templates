@@ -1,12 +1,21 @@
 body {
     /*padding: 20px;*/
     font-family: "Helvetica", "Arial", "FreeSans", "Verdana", "Tahoma", "Lucida Sans", "Lucida Sans Unicode", "Luxi Sans", sans-serif;
-    background: #f6f6f6 url(../img/initializing.png) 50% 50% no-repeat;
-    overflow: hidden;
+    /*background: #f6f6f6 url(../img/initializing.png) 50% 50% no-repeat;*/
+    /*overflow: hidden;*/
     padding: 0;
     margin: 0;
     position: relative;
     font-size: 14px;
+    height: 100%;
+}
+
+html {
+    height: 100%;
+}
+
+#container {
+    height: 100%;
 }
 
 #header {
@@ -23,20 +32,26 @@ body {
     display: inline-block;
 }
 
-.hiddenTab {
-    /*width: 0;*/
-    /*height: 0;*/
+#buttons-bar {
+    padding-left: 40px;
+    display: inline-block;
+}
+
+.fiddle {
+    height: 100%;
 }
 
 .large-text-area {
-    height: 400px;
+    height: 90%;
+    width: 100%;
+    display: block;
     margin: 10px;
 }
 
 .result-area {
     width: 50%;
-    float: left;
-    margin-top: 48px;
+    display: table-cell;
+    vertical-align: top;
 }
 
 .sample-view {
@@ -52,6 +67,13 @@ body {
 }
 
 .playground {
+    display: table;
+    height: 100%;
+}
+
+.row {
+    display: table-row;
+    height: 50%;
 }
 
 .code-area {
@@ -59,8 +81,8 @@ body {
     width: 50%;
     height: 50%;
     /*height: 166px;*/
-    display: inline-block;
-    float: left;
+    display: table-cell;
+    /*float: left;*/
     /*margin: 2px;*/
     /*padding: 10px;*/
 }

@@ -1,30 +1,34 @@
 <!DOCTYPE rt CodeEditor="./aceEditor">
 <!--suppress ALL -->
 <div class="playground">
-    <div class="code-area">
-        <CodeEditor class="large-text-area" style="border: {this.validHTML ? '1px solid black' : '2px solid red'};"
-                    value="{this.state.templateHTML}"
-                    mode="html"
-                    onChange="(evt) => this.setState({'templateHTML':evt.target.value})" />
+    <div class="row">
+        <div class="code-area">
+            <CodeEditor class="large-text-area" style="border: {this.validHTML ? '1px solid black' : '2px solid red'};"
+                        value="{this.state.templateHTML}"
+                        mode="html"
+                        onChange="(evt) => this.setState({'templateHTML':evt.target.value})" />
+        </div>
+        <div class="code-area">
+            <CodeEditor class="large-text-area" style="border: {this.validProps ? '1px solid black' : '2px solid red'};"
+                        value="{this.state.templateProps}"
+                        mode="javascript"
+                        onChange="(evt) => this.setState({'templateProps':evt.target.value})" />
+        </div>
     </div>
-    <div class="code-area">
-        <CodeEditor class="large-text-area" style="border: {this.validProps ? '1px solid black' : '2px solid red'};"
-                    value="{this.state.templateProps}"
-                    mode="javascript"
-                    onChange="(evt) => this.setState({'templateProps':evt.target.value})" />
+    <div class="row">
+        <div class="code-area">
+            <CodeEditor class="large-text-area" style="border:1px solid black;"
+                        value="{this.templateSource}"
+                        mode="javascript"
+                        readOnly="{true}" />
+        </div>
+        <div key="result-area" class="result-area well">
+            <h2>Preview:</h2>
+            <form class="sample-view" onSubmit="(e) => e.preventDefault();">
+                <this.sample key="sample">
+                </this.sample>
+            </form>
+        </div>
     </div>
-    <div class="code-area">
-        <CodeEditor class="large-text-area" style="border:1px solid black;"
-                    value="{this.templateSource}"
-                    mode="javascript"
-                    readOnly="{true}" />
-    </div>
-    <div key="result-area" class="result-area">
-        <h2>Preview:</h2>
-        <form class="sample-view" onSubmit="(e) => e.preventDefault();">
-            <this.sample key="sample">
-            </this.sample>
-        </form>
-    </div>
-    <br style="clear:both">
+    <!--<br style="clear:both">-->
 </div>

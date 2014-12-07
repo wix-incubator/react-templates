@@ -1,13 +1,17 @@
-var React = require('react/addons');
-var _ = require('lodash');
-var playGround = require('./PlayGround.js');
-'use strict';
-module.exports = function () {
-    return React.DOM.div({}, React.DOM.h1({}, 'React Templates'), playGround(_.merge({}, {
-        'ref': 'playground',
-        'direction': 'horizontal'
-    }, this.state.samples[0])), playGround(_.merge({}, {
-        'ref': 'playground',
-        'direction': 'horizontal'
-    }, this.state.samples[1])));
-};
+/*eslint new-cap:0,no-unused-vars:0*/
+define([
+    'react/addons',
+    'lodash',
+    './PlayGround.js'
+], function (React, _, playGround) {
+    'use strict';
+    return function () {
+        return React.createElement('div', {}, React.createElement('h1', {}, 'React Templates'), React.createElement(playGround, _.merge({}, {
+            'ref': 'playground',
+            'direction': 'horizontal'
+        }, this.state.samples[0])), React.createElement(playGround, _.merge({}, {
+            'ref': 'playground',
+            'direction': 'horizontal'
+        }, this.state.samples[1])));
+    };
+});
