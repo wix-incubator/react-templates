@@ -1,0 +1,9 @@
+{
+    mixins: [React.addons.LinkedStateMixin],
+    getProps: function() {
+        return _.omit(this.props, ['onClick', 'eventId']);    
+    },
+    reportClick: function(child) {
+        alert((this.props.eventId || -1) + ':' + child.innerText);
+    }
+}

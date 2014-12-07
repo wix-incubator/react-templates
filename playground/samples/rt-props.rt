@@ -1,0 +1,4 @@
+<div onClick="(evt)=>this.reportClick(evt.target)" rt-props="this.getProps()">
+    All kinds of stuff,
+    <span>some inner child, </span> and a sibling
+</div>

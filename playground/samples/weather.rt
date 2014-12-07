@@ -1,0 +1,12 @@
+<div>
+    <h4>Cities weather report</h4>
+    <input placeholder="Type a city to add" valueLink="{this.linkState('cityToAdd')}" onKeyDown="(e)=>if (e.keyCode === 13) { e.preventDefault(); this.addCity(); }"/>
+    <button onClick="{this.addCity}">Add</button>
+    <div key="preloader" rt-if="this.state.loading">-- Loading --</div>
+    <div rt-repeat="city in this.state.info" key="{city.id}">
+        {cityIndex+1})
+        <img rt-repeat="weather in city.weather" src="http://openweathermap.org/img/w/{weather.icon}.png" title="{weather.description}"/>
+        {city.name}, {city.sys.country}
+    </div>
+    <button onClick="{this.refresh}">Refresh</button>
+</div>

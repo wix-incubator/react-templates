@@ -1,0 +1,13 @@
+<div>
+    Have {_.filter(this.state.todos, {done:true}).length} todos done,
+    and {_.filter(this.state.todos, {done:false}).length} not done
+    <br/>
+    <div rt-repeat="todo in this.state.todos" key="{todo.key}">
+        <button onClick="()=>this.remove(todo)">x</button>
+        <input type="checkbox" checked="{todo.done}" onChange="()=>this.toggleChecked(todoIndex)"/>
+        <span style="text-decoration: {todo.done ? 'line-through': 'none'}">{todo.value}</span>
+    </div>
+    <input key="myinput" type="text" onKeyDown="(e) => if (e.keyCode == 13) { e.preventDefault(); this.add(); }" valueLink="{this.linkState('edited')}"/>
+    <button onClick="()=>this.add()">Add</button><br/>
+    <button onClick="()=>this.clearDone()">Clear done</button>
+</div>

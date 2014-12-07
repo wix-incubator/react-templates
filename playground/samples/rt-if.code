@@ -1,0 +1,9 @@
+{
+    mixins: [React.addons.LinkedStateMixin],
+    getInitialState: function () {
+        return {open:false};
+    },
+    toggle: function() {
+        this.setState({open:!this.state.open});
+    }
+}
