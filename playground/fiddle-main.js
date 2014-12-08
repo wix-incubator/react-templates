@@ -6,7 +6,9 @@ requirejs.config({
         firebase: 'https://cdn.firebase.com/js/client/2.0.5/firebase',
         react: 'http://fb.me/react-with-addons-0.12.1',
         //ace: '../ace-builds-1.1.8/src-min/ace',
-        fiddle: './fiddle'
+        fiddle: './fiddle',
+        text: 'libs/requirejs-plugins/text',
+        json: 'libs/requirejs-plugins/json'
         //'react/addons': 'http://fb.me/react-with-addons-0.12.1'
     },
     shim: {
@@ -41,8 +43,8 @@ requirejs(['jquery', 'react', 'fiddle'], function ($, React, fiddle) {
         //});
 
 
-        var h = (contentHeight / 2) - 10;
-        var w = ($(document).width() / 2) - 10;
+        //var h = (contentHeight / 2) - 10;
+        //var w = ($(document).width() / 2) - 10;
         //var size = getWindowSize();
         //$('#editor-rt').css({
         //    top: 50, left: 0, bottom: h, right: w, position: 'absolute'
@@ -70,17 +72,8 @@ requirejs(['jquery', 'react', 'fiddle'], function ($, React, fiddle) {
             //var h = (contentHeight / 2) - 10;
             //var w = ($(document).width() / 2) - 10;
             var $this = $(this);
-            //$this.parent().width();
-            //$this.parent().width();
-            console.log('' + $this.parent().height() + ',' + $this.parent().width() );
-            //$(this).css({);
-
             $this.height($this.parent().height() - 2).width($this.parent().width() - 2);
-            //$(this).css({
-            //    top: 50 + h, left: w, bottom: 0, right: 0, position: 'absolute'
-            //});
         });
-        //.large-text-area
     }
 });
 

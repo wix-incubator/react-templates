@@ -37,14 +37,33 @@ body {
 #header-title {
     color: #00d8ff;
     font-size: 24px;
-    line-height: 50px;
-    height: 50px;
+    line-height: 48px;
+    /*height: 50px;*/
+    padding-left: 10px;
+    vertical-align: middle;
     display: inline-block;
+}
+
+.title-link, .title-link:hover, .title-link:visited {
+    text-decoration: none;
+    color: #00d8ff;
 }
 
 #buttons-bar {
     padding-left: 40px;
     display: inline-block;
+}
+
+#buttons-bar button, #buttons-bar div {
+    margin-right: 10px;
+}
+
+.toolbar-dropdown {
+    display: inline-block;
+}
+
+.button-icon {
+    margin-right: 5px;
 }
 
 .fiddle {
@@ -63,6 +82,7 @@ body {
     width: 50%;
     display: table-cell;
     vertical-align: top;
+    padding: 5px;
 }
 
 .sample-view {

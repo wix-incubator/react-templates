@@ -100,6 +100,15 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
             classBase.render = this.sampleRender;
             this.sample = React.createFactory(React.createClass(classBase));
         },
+        clear: function () {
+            //console.log('clear');
+            var currentState = {
+                templateHTML: templateHTML,
+                templateProps: templateProps
+            };
+            //this.updateSample(currentState);
+            this.setState(currentState);
+        },
         getInitialState: function () {
             var currentState = {
                 templateHTML: this.props.templateHTML || templateHTML,

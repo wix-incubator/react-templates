@@ -3,7 +3,7 @@
  */
 /*eslint global-strict:0, no-alert:0*/
 /*global Firebase:true,alert:true*/
-define(['react', 'firebase', 'lodash', './fiddle.rt'], function (React, Firebase, _, fiddleTemplate) {
+define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React, Firebase, _, fiddleTemplate, $) {
     'use strict';
 
     function generateRandomId() {
@@ -40,7 +40,35 @@ define(['react', 'firebase', 'lodash', './fiddle.rt'], function (React, Firebase
                 Firebase.goOffline();
                 alert('saved the fiddle, you can share your url');
             }.bind(this));
+        },
 
+        clear: function () {
+            this.refs.playground.clear();
+        },
+
+        loadSample: function (name) {
+            //require(['text!./samples/' + name + '.rt', 'text!./samples/' + name + '.code'], function (rt, code) {
+            //    var currentState = {
+            //        templateHTML: rt,
+            //        templateProps: code
+            //    };
+            //    //this.updateSample(currentState);
+            //    this.refs.playground.setState(currentState);
+            //});
+
+            var playground = this.refs.playground;
+            $.get('playground/samples/' + name + '.rt', null, function (data, textStatus, jqXHR) {
+                var rt = data;
+                $.get('playground/samples/' + name + '.code', null, function (data2, textStatus2, jqXHR2) {
+                    var currentState = {
+                        templateHTML: rt,
+                        templateProps: data2
+                    };
+                    //this.updateSample(currentState);
+                    playground.setState(currentState);
+                });
+            });
+            //this.refs.playground.clear();
         },
 
         render: function () {

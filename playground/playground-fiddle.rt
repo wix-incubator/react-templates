@@ -22,12 +22,14 @@
                         mode="javascript"
                         readOnly="{true}" />
         </div>
-        <div id="result-area" key="result-area" class="result-area well">
-            <h2>Preview:</h2>
-            <form class="sample-view" onSubmit="(e) => e.preventDefault();">
-                <this.sample key="sample">
-                </this.sample>
-            </form>
+        <div class="result-area">
+            <div id="result-area" key="result-area" class="well">
+                <h2>Preview:</h2>
+                <form class="sample-view" onSubmit="(e) => e.preventDefault();">
+                    <this.sample key="sample">
+                    </this.sample>
+                </form>
+            </div>
         </div>
     </div>
     <!--<br style="clear:both">-->

@@ -36,13 +36,13 @@ define([
             'value': this.templateSource,
             'mode': 'javascript',
             'readOnly': true
-        })), React.createElement('div', {
+        })), React.createElement('div', { 'className': 'result-area' }, React.createElement('div', {
             'id': 'result-area',
             'key': 'result-area',
-            'className': 'result-area well'
+            'className': 'well'
         }, React.createElement('h2', {}, 'Preview:'), React.createElement('form', {
             'className': 'sample-view',
             'onSubmit': onSubmit3.bind(this)
-        }, React.createElement(this.sample, { 'key': 'sample' }))))    /* <br style="clear:both"> */);
+        }, React.createElement(this.sample, { 'key': 'sample' })))))    /* <br style="clear:both"> */);
     };
 });
