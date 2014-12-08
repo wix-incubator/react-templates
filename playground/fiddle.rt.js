@@ -10,22 +10,22 @@ define([
         this.save();
     }
     return function () {
-        return React.createElement('div', { 'className': 'fiddle' }, React.createElement('div', { 'id': 'header' }, React.createElement('div', { 'id': 'header-title' }, React.createElement('img', {
+        return React.createElement('div', { 'className': 'fiddle' }, React.createElement('div', { 'id': 'header' }, React.createElement('div', { 'id': 'header-title' }, React.createElement('span', {}, '<'), React.createElement('img', {
             'className': 'nav-logo',
             'src': 'https://facebook.github.io/react/img/logo.svg',
-            'width': '36',
-            'height': '36'
-        }), '\n            RTFiddle\n        '), React.createElement('div', { 'id': 'buttons-bar' }, React.createElement('button', {
+            'width': '32',
+            'height': '32'
+        }), React.createElement('span', {}, '/>'), '\n            RTFiddle\n        '), React.createElement('div', { 'id': 'buttons-bar' }, React.createElement('button', {
             'className': 'btn',
             'onClick': onClick1.bind(this)
         }, 'Save fiddle')))    /* <div> */
                                /* <h1>React Templates fiddle</h1> */
                                /* <h2>Play with react templates and save/share your results</h2> */
                                /* <button class="btn btn-lg btn-primary" onClick="(evt)=>evt.preventDefault();this.save()">Save fiddle</button> */
-                               /* <br /> */, React.createElement(playground, {
+                               /* <br /> */, React.createElement('div', { 'className': 'playground-container' }, React.createElement(playground, {
             'ref': 'playground',
             'direction': 'vertical',
             'fiddle': true
-        })    /* </div> */);
+        }))    /* </div> */);
     };
 });

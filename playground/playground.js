@@ -60,8 +60,8 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
     //    '    <button onClick="()=>this.add()">Add</button><br/>\n' +
     //    '    <button onClick="()=>this.clearDone()">Clear done</button>\n' +
     //    '</div>';
-    var templateHTML = "<div></div>";
-    var templateProps = "{}";
+    var templateHTML = '<div></div>';
+    var templateProps = '{}';
     //var templateProps = "{\n    mixins: [React.addons.LinkedStateMixin],\n    getInitialState: function () {\n        return {edited: '', todos: [], counter: 0};\n    },\n    add: function () {\n    if (this.state.edited.trim().length === 0) {\n        return;\n    }\n        var newTodo = {value: this.state.edited, done: false, key: this.state.counter};\n        this.setState({todos: this.state.todos.concat(newTodo), edited: '', counter: this.state.counter + 1});\n    },\n    remove: function (todo) {\n        this.setState({todos: _.reject(this.state.todos, todo)});\n    },\n    toggleChecked: function (index) {\n        var todos = _.cloneDeep(this.state.todos);\n        todos[index].done = !todos[index].done;\n        this.setState({todos: todos});\n    },\n    clearDone: function () {\n        this.setState({todos: _.filter(this.state.todos, {done: false})});\n    }\n}";
 
     var Playground = React.createClass({

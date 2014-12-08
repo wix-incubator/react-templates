@@ -10,11 +10,11 @@ requirejs.config({
         //'react/addons': 'http://fb.me/react-with-addons-0.12.1'
     },
     shim: {
-        lodash: { exports: '_' },
-        firebase: { exports: 'Firebase' },
+        lodash: {exports: '_'},
+        firebase: {exports: 'Firebase'},
         //ace: { exports: 'ace' },
-        jquery: { exports: '$' },
-        react: { exports: 'React' }
+        jquery: {exports: '$'},
+        react: {exports: 'React'}
     },
     map: {
         '*': {
@@ -26,5 +26,61 @@ requirejs.config({
 requirejs(['jquery', 'react', 'fiddle'], function ($, React, fiddle) {
     'use strict';
     window.fiddle = React.render(fiddle(), document.getElementById('container'));
+    $(function () {
+        $(window).resize(calcSize);
+        calcSize();
+    });
+
+    function calcSize() {
+        var contentHeight = $(document).height() - 48;
+        //$('#container').height(contentHeight).width($(document).width());
+        //$('.code-area').each(function (i) {
+        //    var h = (contentHeight / 2) - 10;
+        //    var w = ($(document).width() / 2) - 10;
+        //    $(this).height(h).width(w);
+        //});
+
+
+        var h = (contentHeight / 2) - 10;
+        var w = ($(document).width() / 2) - 10;
+        //var size = getWindowSize();
+        //$('#editor-rt').css({
+        //    top: 50, left: 0, bottom: h, right: w, position: 'absolute'
+        //});
+        //$('#editor-code').css({
+        //    top: 50, left: w, bottom: h, right: 0, position: 'absolute'
+        //});
+        //$('#editor-generated').css({
+        //    top: 50 + h, left: 0, bottom: 0, right: w, position: 'absolute'
+        //});
+        //$('#result-area').css({
+        //    top: 50 + h, left: w, bottom: 0, right: 0, position: 'absolute'
+        //});
+
+        //$('.code-area').each(function (i, k) {
+        //    //var h = (contentHeight / 2) - 10;
+        //    //var w = ($(document).width() / 2) - 10;
+        //    //$(this).height(h).width(w);
+        //    $(this).css({
+        //        top: 50 + h, left: w, bottom: 0, right: 0, position: 'absolute'
+        //    });
+        //});
+
+        $('.large-text-area').each(function (i, k) {
+            //var h = (contentHeight / 2) - 10;
+            //var w = ($(document).width() / 2) - 10;
+            var $this = $(this);
+            //$this.parent().width();
+            //$this.parent().width();
+            console.log('' + $this.parent().height() + ',' + $this.parent().width() );
+            //$(this).css({);
+
+            $this.height($this.parent().height() - 2).width($this.parent().width() - 2);
+            //$(this).css({
+            //    top: 50 + h, left: w, bottom: 0, right: 0, position: 'absolute'
+            //});
+        });
+        //.large-text-area
+    }
 });
 

@@ -2,6 +2,7 @@
  * Created by avim on 11/25/2014.
  */
 'use strict';
+/*global ace:true*/
 define(['react', 'lodash'/*, 'ace'*/], function (React, _/*, ace*/) {
 
 var editor = React.createClass({
@@ -15,8 +16,8 @@ var editor = React.createClass({
 
     },
     render: function () {
-        var props = _.omit(this.props, ['id', 'ref', 'key', 'value', 'valueLink', 'onChange']);
-        props.id = this.state.editorId;
+        var props = _.omit(this.props, ['ref', 'key', 'value', 'valueLink', 'onChange']);
+        props.id = this.props.id || this.state.editorId;
         return React.DOM.div(props);
     },
     componentWillUpdate: function (nextProps/*, nextState*/) {
@@ -26,7 +27,7 @@ var editor = React.createClass({
         }
     },
     componentDidMount: function () {
-        this.editor = ace.edit(this.state.editorId);
+        this.editor = ace.edit(this.props.id || this.state.editorId);
 //        this.editor.setTheme('ace/theme/monokai');
         this.editor.setTheme('ace/theme/solarized_light');
         if (this.props.mode !== 'html') {
