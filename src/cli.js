@@ -79,7 +79,7 @@ function execute(args) {
         console.error(error.message);
         return 1;
     }
-    console.log(currentOptions);
+    //console.log(currentOptions);
     return executeOptions(currentOptions);
 }
 
