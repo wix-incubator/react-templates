@@ -1,4 +1,4 @@
-<!DOCTYPE rt CodeEditor="./aceEditor">
+<!DOCTYPE rt CodeEditor="./CodeMirrorEditor">
 <!--suppress ALL -->
 <div class="playground">
     <div class="fiddle-row">
@@ -22,7 +22,7 @@
                         mode="javascript"
                         readOnly="{true}" />
         </div>
-        <div class="result-area">
+        <div id="result-container" class="result-area">
             <div id="result-area" key="result-area" class="well">
                 <h2>Preview:</h2>
                 <form class="sample-view" onSubmit="(e) => e.preventDefault();">

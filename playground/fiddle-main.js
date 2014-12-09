@@ -8,7 +8,10 @@ requirejs.config({
         //ace: '../ace-builds-1.1.8/src-min/ace',
         fiddle: './fiddle',
         text: 'libs/requirejs-plugins/text',
-        json: 'libs/requirejs-plugins/json'
+        json: 'libs/requirejs-plugins/json',
+        //codeMirror: 'libs/codemirror-4.8/lib/codemirror',
+        //htmlmixed: 'libs/codemirror-4.8/mode/htmlmixed/htmlmixed',
+        //javascript: 'libs/codemirror-4.8/mode/javascript/javascript'
         //'react/addons': 'http://fb.me/react-with-addons-0.12.1'
     },
     shim: {
@@ -73,7 +76,10 @@ requirejs(['jquery', 'react', 'fiddle'], function ($, React, fiddle) {
             //var w = ($(document).width() / 2) - 10;
             var $this = $(this);
             $this.height($this.parent().height() - 2).width($this.parent().width() - 2);
+            //$this.children().height($this.parent().height() - 2).width($this.parent().width() - 2);
         });
+        var $result = $('#result-container');
+        $result.height($result.parent().height() - 2).width($result.parent().width() - 2);
     }
 });
 

@@ -2,7 +2,7 @@
 define([
     'react/addons',
     'lodash',
-    './aceEditor'
+    './CodeMirrorEditor'
 ], function (React, _, CodeEditor) {
     'use strict';
     function onChange1(evt) {
@@ -36,7 +36,10 @@ define([
             'value': this.templateSource,
             'mode': 'javascript',
             'readOnly': true
-        })), React.createElement('div', { 'className': 'result-area' }, React.createElement('div', {
+        })), React.createElement('div', {
+            'id': 'result-container',
+            'className': 'result-area'
+        }, React.createElement('div', {
             'id': 'result-area',
             'key': 'result-area',
             'className': 'well'

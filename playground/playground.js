@@ -10,6 +10,11 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
         try {
             code = window.reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g, ''));
         } catch (e) {
+            if (e.name === 'RTCodeError') {
+                console.log('');
+                //index: -1 line: -1 message: "Document should have a root element" name: "RTCodeError"
+            }
+            console.log('' + e);
         }
         return code;
     }
@@ -27,6 +32,7 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
             var res = eval(code);
             return res;
         } catch (e) {
+            console.log('' + e);
             return emptyFunc;
         }
     }
