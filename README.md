@@ -30,12 +30,22 @@ http://wix.github.io/react-templates/
 ###### Why not use JSX?
 Some love JSX, some don't. We don't. More specifically, it seems to us that JSX is a good fit only for components with very little HTML inside, which can be accomplished by creating elements in code. Also, we like to separate code and HTML. It just feels right.
 
+## Installation
+You can install ESLint using npm:
+```shell
+npm install git+ssh://git@github.com:wix/react-templates -g
+```
+
 ## Usage
+```shell
+rt [file.rt|dir]* [options]
+```
+
 **src/cli.js < filename.rt >**
-*(you might need to provide execution permission to the file)*
+*(you might need to provide execution permission to the file)* ?
 
 Note that in most cases, this package will be wrapped in a Grunt task, so that cli will not be used explicitly.
-TODO: pointer to the Grunt repository
+[grunt-react-templates](https://github.com/wix/grunt-react-templates)
 
 # Template directives and syntax
 
@@ -300,3 +310,6 @@ define([
     };
 });
 ```
+
+## License
+Copyright (c) 2014 Wix. Licensed under the MIT license.
