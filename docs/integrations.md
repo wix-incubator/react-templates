@@ -20,4 +20,4 @@
 react templates uses es6 syntax for lambda expressions in event handlers, enable this in the IDE:
 
 
- ![ES6 in intellij](/intellij-es6.png "ES6 in intellij")
+ ![ES6 in intellij](https://raw.githubusercontent.com/wix/react-templates/gh-pages/docs/intellij-es6.png "ES6 in intellij")
