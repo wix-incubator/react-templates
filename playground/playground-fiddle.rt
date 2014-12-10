@@ -3,13 +3,13 @@
 <div class="playground">
     <div class="fiddle-row">
         <div class="code-area">
-            <CodeEditor id="editor-rt" class="large-text-area" style="border: {this.validHTML ? '1px solid black' : '2px solid red'};"
+            <CodeEditor ref="editorRT" id="editor-rt" class="large-text-area" style="border: {this.validHTML ? '1px solid black' : '2px solid red'};"
                         value="{this.state.templateHTML}"
                         mode="html"
                         onChange="(evt) => this.setState({'templateHTML':evt.target.value})" />
         </div>
         <div class="code-area">
-            <CodeEditor id="editor-code" class="large-text-area" style="border: {this.validProps ? '1px solid black' : '2px solid red'};"
+            <CodeEditor ref="editorCode" id="editor-code" class="large-text-area" style="border: {this.validProps ? '1px solid black' : '2px solid red'};"
                         value="{this.state.templateProps}"
                         mode="javascript"
                         onChange="(evt) => this.setState({'templateProps':evt.target.value})" />

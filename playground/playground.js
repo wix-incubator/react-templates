@@ -1,20 +1,29 @@
-'use strict';
 /*eslint-env browser*/
 define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], function (React, _, pgFiddleTemplate, playgroundTemplate) {
+    'use strict';
     function emptyFunc() {
         return null;
     }
 
-    function generateTemplateSource(html) {
+    function generateTemplateSource(html, editor) {
         var code = null;
         try {
             code = window.reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g, ''));
-        } catch (e) {
-            if (e.name === 'RTCodeError') {
-                console.log('');
-                //index: -1 line: -1 message: "Document should have a root element" name: "RTCodeError"
+            if (editor) {
+                editor.clearMessage();
             }
-            console.log('' + e);
+        } catch (e) {
+            var msg;
+            if (e.name === 'RTCodeError') {
+                //index: -1 line: -1 message: "Document should have a root element" name: "RTCodeError"
+                msg = e.message + ', line: ' + e.line;
+            } else {
+                msg = e.message;
+            }
+            if (editor) {
+                editor.showMessage(msg);
+            }
+            console.log(e);
         }
         return code;
     }
@@ -32,7 +41,7 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
             var res = eval(code);
             return res;
         } catch (e) {
-            console.log('' + e);
+            console.log(e);
             return emptyFunc;
         }
     }
@@ -72,8 +81,8 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
             };
         },
         updateSample: function (state) {
-            this.templateSource = generateTemplateSource(state.templateHTML);
-            this.sampleFunc = generateTemplateFunction(this.templateSource);
+            this.templateSource = generateTemplateSource(state.templateHTML, this.refs.editorRT);
+            this.sampleFunc = generateTemplateFunction(this.templateSource, this.refs.editorCode);
             this.validHTML = this.sampleFunc !== emptyFunc;
             this.sampleRender = generateRenderFunc(this.sampleFunc);
             var classBase = {};
@@ -84,9 +93,15 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
                 if (!_.isObject(classBase)) {
                     throw 'failed to eval';
                 }
+                if (this.refs.editorCode) {
+                    this.refs.editorCode.clearMessage();
+                }
             } catch (e) {
                 classBase = {};
                 this.validProps = false;
+                if (this.refs.editorCode) {
+                    this.refs.editorCode.showMessage(e.message);
+                }
             }
             classBase.render = this.sampleRender;
             this.sample = React.createFactory(React.createClass(classBase));

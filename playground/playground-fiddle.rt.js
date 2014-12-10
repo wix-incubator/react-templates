@@ -16,6 +16,7 @@ define([
     }
     return function () {
         return React.createElement('div', { 'className': 'playground' }, React.createElement('div', { 'className': 'fiddle-row' }, React.createElement('div', { 'className': 'code-area' }, React.createElement(CodeEditor, {
+            'ref': 'editorRT',
             'id': 'editor-rt',
             'className': 'large-text-area',
             'style': { border: this.validHTML ? '1px solid black' : '2px solid red' },
@@ -23,6 +24,7 @@ define([
             'mode': 'html',
             'onChange': onChange1.bind(this)
         })), React.createElement('div', { 'className': 'code-area' }, React.createElement(CodeEditor, {
+            'ref': 'editorCode',
             'id': 'editor-code',
             'className': 'large-text-area',
             'style': { border: this.validProps ? '1px solid black' : '2px solid red' },

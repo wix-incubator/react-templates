@@ -1,14 +1,15 @@
-define(['react', 'lodash', './libs/codemirror-4.8/lib/codemirror',
+define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
         './libs/codemirror-4.8/mode/javascript/javascript',
         './libs/codemirror-4.8/addon/hint/html-hint',
         './libs/codemirror-4.8/addon/hint/show-hint',
         './libs/codemirror-4.8/addon/hint/xml-hint',
         './libs/codemirror-4.8/addon/hint/html-hint',
+        './libs/codemirror-4.8/addon/display/panel',
         './libs/codemirror-4.8/mode/xml/xml',
         './libs/codemirror-4.8/mode/css/css',
         './libs/codemirror-4.8/mode/htmlmixed/htmlmixed'
         //'./libs/codemirror-4.8/addon/display/placeholder'
-], function (React, _, CodeMirror) {
+], function (React, _, $, CodeMirror) {
     'use strict';
     //codeMirror: 'libs/codemirror-4.8/lib/codemirror',
     //htmlmixed: 'libs/codemirror-4.8/mode/htmlmixed/htmlmixed',
@@ -33,7 +34,7 @@ define(['react', 'lodash', './libs/codemirror-4.8/lib/codemirror',
     });
 
     function completeAfter(cm, pred) {
-        var cur = cm.getCursor();
+        //var cur = cm.getCursor();
         if (!pred || pred()) {
             setTimeout(function () {
                 if (!cm.state.completionActive) {
@@ -47,6 +48,7 @@ define(['react', 'lodash', './libs/codemirror-4.8/lib/codemirror',
     function completeIfAfterLt(cm) {
         return completeAfter(cm, function () {
             var cur = cm.getCursor();
+            /*eslint new-cap:0*/
             return cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur) === '<';
         });
     }
@@ -70,7 +72,6 @@ define(['react', 'lodash', './libs/codemirror-4.8/lib/codemirror',
             };
         },
         componentWillMount: function () {
-
         },
         render: function () {
             var props = _.omit(this.props, ['ref', 'key', 'value', 'valueLink', 'onChange']);
@@ -79,7 +80,7 @@ define(['react', 'lodash', './libs/codemirror-4.8/lib/codemirror',
         },
         componentWillUpdate: function (nextProps/*, nextState*/) {
             var value = nextProps.valueLink ? nextProps.valueLink() : nextProps.value;
-            if (this.editor && this.editor.getValue() != value) {
+            if (this.editor && this.editor.getValue() !== value) {
                 this.editor.setValue(value || '');
             }
         },
@@ -88,10 +89,12 @@ define(['react', 'lodash', './libs/codemirror-4.8/lib/codemirror',
             var options = {
                 readOnly: this.props.readOnly,
                 lineWrapping: true,
+                smartIndent: true,
+                matchBrackets: true,
                 value: value,
                 lineNumbers: true,
                 mode: 'javascript',
-                theme: 'solarized' //solarized_light
+                theme: 'solarized' //solarized_light solarized-light
             };
 
             if (this.props.mode === 'html') {
@@ -122,6 +125,21 @@ define(['react', 'lodash', './libs/codemirror-4.8/lib/codemirror',
                         this.props.onChange({target: {value: this.editor.getValue()}});
                     }
                 }.bind(this));
+            }
+        },
+        showMessage: function (msg) {
+            var anOption = document.createElement('div');
+            anOption.innerText = msg;
+            anOption.setAttribute('class', 'error-panel');
+            if (this.panel) {
+                this.panel.clear();
+            }
+            this.panel = this.editor.addPanel(anOption, {height: 22}); // {position: 'bottom'}
+        },
+        clearMessage: function () {
+            if (this.panel) {
+                this.panel.clear();
+                this.panel = null;
             }
         },
         componentWillUnmount: function () {

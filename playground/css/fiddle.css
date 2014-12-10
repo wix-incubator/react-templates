@@ -125,4 +125,13 @@ body {
     padding: 1px;
 }
 
+.error-panel {
+    /*padding: 4px; */
+    padding-left: 20px;
+    /* position: static; */
+    color: red;
+    background: #f7f7f7;
+    border-bottom: 1px solid #000;
+}
+
 /*position: relative; min-height: 100%;*/
