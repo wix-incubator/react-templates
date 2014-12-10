@@ -31,7 +31,7 @@ http://wix.github.io/react-templates/
 Some love JSX, some don't. We don't. More specifically, it seems to us that JSX is a good fit only for components with very little HTML inside, which can be accomplished by creating elements in code. Also, we like to separate code and HTML. It just feels right.
 
 ## Installation
-You can install ESLint using npm:
+You can install react-templates using npm:
 ```shell
 npm install git+ssh://git@github.com:wix/react-templates -g
 ```
