@@ -47,6 +47,12 @@ module.exports = optionator({
         type: 'Boolean',
         description: 'Use Common JS output.'
     }, {
+        option: 'dry-run',
+        alias: 'd',
+        default: 'false',
+        type: 'Boolean',
+        description: 'Run compilation without creating an output file, used to check if the file is valid'
+    }, {
         option: 'force',
         alias: 'r',
         default: 'false',
@@ -64,7 +70,6 @@ module.exports = optionator({
         alias: 't',
         type: 'String',
         default: '0.12.1',
-        //enum: ['stylish', 'json'],
         description: 'React version to generate code for (' + Object.keys(reactDOMSupport).join(', ') + ')'
     }, {
         option: 'version',

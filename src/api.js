@@ -7,7 +7,7 @@ var convertTemplateToReact = reactTemplates.convertTemplateToReact;
 
 /**
  * @param {string} source
- * @param {{commonJS:boolean}?} options
+ * @param {{commonJS:boolean, dryRun:boolean}?} options
  * @param {string} target
  * @param {CONTEXT} context
  */
@@ -29,7 +29,9 @@ function convertFile(source, target, options, context) {
         throw new Error('invalid file, missing header');
     }
     var js = convertTemplateToReact(html, options);
-    fs.writeFileSync(target, js);
+    if (!options.dryRun) {
+        fs.writeFileSync(target, js);
+    }
 }
 
 module.exports = {
