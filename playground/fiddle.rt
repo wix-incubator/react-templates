@@ -1,4 +1,4 @@
-<!DOCTYPE rt playground="./playground">
+<rt-require dependency="./playground" as="playground"/>
 <div class="fiddle">
     <div id="header">
         <div id="header-title">

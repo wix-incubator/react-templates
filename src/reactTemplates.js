@@ -330,22 +330,13 @@ function convertHtmlToReact(node, context) {
     }
 }
 
-function extractDefinesFromJSXTag(html, defines) {
-    html = html.replace(/\<\!doctype rt\s*(.*?)\s*\>/i, function (full, reqStr) {
-        var match = true;
-        while (match) {
-            match = false;
-            /*eslint no-loop-func:0*/
-            reqStr = reqStr.replace(/\s*(\w+)\s*\=\s*\"([^\"]*)\"\s*/, function (full, varName, reqPath) {
-                defines[reqPath] = varName;
-                match = true;
-                return '';
-            });
-        }
-        return '';
-    });
-    return html;
+function removeDocType(html) {
+  html = html.replace(/^\s*\<\!doctype\s+rt\s*>/mi, function () {
+    return "";
+  });
+  return html;
 }
+
 
 /**
  * @param {string} html
@@ -356,16 +347,30 @@ function convertTemplateToReact(html, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = _.defaults({}, options, defaultOptions);
     var defines = {'react/addons': 'React', lodash: '_'};
-    html = extractDefinesFromJSXTag(html, defines);
     var context = defaultContext(html, options);
     var rootTags = _.filter(rootNode.root()[0].children, function (i) { return i.type === 'tag'; });
     if (!rootTags || rootTags.length === 0) {
         throw new RTCodeError('Document should have a root element');
     }
-    if (rootTags.length > 1) {
-        throw buildError('Document should have a single root element', context, rootTags[1]);
+    var firstTag = null;
+    _.forEach(rootTags, function(tag) {
+        if (tag.name == 'rt-require') {
+          if (!tag.attribs['dependency'] || !tag.attribs['as']) {
+            throw buildError('rt-require needs \'dependency\' and \'as\' attributes', context, tag);
+          } else if (tag.children.length) {
+            throw buildError('rt-require may have no children', context, tag);
+          } else {
+            defines[tag.attribs['dependency']] = tag.attribs['as'];
+          }
+        } else if (firstTag === null) {
+          firstTag = tag;
+        } else {
+          throw buildError('Document should have no more than a single root element', context, tag);
+        }
+    });
+    if (firstTag === null) {
+      throw buildError('Document should have a single root element', context, rootNode.root()[0]);
     }
-    var firstTag = rootTags[0];
     var body = convertHtmlToReact(firstTag, context);
     var requirePaths = _(defines).keys().map(function (reqName) { return '"' + reqName + '"'; }).value().join(',');
     var requireVars = _(defines).values().value().join(',');

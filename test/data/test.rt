@@ -1,5 +1,3 @@
-<!doctype rt>
-
 <div>
     <div style= "position: relative; textAlign: center;
             top: {this.props.config.previewTop};

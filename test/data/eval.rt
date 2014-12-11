@@ -1,4 +1,3 @@
-<!doctype rt>
 <div>
     Strings and execution mixing is:{2>1?'correct':'incorrect'}
 </div>

@@ -1,4 +1,4 @@
-<!DOCTYPE rt CodeEditor="./CodeMirrorEditor">
+<rt-require dependency="./CodeMirrorEditor" as="CodeEditor"/>
 <!--suppress ALL -->
 <div class="playground">
     <div class="fiddle-row">

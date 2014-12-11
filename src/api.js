@@ -25,9 +25,6 @@ function convertFile(source, target, options, context) {
     }
 
     var html = fs.readFileSync(source).toString();
-    if (!html.match(/\<\!doctype rt/i)) {
-        throw new Error('invalid file, missing header');
-    }
     var js = convertTemplateToReact(html, options);
     if (!options.dryRun) {
         fs.writeFileSync(target, js);

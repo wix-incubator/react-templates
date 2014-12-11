@@ -1,3 +1,2 @@
-<!doctype rt>
 <div rt-scope="a in a in a">
 </div>

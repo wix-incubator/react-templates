@@ -1,4 +1,4 @@
-<!DOCTYPE rt CodeEditor="./aceEditor">
+<rt-require dependency="./aceEditor" as="CodeEditor"/>
 <div class="playground">
     <div id="{this.props.id}-myTab" role="tabpanel" class="code-area {(this.props.direction === 'horizontal' && 'horizontal') ||'vertical'}">
         <!-- Nav tabs -->

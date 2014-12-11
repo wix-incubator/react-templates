@@ -1,4 +1,4 @@
-<!doctype rt playground="./playground">
+<rt-require dependency="./playground" as="playground"/>
 <div id="examples">
     <div class="example">
         <h3>Hello world in react templates</h3>

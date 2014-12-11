@@ -1,2 +1,1 @@
-<!doctype rt>
 <input rt-scope="'test' as i" alt="test rt-props" style="height:10px;width:3px;" rt-props="{style:{width:'5px'},type:'text',value:i}"/>

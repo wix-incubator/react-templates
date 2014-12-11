@@ -1,4 +1,4 @@
-<!DOCTYPE rt playGround="./PlayGround.js">
+<rt-require dependency="./PlayGround.js" as="playGround"/>
 <div>
     <h1>React Templates</h1>
     <playGround ref="playground" direction="horizontal" rt-props="this.state.samples[0]"/>
