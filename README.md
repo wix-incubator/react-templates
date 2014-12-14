@@ -25,7 +25,7 @@ http://wix.github.io/react-templates/
 * rt-class
 * style
 * event handlers
-* doctype rt, require dependencies, and calling other components
+* rt-require, and using other components in the template
 
 ###### Why not use JSX?
 Some love JSX, some don't. We don't. More specifically, it seems to us that JSX is a good fit only for components with very little HTML inside, which can be accomplished by creating elements in code. Also, we like to separate code and HTML. It just feels right.
@@ -282,33 +282,47 @@ define([
 });
 ```
 
-## doctype rt, require dependencies, and calling other components
-In many cases, you'd like to use either library code, or other components within your template. In order to do so, you can define a doctype and indicate dependencies. You do so by `<!doctype rt depVarName="depVarPath">`. After that, you will have **depVarName** in your scope. You can import react components and use them afterwords in the template as tag names. For example `<MySlider prop1="val1" onMyChange="{this.onSliderMoved}">`. This will also support nesting `<MyContainer><div>child</div><div>another</div></MyContainer>`. You will then be able to find the children in **this.props.children**.
+## rt-require, and using other components in the template
+In many cases, you'd like to use either library code, or other components within your template. In order to do so, you can define a **rt-require** tag and indicate dependencies. You do so by `<rt-require dependency="depVarPath" as="depVarName"/>`. After that, you will have **depVarName** in your scope. You can only use rt-require tags in the beginning of your template. You can import react components and use them afterwords in the template as tag names. For example `<MySlider prop1="val1" onMyChange="{this.onSliderMoved}">`. This will also support nesting `<MyContainer><div>child</div><div>another</div></MyContainer>`. You will then be able to find the children in **this.props.children**.
 
 ###### Sample:
 ```html
-<!doctype rt MyComp="comps/myComp" utils="utils/utils">
+<rt-require dependency="comps/myComp" as="MyComp"/>
+<rt-require dependency="utils/utils" as="utils"/>
 <MyComp rt-repeat="item in items">
     <div>{utils.toLower(item.name)}</div>
 </MyComp>
-
 ```
-###### Compiled:
+###### Compiled (AMD):
 ```javascript
 define([
-    'react',
+    'react/addons',
     'lodash',
     'comps/myComp',
     'utils/utils'
 ], function (React, _, MyComp, utils) {
     'use strict';
     function repeatItem1(item, itemIndex) {
-        return MyComp({}, React.DOM.div({}, utils.toLower(item.name)));
+        return React.createElement(MyComp, {}, React.createElement('div', {}, utils.toLower(item.name)));
     }
     return function () {
         return _.map(items, repeatItem1.bind(this));
     };
 });
+```
+###### Compiled (with CommonJS flag):
+```javascript
+var React = require('react/addons');
+var _ = require('lodash');
+var MyComp = require('comps/myComp');
+var utils = require('utils/utils');
+'use strict';
+function repeatItem1(item, itemIndex) {
+    return React.createElement(MyComp, {}, React.createElement('div', {}, utils.toLower(item.name)));
+}
+module.exports = function () {
+    return _.map(items, repeatItem1.bind(this));
+};
 ```
 
 ## License

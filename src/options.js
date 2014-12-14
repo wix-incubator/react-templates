@@ -41,7 +41,7 @@ module.exports = optionator({
         type: 'Boolean',
         description: 'Use colors in output.'
     }, {
-        option: 'common',
+        option: 'commonJS',
         alias: 'm',
         default: 'false',
         type: 'Boolean',
