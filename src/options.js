@@ -23,7 +23,7 @@ module.exports = optionator({
         pkg.description,
         '',
         'Usage:',
-        '$ rt <filename>[,<filename>] [<args>]'
+        '$ rt <filename> [<filename> ...] [<args>]'
     ].join('\n'),
     concatRepeatedArrays: true,
     mergeRepeatedObjects: true,
