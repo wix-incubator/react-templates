@@ -37,12 +37,12 @@ define([
         return React.createElement('div', { 'className': 'fiddle' }, React.createElement('div', { 'id': 'header' }, React.createElement('div', { 'id': 'header-title' }, React.createElement('a', {
             'href': 'index.html',
             'className': 'title-link'
-        }, React.createElement('span', {}, '<'), React.createElement('img', {
+        }, React.createElement('img', {
             'className': 'nav-logo',
-            'src': 'https://facebook.github.io/react/img/logo.svg',
-            'width': '32',
-            'height': '32'
-        }), React.createElement('span', {}, '/>')), '\n            RTFiddle\n        '), React.createElement('div', { 'id': 'buttons-bar' }, React.createElement('button', {
+            'src': 'https://wix.github.io/react-templates/img/logo-rt.svg',
+            'width': '56',
+            'height': '24'
+        })), '\n            RTFiddle\n        '), React.createElement('div', { 'id': 'buttons-bar' }, React.createElement('button', {
             'type': 'button',
             'className': 'btn btn-default',
             'onClick': onClick1.bind(this)

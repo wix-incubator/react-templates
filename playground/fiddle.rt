@@ -3,9 +3,9 @@
     <div id="header">
         <div id="header-title">
             <a href="index.html" class="title-link">
-            <span>&lt;</span>
-            <img class="nav-logo" src="https://facebook.github.io/react/img/logo.svg" width="32" height="32" />
-            <span>/&gt;</span>
+
+            <img class="nav-logo" src="https://wix.github.io/react-templates/img/logo-rt.svg" width="56" height="24" />
+
             </a>
             RTFiddle
         </div>
