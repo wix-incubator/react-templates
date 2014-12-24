@@ -24,7 +24,9 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
                 'rt-class': null,
                 'rt-scope': null,
                 valueLink: null,
-                key: null
+                key: null,
+                ref: null,
+                dangerouslySetInnerHTML: null
             }
         }
     };
