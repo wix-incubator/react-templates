@@ -4,7 +4,7 @@
         <div id="header-title">
             <a href="index.html" class="title-link">
 
-            <img class="nav-logo" src="https://wix.github.io/react-templates/img/logo-rt.svg" width="70" height="30" />
+            <img class="nav-logo" src="https://wix.github.io/react-templates/img/logo-rt.svg" width="56" height="24" />
 
             </a>
             RTFiddle

@@ -40,8 +40,8 @@ define([
         }, React.createElement('img', {
             'className': 'nav-logo',
             'src': 'https://wix.github.io/react-templates/img/logo-rt.svg',
-            'width': '70',
-            'height': '30'
+            'width': '56',
+            'height': '24'
         })), '\n            RTFiddle\n        '), React.createElement('div', { 'id': 'buttons-bar' }, React.createElement('button', {
             'type': 'button',
             'className': 'btn btn-default',
