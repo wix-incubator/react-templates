@@ -507,7 +507,8 @@ h1:hover .hash-link, h2:hover .hash-link, h3:hover .hash-link, h4:hover .hash-li
 
 .nav-main .nav-logo {
     vertical-align: middle;
-    display: inline-block
+    display: inline-block;
+    margin-bottom:5px;
 }
 
 .nav-main ul {
