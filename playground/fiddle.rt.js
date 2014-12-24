@@ -39,9 +39,9 @@ define([
             'className': 'title-link'
         }, React.createElement('span', {}, '<'), React.createElement('img', {
             'className': 'nav-logo',
-            'src': 'https://facebook.github.io/react/img/logo.svg',
-            'width': '32',
-            'height': '32'
+            'src': 'https://wix.github.io/react-templates/img/logo-rt.svg',
+            'width': '30',
+            'height': '70'
         }), React.createElement('span', {}, '/>')), '\n            RTFiddle\n        '), React.createElement('div', { 'id': 'buttons-bar' }, React.createElement('button', {
             'type': 'button',
             'className': 'btn btn-default',
