@@ -9,9 +9,7 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
         var code = null;
         try {
             code = window.reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g, ''));
-            if (editor) {
-                editor.clearMessage();
-            }
+            clearMessage(editor);
         } catch (e) {
             var msg;
             if (e.name === 'RTCodeError') {
@@ -20,12 +18,22 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
             } else {
                 msg = e.message;
             }
-            if (editor) {
-                editor.showMessage(msg);
-            }
+            showMessage(editor, msg);
             console.log(e);
         }
         return code;
+    }
+
+    function showMessage(editor, msg) {
+        if (editor && editor.showMessage) {
+            editor.showMessage(msg);
+        }
+    }
+
+    function clearMessage(editor) {
+        if (editor && editor.clearMessage) {
+            editor.clearMessage();
+        }
     }
 
     function generateTemplateFunction(code) {
@@ -69,7 +77,7 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
         displayName: 'Playground',
         mixins: [React.addons.LinkedStateMixin],
         propTypes: {
-            direction: React.PropTypes.string,
+            direction: React.PropTypes.oneOf(['horizontal', 'vertical']),
             codeVisible: React.PropTypes.bool,
             fiddle: React.PropTypes.bool
         },
@@ -82,7 +90,7 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
         },
         updateSample: function (state) {
             this.templateSource = generateTemplateSource(state.templateHTML, this.refs.editorRT);
-            this.sampleFunc = generateTemplateFunction(this.templateSource, this.refs.editorCode);
+            this.sampleFunc = generateTemplateFunction(this.templateSource);
             this.validHTML = this.sampleFunc !== emptyFunc;
             this.sampleRender = generateRenderFunc(this.sampleFunc);
             var classBase = {};
@@ -93,15 +101,11 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
                 if (!_.isObject(classBase)) {
                     throw 'failed to eval';
                 }
-                if (this.refs.editorCode) {
-                    this.refs.editorCode.clearMessage();
-                }
+                clearMessage(this.refs.editorCode);
             } catch (e) {
                 classBase = {};
                 this.validProps = false;
-                if (this.refs.editorCode) {
-                    this.refs.editorCode.showMessage(e.message);
-                }
+                showMessage(this.refs.editorCode, e.message);
             }
             classBase.render = this.sampleRender;
             this.sample = React.createFactory(React.createClass(classBase));

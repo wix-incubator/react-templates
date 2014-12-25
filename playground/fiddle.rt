@@ -3,9 +3,7 @@
     <div id="header">
         <div id="header-title">
             <a href="index.html" class="title-link">
-
-            <img class="nav-logo" src="https://wix.github.io/react-templates/img/logo-rt.svg" width="56" height="24" />
-
+                <img class="nav-logo" src="https://wix.github.io/react-templates/img/logo-rt.svg" width="56" height="24" />
             </a>
             RTFiddle
         </div>

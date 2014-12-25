@@ -68,13 +68,34 @@ module.exports = function (grunt) {
                     spawn: false
                 }
             }
+        },
+        uglify: {
+            my_target: {
+                //options: {
+                //    sourceMap: true,
+                //    sourceMapIncludeSources: true,
+                //    sourceMapIn: 'example/coffeescript-sourcemap.js', // input sourcemap from a previous compilation
+                //},
+                files: {
+                    'playground/rt-main.browser.min.js': ['playground/rt-main.browser.js'],
+                    'playground/libs/requirejs-plugins/text.min.js': ['playground/libs/requirejs-plugins/text.js'],
+                    'playground/libs/requirejs-plugins/json.min.js': ['playground/libs/requirejs-plugins/json.js']
+                }
+            }
+        },
+        requirejs: {
+            compile: {
+                options: eval(require('fs').readFileSync('./home.config.js').toString())
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-eslint');
     grunt.loadNpmTasks('grunt-node-tap');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.registerTask('default', ['eslint']);
     grunt.registerTask('test', ['node_tap']);
@@ -84,13 +105,14 @@ module.exports = function (grunt) {
     grunt.registerTask('rt', function () {
         var reactTemplates = require('./src/cli');
         var files = grunt.file.expand('playground/*.rt');
-        var conf = {common: false, force: true, _: files};
+        var conf = {commonjs: false, force: true, _: files};
         var ret = reactTemplates.execute(conf);
         return ret === 0;
     });
 
     grunt.registerTask('build', ['rt', 'browserify:pg']);
     grunt.registerTask('home', ['rt', 'browserify:home']);
+    grunt.registerTask('pgall', ['rt', 'browserify', 'uglify']);
 
     grunt.registerTask('all', ['default', 'test']);
 };
