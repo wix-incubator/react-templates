@@ -105,7 +105,7 @@ module.exports = function (grunt) {
     grunt.registerTask('rt', function () {
         var reactTemplates = require('./src/cli');
         var files = grunt.file.expand('playground/*.rt');
-        var conf = {commonjs: false, force: true, _: files};
+        var conf = {modules: 'amd', force: true, _: files};
         var ret = reactTemplates.execute(conf);
         return ret === 0;
     });

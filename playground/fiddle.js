@@ -2,7 +2,7 @@
  * Created by avim on 12/2/2014.
  */
 /*eslint global-strict:0, no-alert:0*/
-/*global Firebase:true,alert:true*/
+/*global alert:true*/
 define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React, Firebase, _, fiddleTemplate, $) {
     'use strict';
 

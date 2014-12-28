@@ -41,11 +41,17 @@ module.exports = optionator({
         type: 'Boolean',
         description: 'Use colors in output.'
     }, {
-        option: 'commonJS',
+        option: 'modules',
         alias: 'm',
-        default: 'false',
-        type: 'Boolean',
-        description: 'Use Common JS output.'
+        default: 'none',
+        type: 'String',
+        description: 'Use output modules. (amd|commonjs|none)'
+    }, {
+        option: 'name',
+        alias: 'n',
+        default: 'filenameRT',
+        type: 'String',
+        description: 'When using globals, the name for the variable. The default is the [file name]RT'
     }, {
         option: 'dry-run',
         alias: 'd',

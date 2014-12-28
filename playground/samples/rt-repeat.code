@@ -2,16 +2,11 @@
     mixins: [React.addons.LinkedStateMixin],
     getInitialState: function () {
         return {
-            media: [
-                { id:0, type: 'Text', title: 'I\'m a title', body: 'I\'m a paragraph' },
-                { id:1, type: 'Image', src: 'https://facebook.github.io/react/img/logo.svg' },
-                { id:2, type: 'Text', title: 'Also a title', body: 'Also a paragraph' }
+            items: [
+                'One',
+                'Two',
+                'Three'
             ]
         };
-    },
-    swap: function(from, to) {
-        var newMedia = _.clone(this.state.media);
-        newMedia.splice(to, 0, newMedia.splice(from, 1)[0]);
-        this.setState({media:newMedia});
     }
 }

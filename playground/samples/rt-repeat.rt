@@ -1,13 +1,5 @@
 <div>
-    <div rt-repeat="media in this.state.media" key="{media.id}">
-        <button onClick="()=>this.swap(mediaIndex,mediaIndex-1)" rt-scope="mediaIndex === 0 as first" disabled="{first}" style="color:{first?'grey':'black'}">Up</button>
-        <button onClick="()=>this.swap(mediaIndex,mediaIndex+1)" rt-scope="mediaIndex === (this.state.media.length - 1) as last" disabled="{last}" style="color:{last?'grey':'black'}">Down</button>
-        <div rt-if="media.type == 'Image'">
-            <img src="{media.src}" width="80"/>
-        </div>
-        <div rt-if="media.type == 'Text'">
-            <h4>{media.title}</h4>
-            <p>{media.body}</p>
-        </div>
-    </div>
+    <ul rt-repeat="item in this.state.items">
+        <li>{item}</li>
+    </ul>
 </div>

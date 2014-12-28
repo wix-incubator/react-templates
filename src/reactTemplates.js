@@ -18,8 +18,12 @@ var tagTemplate = _.template('<%= name %>.apply(this,_.flatten([<%= props %><%= 
 var simpleTagTemplateCreateElement = _.template('React.createElement(<%= name %>,<%= props %><%= children %>)');
 var tagTemplateCreateElement = _.template('React.createElement.apply(this,_.flatten([<%= name %>,<%= props %><%= children %>]))');
 var commentTemplate = _.template(' /* <%= data %> */ ');
-var templateAMDTemplate = _.template("/*eslint new-cap:0,no-unused-vars:0*/\ndefine([<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
+var templateAMDTemplate = _.template("define([<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
 var templateCommonJSTemplate = _.template("<%= vars %>\n\n'use strict';\n <%= injectedFunctions %>\nmodule.exports = function(){ return <%= body %>};\n");
+var templatePJSTemplate = _.template('var <%= name %> = function () {\n' +
+                                '<%= injectedFunctions %>\n' +
+                                'return <%= body %>\n' +
+                                '};\n');
 
 var templateProp = 'rt-repeat';
 var ifProp = 'rt-if';
@@ -27,7 +31,7 @@ var classSetProp = 'rt-class';
 var scopeProp = 'rt-scope';
 var propsProp = 'rt-props';
 
-var defaultOptions = {commonJS: false, version: false, force: false, format: 'stylish', targetVersion: '0.12.1'};
+var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.12.1'};
 
 function shouldUseCreateElement(context) {
     switch (context.options.targetVersion) {
@@ -332,7 +336,7 @@ function convertHtmlToReact(node, context) {
 
 function removeDocType(html) {
   html = html.replace(/^\s*\<\!doctype\s+rt\s*>/mi, function () {
-    return "";
+    return '';
   });
   return html;
 }
@@ -340,7 +344,7 @@ function removeDocType(html) {
 
 /**
  * @param {string} html
- * @param {{commonJS:boolean}?} options
+ * @param {{modules:string}?} options
  * @return {string}
  */
 function convertTemplateToReact(html, options) {
@@ -354,13 +358,13 @@ function convertTemplateToReact(html, options) {
     }
     var firstTag = null;
     _.forEach(rootTags, function(tag) {
-        if (tag.name == 'rt-require') {
-          if (!tag.attribs['dependency'] || !tag.attribs['as']) {
-            throw buildError('rt-require needs \'dependency\' and \'as\' attributes', context, tag);
+        if (tag.name === 'rt-require') {
+          if (!tag.attribs.dependency || !tag.attribs.as) {
+            throw buildError("rt-require needs 'dependency' and 'as' attributes", context, tag);
           } else if (tag.children.length) {
             throw buildError('rt-require may have no children', context, tag);
           } else {
-            defines[tag.attribs['dependency']] = tag.attribs['as'];
+            defines[tag.attribs.dependency] = tag.attribs.as;
           }
         } else if (firstTag === null) {
           firstTag = tag;
@@ -375,9 +379,9 @@ function convertTemplateToReact(html, options) {
     var requirePaths = _(defines).keys().map(function (reqName) { return '"' + reqName + '"'; }).value().join(',');
     var requireVars = _(defines).values().value().join(',');
     var vars = _(defines).map(function (reqVar, reqPath) { return 'var ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
-    var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars: vars};
+    var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars: vars, name: options.name};
     data.injectedFunctions = context.injectedFunctions.join('\n');
-    var code = options.commonJS ? templateCommonJSTemplate(data) : templateAMDTemplate(data);
+    var code = generate(data, options);
     try {
         var tree = esprima.parse(code, {range: true, tokens: true, comment: true});
         tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
@@ -387,6 +391,16 @@ function convertTemplateToReact(html, options) {
         console.log(e);
     }
     return code;
+}
+
+function generate(data, options) {
+    if (options.modules === 'amd') {
+        return templateAMDTemplate(data);
+    }
+    if (options.modules === 'commonjs') {
+        return templateCommonJSTemplate(data);
+    }
+    return templatePJSTemplate(data);
 }
 
 module.exports = {

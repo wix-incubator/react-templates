@@ -2,7 +2,7 @@
 define([
     'react/addons',
     'lodash',
-    './aceEditor'
+    './CodeMirrorEditor'
 ], function (React, _, CodeEditor) {
     'use strict';
     function onChange1(evt) {
@@ -20,7 +20,7 @@ define([
             'role': 'tabpanel',
             'className': 'code-area ' + (this.props.direction === 'horizontal' && 'horizontal' || 'vertical')
         }    /*  Nav tabs  */, React.createElement('ul', {
-            'className': 'nav nav-pills',
+            'className': 'nav nav-tabs',
             'role': 'tablist'
         }, React.createElement('li', {
             'role': 'presentation',
@@ -45,8 +45,9 @@ define([
             'className': 'tab-pane active',
             'id': this.props.id + '-template'
         }, React.createElement(CodeEditor, {
+            'ref': 'editorRT',
             'className': 'large-text-area',
-            'style': { border: this.validHTML ? '1px solid black' : '2px solid red' },
+            'style': { border: this.validHTML ? '' : '2px solid red' },
             'value': this.state.templateHTML,
             'mode': 'html',
             'onChange': onChange1.bind(this)
@@ -55,8 +56,9 @@ define([
             'className': 'tab-pane',
             'id': this.props.id + '-classCode'
         }, React.createElement(CodeEditor, {
+            'ref': 'editorCode',
             'className': 'large-text-area',
-            'style': { border: this.validProps ? '1px solid black' : '2px solid red' },
+            'style': { border: this.validProps ? '' : '2px solid red' },
             'value': this.state.templateProps,
             'mode': 'javascript',
             'onChange': onChange2.bind(this)
@@ -66,15 +68,13 @@ define([
             'id': this.props.id + '-generatedCode'
         }, React.createElement(CodeEditor, {
             'className': 'large-text-area',
-            'style': { border: '1px solid black' },
             'value': this.templateSource,
             'mode': 'javascript',
             'readOnly': true
         })))), React.createElement('div', {
             'key': 'result-area',
-            'className': 'result-area well ' + (this.props.direction === 'horizontal' && 'horizontal' || 'vertical'),
-            'style': { marginTop: '48px' }
-        }, React.createElement('h2', {}, 'Preview:'), React.createElement('form', {
+            'className': 'result-area  ' + (this.props.direction === 'horizontal' && 'horizontal' || 'vertical')
+        }, React.createElement('span', { 'className': 'preview-title' }, '\xA0'), React.createElement('form', {
             'className': 'sample-view',
             'onSubmit': onSubmit3.bind(this)
         }, React.createElement(this.sample, { 'key': 'sample' }))), React.createElement('br', { 'style': { clear: 'both' } }));

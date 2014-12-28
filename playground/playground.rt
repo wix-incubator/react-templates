@@ -1,8 +1,10 @@
-<rt-require dependency="./aceEditor" as="CodeEditor"/>
+<!--<rt-require dependency="./aceEditor" as="CodeEditor"/>-->
+<!--suppress CheckEmptyScriptTag -->
+<rt-require dependency="./CodeMirrorEditor" as="CodeEditor"/>
 <div class="playground">
     <div id="{this.props.id}-myTab" role="tabpanel" class="code-area {(this.props.direction === 'horizontal' && 'horizontal') ||'vertical'}">
         <!-- Nav tabs -->
-        <ul class="nav nav-pills" role="tablist">
+        <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#{this.props.id}-template" aria-controls="template" role="tab" data-toggle="tab">Template</a></li>
             <li rt-if="this.props.codeVisible" role="presentation"><a href="#{this.props.id}-classCode" aria-controls="classCode" role="tab" data-toggle="tab">Class</a></li>
             <li role="presentation"><a href="#{this.props.id}-generatedCode" aria-controls="generatedCode" role="tab" data-toggle="tab">Generated code</a></li>
@@ -10,30 +12,28 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="{this.props.id}-template">
-                <CodeEditor class="large-text-area" style="border: {this.validHTML? '1px solid black':'2px solid red'};"
+                <CodeEditor ref="editorRT" class="large-text-area" style="border: {this.validHTML? '':'2px solid red'};"
                             value="{this.state.templateHTML}"
                             mode="html"
-                            onChange="(evt) => this.setState({'templateHTML':evt.target.value})"
-                        />
+                            onChange="(evt) => this.setState({'templateHTML':evt.target.value})" />
             </div>
             <div rt-if="this.props.codeVisible" role="tabpanel" class="tab-pane" id="{this.props.id}-classCode">
-                <CodeEditor class="large-text-area" style="border: {this.validProps? '1px solid black':'2px solid red'};"
+                <CodeEditor ref="editorCode" class="large-text-area" style="border: {this.validProps? '':'2px solid red'};"
                             value="{this.state.templateProps}"
                             mode="javascript"
-                            onChange="(evt) => this.setState({'templateProps':evt.target.value})"
-                        />
+                            onChange="(evt) => this.setState({'templateProps':evt.target.value})" />
             </div>
             <div role="tabpanel" class="tab-pane" id="{this.props.id}-generatedCode">
-                <CodeEditor class="large-text-area" style="border:1px solid black;"
+                <CodeEditor class="large-text-area"
                             value="{this.templateSource}"
                             mode="javascript"
-                            readOnly="{true}"
-                        />
+                            readOnly="{true}" />
             </div>
         </div>
     </div>
-    <div key="result-area" class="result-area well {(this.props.direction === 'horizontal' && 'horizontal') ||'vertical'}" style="margin-top: 48px;">
-        <h2>Preview:</h2>
+
+    <div key="result-area" class="result-area  {(this.props.direction === 'horizontal' && 'horizontal') ||'vertical'}">
+        <span class="preview-title">{'\u00A0'}</span>
         <form class="sample-view" onSubmit="(e) => e.preventDefault();">
             <this.sample key="sample">
             </this.sample>

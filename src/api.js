@@ -1,13 +1,14 @@
 'use strict';
 
 var fs = require('fs');
+var path = require('path');
 var chalk = require('chalk');
 var reactTemplates = require('./reactTemplates');
 var convertTemplateToReact = reactTemplates.convertTemplateToReact;
 
 /**
  * @param {string} source
- * @param {{commonJS:boolean, dryRun:boolean}?} options
+ * @param {{modules:string, dryRun:boolean}?} options
  * @param {string} target
  * @param {CONTEXT} context
  */
@@ -25,6 +26,9 @@ function convertFile(source, target, options, context) {
     }
 
     var html = fs.readFileSync(source).toString();
+    if (!options.name) {
+        options.name = path.basename(source, path.extname(source)) + 'RT';
+    }
     var js = convertTemplateToReact(html, options);
     if (!options.dryRun) {
         fs.writeFileSync(target, js);
