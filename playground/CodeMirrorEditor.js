@@ -78,7 +78,8 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
         render: function () {
             var props = _.omit(this.props, ['ref', 'key', 'value', 'valueLink', 'onChange']);
             props.id = this.props.id || this.state.editorId;
-            return React.DOM.div(props);
+            var value = this.props.valueLink ? this.props.valueLink() : this.props.value;
+            return React.DOM.textarea(props,value);
         },
         componentWillUpdate: function (nextProps/*, nextState*/) {
             var value = nextProps.valueLink ? nextProps.valueLink() : nextProps.value;
@@ -117,7 +118,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
                 options.lint = true;
             }
 
-            this.editor = new CodeMirror(document.getElementById(this.props.id || this.state.editorId), options);
+            this.editor = CodeMirror.fromTextArea(this.getDOMNode(), options);
 
             if (!this.props.readOnly) {
                 this.editor.on('change', function (/*e*/) {
@@ -145,7 +146,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
             }
         },
         componentWillUnmount: function () {
-            this.editor.destroy();
+            this.editor.toTextArea();
         }
     });
 

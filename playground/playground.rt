@@ -2,28 +2,32 @@
 <!--suppress CheckEmptyScriptTag -->
 <rt-require dependency="./CodeMirrorEditor" as="CodeEditor"/>
 <div class="playground">
-    <div id="{this.props.id}-myTab" role="tabpanel" class="code-area {(this.props.direction === 'horizontal' && 'horizontal') ||'vertical'}">
+    <div id="{this.props.id}-myTab" class="code-area {(this.props.direction === 'horizontal' && 'horizontal') ||'vertical'}">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#{this.props.id}-template" aria-controls="template" role="tab" data-toggle="tab">Template</a></li>
-            <li rt-if="this.props.codeVisible" role="presentation"><a href="#{this.props.id}-classCode" aria-controls="classCode" role="tab" data-toggle="tab">Class</a></li>
-            <li role="presentation"><a href="#{this.props.id}-generatedCode" aria-controls="generatedCode" role="tab" data-toggle="tab">Generated code</a></li>
+
+            <li rt-repeat="tab in this.getTabs()" role="presentation"
+                rt-class="{active:this.state.currentTab === tab[0]}"
+                onClick="(evt)=> evt.preventDefault();this.setState({'currentTab':tab[0]});">
+                <a aria-controls="{tab[1]}"
+                   >{tab[1]}</a>
+            </li>
         </ul>
         <!-- Tab panes -->
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="{this.props.id}-template">
+        <div>
+            <div rt-if="this.state.currentTab === 'templateHTML'" class="tab-pane active" >
                 <CodeEditor ref="editorRT" class="large-text-area" style="border: {this.validHTML? '':'2px solid red'};"
                             value="{this.state.templateHTML}"
                             mode="html"
                             onChange="(evt) => this.setState({'templateHTML':evt.target.value})" />
             </div>
-            <div rt-if="this.props.codeVisible" role="tabpanel" class="tab-pane" id="{this.props.id}-classCode">
+            <div rt-if="this.state.currentTab === 'templateProps'" class="tab-pane active">
                 <CodeEditor ref="editorCode" class="large-text-area" style="border: {this.validProps? '':'2px solid red'};"
                             value="{this.state.templateProps}"
                             mode="javascript"
                             onChange="(evt) => this.setState({'templateProps':evt.target.value})" />
             </div>
-            <div role="tabpanel" class="tab-pane" id="{this.props.id}-generatedCode">
+            <div rt-if="this.state.currentTab === 'templateSource'" class="tab-pane active">
                 <CodeEditor class="large-text-area"
                             value="{this.templateSource}"
                             mode="javascript"

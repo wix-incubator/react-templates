@@ -88,6 +88,13 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
                 fiddle: false
             };
         },
+        getTabs: function () {
+            if (this.props.codeVisible) {
+                return  [['templateHTML','Template'],['templateProps','Class'],['templateSource','Generated code']];
+            } else {
+                return  [['templateHTML','Template'],['templateSource','Generated code']];
+            }
+        },
         updateSample: function (state) {
             this.templateSource = generateTemplateSource(state.templateHTML, this.refs.editorRT);
             this.sampleFunc = generateTemplateFunction(this.templateSource);
@@ -122,7 +129,8 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
         getInitialState: function () {
             var currentState = {
                 templateHTML: this.props.templateHTML || templateHTML,
-                templateProps: this.props.templateProps || templateProps
+                templateProps: this.props.templateProps || templateProps,
+                currentTab: 'templateHTML'
             };
             this.updateSample(currentState);
             return currentState;
