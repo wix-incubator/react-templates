@@ -39,7 +39,7 @@ module.exports = function (grunt) {
         browserify: {
             rt: {
                 files: {
-                    'playground/rt-main.browser.js': ['playground/rt-main.js']
+                    'playground/dist/rt-main.browser.js': ['playground/rt-main.js']
                 },
                 options: {
                     transform: ['brfs'],
@@ -77,7 +77,7 @@ module.exports = function (grunt) {
                 //    sourceMapIn: 'example/coffeescript-sourcemap.js', // input sourcemap from a previous compilation
                 //},
                 files: {
-                    'playground/rt-main.browser.min.js': ['playground/rt-main.browser.js'],
+                    'playground/dist/rt-main.browser.min.js': ['playground/dist/rt-main.browser.js'],
                     'playground/libs/requirejs-plugins/text.min.js': ['playground/libs/requirejs-plugins/text.js'],
                     'playground/libs/requirejs-plugins/json.min.js': ['playground/libs/requirejs-plugins/json.js']
                 }
