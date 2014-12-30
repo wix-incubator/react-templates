@@ -62,7 +62,7 @@ define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React
                 $.get('playground/samples/' + name + '.code', null, function (data2, textStatus2, jqXHR2) {
                     var currentState = {
                         templateHTML: rt,
-                        templateProps: data2
+                        templateProps: _.template(data2, {name: 'template'})
                     };
                     //this.updateSample(currentState);
                     playground.setState(currentState);

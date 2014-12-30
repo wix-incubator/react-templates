@@ -8,7 +8,8 @@ requirejs.config({
         //ace: '../ace-builds-1.1.8/src-min/ace',
         fiddle: './fiddle',
         text: 'libs/requirejs-plugins/text',
-        json: 'libs/requirejs-plugins/json'
+        json: 'libs/requirejs-plugins/json',
+        bootstrap: 'libs/bootstrap/bootstrap.min',
         //codeMirror: 'libs/codemirror-4.8/lib/codemirror',
         //htmlmixed: 'libs/codemirror-4.8/mode/htmlmixed/htmlmixed',
         //javascript: 'libs/codemirror-4.8/mode/javascript/javascript'
@@ -28,7 +29,7 @@ requirejs.config({
     }
 });
 
-requirejs(['jquery', 'react', 'fiddle'], function ($, React, fiddle) {
+requirejs(['jquery', 'react', 'fiddle', 'bootstrap'], function ($, React, fiddle) {
     'use strict';
     window.fiddle = React.render(fiddle(), document.getElementById('container'));
     $(function () {

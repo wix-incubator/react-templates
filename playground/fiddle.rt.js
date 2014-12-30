@@ -90,7 +90,7 @@ define([
             'tabIndex': '-1',
             'href': '#',
             'onClick': onClick7.bind(this)
-        }, 'Weather'))))), React.createElement('ul', { 'className': 'nav-site' }, React.createElement('li', {}, React.createElement('a', { 'href': 'https://github.com/wix/react-templates' }, 'docs'))    /* <li><a href="https://github.com/wix/react-templates">support</a></li> */, React.createElement('li', {}, React.createElement('a', { 'href': 'https://github.com/wix/react-templates' }, 'download'))    /* <li><a href="https://github.com/wix/react-templates/">blog</a></li> */, React.createElement('li', {}, React.createElement('a', { 'href': 'https://github.com/wix/react-templates' }, 'github')))), React.createElement('div', { 'className': 'playground-container' }, React.createElement(playground, {
+        }, 'Weather'))))), React.createElement('ul', { 'className': 'nav-site' }, React.createElement('li', {}, React.createElement('a', { 'href': 'index.html' }, 'HOME')), React.createElement('li', {}, React.createElement('a', { 'href': 'https://github.com/wix/react-templates' }, 'docs'))    /* <li><a href="https://github.com/wix/react-templates">support</a></li> */, React.createElement('li', {}, React.createElement('a', { 'href': 'https://github.com/wix/react-templates' }, 'download'))    /* <li><a href="https://github.com/wix/react-templates/">blog</a></li> */, React.createElement('li', {}, React.createElement('a', { 'href': 'https://github.com/wix/react-templates' }, 'github')))), React.createElement('div', { 'className': 'playground-container' }, React.createElement(playground, {
             'ref': 'playground',
             'direction': 'vertical',
             'fiddle': true

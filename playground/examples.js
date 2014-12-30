@@ -19,7 +19,7 @@ define(['lodash', 'react', './examples.rt',
     //    return {templateProps: tuple[0], templateHTML: tuple[1]};
     //});
     Object.keys(samples).forEach(function (k) {
-        samples[k] = {name: k, templateProps: samples[k][0], templateHTML: samples[k][1]};
+        samples[k] = {name: k, templateProps: _.template(samples[k][0], {name: k}), templateHTML: samples[k][1]};
     });
 
     var Examples = React.createClass({

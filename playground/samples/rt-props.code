@@ -1,4 +1,4 @@
-var props = React.createClass({
+var <%= name %> = React.createClass({
     mixins: [React.addons.LinkedStateMixin],
     getInitialState: function() {
         return { key: 'color', val: 'blue' };
@@ -13,6 +13,6 @@ var props = React.createClass({
         return ret;
     },
     render: function () {
-        return propsRT.apply(this);
+        return <%= name %>RT.apply(this);
     }
 });

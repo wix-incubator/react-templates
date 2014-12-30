@@ -22,12 +22,12 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror'], fu
     var GUTTER_ID = 'rt-annotations';
 
     function annotate(editor, annot) {
-        if (annot.index) {
-            //posFromIndex
-            var pos = editor.findPosH({line: 0, ch: 0}, 25, 'char');
-            var range = editor.findWordAt(pos);
-            editor.markText(range.anchor,  range.head, {className: 'editor-error'});
-        }
+        //if (annot.index) {
+        //    //posFromIndex
+        //    var pos = editor.findPosH({line: 0, ch: 0}, 25, 'char');
+        //    var range = editor.findWordAt(pos);
+        //    editor.markText(range.anchor,  range.head, {className: 'editor-error'});
+        //}
         var tipLabel = /*state.hasGutter &&*/ document.createDocumentFragment();
         var ann = {severity: 'error', message: annot.message};
         tipLabel.appendChild(annotationTooltip(ann));

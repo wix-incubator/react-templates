@@ -1,5 +1,5 @@
-var hello = React.createClass({
+var <%= name %> = React.createClass({
     render: function () {
-        return helloRT.apply(this);
+        return <%= name %>RT.apply(this);
     }
 });

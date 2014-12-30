@@ -1,4 +1,4 @@
-var weather = React.createClass({
+var <%= name %> = React.createClass({
     mixins: [React.addons.LinkedStateMixin],
     getInitialState: function() {
         this.cityIds = [5391959,293397,2643743];
@@ -31,6 +31,6 @@ var weather = React.createClass({
         this.setState({ loading:false, info: result.list });
     },
     render: function () {
-        return weatherRT.apply(this);
+        return <%= name %>RT.apply(this);
     }
 });

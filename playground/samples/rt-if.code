@@ -1,4 +1,4 @@
-var rtIf = React.createClass({
+var <%= name %> = React.createClass({
     getInitialState: function () {
         return {open: false};
     },
@@ -6,6 +6,6 @@ var rtIf = React.createClass({
         this.setState({open: !this.state.open});
     },
     render: function () {
-        return rtIfRT.apply(this);
+        return <%= name %>RT.apply(this);
     }
 });

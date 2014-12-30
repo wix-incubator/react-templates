@@ -1,5 +1,5 @@
 /*eslint-env browser*/
-define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt', './CMLint'], function (React, $, _, pgFiddleTemplate, playgroundTemplate, CMLint) {
+define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'], function (React, $, _, pgFiddleTemplate, playgroundTemplate) {
     'use strict';
     function emptyFunc() {
         return null;
