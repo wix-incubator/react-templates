@@ -9,7 +9,7 @@ requirejs.config({
         fiddle: './fiddle',
         text: 'libs/requirejs-plugins/text',
         json: 'libs/requirejs-plugins/json',
-        bootstrap: 'libs/bootstrap/bootstrap.min',
+        bootstrap: 'libs/bootstrap/bootstrap.min'
         //codeMirror: 'libs/codemirror-4.8/lib/codemirror',
         //htmlmixed: 'libs/codemirror-4.8/mode/htmlmixed/htmlmixed',
         //javascript: 'libs/codemirror-4.8/mode/javascript/javascript'

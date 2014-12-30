@@ -86,6 +86,9 @@ module.exports = function (grunt) {
         requirejs: {
             compile: {
                 options: eval(require('fs').readFileSync('./home.config.js').toString())
+            },
+            playground: {
+                options: eval(require('fs').readFileSync('./playground.config.js').toString())
             }
         }
     });
