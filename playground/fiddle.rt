@@ -1,3 +1,4 @@
+<!--suppress CheckEmptyScriptTag -->
 <rt-require dependency="./playground" as="playground"/>
 <div class="fiddle">
     <div id="header">
@@ -5,7 +6,7 @@
             <a href="index.html" class="title-link">
                 <img class="nav-logo" src="https://wix.github.io/react-templates/img/logo-rt.svg" width="56" height="24" />
             </a>
-            RTFiddle
+            RT Playground
         </div>
         <div id="buttons-bar">
             <button type="button" class="btn btn-default" onClick="(evt)=>evt.preventDefault();this.save()">
@@ -29,14 +30,15 @@
                 </ul>
             </div>
         </div>
+        <ul class="nav-site">
+            <li><a href="https://github.com/wix/react-templates">docs</a></li>
+            <!--<li><a href="https://github.com/wix/react-templates">support</a></li>-->
+            <li><a href="https://github.com/wix/react-templates">download</a></li>
+            <!--<li><a href="https://github.com/wix/react-templates/">blog</a></li>-->
+            <li><a href="https://github.com/wix/react-templates">github</a>
+        </ul>
     </div>
-    <!--<div>-->
-        <!--<h1>React Templates fiddle</h1>-->
-        <!--<h2>Play with react templates and save/share your results</h2>-->
-        <!--<button class="btn btn-lg btn-primary" onClick="(evt)=>evt.preventDefault();this.save()">Save fiddle</button>-->
-        <!--<br />-->
     <div class="playground-container">
         <playground ref="playground" direction="vertical" fiddle="{true}" />
     </div>
-    <!--</div>-->
 </div>

@@ -1,5 +1,5 @@
 <div>
-    <ul rt-repeat="item in this.state.items">
-        <li>{item}</li>
+    <ul>
+        <li rt-repeat="item in this.state.items">{item}</li>
     </ul>
 </div>

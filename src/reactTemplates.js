@@ -403,8 +403,17 @@ function generate(data, options) {
     return templatePJSTemplate(data);
 }
 
+/**
+ * @param {string} name
+ * @return {string}
+ */
+function normalizeName(name) {
+    return name.replace(/-/g, '_');
+}
+
 module.exports = {
     convertTemplateToReact: convertTemplateToReact,
     RTCodeError: RTCodeError,
+    normalizeName: normalizeName,
     _test: {}
 };

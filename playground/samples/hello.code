@@ -1,1 +1,5 @@
-{}
+var hello = React.createClass({
+    render: function () {
+        return helloRT.apply(this);
+    }
+});

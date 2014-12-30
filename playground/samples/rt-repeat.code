@@ -1,12 +1,10 @@
-{
-    mixins: [React.addons.LinkedStateMixin],
+var repeat = React.createClass({
     getInitialState: function () {
         return {
-            items: [
-                'One',
-                'Two',
-                'Three'
-            ]
+            items: ['One', 'Two', 'Three']
         };
+    },
+    render: function () {
+        return repeatRT.apply(this);
     }
-}
+});

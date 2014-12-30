@@ -1,24 +1,32 @@
 /*eslint-env browser*/
-define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], function (React, _, pgFiddleTemplate, playgroundTemplate) {
+define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt', './CMLint'], function (React, $, _, pgFiddleTemplate, playgroundTemplate, CMLint) {
     'use strict';
     function emptyFunc() {
         return null;
     }
 
-    function generateTemplateSource(html, editor) {
+    /**
+     * @param {string} html
+     * @param editor
+     * @param {string} name
+     * @return {string}
+     */
+    function generateTemplateSource(html, editor, name) {
         var code = null;
         try {
-            code = window.reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g, ''));
+            code = window.reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g, ''), {modules: 'none', name: name});
             clearMessage(editor);
         } catch (e) {
             var msg;
             if (e.name === 'RTCodeError') {
                 //index: -1 line: -1 message: "Document should have a root element" name: "RTCodeError"
                 msg = e.message + ', line: ' + e.line;
+                editor.annotate({line: e.line, message: e.message, index: e.index});
             } else {
                 msg = e.message;
+                editor.annotate({line: 1, message: e.message});
             }
-            showMessage(editor, msg);
+            //showMessage(editor, msg);
             console.log(e);
         }
         return code;
@@ -26,13 +34,23 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
 
     function showMessage(editor, msg) {
         if (editor && editor.showMessage) {
-            editor.showMessage(msg);
+            //editor.showMessage(msg);
+            editor.annotate({line: 1, message: msg});
+            //calcSize();
+        }
+    }
+
+    function calcSize() {
+        if (window.calcSize) {
+            window.calcSize();
         }
     }
 
     function clearMessage(editor) {
         if (editor && editor.clearMessage) {
-            editor.clearMessage();
+            //editor.clearMessage();
+            editor.clearAnnotations();
+            //calcSize();
         }
     }
 
@@ -70,16 +88,38 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
     }
 
     var templateHTML = '<div></div>';
-    var templateProps = '{}';
+    var templateProps = 'var template = React.createClass({\n' +
+        '   render: function () {\n' +
+        '       return templateRT.apply(this);\n' +
+        '   }\n' +
+        '});';
+
+    var selfCleaningTimeout = {
+        componentDidUpdate: function() {
+            clearTimeout(this.timeoutID);
+        },
+        setTimeout: function() {
+            console.log('setTimeout');
+            clearTimeout(this.timeoutID);
+            this.timeoutID = setTimeout.apply(null, arguments);
+        }
+    };
 
     var Playground = React.createClass({
-
         displayName: 'Playground',
         mixins: [React.addons.LinkedStateMixin],
         propTypes: {
             direction: React.PropTypes.oneOf(['horizontal', 'vertical']),
             codeVisible: React.PropTypes.bool,
             fiddle: React.PropTypes.bool
+        },
+        templateSource: '',
+        validHTML: true,
+        validProps: true,
+        setTimeout: function() {
+            console.log('setTimeout');
+            clearTimeout(this.timeoutID);
+            this.timeoutID = setTimeout.apply(null, arguments);
         },
         getDefaultProps: function () {
             return {
@@ -88,34 +128,83 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
                 fiddle: false
             };
         },
+        getLayoutClass: function () {
+            return (this.props.direction === 'horizontal' && 'horizontal') || 'vertical';
+        },
+        //executeCode: function() {
+        //    var mountNode = this.refs.mount.getDOMNode();
+        //
+        //    try {
+        //        React.unmountComponentAtNode(mountNode);
+        //    } catch (e) { }
+        //
+        //    try {
+        //        var compiledCode = this.compileCode();
+        //        if (this.props.renderCode) {
+        //            React.render(
+        //                React.createElement(CodeMirrorEditor, {codeText: compiledCode, readOnly: true}),
+        //                mountNode
+        //            );
+        //        } else {
+        //            eval(compiledCode);
+        //        }
+        //    } catch (err) {
+        //        this.setTimeout(function() {
+        //            React.render(
+        //                React.createElement('div', {className: 'playgroundError'}, err.toString()),
+        //                mountNode
+        //            );
+        //        }, 500);
+        //    }
+        //},
         getTabs: function () {
             if (this.props.codeVisible) {
-                return  [['templateHTML','Template'],['templateProps','Class'],['templateSource','Generated code']];
+                return [['templateHTML', 'Template'], ['templateProps', 'Class'], ['templateSource', 'Generated code']];
             } else {
-                return  [['templateHTML','Template'],['templateSource','Generated code']];
+                return [['templateHTML', 'Template'], ['templateSource', 'Generated code']];
             }
         },
         updateSample: function (state) {
-            this.templateSource = generateTemplateSource(state.templateHTML, this.refs.editorRT);
-            this.sampleFunc = generateTemplateFunction(this.templateSource);
-            this.validHTML = this.sampleFunc !== emptyFunc;
+            var mountNode = this.refs.mount.getDOMNode();
+
+            //try {
+            //    React.unmountComponentAtNode(mountNode);
+            //} catch (e) { }
+
+            this.generateCode();
+            //this.sampleFunc = generateTemplateFunction(this.templateSource);
+            //this.validHTML = this.sampleFunc !== emptyFunc;
+            this.validHTML = true;
             this.sampleRender = generateRenderFunc(this.sampleFunc);
-            var classBase = {};
+            //var classBase = {};
             try {
                 this.validProps = true;
                 console.log(state.templateProps);
-                classBase = eval('(' + state.templateProps + ')');
-                if (!_.isObject(classBase)) {
-                    throw 'failed to eval';
+                //classBase = eval(this.templateSource + '\n' + state.templateProps);
+                //if (!_.isObject(classBase)) {
+                //    throw 'failed to eval';
+                //}
+                this.sample = eval('(function () {' + this.templateSource + '\n' + state.templateProps + '\n return React.createElement(' + state.name + ');})()');
+                if (this.sample) {
+                    React.render(this.sample, mountNode);
                 }
                 clearMessage(this.refs.editorCode);
             } catch (e) {
-                classBase = {};
+                //classBase = {};
+                this.rtMessage = e.toString();
                 this.validProps = false;
-                showMessage(this.refs.editorCode, e.message);
+                var editor = this.refs.editorCode;
+                this.setTimeout(function() {
+                    showMessage(editor, e.message);
+                    console.log('setTimeout playgroundError');
+                    React.render(
+                        React.createElement('div', {className: 'playground-error'}, e.toString()),
+                        mountNode
+                    );
+                }, 500);
             }
-            classBase.render = this.sampleRender;
-            this.sample = React.createFactory(React.createClass(classBase));
+            //classBase.render = this.sampleRender;
+            //this.sample = React.createFactory(React.createClass(classBase));
         },
         clear: function () {
             //console.log('clear');
@@ -130,20 +219,48 @@ define(['react', 'lodash', './playground-fiddle.rt', './playground.rt'], functio
             var currentState = {
                 templateHTML: this.props.templateHTML || templateHTML,
                 templateProps: this.props.templateProps || templateProps,
+                name: this.props.name || 'template',
                 currentTab: 'templateHTML'
             };
-            this.updateSample(currentState);
+            //this.updateSample(currentState);
             return currentState;
+        },
+        componentDidMount: function() {
+            if (this.props.fiddle) {
+                window.addEventListener('resize', this.calcSize);
+                this.calcSize();
+            }
+            this.updateSample(this.state);
+        },
+
+        componentWillUnmount: function(){
+            window.removeEventListener('resize', this.calcSize);
+        },
+
+        calcSize: function() {
+            var contentHeight = $(window).height() - $('#header').height();
+            var height = contentHeight / 2 - 10;
+
+            $('.code-area').each(function (i, k) {
+                $(this).height(height);
+                console.log($(this).height());
+            });
+            this.refs.editorCode.editor.refresh();
+            this.refs.editorRT.editor.refresh();
+            this.refs.editorGenerated.editor.refresh();
         },
         componentWillUpdate: function (nextProps, nextState) {
             if (nextState.templateHTML !== this.state.templateHTML || nextState.templateProps !== this.state.templateProps) {
                 this.updateSample(nextState);
             }
         },
-
         render: function () {
+            this.generateCode();
             var template = this.props.fiddle ? pgFiddleTemplate : playgroundTemplate;
             return template.apply(this);
+        },
+        generateCode: function () {
+            this.templateSource = generateTemplateSource(this.state.templateHTML, this.refs.editorRT, window.reactTemplates.normalizeName(this.state.name) + 'RT');
         }
     });
 

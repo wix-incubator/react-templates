@@ -10,6 +10,7 @@
     <meta name="description" content="Light weight templates for React.">
 
     <link rel="shortcut icon" href="https://facebook.github.io/react/favicon.ico">
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,700' rel='stylesheet' type='text/css'>
     <!--<link rel="alternate" type="application/rss+xml" title="React" href="http://facebook.github.io/react/feed.xml">-->
 
     <!--<link rel="stylesheet" href="https://facebook.github.io/react/css/syntax.css">-->
@@ -42,6 +43,7 @@
     <link rel="stylesheet" href="playground/libs/codemirror-4.8/addon/hint/show-hint.css">
     <link rel="stylesheet" href="playground/libs/codemirror-4.8/addon/lint/lint.css">
 
+    <link rel="stylesheet" href="playground/css/playground.css"/>
     <link rel="stylesheet" href="playground/css/home.css"/>
 </head>
 <body>
@@ -52,9 +54,10 @@
         <div class="wrap">
             <a class="nav-home" href="index.html">
                 <img class="nav-logo" src="https://wix.github.io/react-templates/img/logo-rt.svg" width="56" height="24">
-                React Templates
+                <span>React Templates</span>
             </a>
             <ul class="nav-site">
+                <li><a href="fiddle.html">Playground</a></li>
                 <li><a href="https://github.com/wix/react-templates">docs</a></li>
                 <!--<li><a href="https://github.com/wix/react-templates">support</a></li>-->
                 <li><a href="https://github.com/wix/react-templates">download</a></li>
@@ -67,55 +70,33 @@
 
     <div class="hero">
         <div class="wrap">
-            <div class="text"><strong>React Templates</strong></div>
+            <div class="text">React Templates</div>
             <div class="minitext">
                 Light weight templates for React
             </div>
-
             <div class="buttons-unit">
-                <a href="fiddle.html" class="button">RTFiddle</a>
+                <a href="fiddle.html" class="button">Checkout the Playground</a>
                 <!--<a href="/react/downloads.html" class="button">Download React v0.12.1</a>-->
             </div>
+
         </div>
     </div>
 
 
     <section class="content wrap">
-        <p><section class="light home-section">
-            <!--<div class="marketing-row">-->
-                <!--<div class="marketing-col">-->
-                    <!--<h3>Just the UI</h3>-->
-                    <!--<p>-->
-                        <!--Lots of people use React as the V in MVC.-->
-                        <!--Since React makes no assumptions about the rest of your technology stack,-->
-                        <!--it&apos;s easy to try it out on a small feature in an existing project.-->
-                    <!--</p>-->
-                <!--</div>-->
-                <!--<div class="marketing-col">-->
-                    <!--<h3>Virtual DOM</h3>-->
-                    <!--<p>-->
-                        <!--React uses a <i>virtual DOM</i> diff implementation for ultra-high performance. It can also-->
-                        <!--render on the server using Node.js &mdash; no heavy browser DOM required.-->
-                    <!--</p>-->
-                <!--</div>-->
-                <!--<div class="marketing-col">-->
-                    <!--<h3>Data flow</h3>-->
-                    <!--<p>-->
-                        <!--React implements one-way reactive data flow which reduces boilerplate and is-->
-                        <!--easier to reason about than traditional data binding.-->
-                    <!--</p>-->
-                <!--</div>-->
-            <!--</div>-->
-            <h3>Reasons that we love it:</h3>
-            <ul>
+
+        <section class="love-list">
+
+            <ul >
                 <li>No runtime libraries. No magic. Just simple pre-compilation to a clear React code</li>
                 <li>Super easy to write panels. By panels we mean components that have a lot of HTML code and non-reusable logic</li>
                 <li>Very good separation of presentation and logic. Almost no HTML within the component file</li>
                 <li>Declarative coding for presentation. HTML that you write and inspect look similar</li>
                 <li>Easy syntax. Similar to HTML. All IDEs recognize this format</li>
             </ul>
+
+
         </section>
-        <hr class="home-divider" />
         <section id="home-section" class="home-section">
         </section>
         <div id="loading" style="/* padding-bottom: 40px; */

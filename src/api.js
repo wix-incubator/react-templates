@@ -27,7 +27,7 @@ function convertFile(source, target, options, context) {
 
     var html = fs.readFileSync(source).toString();
     if (!options.name) {
-        options.name = path.basename(source, path.extname(source)) + 'RT';
+        options.name = reactTemplates.normalizeName(path.basename(source, path.extname(source))) + 'RT';
     }
     var js = convertTemplateToReact(html, options);
     if (!options.dryRun) {

@@ -1,8 +1,8 @@
 
 
-html {
-    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
-    font-family: proxima-nova, "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+body {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
     color: #484848;
     line-height: 1.28
 }
@@ -464,31 +464,54 @@ h1:hover .hash-link, h2:hover .hash-link, h3:hover .hash-link, h4:hover .hash-li
 }
 
 .hero {
-    height: 300px;
-    background: #2d2d2d;
-    padding-top: 50px;
-    color: #e9e9e9;
-    font-weight: 300
+    padding-bottom:60px;
+    background: #fff;
+    padding-top: 40px;
 }
 
 .hero .text {
-    font-size: 64px;
-    text-align: center
+    font-size: 110px;
+    text-align: center;
+    font-weight: 100;
+    color: #3899EC;
 }
 
 .hero .minitext {
-    font-size: 16px;
+    font-size: 24px;
     text-align: center;
-    text-transform: uppercase
+    color: #444;
+    margin-top: 15px;
+    font-weight:300;
 }
 
-.hero strong {
-    color: #61dafb;
-    font-weight: 400
+.love-list{
+    padding: 40px 0;
+    border: 1px solid #ddd;
+    border-width: 1px 0 1px 0;
+}
+.love-list ul{
+    margin:0;
+    padding:0;
+}
+
+.love-list li{
+    font-size: 18px;
+    line-height:1.7;
+    list-style-type: none;
+}
+
+.love-list li::before{
+    content: '';
+    display:inline-block;
+    width:14px;
+    height:14px;
+    border-radius:9px;
+    background: #3899EC;
+    margin-right:12px;
 }
 
 .buttons-unit {
-    margin-top: 60px;
+    margin-top: 40px;
     text-align: center
 }
 
@@ -571,13 +594,14 @@ h1:hover .hash-link, h2:hover .hash-link, h3:hover .hash-link, h4:hover .hash-li
 }
 
 .home-section {
-    margin: 50px 0
+    margin: 50px 0;
+
 }
 
 .home-divider {
     border-top-color: #bbb;
     margin: 0 auto;
-    width: 400px
+    width: 960px
 }
 
 .skinny-row:after {
@@ -627,7 +651,7 @@ h1:hover .hash-link, h2:hover .hash-link, h3:hover .hash-link, h4:hover .hash-li
     margin-left: 0
 }
 
-#examples h3, .home-presentation h3 {
+h3 {
     color: #2d2d2d;
     font-size: 24px;
     font-weight: normal;
@@ -1099,6 +1123,15 @@ div[data-twttr-id] iframe {
 
 .code-area, .result-area{
     box-sizing:border-box;
+}
+
+.CodeMirror-wrap {
+    border:1px solid #ddd;
+    border-radius: 0 4px 4px 4px;
+    /*height: 400px;*/
+    /*min-height: 100px;*/
+    /*height: 100%;*/
+    /*margin: 10px;*/
 }
 
 .code-area.horizontal {

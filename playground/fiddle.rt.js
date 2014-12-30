@@ -41,7 +41,7 @@ define([
             'src': 'https://wix.github.io/react-templates/img/logo-rt.svg',
             'width': '56',
             'height': '24'
-        })), '\n            RTFiddle\n        '), React.createElement('div', { 'id': 'buttons-bar' }, React.createElement('button', {
+        })), '\n            RT Playground\n        '), React.createElement('div', { 'id': 'buttons-bar' }, React.createElement('button', {
             'type': 'button',
             'className': 'btn btn-default',
             'onClick': onClick1.bind(this)
@@ -90,14 +90,10 @@ define([
             'tabIndex': '-1',
             'href': '#',
             'onClick': onClick7.bind(this)
-        }, 'Weather'))))))    /* <div> */
-                              /* <h1>React Templates fiddle</h1> */
-                              /* <h2>Play with react templates and save/share your results</h2> */
-                              /* <button class="btn btn-lg btn-primary" onClick="(evt)=>evt.preventDefault();this.save()">Save fiddle</button> */
-                              /* <br /> */, React.createElement('div', { 'className': 'playground-container' }, React.createElement(playground, {
+        }, 'Weather'))))), React.createElement('ul', { 'className': 'nav-site' }, React.createElement('li', {}, React.createElement('a', { 'href': 'https://github.com/wix/react-templates' }, 'docs'))    /* <li><a href="https://github.com/wix/react-templates">support</a></li> */, React.createElement('li', {}, React.createElement('a', { 'href': 'https://github.com/wix/react-templates' }, 'download'))    /* <li><a href="https://github.com/wix/react-templates/">blog</a></li> */, React.createElement('li', {}, React.createElement('a', { 'href': 'https://github.com/wix/react-templates' }, 'github')))), React.createElement('div', { 'className': 'playground-container' }, React.createElement(playground, {
             'ref': 'playground',
             'direction': 'vertical',
             'fiddle': true
-        }))    /* </div> */);
+        })));
     };
 });

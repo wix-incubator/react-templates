@@ -7,8 +7,7 @@ define([
     return function () {
         return React.createElement('div', { 'id': 'examples' }, React.createElement('div', { 'className': 'example' }, React.createElement('h3', {}, 'Hello world in react templates'), React.createElement('p', {}, '\n            Simple hello world html transformed into react javascript code\n        '), React.createElement(playground, _.merge({}, {
             'id': 'helloExample',
-            'direction': 'horizontal',
-            'codeVisible': false
+            'direction': 'horizontal'
         }, this.state.samples.hello))), React.createElement('div', { 'className': 'example' }, React.createElement('h3', {}, 'This shows the use of rt-if'), React.createElement('p', {}, '\n            This shows the use of rt-if\n        '), React.createElement(playground, _.merge({}, {
             'id': 'ifExample',
             'direction': 'horizontal'

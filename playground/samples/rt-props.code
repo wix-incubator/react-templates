@@ -1,9 +1,18 @@
-{
+var props = React.createClass({
     mixins: [React.addons.LinkedStateMixin],
-    getProps: function() {
-        return _.omit(this.props, ['onClick', 'eventId']);    
+    getInitialState: function() {
+        return { key: 'color', val: 'blue' };
     },
-    reportClick: function(child) {
-        alert((this.props.eventId || -1) + ':' + child.innerText);
+    getProps: function() {
+        var ret = { style: {
+          color: 'black',
+          backgroundColor: 'white',
+          borderColor: 'black'
+        }};
+        ret.style[this.state.key] = this.state.val;
+        return ret;
+    },
+    render: function () {
+        return propsRT.apply(this);
     }
-}
+});

@@ -1,4 +1,4 @@
-{
+var weather = React.createClass({
     mixins: [React.addons.LinkedStateMixin],
     getInitialState: function() {
         this.cityIds = [5391959,293397,2643743];
@@ -16,8 +16,7 @@
         if (result.id && !_.contains(this.cityIds, result.id)) {
             this.cityIds.unshift(result.id);
             this.fetchWeather();
-        }
-        else {
+        } else {
             this.setState({ loading: false });
         }
     },
@@ -30,5 +29,8 @@
     },
     fetchWeatherCallback: function(result) {
         this.setState({ loading:false, info: result.list });
+    },
+    render: function () {
+        return weatherRT.apply(this);
     }
-}   
+});

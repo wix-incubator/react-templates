@@ -1,3 +1,4 @@
+<!--suppress CheckEmptyScriptTag -->
 <rt-require dependency="./playground" as="playground"/>
 <div id="examples">
     <div class="example">
@@ -5,7 +6,7 @@
         <p>
             Simple hello world html transformed into react javascript code
         </p>
-        <playground id="helloExample" rt-props="this.state.samples.hello" direction="horizontal" codeVisible="{false}"></playground>
+        <playground id="helloExample" rt-props="this.state.samples.hello" direction="horizontal"></playground>
     </div>
     <div class="example">
         <h3>This shows the use of rt-if</h3>

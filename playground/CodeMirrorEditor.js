@@ -1,4 +1,5 @@
 define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
+        './CMLint',
         './libs/codemirror-4.8/mode/javascript/javascript',
         './libs/codemirror-4.8/addon/hint/html-hint',
         './libs/codemirror-4.8/addon/hint/show-hint',
@@ -9,7 +10,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
         './libs/codemirror-4.8/mode/css/css',
         './libs/codemirror-4.8/mode/htmlmixed/htmlmixed'
         //'./libs/codemirror-4.8/addon/display/placeholder'
-], function (React, _, $, CodeMirror) {
+], function (React, _, $, CodeMirror, CMLint) {
     'use strict';
     //codeMirror: 'libs/codemirror-4.8/lib/codemirror',
     //htmlmixed: 'libs/codemirror-4.8/mode/htmlmixed/htmlmixed',
@@ -79,7 +80,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
             var props = _.omit(this.props, ['ref', 'key', 'value', 'valueLink', 'onChange']);
             props.id = this.props.id || this.state.editorId;
             var value = this.props.valueLink ? this.props.valueLink() : this.props.value;
-            return React.DOM.textarea(props,value);
+            return React.DOM.textarea(props, value);
         },
         componentWillUpdate: function (nextProps/*, nextState*/) {
             var value = nextProps.valueLink ? nextProps.valueLink() : nextProps.value;
@@ -97,6 +98,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
                 value: value,
                 lineNumbers: true,
                 mode: 'javascript',
+                gutters: ['CodeMirror-linenumbers', 'rt-annotations'],
                 theme: 'solarized' //solarized_light solarized-light
             };
 
@@ -110,11 +112,11 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
                     'Ctrl-Space': 'autocomplete'
                 };
                 options.hintOptions = {schemaInfo: tags};
-                options.gutters = ['CodeMirror-lint-markers'];
+                //options.gutters = ['CodeMirror-lint-markers'];
                 options.lint = true;
             } else {
                 options.mode = 'javascript';
-                options.gutters = ['CodeMirror-lint-markers'];
+                //options.gutters = ['CodeMirror-lint-markers'];
                 options.lint = true;
             }
 
@@ -131,19 +133,25 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
             }
         },
         showMessage: function (msg) {
-            var anOption = document.createElement('div');
-            anOption.innerText = msg;
-            anOption.setAttribute('class', 'error-panel');
-            if (this.panel) {
-                this.panel.clear();
-            }
-            this.panel = this.editor.addPanel(anOption, {height: 22}); // {position: 'bottom'}
+            //var anOption = document.createElement('div');
+            //anOption.innerText = msg;
+            //anOption.setAttribute('class', 'error-panel');
+            //if (this.panel) {
+            //    this.panel.clear();
+            //}
+            //this.panel = this.editor.addPanel(anOption, {height: 22}); // {position: 'bottom'}
         },
         clearMessage: function () {
             if (this.panel) {
                 this.panel.clear();
                 this.panel = null;
             }
+        },
+        annotate: function (annot) {
+            CMLint.annotate(this.editor, annot);
+        },
+        clearAnnotations: function () {
+            CMLint.clearMarks(this.editor);
         },
         componentWillUnmount: function () {
             this.editor.toTextArea();

@@ -1,5 +1,16 @@
-<div onClick="(evt)=>this.reportClick(evt.target)"
-     rt-props="this.getProps()">
-    All kinds of stuff,
-    <span>some inner child, </span> and a sibling
+<div>
+    Style:
+    <select valueLink="{this.linkState('key')}">
+        <option value="color">Color</option>
+        <option value="backgroundColor">Background color</option>
+        <option value="borderColor">Border color</option>
+    </select><br/>
+    Value:
+    <select valueLink="{this.linkState('val')}">
+        <option value="blue">Blue</option>
+        <option value="red">Red</option>
+        <option value="yellow">Yellow</option>
+    </select><br/><br/>
+    <div style="padding:5px;text-align:center;border:1px solid"
+         rt-props="this.getProps()">Sample</div>
 </div>

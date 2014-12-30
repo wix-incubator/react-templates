@@ -1,8 +1,11 @@
-{
+var rtIf = React.createClass({
     getInitialState: function () {
         return {open: false};
     },
     toggle: function() {
         this.setState({open: !this.state.open});
+    },
+    render: function () {
+        return rtIfRT.apply(this);
     }
-}
+});

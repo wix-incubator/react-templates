@@ -16,10 +16,10 @@ define([
         }, React.createElement('a', { 'aria-controls': tab[1] }, tab[1]));
     }
     function onChange3(evt) {
-        this.setState({ 'templateHTML': evt.target.value });
+        this.setState({ templateHTML: evt.target.value });
     }
     function onChange4(evt) {
-        this.setState({ 'templateProps': evt.target.value });
+        this.setState({ templateProps: evt.target.value });
     }
     function onSubmit5(e) {
         e.preventDefault();
@@ -27,7 +27,7 @@ define([
     return function () {
         return React.createElement('div', { 'className': 'playground' }, React.createElement('div', {
             'id': this.props.id + '-myTab',
-            'className': 'code-area ' + (this.props.direction === 'horizontal' && 'horizontal' || 'vertical')
+            'className': 'code-area ' + this.getLayoutClass()
         }    /*  Nav tabs  */, React.createElement.apply(this, _.flatten([
             'ul',
             {
@@ -56,10 +56,12 @@ define([
             'readOnly': true
         })) : null)), React.createElement('div', {
             'key': 'result-area',
-            'className': 'result-area  ' + (this.props.direction === 'horizontal' && 'horizontal' || 'vertical')
+            'className': 'result-area ' + this.getLayoutClass()
         }, React.createElement('span', { 'className': 'preview-title' }, '\xA0'), React.createElement('form', {
+            'ref': 'mount',
             'className': 'sample-view',
             'onSubmit': onSubmit5.bind(this)
-        }, React.createElement(this.sample, { 'key': 'sample' }))), React.createElement('br', { 'style': { clear: 'both' } }));
+        }    /* <this.sample key="sample"> */
+             /* </this.sample> */)), React.createElement('br', { 'style': { clear: 'both' } }));
     };
 });
