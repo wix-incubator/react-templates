@@ -1,0 +1,5 @@
+<rt-require dependency="comps/myComp" as="myComp"/>
+<rt-require dependency="utils/utils" as="utils"/>
+<div>
+    <myComp customProp="{utils.doSomething()}">myComp is just a regular tag</myComp>
+</div>

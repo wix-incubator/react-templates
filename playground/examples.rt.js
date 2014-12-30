@@ -25,11 +25,14 @@ define([
             'id': 'weatherExample',
             'direction': 'horizontal'
         }, this.state.samples.weather))), React.createElement('div', {
+            'id': 'rt-require',
+            'className': 'example'
+        }, React.createElement('h3', {}, 'rt-require'), React.createElement('p', {}, '\n            This example shows how to load other react components and libraries into a react-template and use them in the template\n        '), React.createElement(viewer, _.merge({}, { 'mode': 'javascript' }, this.state.rtRequire))), React.createElement('div', {
             'id': 'amd',
             'className': 'example'
-        }, React.createElement('h3', {}, 'AMD'), React.createElement('p', {}, '\n            This example shows the hello sample output with AMD support.\n        '), React.createElement(viewer, _.merge({}, { 'mode': 'javascript' }, this.state.amd))), React.createElement('div', {
+        }, React.createElement('h3', {}, 'AMD'), React.createElement('p', {}, '\n            This example shows the rt-require sample output with AMD support\n        '), React.createElement(viewer, _.merge({}, { 'mode': 'javascript' }, this.state.amd))), React.createElement('div', {
             'id': 'commonjs',
             'className': 'example'
-        }, React.createElement('h3', {}, 'CommonJS'), React.createElement('p', {}, '\n            This example shows the hello sample output with CommonJS support.\n        '), React.createElement(viewer, _.merge({}, { 'mode': 'javascript' }, this.state.cjs))));
+        }, React.createElement('h3', {}, 'CommonJS'), React.createElement('p', {}, '\n            This example shows the rt-require sample output with CommonJS support\n        '), React.createElement(viewer, _.merge({}, { 'mode': 'javascript' }, this.state.cjs))));
     };
 });

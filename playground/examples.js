@@ -5,8 +5,9 @@ define(['lodash', 'react', './examples.rt',
         'text!./samples/rt-if.code', 'text!./samples/rt-if.rt',
         'text!./samples/rt-props.code', 'text!./samples/rt-props.rt',
         'text!./samples/rt-repeat.code', 'text!./samples/rt-repeat.rt',
-        'text!./samples/weather.code', 'text!./samples/weather.rt'
-], function (_, React, examplesTemplate, helloCode, helloRT, todoCode, todoRT, rtIfCode, rtIfRT, rtPropsCode, rtPropsRT, rtRepeatCode, rtRepeatRT, weatherCode, weatherRT) {
+        'text!./samples/weather.code', 'text!./samples/weather.rt',
+        'text!./samples/rt-require.rt'
+], function (_, React, examplesTemplate, helloCode, helloRT, todoCode, todoRT, rtIfCode, rtIfRT, rtPropsCode, rtPropsRT, rtRepeatCode, rtRepeatRT, weatherCode, weatherRT, rtRequireRT) {
     var samples = {
         hello: [helloCode, helloRT],
         todo: [todoCode, todoRT],
@@ -26,9 +27,10 @@ define(['lodash', 'react', './examples.rt',
         displayName: 'Examples',
         mixins: [React.addons.LinkedStateMixin],
         getInitialState: function () {
-            var codeAmd = window.reactTemplates.convertTemplateToReact(helloRT, {modules: 'amd', name: 'template'});
-            var codeCJS = window.reactTemplates.convertTemplateToReact(helloRT, {modules: 'commonjs', name: 'template'});
+            var codeAmd = window.reactTemplates.convertTemplateToReact(rtRequireRT, {modules: 'amd', name: 'template'});
+            var codeCJS = window.reactTemplates.convertTemplateToReact(rtRequireRT, {modules: 'commonjs', name: 'template'});
             return {
+                rtRequire: {value: rtRequireRT},
                 amd: {value: codeAmd},
                 cjs: {value: codeCJS},
                 samples: samples
