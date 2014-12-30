@@ -1,26 +1,22 @@
 <!--suppress CheckEmptyScriptTag -->
 <rt-require dependency="./CodeMirrorEditor" as="CodeEditor"/>
-<!--suppress ALL -->
 <div class="playground">
     <div class="fiddle-row">
         <div class="code-area" id="area-rt">
-            <!--style="border: {this.validHTML ? '' : '2px solid red'};"-->
             <CodeEditor ref="editorRT" id="editor-rt" class="large-text-area"
                         value="{this.state.templateHTML}"
                         mode="html"
-                        onChange="(evt) => this.setState({'templateHTML':evt.target.value})" />
+                        onChange="(e)=>this.setState({templateHTML:e.target.value})" />
         </div>
         <div class="code-area" id="area-code">
-            <!--style="border: {this.validProps ? '' : '2px solid red'};"-->
             <CodeEditor ref="editorCode" id="editor-code" class="large-text-area"
                         value="{this.state.templateProps}"
                         mode="javascript"
-                        onChange="(evt) => this.setState({'templateProps':evt.target.value})" />
+                        onChange="(e)=>this.setState({templateProps:e.target.value})" />
         </div>
     </div>
     <div class="fiddle-row">
         <div class="code-area" id="area-generated">
-            <!--style="border:0px none black;"-->
             <CodeEditor id="editor-generated" class="large-text-area"
                         ref="editorGenerated"
                         value="{this.templateSource}"
@@ -30,8 +26,7 @@
         <div class="code-area" id="area-result">
         <!--<div id="result-container" class="result-area">-->
             <div id="result-area" key="result-area" class="sample-view">
-                <!--<h2>Preview:</h2>-->
-                <form class="result-area-form" ref="mount" onSubmit="(e) => e.preventDefault();">
+                <form class="result-area-form" ref="mount" onSubmit="(e)=>e.preventDefault();">
                     <!--<this.sample key="sample">-->
                     <!--</this.sample>-->
                 </form>

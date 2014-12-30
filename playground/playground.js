@@ -17,13 +17,10 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             code = window.reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g, ''), {modules: 'none', name: name});
             clearMessage(editor);
         } catch (e) {
-            var msg;
             if (e.name === 'RTCodeError') {
                 //index: -1 line: -1 message: "Document should have a root element" name: "RTCodeError"
-                msg = e.message + ', line: ' + e.line;
                 editor.annotate({line: e.line, message: e.message, index: e.index});
             } else {
-                msg = e.message;
                 editor.annotate({line: 1, message: e.message});
             }
             //showMessage(editor, msg);
@@ -34,23 +31,13 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
 
     function showMessage(editor, msg) {
         if (editor && editor.showMessage) {
-            //editor.showMessage(msg);
             editor.annotate({line: 1, message: msg});
-            //calcSize();
-        }
-    }
-
-    function calcSize() {
-        if (window.calcSize) {
-            window.calcSize();
         }
     }
 
     function clearMessage(editor) {
         if (editor && editor.clearMessage) {
-            //editor.clearMessage();
             editor.clearAnnotations();
-            //calcSize();
         }
     }
 
@@ -165,13 +152,12 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             }
         },
         updateSample: function (state) {
-            var mountNode = this.refs.mount.getDOMNode();
 
             //try {
             //    React.unmountComponentAtNode(mountNode);
             //} catch (e) { }
 
-            this.generateCode();
+            this.generateCode(state);
             //this.sampleFunc = generateTemplateFunction(this.templateSource);
             //this.validHTML = this.sampleFunc !== emptyFunc;
             this.validHTML = true;
@@ -185,14 +171,12 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
                 //    throw 'failed to eval';
                 //}
                 this.sample = eval('(function () {' + this.templateSource + '\n' + state.templateProps + '\n return React.createElement(' + state.name + ');})()');
-                if (this.sample) {
-                    React.render(this.sample, mountNode);
-                }
+
                 clearMessage(this.refs.editorCode);
             } catch (e) {
                 //classBase = {};
-                this.rtMessage = e.toString();
                 this.validProps = false;
+                this.sample = null;
                 var editor = this.refs.editorCode;
                 this.setTimeout(function() {
                     showMessage(editor, e.message);
@@ -231,8 +215,17 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
                 this.calcSize();
             }
             this.updateSample(this.state);
+            this.renderSample();
         },
-
+        renderSample: function () {
+            var mountNode = this.refs.mount.getDOMNode();
+            if (this.sample) {
+                React.render(this.sample, mountNode);
+            }
+        },
+        componentDidUpdate: function () {
+            this.renderSample();
+        },
         componentWillUnmount: function(){
             window.removeEventListener('resize', this.calcSize);
         },
@@ -255,12 +248,12 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             }
         },
         render: function () {
-            this.generateCode();
+            this.generateCode(this.state);
             var template = this.props.fiddle ? pgFiddleTemplate : playgroundTemplate;
             return template.apply(this);
         },
-        generateCode: function () {
-            this.templateSource = generateTemplateSource(this.state.templateHTML, this.refs.editorRT, window.reactTemplates.normalizeName(this.state.name) + 'RT');
+        generateCode: function (state) {
+            this.templateSource = generateTemplateSource(state.templateHTML, this.refs.editorRT, window.reactTemplates.normalizeName(state.name) + 'RT');
         }
     });
 

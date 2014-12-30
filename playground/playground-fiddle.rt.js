@@ -4,11 +4,11 @@ define([
     './CodeMirrorEditor'
 ], function (React, _, CodeEditor) {
     'use strict';
-    function onChange1(evt) {
-        this.setState({ 'templateHTML': evt.target.value });
+    function onChange1(e) {
+        this.setState({ templateHTML: e.target.value });
     }
-    function onChange2(evt) {
-        this.setState({ 'templateProps': evt.target.value });
+    function onChange2(e) {
+        this.setState({ templateProps: e.target.value });
     }
     function onSubmit3(e) {
         e.preventDefault();
@@ -17,7 +17,7 @@ define([
         return React.createElement('div', { 'className': 'playground' }, React.createElement('div', { 'className': 'fiddle-row' }, React.createElement('div', {
             'className': 'code-area',
             'id': 'area-rt'
-        }    /* style="border: {this.validHTML ? '' : '2px solid red'};" */, React.createElement(CodeEditor, {
+        }, React.createElement(CodeEditor, {
             'ref': 'editorRT',
             'id': 'editor-rt',
             'className': 'large-text-area',
@@ -27,7 +27,7 @@ define([
         })), React.createElement('div', {
             'className': 'code-area',
             'id': 'area-code'
-        }    /* style="border: {this.validProps ? '' : '2px solid red'};" */, React.createElement(CodeEditor, {
+        }, React.createElement(CodeEditor, {
             'ref': 'editorCode',
             'id': 'editor-code',
             'className': 'large-text-area',
@@ -37,7 +37,7 @@ define([
         }))), React.createElement('div', { 'className': 'fiddle-row' }, React.createElement('div', {
             'className': 'code-area',
             'id': 'area-generated'
-        }    /* style="border:0px none black;" */, React.createElement(CodeEditor, {
+        }, React.createElement(CodeEditor, {
             'id': 'editor-generated',
             'className': 'large-text-area',
             'ref': 'editorGenerated',
@@ -51,7 +51,7 @@ define([
             'id': 'result-area',
             'key': 'result-area',
             'className': 'sample-view'
-        }    /* <h2>Preview:</h2> */, React.createElement('form', {
+        }, React.createElement('form', {
             'className': 'result-area-form',
             'ref': 'mount',
             'onSubmit': onSubmit3.bind(this)

@@ -1,12 +1,5 @@
 define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror'], function (React, _, $, CodeMirror) {
     'use strict';
-    //var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
-    //    lineNumbers: true,
-    //    viewportMargin: Infinity,
-    //    gutters: ['CodeMirror-linenumbers', 'GUTTER_ID']
-    //});
-    //
-    //editor.markText({line: 1, ch: 1}, {line: 1, ch: 10}, {className: 'editor-error'});
 
     function annotationTooltip(ann) {
         var severity = ann.severity;
