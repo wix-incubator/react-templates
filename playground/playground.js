@@ -147,12 +147,10 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
         getTabs: function () {
             if (this.props.codeVisible) {
                 return [['templateHTML', 'Template'], ['templateProps', 'Class'], ['templateSource', 'Generated code']];
-            } else {
-                return [['templateHTML', 'Template'], ['templateSource', 'Generated code']];
             }
+            return [['templateHTML', 'Template'], ['templateSource', 'Generated code']];
         },
         updateSample: function (state) {
-
             //try {
             //    React.unmountComponentAtNode(mountNode);
             //} catch (e) { }
@@ -162,42 +160,69 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             //this.validHTML = this.sampleFunc !== emptyFunc;
             this.validHTML = true;
             this.sampleRender = generateRenderFunc(this.sampleFunc);
-            //var classBase = {};
             try {
                 this.validProps = true;
                 console.log(state.templateProps);
-                //classBase = eval(this.templateSource + '\n' + state.templateProps);
-                //if (!_.isObject(classBase)) {
-                //    throw 'failed to eval';
-                //}
                 this.sample = eval('(function () {' + this.templateSource + '\n' + state.templateProps + '\n return React.createElement(' + state.name + ');})()');
-
                 clearMessage(this.refs.editorCode);
             } catch (e) {
-                //classBase = {};
                 this.validProps = false;
                 this.sample = null;
                 var editor = this.refs.editorCode;
-                this.setTimeout(function() {
-                    showMessage(editor, e.message);
-                    console.log('setTimeout playgroundError');
-                    React.render(
-                        React.createElement('div', {className: 'playground-error'}, e.toString()),
-                        mountNode
-                    );
-                }, 500);
+                this.showError(e, editor);
             }
             //classBase.render = this.sampleRender;
             //this.sample = React.createFactory(React.createClass(classBase));
         },
+        showError: function (e, editor) {
+            var mountNode = this.refs.mount.getDOMNode();
+            this.setTimeout(function() {
+                showMessage(editor, e.message);
+                React.render(
+                    React.createElement('div', {className: 'playground-error'}, e.toString()),
+                    mountNode
+                );
+            }, 500);
+        },
+        showErrorAnnotation: function (annot, editor) {
+            var mountNode = this.refs.mount.getDOMNode();
+            this.setTimeout(function() {
+                editor.annotate(annot);
+                React.render(
+                    React.createElement('div', {className: 'playground-error'}, annot.message),
+                    mountNode
+                );
+            }, 500);
+        },
         clear: function () {
-            //console.log('clear');
             var currentState = {
                 templateHTML: templateHTML,
                 templateProps: templateProps
             };
             //this.updateSample(currentState);
             this.setState(currentState);
+        },
+        generateCode: function (state) {
+            var html = state.templateHTML;
+            var editor = this.refs.editorRT;
+            var name = window.reactTemplates.normalizeName(state.name) + 'RT';
+            var code = null;
+            try {
+                code = window.reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g, ''), {modules: 'none', name: name});
+                clearMessage(editor);
+            } catch (e) {
+                var annot = null;
+                if (e.name === 'RTCodeError') {
+                    //index: -1 line: -1 message: "Document should have a root element" name: "RTCodeError"
+                    annot = {line: e.line, message: e.message, index: e.index};
+                } else {
+                    annot = {line: 1, message: e.message};
+                }
+                this.showErrorAnnotation(annot, editor);
+                //showMessage(editor, msg);
+                console.log(e);
+            }
+            this.templateSource = code;
         },
         getInitialState: function () {
             var currentState = {
@@ -229,14 +254,13 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
         componentWillUnmount: function(){
             window.removeEventListener('resize', this.calcSize);
         },
-
         calcSize: function() {
             var contentHeight = $(window).height() - $('#header').height();
             var height = contentHeight / 2 - 10;
 
             $('.code-area').each(function (i, k) {
                 $(this).height(height);
-                console.log($(this).height());
+                //console.log($(this).height());
             });
             this.refs.editorCode.editor.refresh();
             this.refs.editorRT.editor.refresh();
@@ -251,9 +275,6 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             this.generateCode(this.state);
             var template = this.props.fiddle ? pgFiddleTemplate : playgroundTemplate;
             return template.apply(this);
-        },
-        generateCode: function (state) {
-            this.templateSource = generateTemplateSource(state.templateHTML, this.refs.editorRT, window.reactTemplates.normalizeName(state.name) + 'RT');
         }
     });
 

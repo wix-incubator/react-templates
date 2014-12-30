@@ -5,10 +5,10 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
         './libs/codemirror-4.8/addon/hint/show-hint',
         './libs/codemirror-4.8/addon/hint/xml-hint',
         './libs/codemirror-4.8/addon/hint/html-hint',
-        './libs/codemirror-4.8/addon/display/panel',
+        //'./libs/codemirror-4.8/addon/display/panel',
         './libs/codemirror-4.8/mode/xml/xml',
-        './libs/codemirror-4.8/mode/css/css',
-        './libs/codemirror-4.8/mode/htmlmixed/htmlmixed'
+        //'./libs/codemirror-4.8/mode/css/css',
+        './libs/codemirror-4.8/addon/runmode/runmode'
         //'./libs/codemirror-4.8/addon/display/placeholder'
 ], function (React, _, $, CodeMirror, CMLint) {
     'use strict';
@@ -69,13 +69,25 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
 
     var editor = React.createClass({
         displayName: 'CodeMirrorEditor',
+        propTypes: {
+            id: React.PropTypes.string,
+            readOnly: React.PropTypes.bool,
+            runMode: React.PropTypes.bool,
+            mode: React.PropTypes.string
+        },
+        getDefaultProps: function () {
+            return {
+                readOnly: false,
+                mode: 'html'
+            };
+        },
         getInitialState: function () {
             return {
                 editorId: _.uniqueId()
             };
         },
-        componentWillMount: function () {
-        },
+        //componentWillMount: function () {
+        //},
         render: function () {
             var props = _.omit(this.props, ['ref', 'key', 'value', 'valueLink', 'onChange']);
             props.id = this.props.id || this.state.editorId;
@@ -113,11 +125,11 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
                 };
                 options.hintOptions = {schemaInfo: tags};
                 //options.gutters = ['CodeMirror-lint-markers'];
-                options.lint = true;
+                //options.lint = true;
             } else {
                 options.mode = 'javascript';
                 //options.gutters = ['CodeMirror-lint-markers'];
-                options.lint = true;
+                //options.lint = true;
             }
 
             this.editor = CodeMirror.fromTextArea(this.getDOMNode(), options);
@@ -132,21 +144,21 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
                 }.bind(this));
             }
         },
-        showMessage: function (msg) {
-            //var anOption = document.createElement('div');
-            //anOption.innerText = msg;
-            //anOption.setAttribute('class', 'error-panel');
-            //if (this.panel) {
-            //    this.panel.clear();
-            //}
-            //this.panel = this.editor.addPanel(anOption, {height: 22}); // {position: 'bottom'}
-        },
-        clearMessage: function () {
-            if (this.panel) {
-                this.panel.clear();
-                this.panel = null;
-            }
-        },
+        //showMessage: function (msg) {
+        //    //var anOption = document.createElement('div');
+        //    //anOption.innerText = msg;
+        //    //anOption.setAttribute('class', 'error-panel');
+        //    //if (this.panel) {
+        //    //    this.panel.clear();
+        //    //}
+        //    //this.panel = this.editor.addPanel(anOption, {height: 22}); // {position: 'bottom'}
+        //},
+        //clearMessage: function () {
+        //    if (this.panel) {
+        //        this.panel.clear();
+        //        this.panel = null;
+        //    }
+        //},
         annotate: function (annot) {
             CMLint.annotate(this.editor, annot);
         },

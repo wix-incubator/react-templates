@@ -32,10 +32,8 @@
         </div>
         <ul class="nav-site">
             <li><a href="index.html">HOME</a></li>
-            <li><a href="https://github.com/wix/react-templates">docs</a></li>
-            <!--<li><a href="https://github.com/wix/react-templates">support</a></li>-->
-            <li><a href="https://github.com/wix/react-templates">download</a></li>
-            <!--<li><a href="https://github.com/wix/react-templates/">blog</a></li>-->
+            <li><a href="https://github.com/wix/react-templates#template-directives-and-syntax">docs</a></li>
+            <li><a href="https://github.com/wix/react-templates#installation">download</a></li>
             <li><a href="https://github.com/wix/react-templates">github</a>
         </ul>
     </div>

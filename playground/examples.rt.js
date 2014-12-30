@@ -1,8 +1,9 @@
 define([
     'react/addons',
     'lodash',
-    './playground'
-], function (React, _, playground) {
+    './playground',
+    './CodeMirrorViewer'
+], function (React, _, playground, viewer) {
     'use strict';
     return function () {
         return React.createElement('div', { 'id': 'examples' }, React.createElement('div', { 'className': 'example' }, React.createElement('h3', {}, 'Hello world in react templates'), React.createElement('p', {}, '\n            Simple hello world html transformed into react javascript code\n        '), React.createElement(playground, _.merge({}, {
@@ -23,6 +24,12 @@ define([
         }, this.state.samples.todo))), React.createElement('div', { 'className': 'example' }, React.createElement('h3', {}, 'Weather'), React.createElement('p', {}, '\n            This example shows working with async events, usage of regular event handler function pointers instead of lambda expression, and working with 2 way binding\n        '), React.createElement(playground, _.merge({}, {
             'id': 'weatherExample',
             'direction': 'horizontal'
-        }, this.state.samples.weather))));
+        }, this.state.samples.weather))), React.createElement('div', {
+            'id': 'amd',
+            'className': 'example'
+        }, React.createElement('h3', {}, 'AMD'), React.createElement('p', {}, '\n            This example shows the hello sample output with AMD support.\n        '), React.createElement(viewer, _.merge({}, { 'mode': 'javascript' }, this.state.amd))), React.createElement('div', {
+            'id': 'commonjs',
+            'className': 'example'
+        }, React.createElement('h3', {}, 'CommonJS'), React.createElement('p', {}, '\n            This example shows the hello sample output with CommonJS support.\n        '), React.createElement(viewer, _.merge({}, { 'mode': 'javascript' }, this.state.cjs))));
     };
 });

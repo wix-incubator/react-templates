@@ -25,13 +25,15 @@ define(['lodash', 'react', './examples.rt',
     var Examples = React.createClass({
         displayName: 'Examples',
         mixins: [React.addons.LinkedStateMixin],
-
         getInitialState: function () {
+            var codeAmd = window.reactTemplates.convertTemplateToReact(helloRT, {modules: 'amd', name: 'template'});
+            var codeCJS = window.reactTemplates.convertTemplateToReact(helloRT, {modules: 'commonjs', name: 'template'});
             return {
+                amd: {value: codeAmd},
+                cjs: {value: codeCJS},
                 samples: samples
             };
         },
-
         render: function () {
             return examplesTemplate.apply(this);
         }

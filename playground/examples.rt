@@ -1,5 +1,6 @@
 <!--suppress CheckEmptyScriptTag -->
 <rt-require dependency="./playground" as="playground"/>
+<rt-require dependency="./CodeMirrorViewer" as="viewer"/>
 <div id="examples">
     <div class="example">
         <h3>Hello world in react templates</h3>
@@ -42,5 +43,19 @@
             This example shows working with async events, usage of regular event handler function pointers instead of lambda expression, and working with 2 way binding
         </p>
         <playground id="weatherExample" rt-props="this.state.samples.weather" direction="horizontal"></playground>
+    </div>
+    <div id="amd" class="example">
+        <h3>AMD</h3>
+        <p>
+            This example shows the hello sample output with AMD support.
+        </p>
+        <viewer rt-props="this.state.amd" mode="javascript" />
+    </div>
+    <div id="commonjs" class="example">
+        <h3>CommonJS</h3>
+        <p>
+            This example shows the hello sample output with CommonJS support.
+        </p>
+        <viewer rt-props="this.state.cjs" mode="javascript" />
     </div>
 </div>
