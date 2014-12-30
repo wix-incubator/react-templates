@@ -33,16 +33,13 @@ Some love JSX, some don't. We don't. More specifically, it seems to us that JSX 
 ## Installation
 You can install react-templates using npm:
 ```shell
-npm install git+ssh://git@github.com:wix/react-templates -g
+npm install react-templates -g
 ```
 
 ## Usage
 ```shell
 rt [file.rt|dir]* [options]
 ```
-
-**src/cli.js < filename.rt >**
-*(you might need to provide execution permission to the file)* ?
 
 Note that in most cases, this package will be wrapped in a Grunt task, so that cli will not be used explicitly.
 [grunt-react-templates](https://github.com/wix/grunt-react-templates)

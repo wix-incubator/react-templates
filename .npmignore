@@ -20,5 +20,6 @@ npm-debug.log
 /test
 
 ### gh-pages content ###
-index.html
-playground
+/index.html
+/playground
+/web
