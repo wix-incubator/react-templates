@@ -2,14 +2,15 @@ language: node_js
 node_js:
   - "0.10"
 
-install:
-  - npm install
-
 before_script:
   - npm install -g grunt-cli
 
+install:
+  - npm install
+
 script:
   - grunt eslint
+  - npm test
 
 branches:
   only:
