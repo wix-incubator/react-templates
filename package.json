@@ -1,6 +1,6 @@
 {
   "name": "react-templates",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Light weight templates for react -> write html get valid react code",
   "main": "./src/cli.js",
   "bin": {
@@ -40,5 +40,14 @@
     "grunt-node-tap": "^0.1.61",
     "react": "^0.12.0",
     "tape": "^3.0.2"
-  }
+  },
+  "keywords": [
+    "templates",
+    "react-templates",
+    "react",
+    "reactjs",
+    "react.js",
+    "react-component",
+    "react component"
+  ]
 }
