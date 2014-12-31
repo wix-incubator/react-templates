@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-    - "0.10"
+  - "0.10"
 
 install:
   - npm install
@@ -13,6 +13,6 @@ script:
 
 branches:
   only:
-    - gh-page
+    - gh-pages
 #after_success:
 #    - npm run coveralls
