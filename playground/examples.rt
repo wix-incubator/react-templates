@@ -44,17 +44,24 @@
         </p>
         <playground id="weatherExample" rt-props="this.state.samples.weather" direction="horizontal"></playground>
     </div>
+    <div id="rt-require" class="example">
+        <h3>rt-require</h3>
+        <p>
+            This example shows how to load other react components and libraries into a react-template and use them in the template
+        </p>
+        <viewer rt-props="this.state.rtRequire" mode="javascript" />
+    </div>
     <div id="amd" class="example">
         <h3>AMD</h3>
         <p>
-            This example shows the hello sample output with AMD support.
+            This example shows the rt-require sample output with AMD support
         </p>
         <viewer rt-props="this.state.amd" mode="javascript" />
     </div>
     <div id="commonjs" class="example">
         <h3>CommonJS</h3>
         <p>
-            This example shows the hello sample output with CommonJS support.
+            This example shows the rt-require sample output with CommonJS support
         </p>
         <viewer rt-props="this.state.cjs" mode="javascript" />
     </div>
