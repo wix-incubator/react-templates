@@ -9,6 +9,7 @@ var ver0_10_0 = ['a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b
 
 
 var versions = {
+    '0.12.2': ver0_12_0,
     '0.12.1': ver0_12_0,
     '0.12.0': ver0_12_0,
     '0.11.2': ver0_11_2,
