@@ -101,7 +101,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-node-tap');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('default', ['eslint']);
+    grunt.registerTask('default', ['eslint:all']);
     grunt.registerTask('test', ['node_tap']);
 
     grunt.registerTask('teamcity', ['eslint:teamcity']);
