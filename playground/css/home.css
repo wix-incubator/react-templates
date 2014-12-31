@@ -1100,6 +1100,7 @@ div[data-twttr-id] iframe {
     font-size: 20px;
     padding-top: 50px;
     text-align: center;
+    height: 500px;
 }
 
 .nav-tabs {
