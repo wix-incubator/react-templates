@@ -47266,6 +47266,7 @@ var ver0_10_0 = ['a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b
 
 
 var versions = {
+    '0.12.2': ver0_12_0,
     '0.12.1': ver0_12_0,
     '0.12.0': ver0_12_0,
     '0.11.2': ver0_11_2,
@@ -47309,7 +47310,7 @@ var classSetProp = 'rt-class';
 var scopeProp = 'rt-scope';
 var propsProp = 'rt-props';
 
-var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.12.1'};
+var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.12.2'};
 
 function shouldUseCreateElement(context) {
     switch (context.options.targetVersion) {
@@ -47612,12 +47613,12 @@ function convertHtmlToReact(node, context) {
     }
 }
 
-function removeDocType(html) {
-  html = html.replace(/^\s*\<\!doctype\s+rt\s*>/mi, function () {
-    return '';
-  });
-  return html;
-}
+//function removeDocType(html) {
+//  html = html.replace(/^\s*\<\!doctype\s+rt\s*>/mi, function () {
+//    return '';
+//  });
+//  return html;
+//}
 
 
 /**

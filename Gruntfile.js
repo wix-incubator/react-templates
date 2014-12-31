@@ -11,6 +11,7 @@ module.exports = function (grunt) {
                 src: [
                     'src/**/*.js', 'playground/**/*.js',
                     '!playground/libs/**/*.js',
+                    '!playground/dist/**/*.js',
                     '!playground/rt-main.browser.js',
                     '!playground/bundle/**',
                     '!playground/tmp/**',

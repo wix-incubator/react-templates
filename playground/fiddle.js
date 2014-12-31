@@ -9,7 +9,7 @@ define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React
     function generateRandomId() {
         var uuid = 'xxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = _.random(0, 15);
-            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
         return uuid;
     }
@@ -39,7 +39,7 @@ define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React
             firebase.child('fiddles').child(newHash).set(playgroundState, function () {
                 Firebase.goOffline();
                 alert('saved the fiddle, you can share your url');
-            }.bind(this));
+            }/*.bind(this)*/);
         },
 
         clear: function () {
@@ -57,9 +57,9 @@ define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React
             //});
 
             var playground = this.refs.playground;
-            $.get('playground/samples/' + name + '.rt', null, function (data, textStatus, jqXHR) {
+            $.get('playground/samples/' + name + '.rt', null, function (data/*, textStatus, jqXHR*/) {
                 var rt = data;
-                $.get('playground/samples/' + name + '.code', null, function (data2, textStatus2, jqXHR2) {
+                $.get('playground/samples/' + name + '.code', null, function (data2/*, textStatus2, jqXHR2*/) {
                     var currentState = {
                         templateHTML: rt,
                         templateProps: _.template(data2, {name: 'template'})

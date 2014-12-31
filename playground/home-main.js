@@ -26,7 +26,7 @@ requirejs.config({
 
 requirejs(['jquery', 'react', './examples'], function ($, React, Examples) {
     'use strict';
-    //var Examples = require('./examples.js');
+    /*eslint new-cap:0*/
     React.render(Examples(), document.getElementById('home-section'));
     $('#loading').hide();
     //window.fiddle = React.render(fiddle(), document.getElementById('container'));

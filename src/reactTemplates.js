@@ -334,12 +334,12 @@ function convertHtmlToReact(node, context) {
     }
 }
 
-function removeDocType(html) {
-  html = html.replace(/^\s*\<\!doctype\s+rt\s*>/mi, function () {
-    return '';
-  });
-  return html;
-}
+//function removeDocType(html) {
+//  html = html.replace(/^\s*\<\!doctype\s+rt\s*>/mi, function () {
+//    return '';
+//  });
+//  return html;
+//}
 
 
 /**

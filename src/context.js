@@ -2,6 +2,7 @@
 /**
  * @typedef {{color: boolean, cwd: string, report: function(string), warn: function(string), getMessages: function():Array.<MESSAGE>}}
  */
+/*eslint no-unused-vars:0*/
 var CONTEXT = null;
 /**
  * @typedef {{msg: string, level: MESSAGE_LEVEL, file: string}}

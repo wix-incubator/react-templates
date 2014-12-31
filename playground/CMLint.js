@@ -21,7 +21,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror'], fu
         //    var range = editor.findWordAt(pos);
         //    editor.markText(range.anchor,  range.head, {className: 'editor-error'});
         //}
-        var tipLabel = /*state.hasGutter &&*/ document.createDocumentFragment();
+        var tipLabel = document.createDocumentFragment(); /*state.hasGutter &&*/
         var ann = {severity: 'error', message: annot.message};
         tipLabel.appendChild(annotationTooltip(ann));
         editor.setGutterMarker(Math.max(annot.line, 0), GUTTER_ID, makeMarker(tipLabel, 'error', false, 'state.options.tooltips'));
@@ -80,7 +80,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror'], fu
         if (!tt.parentNode) {
             return;
         }
-        if (tt.style.opacity == null) {
+        if (tt.style.opacity === null) {
             rm(tt);
         }
         tt.style.opacity = 0;
@@ -96,8 +96,8 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror'], fu
         var poll = setInterval(function() {
             if (tooltip) {
                 for (var n = node;; n = n.parentNode) {
-                    if (n == document.body) {
-                        return;
+                    if (n === document.body) {
+                        return undefined;
                     }
                     if (!n) { hide(); break; }
                 }

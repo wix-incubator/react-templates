@@ -22,7 +22,7 @@ var editor = React.createClass({
     },
     componentWillUpdate: function (nextProps/*, nextState*/) {
         var value = nextProps.valueLink ? nextProps.valueLink() : nextProps.value;
-        if (this.editor && this.editor.getValue() != value) {
+        if (this.editor && this.editor.getValue() !== value) {
             this.editor.setValue(value, 0);
         }
     },

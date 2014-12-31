@@ -19,10 +19,10 @@ function getMessageType(message) {
     return chalk.cyan('info');
 }
 
-module.exports = function (warnings, config) {
+module.exports = function (warnings/*, config*/) {
     var _ = require('lodash');
     var table = require('text-table');
-    var verbosity = false;
+    //var verbosity = false;
     var UNICODE_HEAVY_MULTIPLICATION_X = '\u2716';
 
     function pluralize(n, single, plural) {

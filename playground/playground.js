@@ -1,33 +1,27 @@
 /*eslint-env browser*/
 define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'], function (React, $, _, pgFiddleTemplate, playgroundTemplate) {
     'use strict';
-    function emptyFunc() {
-        return null;
-    }
+    //function emptyFunc() {
+    //    return null;
+    //}
 
-    /**
-     * @param {string} html
-     * @param editor
-     * @param {string} name
-     * @return {string}
-     */
-    function generateTemplateSource(html, editor, name) {
-        var code = null;
-        try {
-            code = window.reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g, ''), {modules: 'none', name: name});
-            clearMessage(editor);
-        } catch (e) {
-            if (e.name === 'RTCodeError') {
-                //index: -1 line: -1 message: "Document should have a root element" name: "RTCodeError"
-                editor.annotate({line: e.line, message: e.message, index: e.index});
-            } else {
-                editor.annotate({line: 1, message: e.message});
-            }
-            //showMessage(editor, msg);
-            console.log(e);
-        }
-        return code;
-    }
+    //function generateTemplateSource(html, editor, name) {
+    //    var code = null;
+    //    try {
+    //        code = window.reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g, ''), {modules: 'none', name: name});
+    //        clearMessage(editor);
+    //    } catch (e) {
+    //        if (e.name === 'RTCodeError') {
+    //            //index: -1 line: -1 message: "Document should have a root element" name: "RTCodeError"
+    //            editor.annotate({line: e.line, message: e.message, index: e.index});
+    //        } else {
+    //            editor.annotate({line: 1, message: e.message});
+    //        }
+    //        //showMessage(editor, msg);
+    //        console.log(e);
+    //    }
+    //    return code;
+    //}
 
     function showMessage(editor, msg) {
         if (editor && editor.showMessage) {
@@ -41,23 +35,23 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
         }
     }
 
-    function generateTemplateFunction(code) {
-        try {
-            var defineMap = {'react/addons': React, lodash: _};
-            var define = function (requirementsNames, content) {
-                var requirements = _.map(requirementsNames, function (reqName) {
-                    return defineMap[reqName];
-                });
-                return content.apply(this, requirements);
-            };
-            /*eslint no-eval:0*/
-            var res = eval(code);
-            return res;
-        } catch (e) {
-            console.log(e);
-            return emptyFunc;
-        }
-    }
+    //function generateTemplateFunction(code) {
+    //    try {
+    //        var defineMap = {'react/addons': React, lodash: _};
+    //        var define = function (requirementsNames, content) {
+    //            var requirements = _.map(requirementsNames, function (reqName) {
+    //                return defineMap[reqName];
+    //            });
+    //            return content.apply(this, requirements);
+    //        };
+    //        /*eslint no-eval:0*/
+    //        var res = eval(code);
+    //        return res;
+    //    } catch (e) {
+    //        console.log(e);
+    //        return emptyFunc;
+    //    }
+    //}
 
     function generateRenderFunc(renderFunc) {
         return function () {
@@ -81,16 +75,16 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
         '   }\n' +
         '});';
 
-    var selfCleaningTimeout = {
-        componentDidUpdate: function() {
-            clearTimeout(this.timeoutID);
-        },
-        setTimeout: function() {
-            console.log('setTimeout');
-            clearTimeout(this.timeoutID);
-            this.timeoutID = setTimeout.apply(null, arguments);
-        }
-    };
+    //var selfCleaningTimeout = {
+    //    componentDidUpdate: function() {
+    //        clearTimeout(this.timeoutID);
+    //    },
+    //    setTimeout: function() {
+    //        console.log('setTimeout');
+    //        clearTimeout(this.timeoutID);
+    //        this.timeoutID = setTimeout.apply(null, arguments);
+    //    }
+    //};
 
     var Playground = React.createClass({
         displayName: 'Playground',
@@ -163,6 +157,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             try {
                 this.validProps = true;
                 console.log(state.templateProps);
+                /*eslint no-eval:0*/
                 this.sample = eval('(function () {' + this.templateSource + '\n' + state.templateProps + '\n return React.createElement(' + state.name + ');})()');
                 clearMessage(this.refs.editorCode);
             } catch (e) {
@@ -258,7 +253,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             var contentHeight = $(window).height() - $('#header').height();
             var height = contentHeight / 2 - 10;
 
-            $('.code-area').each(function (i, k) {
+            $('.code-area').each(function (/*i, k*/) {
                 $(this).height(height);
                 //console.log($(this).height());
             });

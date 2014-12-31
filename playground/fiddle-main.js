@@ -32,22 +32,22 @@ requirejs.config({
 requirejs(['jquery', 'react', 'fiddle', 'bootstrap'], function ($, React, fiddle) {
     'use strict';
     window.fiddle = React.render(fiddle(), document.getElementById('container'));
-    $(function () {
-        //$(window).resize(calcSize);
-        //calcSize();
-    });
-
-    function calcSize() {
-        var contentHeight = $(window).height() - $('#header').height();
-        var height = contentHeight / 2 - 10;
-        console.log(contentHeight, height);
-        $('.code-area').each(function (i, k) {
-            $(this).height(height);
-            console.log($(this).height());
-        });
-        window.editorCode.refresh();
-        window.editorRT.refresh();
-        window.editorGenerated.refresh();
-    }
+    //$(function () {
+    //    //$(window).resize(calcSize);
+    //    //calcSize();
+    //});
+    //
+    //function calcSize() {
+    //    var contentHeight = $(window).height() - $('#header').height();
+    //    var height = contentHeight / 2 - 10;
+    //    console.log(contentHeight, height);
+    //    $('.code-area').each(function (/*i, k*/) {
+    //        $(this).height(height);
+    //        console.log($(this).height());
+    //    });
+    //    window.editorCode.refresh();
+    //    window.editorRT.refresh();
+    //    window.editorGenerated.refresh();
+    //}
 });
 
