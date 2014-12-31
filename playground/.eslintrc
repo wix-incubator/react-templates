@@ -1,0 +1,10 @@
+{
+    "rules": {
+        "global-strict": 0
+    },
+    "env": {
+        "browser": true,
+        "node": true,
+        "amd": true
+    }
+}
