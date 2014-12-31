@@ -10,6 +10,7 @@ Light weight templates for [React](http://facebook.github.io/react/index.html). 
 * Very good separation of presentation and logic. Almost no HTML within the component file
 * Declarative coding for presentation. HTML that you write and inspect look similar
 * Easy syntax. Similar to HTML. All IDEs recognize this format
+* Supports AMD, CommonJS and globals
 
 ## How does it work
 React templates compiles a *.rt file (react template file - extended HTML format) into a JavaScript file. This file - which currently utilizes RequireJS format - returns a function. This function, when invoked, returns a virtual React DOM (based on React.DOM elements and custom user components). A common use case would be that a regular React component would require a JavaScript file generated from a template, and then perform `func.apply(this)`, causing the template to have that component as its context.
@@ -330,7 +331,7 @@ Copyright (c) 2014 Wix. Licensed under the MIT license.
 
 [npm-image]: https://img.shields.io/npm/v/react-templates.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/react-templates
-[travis-image]: https://img.shields.io/travis/wix/react-templates/master.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/wix/react-templates/gh-pages.svg?style=flat-square
 [travis-url]: https://travis-ci.org/wix/react-templates
 [coveralls-image]: https://img.shields.io/coveralls/wix/react-templates/master.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/r/wix/react-templates?branch=master
