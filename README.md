@@ -1,3 +1,5 @@
+[![NPM version][npm-image]][npm-url]
+
 # react-templates
 
 Light weight templates for [React](http://facebook.github.io/react/index.html). Reasons that we love it:
