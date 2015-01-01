@@ -18,6 +18,12 @@ React templates compiles a *.rt file (react template file - extended HTML format
 ## playground
 http://wix.github.io/react-templates/
 
+## Yeoman generator
+https://github.com/wix/generator-react-templates
+
+## Hello React-Templates
+There's a sample Hello project<br/>
+https://github.com/wix/hello-react-templates
 
 ###### Basic concepts for react templates
 * Any valid HTML is a template (and comments)
