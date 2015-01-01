@@ -57,12 +57,12 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror'], fu
         tt.appendChild(content.cloneNode(true));
         document.body.appendChild(tt);
 
-        function position(e) {
+        function position(ev) {
             if (!tt.parentNode) {
                 return CodeMirror.off(document, 'mousemove', position);
             }
-            tt.style.top = Math.max(0, e.clientY - tt.offsetHeight - 5) + 'px';
-            tt.style.left = (e.clientX + 5) + 'px';
+            tt.style.top = Math.max(0, ev.clientY - tt.offsetHeight - 5) + 'px';
+            tt.style.left = (ev.clientX + 5) + 'px';
         }
         CodeMirror.on(document, 'mousemove', position);
         position(e);

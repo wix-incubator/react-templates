@@ -332,13 +332,13 @@ html {
     background: #f9f9f9
 }
 
-.left {
-    float: left
-}
+/*.left {*/
+/*float: left*/
+/*}*/
 
-.right {
-    float: right
-}
+/*.right {*/
+/*float: right*/
+/*}*/
 
 .container {
     padding-top: 50px;
@@ -356,13 +356,13 @@ html {
     padding-right: 20px
 }
 
-.skinnyWrap {
-    width: 690px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 20px;
-    padding-right: 20px
-}
+/*.skinnyWrap {*/
+/*width: 690px;*/
+/*margin-left: auto;*/
+/*margin-right: auto;*/
+/*padding-left: 20px;*/
+/*padding-right: 20px*/
+/*}*/
 
 hr {
     height: 0;
@@ -528,9 +528,9 @@ h1:hover .hash-link, h2:hover .hash-link, h3:hover .hash-link, h4:hover .hash-li
     background: #c5695c
 }
 
-.buttons-unit.downloads {
-    margin: 30px 0
-}
+/*.buttons-unit.downloads {*/
+/*margin: 30px 0*/
+/*}*/
 
 .nav-docs {
     color: #2d2d2d;
@@ -603,53 +603,53 @@ h1:hover .hash-link, h2:hover .hash-link, h3:hover .hash-link, h4:hover .hash-li
     width: 960px
 }
 
-.skinny-row:after {
+/**.skinny-row:after {
     content: "";
     display: table;
     clear: both
 }
-
-.skinny-col {
+**/
+/**.skinny-col {
     float: left;
     margin-left: 40px;
     width: 305px
 }
-
-.skinny-col:first-child {
+**/
+/**.skinny-col:first-child {
     margin-left: 0
 }
-
-.marketing-row {
+**/
+/**.marketing-row {
     margin: 50px 0
 }
-
-.marketing-row:after {
+**/
+/**.marketing-row:after {
     content: "";
     display: table;
     clear: both
 }
-
-.marketing-col {
+**/
+/**.marketing-col {
     float: left;
     margin-left: 40px;
     width: 280px
 }
-
-.marketing-col h3 {
+**/
+/**.marketing-col h3 {
     color: #2d2d2d;
     font-size: 24px;
     font-weight: normal;
     text-transform: uppercase
 }
-
-.marketing-col p {
+**/
+/**.marketing-col p {
     font-size: 16px
 }
-
-.marketing-col:first-child {
+**/
+/**.marketing-col:first-child {
     margin-left: 0
 }
-
+**/
 h3 {
     color: #2d2d2d;
     font-size: 24px;
@@ -780,35 +780,35 @@ section.black content {
     padding-bottom: 40px
 }
 
-.jsxCompiler {
-    margin: 0 auto;
-    padding-top: 20px;
-    width: 1220px
-}
+/*.jsxCompiler {*/
+    /*margin: 0 auto;*/
+    /*padding-top: 20px;*/
+    /*width: 1220px*/
+/*}*/
 
-.jsxCompiler label.compiler-option {
-    display: block;
-    margin-top: 5px
-}
+/*.jsxCompiler label.compiler-option {*/
+    /*display: block;*/
+    /*margin-top: 5px*/
+/*}*/
 
-.jsxCompiler #jsxCompiler {
-    margin-top: 20px
-}
+/*.jsxCompiler #jsxCompiler {*/
+    /*margin-top: 20px*/
+/*}*/
 
-.jsxCompiler .playgroundPreview {
-    padding: 0;
-    width: 600px
-}
+/*.jsxCompiler .playgroundPreview {*/
+    /*padding: 0;*/
+    /*width: 600px*/
+/*}*/
 
-.jsxCompiler .playgroundPreview pre {
-    font-family: 'source-code-pro', Menlo, Consolas, 'Courier New', monospace;
-    font-size: 0.8em;
-    line-height: 1.5
-}
+/*.jsxCompiler .playgroundPreview pre {*/
+    /*font-family: 'source-code-pro', Menlo, Consolas, 'Courier New', monospace;*/
+    /*font-size: 0.8em;*/
+    /*line-height: 1.5*/
+/*}*/
 
-.jsxCompiler .playgroundError {
-    padding: 15px 20px
-}
+/*.jsxCompiler .playgroundError {*/
+    /*padding: 15px 20px*/
+/*}*/
 
 .button {
     background: -webkit-linear-gradient(#9a9a9a, #646464);

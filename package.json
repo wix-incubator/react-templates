@@ -25,7 +25,7 @@
     "escodegen": "^1.4.1",
     "esprima": "^1.2.2",
     "lodash": "^2.4.1",
-    "optionator": "^0.4.0",
+    "optionator": "^0.5.0",
     "text-table": "^0.2.0"
   },
   "devDependencies": {
@@ -34,11 +34,11 @@
     "grunt": "^0.4.5",
     "grunt-browserify": "^3.2.0",
     "grunt-contrib-requirejs": "^0.4.4",
-    "grunt-contrib-uglify": "^0.6.0",
+    "grunt-contrib-uglify": "^0.7.0",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-eslint": "^2.1.0",
+    "grunt-eslint": "^3.0.0",
     "grunt-node-tap": "^0.1.61",
-    "react": "^0.12.0",
+    "react": "^0.12.2",
     "tape": "^3.0.2"
   },
   "keywords": [

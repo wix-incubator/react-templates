@@ -1,9 +1,10 @@
-
+/* uncss:ignore */
 .playground-error {
     color: red;
     font-weight: 500;
 }
 
+/* uncss:ignore */
 .cm-s-solarized .editor-error {
     background-color: #F0F079;
 }

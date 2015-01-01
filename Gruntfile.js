@@ -86,13 +86,18 @@ module.exports = function (grunt) {
         },
         requirejs: {
             compile: {
-                options: eval(require('fs').readFileSync('./home.config.js').toString())
+                options: readConfig('./home.config.js')
             },
             playground: {
-                options: eval(require('fs').readFileSync('./playground.config.js').toString())
+                options: readConfig('./home.config.js')
             }
         }
     });
+
+    function readConfig(file) {
+        /*eslint no-eval:0*/
+        return eval(require('fs').readFileSync(file).toString());
+    }
 
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-watch');
