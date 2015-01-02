@@ -3,7 +3,7 @@
 
 # react-templates
 
-Light weight templates for [React](http://facebook.github.io/react/index.html). Reasons that we love it:
+Lightweight templates for [React](http://facebook.github.io/react/index.html). 
 
 * No runtime libraries. No magic. Just simple pre-compilation to a clear React code
 * Super easy to write panels. By panels we mean components that have a lot of HTML code and non-reusable logic
