@@ -6,9 +6,9 @@
 Lightweight templates for [React](http://facebook.github.io/react/index.html). 
 
 * No runtime libraries. No magic. Simply precompile your way to clear React code.
-* Easy syntax that's similar to HTML. Out of the box support from IDEs.
+* Easy syntax that's similar to HTML, supported by most IDEs.
 * Clear separation of presentation and logic - almost zero HTML in component files.
-* Declarative coding ensures the HTML that you write and the HTML you inspect look nearly identical.
+* Declarative coding ensures that the HTML that you write and the HTML you inspect look nearly identical.
 * Supports AMD, CommonJS, and globals.
 
 ## How does it work
@@ -30,7 +30,7 @@ https://github.com/wix/hello-react-templates
 ###### Basic concepts for React templates
 * Any valid HTML (including comments) is a template 
 * {} to identify JS expression
-* Built in directives
+* Built-in directives:
     * rt-if
     * rt-repeat
     * rt-scope
@@ -41,7 +41,7 @@ https://github.com/wix/hello-react-templates
 * event handlers
 
 ###### Why not use JSX?
-Some love JSX, some don't. We don't. More specifically, it seems to us that JSX is only a good fit for components with very little HTML inside. And this can be accomplished by creating DOM elements in code. Also, we like to separate code and HTML because it just feels right.
+Some love JSX, some don't. We don't. More specifically, it seems to us that JS is only a good fit for components with very little HTML inside. And this can be accomplished by creating DOM elements in code. Also, we like to separate code and HTML because it just feels right.
 
 ## Installation
 You can install react-templates using npm:
@@ -62,10 +62,10 @@ In most cases, this package will be wrapped in a Grunt task, so CLI will not be 
 # Template directives and syntax
 
 ## Any valid HTML is a template
-Any HTML that you write is a valid template, except for inline event handlers ("on" attributes). See the "event handlers" section for more information.
+Any HTML that you write is a valid template, except for inline event handlers ("on" attributes). See the "event handlers" section below for more information.
 
 ## {} to identify JavaScript expressions
-You can easily embed JavaScript expressions in both attribute values and tag content by encapsulating them in {}. If this is done inside an attribute value, the value still needs to be wrapped in quotes. For directives (see below), {} are not used.
+To embed JavaScript expressions in both attribute values and tag content, encapsulate them in {}. If this is done inside an attribute value, the value still needs to be wrapped in quotes. For directives (see below), {} are not used.
 
 ###### Sample:
 ```html
@@ -191,7 +191,7 @@ define([
 ```
 
 ## rt-class
-To reduce the boilerplate code when setting class names programatically, you can use the rt-class directive. It expects a JSON object with keys as class names, and a boolean as the value. If the value is true, the class name will be included.
+To reduce the boilerplate code when setting class names programatically, you can use the rt-class directive. It expects a JSON object with keys as class names, and a Boolean as the value. If the value is true, the class name will be included.
 
 <p>Note the following:<br/>
 1. In React templates, you can use the "class" attribute as you would in HTML. <br/>
@@ -233,7 +233,7 @@ define([
 ## style
 React templates allow the settings of styles inline in HTML, optionally returning an object from the evaluation context. By default, style names will be converted from hyphen-style to camelCase-style naming. 
 
-To embed JavaScript inside a style attribute, single braces are used. To embed an entire object, double braces are used. *Note*: When embedding objects, styles must conform to camelCase-style naming.
+To embed JavaScript inside a style attribute, single curly braces are used. To embed an entire object, double curly braces are used. *Note*: When embedding objects, styles must conform to camelCase-style naming.
 
 ###### Sample:
 ```html
@@ -267,7 +267,7 @@ define([
 ```
 
 ## event handlers
-React event handlers accept function references inside of {}, such as `onClick="{this.myClickHandler}"`. When functions are not needed, lambda notation can be used which will create a React template that creates a function for the included code. There is no performance impact, as the function created is bound to the context instead of being recreated. 
+React event handlers accept function references inside of {}, such as `onClick="{this.myClickHandler}"`. When functions are not needed, lambda notation can be used, which will create a React template that creates a function for the included code. There is no performance impact, as the function created is bound to the context instead of being recreated. 
 <p>The lambda notation has the form: `onClick="(evt) => console.log(evt)"`. In this example, **evt** is the name of the first argument passed into the inline function. With browser events, this will most likely be the React synthetic event. However, if you expect a property that starts with **on**Something, then React templates will treat it as an event handler. If you have an event handler called **onBoxSelected** that triggers an event with row and column params, you can write `onBoxSelected="(row, col)=>this.doSomething(row,col)"`. A no-param version is supported as well: `onClick="()=>console.log('just wanted to know it clicked')"`.
 
 ###### Sample:
@@ -299,7 +299,7 @@ define([
 ```
 
 ## rt-require, and using other components in the template
-In many cases, you'd like to use either external code or other components within your template. An **rt-require** tag lets you include dependencies: `<rt-require dependency="depVarPath" as="depVarName"/>`. Once included, **depVarName** will be in scope. You can only use rt-require tags only at the beginning of your template. When including React components, they can be referred to by their tag name inside a template. For example, `<MySlider prop1="val1" onMyChange="{this.onSliderMoved}">`. Nesting is also supported: `<MyContainer><div>child</div><div>another</div></MyContainer>`. Children are accessible from **this.props.children**.
+In many cases, you'd like to use either external code or other components within your template. An **rt-require** tag lets you include dependencies: `<rt-require dependency="depVarPath" as="depVarName"/>`. Once included, **depVarName** will be in scope. You can only use rt-require tags at the beginning of your template. When including React components, they can be referred to by their tag name inside a template. For example, `<MySlider prop1="val1" onMyChange="{this.onSliderMoved}">`. Nesting is also supported: `<MyContainer><div>child</div><div>another</div></MyContainer>`. Children are accessible from **this.props.children**.
 
 ###### Sample:
 ```html
