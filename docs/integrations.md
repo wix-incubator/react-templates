@@ -1,9 +1,9 @@
 # Integrations
 
-## Intellij / Webstorm
+## Intellij / WebStorm
 
 ### Install intellij react templates plugin
-1. From intellij/webstorm open preferences
+1. From intellij/WebStorm open preferences
 2. Go to plugins
 3. Press browse repositories
 4. Press manage repositories
