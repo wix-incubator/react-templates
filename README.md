@@ -25,8 +25,6 @@ https://github.com/wix/generator-react-templates
 There's a sample Hello project<br/>
 https://github.com/wix/hello-react-templates
 
-## CLI
-https://github.com/wix/react-templates/blob/gh-pages/docs/cli.md
 
 
 ###### Basic concepts for react templates
@@ -54,6 +52,8 @@ npm install react-templates -g
 ```shell
 rt [file.rt|dir]* [options]
 ```
+
+See more on CLI usage [here](https://github.com/wix/react-templates/blob/gh-pages/docs/cli.md)
 
 Note that in most cases, this package will be wrapped in a Grunt task, so that cli will not be used explicitly.
 [grunt-react-templates](https://github.com/wix/grunt-react-templates)
