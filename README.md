@@ -5,15 +5,15 @@
 
 Lightweight templates for [React](http://facebook.github.io/react/index.html). 
 
-* No runtime libraries. No magic. Just simple pre-compilation to a clear React code
-* Super easy to write panels. By panels we mean components that have a lot of HTML code and non-reusable logic
-* Very good separation of presentation and logic. Almost no HTML within the component file
-* Declarative coding for presentation. HTML that you write and inspect look similar
-* Easy syntax. Similar to HTML. All IDEs recognize this format
-* Supports AMD, CommonJS and globals
+* No runtime libraries. No magic. Simply precompile your way to clear React code.
+* It's super easy to write panels - components that have a lot of HTML code and non-reusable logic.
+* There's very good separation of presentation and logic - that is, there's almost no HTML within the component file.
+* Declarative coding for presentation makes the HTML that you write and inspect look similar.
+* Easy syntax that's similar to HTML. All IDEs recognize this format.
+* Supports AMD, CommonJS, and globals.
 
 ## How does it work
-React Templates compiles a *.rt file (react template file - an extended HTML format) into a JavaScript file. This file, which currently utilizes RequireJS format, returns a function. When invoked, this function returns a virtual React DOM (based on React.DOM elements and custom user components). 
+React templates compiles a *.rt file (react template file - an extended HTML format) into a JavaScript file. This file, which currently utilizes RequireJS format, returns a function. When invoked, this function returns a virtual React DOM (based on React.DOM elements and custom user components). 
 <p>A common use case would be that a regular React component would require a JavaScript file generated from a template, and then perform `func.apply(this)`, causing the template to have that component as its context.
 
 ## Playground
@@ -22,13 +22,13 @@ http://wix.github.io/react-templates/
 ## Yeoman generator
 https://github.com/wix/generator-react-templates
 
-## Hello React-Templates
+## Hello react-templates
 Here's a sample Hello project:<br/>
 https://github.com/wix/hello-react-templates
 
 
 
-###### Basic concepts for react-templates
+###### Basic concepts for React templates
 * Any valid HTML (including comments) is a template 
 * {} to identify JS expression
 * rt-if
