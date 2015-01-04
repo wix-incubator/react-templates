@@ -89,7 +89,7 @@ module.exports = function (grunt) {
                 options: readConfig('./home.config.js')
             },
             playground: {
-                options: readConfig('./home.config.js')
+                options: readConfig('./playground.config.js')
             }
         }
     });
