@@ -33,7 +33,7 @@
     <div class="example">
         <h3>Improved todo list</h3>
         <p>
-            rt-props is used to pass all the original properties set on this component (except the ones used for the component logic: onClick and eventId) to the element that will actually represent this component.
+            Every project needs a todo list example, so here is ours.
         </p>
         <playground id="todoExample" rt-props="this.state.samples.todo" direction="horizontal"></playground>
     </div>
