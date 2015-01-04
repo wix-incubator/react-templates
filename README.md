@@ -232,7 +232,9 @@ define([
 ```
 
 ## style
-To make React templates more similar to HTML, we allow the settings of inline styles. This will change the styles from hyphen to camelCase. And you can still return an object from evaluation context. If you set inline styles, you'll need to open single curly braces for the js context, and another for the object. You'll also need to use camelCase.
+React templates allow the settings of styles inline in HTML, optionally returning an object from the evaluation context. By default, style names will be converted from hyphen-style to camelCase-style naming. 
+
+To embed JavaScript inside a style attribute, single braces are used. To embed an entire object, double braces are used. *Note*: When embedding objects, styles must conform to camelCase-style naming.
 
 ###### Sample:
 ```html
