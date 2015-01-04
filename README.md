@@ -13,7 +13,7 @@ Lightweight templates for [React](http://facebook.github.io/react/index.html).
 * Supports AMD, CommonJS, and globals.
 
 ## How does it work
-React templates compiles a *.rt file (react template file - an extended HTML format) into a JavaScript file. This file, which currently utilizes RequireJS format, returns a function. When invoked, this function returns a virtual React DOM (based on React.DOM elements and custom user components). 
+React Templates compiles a *.rt file (react template file - an extended HTML format) into a JavaScript file. This file, which currently utilizes RequireJS format, returns a function. When invoked, this function returns a virtual React DOM (based on React.DOM elements and custom user components). 
 <p>A common use case would be that a regular React component would require a JavaScript file generated from a template, and then perform `func.apply(this)`, causing the template to have that component as its context.
 
 ## Playground
@@ -41,7 +41,7 @@ https://github.com/wix/hello-react-templates
 * rt-require, and using other components in the template
 
 ###### Why not use JSX?
-Some love JSX, some don't. We don't. More specifically, it seems to us that JSX is only a good fit for components with very little HTML inside, which can be accomplished instead by creating elements in code. Also, we like to separate code and HTML - it just feels right.
+Some love JSX, some don't. We don't. More specifically, it seems to us that JSX is only a good fit for components with very little HTML inside, which can be accomplished instead by creating elements in code. Also, we like to separate code and HTML because it just feels right.
 
 ## Installation
 You can install react-templates using npm:
@@ -56,7 +56,7 @@ rt [file.rt|dir]* [options]
 
 See more on CLI usage [here](https://github.com/wix/react-templates/blob/gh-pages/docs/cli.md).
 
-In most cases, this package will be wrapped in a Grunt task, so that CLI will not be used explicitly:
+In most cases, this package will be wrapped in a Grunt task, so CLI will not be used explicitly:
 [grunt-react-templates](https://github.com/wix/grunt-react-templates).
 
 # Template directives and syntax
@@ -83,7 +83,7 @@ define([
     };
 });
 ```
-*Note*: within the special **"rt-"** directives (see below), simple strings don't make sense, as all these directives are used for specifying execution instructions. Therefore, in these directives, you should not use {}.
+*Note*: Within the special **"rt-"** directives (see below), simple strings don't make sense, as all these directives are used for specifying execution instructions. Therefore, in these directives, you should not use {}.
 
 ## rt-if
 This lets you add conditions to a subtree of HTML. If the condition evaluates to true, the subtree will be returned; otherwise, it will not be calculated. It is implemented by a trinary expression.
@@ -164,7 +164,7 @@ define([
 ```
 
 ## rt-props
-rt-props is used to inject properties into an element programmatically. It will merge the properties with the properties received in the template. This option allows the code writer to build properties based on some app logic and pass them to the template. It is also useful when passing properties set on the component to an element within the template. The expected value of this attribute is an expression returning an object. The keys will be the properties, and the values will be the property values.
+rt-props is used to inject properties into an element programmatically. It will merge the properties with the properties received in the template. This option allows you to build properties based on some app logic and pass them to the template. It is also useful when passing properties set on the component to an element within the template. The expected value of this attribute is an expression returning an object. The keys will be the properties, and the values will be the property values.
 
 ###### Sample:
 ```html
@@ -232,7 +232,7 @@ define([
 ```
 
 ## style
-To make React templates more similar to HTML, we allow the settings of inline styles. This will change the styles from hyphen to camelCase. And you can still return an object from evaluation context. Please note that if you set inline styles, you'll need to open single curly braces for the js context, and another for the object. You'll also need to use camelCase.
+To make React templates more similar to HTML, we allow the settings of inline styles. This will change the styles from hyphen to camelCase. And you can still return an object from evaluation context. If you set inline styles, you'll need to open single curly braces for the js context, and another for the object. You'll also need to use camelCase.
 
 ###### Sample:
 ```html
@@ -266,7 +266,7 @@ define([
 ```
 
 ## event handlers
-React event handlers accept function pointers. Therefore, when using event handlers, you can just open an execution context and provide a pointer to a method. This would look like `onClick="{this.myClickHandler}"`. However, sometimes there's very little to do on click, or we just want to call a method with bound parameters. In that case, you can use lambda notation, which will create a React template that creates a method for the handler. It does not have a performance impact, as the method is created once and is bound to the context instead of being created again. 
+React event handlers accept function pointers. Therefore, when using event handlers, you can just open an execution context and provide a pointer to a method. This would look like `onClick="{this.myClickHandler}"`. However, sometimes there's very little to do on click, or you just want to call a method with bound parameters. In that case, you can use lambda notation, which will create a React template that creates a method for the handler. It does not have a performance impact, as the method is created once and is bound to the context instead of being created again. 
 <p>The lambda notation will look like this: `onClick="(evt) => console.log(evt)"`. In this example, **evt** was the name you chose for the first argument that will be passed into your inline method. With browser events, this will most likely be the React synthetic event. However, if you expect a property that starts with **on**Something, then React templates will treat it as an event handler. So if you have an event handler called **onBoxSelected** that will trigger an event with row and column params, you can write `onBoxSelected="(row, col)=>this.doSomething(row,col)"`. You can use a no-param version as well: `onClick="()=>console.log('just wanted to know it clicked')"`.
 
 ###### Sample:
