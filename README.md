@@ -38,7 +38,7 @@ https://github.com/wix/hello-react-templates
     * [rt-class](#rt-class)
     * [rt-require](#rt-require)
 * [styles](#styles)
-* [event handlers](#event handlers)
+* [event handlers](#event-handlers)
 
 ###### Why not use JSX?
 Some love JSX, some don't. We don't. More specifically, it seems to us that JSX is only a good fit for components with very little HTML inside. And this can be accomplished by creating DOM elements in code. Also, we like to separate code and HTML because it just feels right.
