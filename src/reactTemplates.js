@@ -78,7 +78,8 @@ function convertText(node, context, txt) {
             first = false;
         }
         var curlyCounter = 1;
-        for (var end = start + 1; end < txt.length && curlyCounter > 0; end++) {
+        var end;
+        for (end = start + 1; end < txt.length && curlyCounter > 0; end++) {
             curlyCounter += curlyMap[txt.charAt(end)] || 0;
         }
         if (curlyCounter !== 0) {
