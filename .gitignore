@@ -17,4 +17,5 @@ npm-debug.log
 /bower_components/*
 
 /web
+/target
 
