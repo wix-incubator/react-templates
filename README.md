@@ -31,14 +31,14 @@ https://github.com/wix/hello-react-templates
 * Any valid HTML (including comments) is a template 
 * {} to identify JS expression
 * Built-in directives:
-    * rt-if
-    * rt-repeat
-    * rt-scope
-    * rt-props
-    * rt-class
-    * rt-require
-* styles
-* event handlers
+    * [rt-if](#rt-if)
+    * [rt-repeat](#rt-repeat)
+    * [rt-scope](#rt-scope)
+    * [rt-props](#rt-props)
+    * [rt-class](#rt-class)
+    * [rt-require](#rt-require)
+* [styles](#styles)
+* [event handlers](#event handlers)
 
 ###### Why not use JSX?
 Some love JSX, some don't. We don't. More specifically, it seems to us that JSX is only a good fit for components with very little HTML inside. And this can be accomplished by creating DOM elements in code. Also, we like to separate code and HTML because it just feels right.
