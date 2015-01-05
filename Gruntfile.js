@@ -121,7 +121,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', ['rt', 'browserify:pg']);
     grunt.registerTask('home', ['rt', 'browserify:home']);
-    grunt.registerTask('pgall', ['rt', 'browserify', 'uglify']);
+    grunt.registerTask('pgall', ['rt', 'browserify', 'uglify', 'requirejs']);
 
     grunt.registerTask('all', ['default', 'test']);
 };

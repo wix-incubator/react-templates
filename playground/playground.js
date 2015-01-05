@@ -98,7 +98,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
         validHTML: true,
         validProps: true,
         setTimeout: function() {
-            console.log('setTimeout');
+            //console.log('setTimeout');
             clearTimeout(this.timeoutID);
             this.timeoutID = setTimeout.apply(null, arguments);
         },
@@ -156,7 +156,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             this.sampleRender = generateRenderFunc(this.sampleFunc);
             try {
                 this.validProps = true;
-                console.log(state.templateProps);
+                //console.log(state.templateProps);
                 /*eslint no-eval:0*/
                 this.sample = eval('(function () {' + this.templateSource + '\n' + state.templateProps + '\n return React.createElement(' + state.name + ');})()');
                 clearMessage(this.refs.editorCode);
