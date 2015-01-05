@@ -91,8 +91,8 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
         render: function () {
             var props = _.omit(this.props, ['ref', 'key', 'value', 'valueLink', 'onChange']);
             props.id = this.props.id || this.state.editorId;
-            var value = this.props.valueLink ? this.props.valueLink() : this.props.value;
-            return React.DOM.textarea(props, value);
+            props.defaultValue = this.props.valueLink ? this.props.valueLink() : this.props.value;
+            return React.DOM.textarea(props);
         },
         componentWillUpdate: function (nextProps/*, nextState*/) {
             var value = nextProps.valueLink ? nextProps.valueLink() : nextProps.value;

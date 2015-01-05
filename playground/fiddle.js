@@ -28,7 +28,6 @@ define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React
                 Firebase.goOffline();
             }
         },
-
         save: function () {
             var newHash = generateRandomId();
             window.location.hash = newHash;
@@ -41,11 +40,9 @@ define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React
                 alert('saved the fiddle, you can share your url');
             }/*.bind(this)*/);
         },
-
         clear: function () {
             this.refs.playground.clear();
         },
-
         loadSample: function (name) {
             //require(['text!./samples/' + name + '.rt', 'text!./samples/' + name + '.code'], function (rt, code) {
             //    var currentState = {
@@ -70,10 +67,7 @@ define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React
             });
             //this.refs.playground.clear();
         },
-
-        render: function () {
-            return fiddleTemplate.apply(this);
-        }
+        render: fiddleTemplate
     });
 
     return Fiddle;

@@ -31,7 +31,8 @@ requirejs.config({
 
 requirejs(['jquery', 'react', 'fiddle', 'bootstrap'], function ($, React, fiddle) {
     'use strict';
-    window.fiddle = React.render(fiddle(), document.getElementById('container'));
+    var elem = React.createElement(fiddle);
+    window.fiddle = React.render(elem, document.getElementById('container'));
     //$(function () {
     //    //$(window).resize(calcSize);
     //    //calcSize();

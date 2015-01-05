@@ -36,9 +36,7 @@ define(['lodash', 'react', './examples.rt',
                 samples: samples
             };
         },
-        render: function () {
-            return examplesTemplate.apply(this);
-        }
+        render: examplesTemplate
     });
 
     return Examples;
