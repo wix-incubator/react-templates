@@ -41,7 +41,7 @@ https://github.com/wix/hello-react-templates
 * event handlers
 
 ###### Why not use JSX?
-Some love JSX, some don't. We don't. More specifically, it seems to us that JS is only a good fit for components with very little HTML inside. And this can be accomplished by creating DOM elements in code. Also, we like to separate code and HTML because it just feels right.
+Some love JSX, some don't. We don't. More specifically, it seems to us that JSX is only a good fit for components with very little HTML inside. And this can be accomplished by creating DOM elements in code. Also, we like to separate code and HTML because it just feels right.
 
 ## Installation
 You can install react-templates using npm:
