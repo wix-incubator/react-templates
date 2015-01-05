@@ -13,8 +13,6 @@ module.exports = function (grunt) {
                     '!playground/libs/**/*.js',
                     '!playground/dist/**/*.js',
                     '!playground/rt-main.browser.js',
-                    '!playground/bundle/**',
-                    '!playground/tmp/**',
                     '!playground/**/*.rt.js'
                 ]
             },
