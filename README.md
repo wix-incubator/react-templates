@@ -25,6 +25,8 @@ https://github.com/wix/generator-react-templates
 Here's a sample Hello project:<br/>
 https://github.com/wix/hello-react-templates
 
+## IntelliJ / WebStorm plugin
+http://plugins.jetbrains.com/plugin/7648
 
 
 ###### Basic concepts for React templates
