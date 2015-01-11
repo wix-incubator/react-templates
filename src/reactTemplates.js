@@ -349,7 +349,7 @@ function convertHtmlToReact(node, context) {
  * @return {string}
  */
 function convertTemplateToReact(html, options) {
-    var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
+    var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: false, withStartIndices: true});
     options = _.defaults({}, options, defaultOptions);
     var defines = {'react/addons': 'React', lodash: '_'};
     var context = defaultContext(html, options);
