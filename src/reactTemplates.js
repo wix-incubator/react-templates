@@ -24,6 +24,7 @@ var templatePJSTemplate = _.template('var <%= name %> = function () {\n' +
                                 '<%= injectedFunctions %>\n' +
                                 'return <%= body %>\n' +
                                 '};\n');
+var htmlSelfClosingTags = ["area", "base", "br", "col", "command", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"];
 
 var templateProp = 'rt-repeat';
 var ifProp = 'rt-if';
@@ -341,7 +342,27 @@ function convertHtmlToReact(node, context) {
 //  });
 //  return html;
 //}
+function isTag(node) {
+  return node.type === 'tag';
+}
 
+function handleSelfClosingHtmlTags(nodes) {
+  return _(nodes)
+    .map(function (node) {
+      var externalNodes = [];
+      node.children = handleSelfClosingHtmlTags(node.children);
+      if (node.type === 'tag' && _.contains(htmlSelfClosingTags, node.name)) {
+        externalNodes = _.filter(node.children, isTag);
+        _.forEach(externalNodes, function (child) {
+          child.parent = node;
+        });
+        node.children = _.reject(node.children, isTag);
+      }
+      return [node].concat(externalNodes);
+    })
+    .flatten()
+    .value();
+}
 
 /**
  * @param {string} html
@@ -349,11 +370,12 @@ function convertHtmlToReact(node, context) {
  * @return {string}
  */
 function convertTemplateToReact(html, options) {
-    var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: false, withStartIndices: true});
+    var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = _.defaults({}, options, defaultOptions);
     var defines = {'react/addons': 'React', lodash: '_'};
     var context = defaultContext(html, options);
     var rootTags = _.filter(rootNode.root()[0].children, function (i) { return i.type === 'tag'; });
+    rootTags = handleSelfClosingHtmlTags(rootTags);
     if (!rootTags || rootTags.length === 0) {
         throw new RTCodeError('Document should have a root element');
     }

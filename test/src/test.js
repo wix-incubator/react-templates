@@ -82,7 +82,7 @@ function errorEqual(err) {
 }
 
 test('conversion test', function (t) {
-    var files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt'];
+    var files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt','require.rt'];
     t.plan(files.length);
 
     files.forEach(check);
