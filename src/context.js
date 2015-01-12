@@ -1,13 +1,10 @@
 'use strict';
 /**
- * @typedef {{color: boolean, cwd: string, report: function(string), warn: function(string), getMessages: function():Array.<MESSAGE>}}
+ * @typedef {{color: boolean, cwd: string, report: function(string), warn: function(string), getMessages: function():Array.<MESSAGE>}} CONTEXT
  */
-/*eslint no-unused-vars:0*/
-var CONTEXT = null;
 /**
- * @typedef {{msg: string, level: MESSAGE_LEVEL, file: string}}
+ * @typedef {{msg: string, level: MESSAGE_LEVEL, file: string}} MESSAGE
  */
-var MESSAGE = null;
 
 /**
  * Enum for tri-state values.
