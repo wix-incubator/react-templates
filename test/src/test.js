@@ -9,12 +9,17 @@ var cheerio = require('cheerio');
 
 var dataPath = path.resolve(__dirname, '..', 'data');
 
+function readFileNormalized(filename) {
+    return fs.readFileSync(filename).toString().replace(/\r/g, '').trim();
+}
+
 test('invalid tests', function (t) {
     var files = [
         {file: 'invalid-scope.rt', issue: new reactTemplates.RTCodeError("invalid scope part 'a in a in a'", -1, -1)},
         {file: 'invalid-html.rt', issue: new reactTemplates.RTCodeError('Document should have a root element', -1, -1)},
         {file: 'invalid-exp.rt', issue: new reactTemplates.RTCodeError("Failed to parse text '\n    {z\n'", 5, -1)},
-        {file: 'invalid-lambda.rt', issue: new reactTemplates.RTCodeError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [onClick='']", -1, -1)}
+        {file: 'invalid-lambda.rt', issue: new reactTemplates.RTCodeError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [onClick='']", -1, -1)},
+        {file: 'invalid-js.rt', issue: new reactTemplates.RTCodeError('Line 7: Unexpected token ILLEGAL', 187, undefined)}
     ];
     t.plan(files.length);
 
@@ -22,7 +27,7 @@ test('invalid tests', function (t) {
 
     function check(testFile) {
         var filename = path.join(dataPath, testFile.file);
-        var html = fs.readFileSync(filename).toString().replace(/\r/g, '').trim();
+        var html = readFileNormalized(filename);
         var error = null;
         try {
             reactTemplates.convertTemplateToReact(html);
@@ -32,6 +37,40 @@ test('invalid tests', function (t) {
         t.deepEqual(errorEqual(error), errorEqual(testFile.issue), 'Expect convertTemplateToReact to throw an error');
     }
 });
+
+test('invalid tests json', function (t) {
+    var cli = require('../../src/cli');
+    var context = require('../../src/context');
+    var files = [
+        {file: 'invalid-scope.rt', issue: new reactTemplates.RTCodeError("invalid scope part 'a in a in a'", -1, -1)},
+        {file: 'invalid-html.rt', issue: new reactTemplates.RTCodeError('Document should have a root element', -1, -1)},
+        {file: 'invalid-exp.rt', issue: new reactTemplates.RTCodeError("Failed to parse text '\n    {z\n'", 5, -1)},
+        {file: 'invalid-lambda.rt', issue: new reactTemplates.RTCodeError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [onClick='']", -1, -1)},
+        {file: 'invalid-js.rt', issue: new reactTemplates.RTCodeError('Line 7: Unexpected token ILLEGAL', 187, -1)}
+    ];
+    t.plan(files.length);
+
+    files.forEach(check);
+
+    function check(testFile) {
+        context.clear();
+        var filename = path.join(dataPath, testFile.file);
+        var options = {format: 'json'};
+        cli.handleSingleFile(options, filename);
+        t.deepEqual(context.getMessages()[0], errorEqualMessage(testFile.issue, filename), 'Expect cli to produce valid output messages');
+    }
+});
+
+function errorEqualMessage(err, file) {
+    return {
+        index: err.index,
+        line: err.line,
+        column: err.column || -1,
+        msg: err.message,
+        level: 'ERROR',
+        file: file
+    };
+}
 
 function errorEqual(err) {
     return {
@@ -43,15 +82,15 @@ function errorEqual(err) {
 }
 
 test('conversion test', function (t) {
-    var files = ['div.rt', 'test.rt', 'repeat.rt','inputs.rt'];
+    var files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt'];
     t.plan(files.length);
 
     files.forEach(check);
 
     function check(testFile) {
         var filename = path.join(dataPath, testFile);
-        var html = fs.readFileSync(filename).toString().replace(/\r/g, '').trim();
-        var expected = fs.readFileSync(filename + '.js').toString().replace(/\r/g, '').trim();
+        var html = readFileNormalized(filename);
+        var expected = readFileNormalized(filename + '.js');
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
         var actual = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '').trim();
         t.equal(actual, expected);
@@ -77,7 +116,7 @@ test('html tests', function (t) {
     function check(testFile) {
         var filename = path.join(dataPath, testFile);
         var html = fs.readFileSync(filename).toString();
-        var expected = fs.readFileSync(filename + '.html').toString().replace(/\r/g, '');
+        var expected = readFileNormalized(filename + '.html');
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
         var code = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '');
         var defineMap = {'react/addons': React, lodash: _};

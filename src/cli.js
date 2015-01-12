@@ -83,4 +83,4 @@ function execute(args) {
     return executeOptions(currentOptions);
 }
 
-module.exports = {execute: execute, executeOptions: executeOptions};
+module.exports = {execute: execute, executeOptions: executeOptions, handleSingleFile: handleSingleFile};

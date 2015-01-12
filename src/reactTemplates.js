@@ -383,14 +383,13 @@ function convertTemplateToReact(html, options) {
     var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars: vars, name: options.name};
     data.injectedFunctions = context.injectedFunctions.join('\n');
     var code = generate(data, options);
-    //try {
+    try {
         var tree = esprima.parse(code, {range: true, tokens: true, comment: true});
         tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
         code = escodegen.generate(tree, {comment: true});
-    //} catch (e) {
-        // TODO error handling
-        //console.log(e);
-    //}
+    } catch (e) {
+        throw new RTCodeError(e.message, e.index, -1);
+    }
     return code;
 }
 
