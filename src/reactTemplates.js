@@ -18,7 +18,7 @@ var tagTemplate = _.template('<%= name %>.apply(this,_.flatten([<%= props %><%= 
 var simpleTagTemplateCreateElement = _.template('React.createElement(<%= name %>,<%= props %><%= children %>)');
 var tagTemplateCreateElement = _.template('React.createElement.apply(this,_.flatten([<%= name %>,<%= props %><%= children %>]))');
 var commentTemplate = _.template(' /* <%= data %> */ ');
-var templateAMDTemplate = _.template("define([<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
+var templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
 var templateCommonJSTemplate = _.template("<%= vars %>\n\n'use strict';\n <%= injectedFunctions %>\nmodule.exports = function(){ return <%= body %>};\n");
 var templatePJSTemplate = _.template('var <%= name %> = function () {\n' +
                                 '<%= injectedFunctions %>\n' +
