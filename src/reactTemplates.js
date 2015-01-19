@@ -236,6 +236,7 @@ function generateProps(node, context) {
 function convertTagNameToConstructor(tagName, context) {
     var isHtmlTag = _.contains(reactDOMSupport[context.options.targetVersion], tagName);
     if (shouldUseCreateElement(context)) {
+        isHtmlTag = isHtmlTag || tagName.match(/^\w+(-\w+)$/);
         return isHtmlTag ? "'" + tagName + "'" : tagName;
     }
     return isHtmlTag ? 'React.DOM.' + tagName : tagName;
