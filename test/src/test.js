@@ -39,7 +39,7 @@ test('invalid tests', function (t) {
 });
 
 function normalizeError(err) {
-    err.msg = err.msg.replace(/\r/g,'');
+    err.msg = err.msg.replace(/\r/g, '');
     return err;
 }
 
@@ -87,7 +87,7 @@ function errorEqual(err) {
 }
 
 test('conversion test', function (t) {
-    var files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt','require.rt'];
+    var files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt', 'require.rt'];
     t.plan(files.length);
 
     files.forEach(check);
@@ -125,6 +125,7 @@ test('html tests', function (t) {
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
         var code = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '');
         var defineMap = {'react/addons': React, lodash: _};
+        /*eslint no-unused-vars:0*/
         var define = function (requirementsNames, content) {
             var requirements = _.map(requirementsNames, function (reqName) {
                 return defineMap[reqName];
