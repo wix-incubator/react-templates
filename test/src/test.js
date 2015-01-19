@@ -38,6 +38,11 @@ test('invalid tests', function (t) {
     }
 });
 
+function normalizeError(err) {
+    err.msg = err.msg.replace(/\r/g,'');
+    return err;
+}
+
 test('invalid tests json', function (t) {
     var cli = require('../../src/cli');
     var context = require('../../src/context');
@@ -57,7 +62,7 @@ test('invalid tests json', function (t) {
         var filename = path.join(dataPath, testFile.file);
         var options = {format: 'json'};
         cli.handleSingleFile(options, filename);
-        t.deepEqual(context.getMessages()[0], errorEqualMessage(testFile.issue, filename), 'Expect cli to produce valid output messages');
+        t.deepEqual(normalizeError(context.getMessages()[0]), errorEqualMessage(testFile.issue, filename), 'Expect cli to produce valid output messages');
     }
 });
 
