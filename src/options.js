@@ -75,8 +75,13 @@ module.exports = optionator({
         option: 'target-version',
         alias: 't',
         type: 'String',
-        default: '0.12.1',
+        default: '0.12.2',
         description: 'React version to generate code for (' + Object.keys(reactDOMSupport).join(', ') + ')'
+    }, {
+        option: 'list-target-version',
+        type: 'Boolean',
+        default: 'false',
+        description: 'Show list of target versions'
     }, {
         option: 'version',
         alias: 'v',

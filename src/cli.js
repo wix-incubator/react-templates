@@ -12,6 +12,8 @@ var shell = require('./shell');
 var pkg = require('../package.json');
 //var defaultOptions = {commonJS: false, force: false, json: false};
 var options = require('./options');
+var reactDOMSupport = require('./reactDOMSupport');
+var reactTemplates = require('./reactTemplates');
 
 function executeOptions(currentOptions) {
     var ret = 0;
@@ -26,6 +28,8 @@ function executeOptions(currentOptions) {
         } else {
             console.log(options.generateHelp());
         }
+    } else if (currentOptions.listTargetVersion) {
+        printVersions(currentOptions);
     } else if (!files.length) {
         console.log(options.generateHelp());
     } else {
@@ -33,6 +37,15 @@ function executeOptions(currentOptions) {
         ret = shell.printResults(context);
     }
     return ret;
+}
+
+function printVersions(currentOptions) {
+    var ret = Object.keys(reactDOMSupport);
+    if (currentOptions.format === 'json') {
+        console.log(JSON.stringify(ret, undefined, 2));
+    } else {
+        console.log(ret.join(', '));
+    }
 }
 
 /**
@@ -83,4 +96,9 @@ function execute(args) {
     return executeOptions(currentOptions);
 }
 
-module.exports = {execute: execute, executeOptions: executeOptions, handleSingleFile: handleSingleFile};
+module.exports = {
+    execute: execute,
+    executeOptions: executeOptions,
+    handleSingleFile: handleSingleFile,
+    convertTemplateToReact: reactTemplates.convertTemplateToReact
+};
