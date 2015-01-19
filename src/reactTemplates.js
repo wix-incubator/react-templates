@@ -57,7 +57,7 @@ _.forEach(reactSupportedAttributes, function (attributeReactName) {
 function concatChildren(children) {
     var res = '';
     _.forEach(children, function (child) {
-        if (child.indexOf(' /*') !== 0 && child) {
+        if (child && child.indexOf(' /*') !== 0 ) {
             res += ',' + child;
         } else {
             res += child;
@@ -258,7 +258,7 @@ function hasNonSimpleChildren(node) {
 }
 
 function convertHtmlToReact(node, context) {
-    if (node.type === 'tag') {
+    if (node.type === 'tag' || node.type === 'style') {
         context = {
             boundParams: _.clone(context.boundParams),
             injectedFunctions: context.injectedFunctions,
@@ -302,9 +302,9 @@ function convertHtmlToReact(node, context) {
         if (node.attribs[ifProp]) {
             data.condition = node.attribs[ifProp].trim();
         }
-        data.children = concatChildren(_.map(node.children, function (child) {
+        data.children = node.children ? concatChildren(_.map(node.children, function (child) {
             return convertHtmlToReact(child, context);
-        }));
+        })) : '';
 
         if (hasNonSimpleChildren(node)) {
             data.body = shouldUseCreateElement(context) ? tagTemplateCreateElement(data) : tagTemplate(data);
