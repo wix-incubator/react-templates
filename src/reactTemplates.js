@@ -24,7 +24,7 @@ var templatePJSTemplate = _.template('var <%= name %> = function () {\n' +
                                 '<%= injectedFunctions %>\n' +
                                 'return <%= body %>\n' +
                                 '};\n');
-var htmlSelfClosingTags = ["area", "base", "br", "col", "command", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"];
+var htmlSelfClosingTags = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
 var templateProp = 'rt-repeat';
 var ifProp = 'rt-if';
