@@ -10,7 +10,7 @@ module.exports = function (grunt) {
             all: {
                 src: [
                     'src/**/*.js', 'playground/**/*.js',
-                    //'test/**/*.js',
+                    'test/src/**/*.js',
                     '!playground/libs/**/*.js',
                     '!playground/dist/**/*.js',
                     '!playground/rt-main.browser.js',
