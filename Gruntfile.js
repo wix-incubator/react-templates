@@ -98,7 +98,7 @@ module.exports = function (grunt) {
         return eval(require('fs').readFileSync(file).toString());
     }
 
-    grunt.task.loadTasks('./internalTasks');
+    //grunt.task.loadTasks('./internalTasks');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
