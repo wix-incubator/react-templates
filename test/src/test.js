@@ -19,7 +19,10 @@ test('invalid tests', function (t) {
         {file: 'invalid-html.rt', issue: new reactTemplates.RTCodeError('Document should have a root element', -1, -1)},
         {file: 'invalid-exp.rt', issue: new reactTemplates.RTCodeError("Failed to parse text '\n    {z\n'", 5, -1)},
         {file: 'invalid-lambda.rt', issue: new reactTemplates.RTCodeError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [onClick='']", -1, -1)},
-        {file: 'invalid-js.rt', issue: new reactTemplates.RTCodeError('Line 7: Unexpected token ILLEGAL', 187, undefined)}
+        {file: 'invalid-js.rt', issue: new reactTemplates.RTCodeError('Line 7: Unexpected token ILLEGAL', 187, undefined)},
+        {file: 'invalid-single-root.rt', issue: new reactTemplates.RTCodeError('Document should have no more than a single root element', 12, 1)},
+        {file: 'invalid-repeat.rt', issue: new reactTemplates.RTCodeError('rt-repeat invalid \'in\' expression \'a in b in c\'', -1, -1)},
+        {file: 'invalid-rt-require.rt', issue: new reactTemplates.RTCodeError("rt-require needs 'dependency' and 'as' attributes", -1, -1)}
     ];
     t.plan(files.length);
 
@@ -136,6 +139,25 @@ test('conversion test amd with name', function (t) {
         var expected = readFileNormalized(filename + '.amd.js');
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
         var actual = reactTemplates.convertTemplateToReact(html, {modules: 'amd', name: 'div'}).replace(/\r/g, '').trim();
+        t.equal(actual, expected);
+        if (actual !== expected) {
+            fs.writeFileSync(filename + '.actual.js', actual);
+        }
+    }
+});
+
+test('conversion test commonjs', function (t) {
+    var files = ['div.rt'];
+    t.plan(files.length);
+
+    files.forEach(check);
+
+    function check(testFile) {
+        var filename = path.join(dataPath, testFile);
+        var html = readFileNormalized(filename);
+        var expected = readFileNormalized(filename + '.commonjs.js');
+//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
+        var actual = reactTemplates.convertTemplateToReact(html, {modules: 'commonjs', name: 'div'}).replace(/\r/g, '').trim();
         t.equal(actual, expected);
         if (actual !== expected) {
             fs.writeFileSync(filename + '.actual.js', actual);
