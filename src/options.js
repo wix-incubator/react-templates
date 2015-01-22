@@ -50,7 +50,7 @@ module.exports = optionator({
         option: 'name',
         alias: 'n',
         type: 'String',
-        description: 'When using globals, the name for the variable. The default is the [file name]RT'
+        description: 'When using globals, the name for the variable. The default is the [file name]RT, when using amd, the name of the module'
     }, {
         option: 'dry-run',
         alias: 'd',
