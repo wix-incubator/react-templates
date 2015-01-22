@@ -105,6 +105,44 @@ test('conversion test', function (t) {
     }
 });
 
+test('conversion test globals', function (t) {
+    var files = ['div.rt'];
+    t.plan(files.length);
+
+    files.forEach(check);
+
+    function check(testFile) {
+        var filename = path.join(dataPath, testFile);
+        var html = readFileNormalized(filename);
+        var expected = readFileNormalized(filename + '.globals.js');
+//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
+        var actual = reactTemplates.convertTemplateToReact(html, {modules: 'none', name: 'div'}).replace(/\r/g, '').trim();
+        t.equal(actual, expected);
+        if (actual !== expected) {
+            fs.writeFileSync(filename + '.actual.js', actual);
+        }
+    }
+});
+
+test('conversion test amd with name', function (t) {
+    var files = ['div.rt'];
+    t.plan(files.length);
+
+    files.forEach(check);
+
+    function check(testFile) {
+        var filename = path.join(dataPath, testFile);
+        var html = readFileNormalized(filename);
+        var expected = readFileNormalized(filename + '.amd.js');
+//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
+        var actual = reactTemplates.convertTemplateToReact(html, {modules: 'amd', name: 'div'}).replace(/\r/g, '').trim();
+        t.equal(actual, expected);
+        if (actual !== expected) {
+            fs.writeFileSync(filename + '.actual.js', actual);
+        }
+    }
+});
+
 function normalizeHtml(html) {
     return cheerio.load(html, {normalizeWhitespace: true}).html()
         .replace(/\>\s+/mg, '>')

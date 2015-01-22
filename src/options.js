@@ -49,7 +49,6 @@ module.exports = optionator({
     }, {
         option: 'name',
         alias: 'n',
-        default: 'filenameRT',
         type: 'String',
         description: 'When using globals, the name for the variable. The default is the [file name]RT'
     }, {
