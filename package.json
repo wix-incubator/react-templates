@@ -7,7 +7,8 @@
     "rt": "./bin/rt.js"
   },
   "scripts": {
-    "test": "node test/src/test.js"
+    "test": "node test/src/test.js",
+    "test-cov": "istanbul cover test/src/test.js -- --require test/support/env --reporter dot --check-leaks test/ test/acceptance/"
   },
   "repository": {
     "type": "git",
@@ -22,8 +23,8 @@
   "dependencies": {
     "chalk": "^0.5.1",
     "cheerio": "^0.18.0",
-    "escodegen": "^1.5.0",
-    "esprima": "^1.2.2",
+    "escodegen": "^1.6.0",
+    "esprima": "^1.2.3",
     "lodash": "^2.4.1",
     "optionator": "^0.5.0",
     "text-table": "^0.2.0"
@@ -32,14 +33,15 @@
     "brace": "^0.4.0",
     "brfs": "^1.2.0",
     "grunt": "^0.4.5",
-    "grunt-browserify": "^3.2.0",
+    "grunt-browserify": "^3.3.0",
     "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-uglify": "^0.7.0",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-eslint": "^3.0.0",
+    "grunt-eslint": "^5.0.0",
     "grunt-node-tap": "^0.1.61",
+    "istanbul": "^0.3.5",
     "react": "^0.12.2",
-    "tape": "^3.0.2"
+    "tape": "^3.4.0"
   },
   "keywords": [
     "templates",

@@ -9,6 +9,10 @@ var cheerio = require('cheerio');
 
 var dataPath = path.resolve(__dirname, '..', 'data');
 
+/**
+ * @param {string} filename
+ * @return {string}
+ */
 function readFileNormalized(filename) {
     return fs.readFileSync(filename).toString().replace(/\r/g, '').trim();
 }
@@ -41,6 +45,10 @@ test('invalid tests', function (t) {
     }
 });
 
+/**
+ * @param {ERR} err
+ * @return {ERR}
+ */
 function normalizeError(err) {
     err.msg = err.msg.replace(/\r/g, '');
     return err;
@@ -69,6 +77,15 @@ test('invalid tests json', function (t) {
     }
 });
 
+/**
+ * @typedef {{index: number, line: number, column: number, msg: string, level: string, file: string}} ERR
+ */
+
+/**
+ * @param {RTCodeError} err
+ * @param {string} file
+ * @return {ERR}
+ */
 function errorEqualMessage(err, file) {
     return {
         index: err.index,
@@ -80,6 +97,10 @@ function errorEqualMessage(err, file) {
     };
 }
 
+/**
+ * @param {RTCodeError} err
+ * @return {{index: number, line: number, message: string, name: string}}
+ */
 function errorEqual(err) {
     return {
         index: err.index,
@@ -92,7 +113,6 @@ function errorEqual(err) {
 test('conversion test', function (t) {
     var files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt', 'require.rt'];
     t.plan(files.length);
-
     files.forEach(check);
 
     function check(testFile) {
@@ -101,70 +121,46 @@ test('conversion test', function (t) {
         var expected = readFileNormalized(filename + '.js');
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
         var actual = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '').trim();
-        t.equal(actual, expected);
-        if (actual !== expected) {
-            fs.writeFileSync(filename + '.actual.js', actual);
-        }
+        compareAndWrite(t, actual, expected, filename);
     }
 });
 
-test('conversion test globals', function (t) {
-    var files = ['div.rt'];
-    t.plan(files.length);
-
-    files.forEach(check);
-
-    function check(testFile) {
-        var filename = path.join(dataPath, testFile);
-        var html = readFileNormalized(filename);
-        var expected = readFileNormalized(filename + '.globals.js');
-//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertTemplateToReact(html, {modules: 'none', name: 'div'}).replace(/\r/g, '').trim();
-        t.equal(actual, expected);
-        if (actual !== expected) {
-            fs.writeFileSync(filename + '.actual.js', actual);
-        }
+/**
+ * @param {*} t
+ * @param {string} actual
+ * @param {string} expected
+ * @param {string} filename
+ */
+function compareAndWrite(t, actual, expected, filename) {
+    t.equal(actual, expected);
+    if (actual !== expected) {
+        fs.writeFileSync(filename + '.actual.js', actual);
     }
-});
-
-test('conversion test amd with name', function (t) {
-    var files = ['div.rt'];
-    t.plan(files.length);
-
-    files.forEach(check);
-
-    function check(testFile) {
-        var filename = path.join(dataPath, testFile);
-        var html = readFileNormalized(filename);
-        var expected = readFileNormalized(filename + '.amd.js');
-//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertTemplateToReact(html, {modules: 'amd', name: 'div'}).replace(/\r/g, '').trim();
-        t.equal(actual, expected);
-        if (actual !== expected) {
-            fs.writeFileSync(filename + '.actual.js', actual);
-        }
-    }
-});
+}
 
 test('conversion test commonjs', function (t) {
-    var files = ['div.rt'];
+    var files = [
+        {source: 'div.rt', expected: 'div.rt.commonjs.js', options: {modules: 'commonjs'}},
+        {source: 'div.rt', expected: 'div.rt.amd.js', options: {modules: 'amd', name: 'div'}},
+        {source: 'div.rt', expected: 'div.rt.globals.js', options: {modules: 'none', name: 'div'}}
+    ];
     t.plan(files.length);
-
     files.forEach(check);
 
-    function check(testFile) {
-        var filename = path.join(dataPath, testFile);
+    function check(testData) {
+        var filename = path.join(dataPath, testData.source);
         var html = readFileNormalized(filename);
-        var expected = readFileNormalized(filename + '.commonjs.js');
+        var expected = readFileNormalized(path.join(dataPath, testData.expected));
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertTemplateToReact(html, {modules: 'commonjs', name: 'div'}).replace(/\r/g, '').trim();
-        t.equal(actual, expected);
-        if (actual !== expected) {
-            fs.writeFileSync(filename + '.actual.js', actual);
-        }
+        var actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
+        compareAndWrite(t, actual, expected, filename);
     }
 });
 
+/**
+ * @param {string} html
+ * @return {string}
+ */
 function normalizeHtml(html) {
     return cheerio.load(html, {normalizeWhitespace: true}).html()
         .replace(/\>\s+/mg, '>')
@@ -199,10 +195,7 @@ test('html tests', function (t) {
         var actual = React.renderToStaticMarkup(comp());
         actual = normalizeHtml(actual);
         expected = normalizeHtml(expected);
-        t.equal(actual, expected);
-        if (actual !== expected) {
-            fs.writeFileSync(filename + '.actual.html', actual);
-        }
+        compareAndWrite(t, actual, expected, filename);
     }
 });
 
