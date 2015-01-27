@@ -1,5 +1,6 @@
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
+[![Coverage Status][coveralls-image]][coveralls-url]
 
 # React Templates
 
@@ -350,7 +351,7 @@ Copyright (c) 2014 Wix. Licensed under the MIT license.
 [npm-url]: https://npmjs.org/package/react-templates
 [travis-image]: https://img.shields.io/travis/wix/react-templates/gh-pages.svg?style=flat-square
 [travis-url]: https://travis-ci.org/wix/react-templates
-[coveralls-image]: https://img.shields.io/coveralls/wix/react-templates/master.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/wix/react-templates?branch=master
+[coveralls-image]: https://img.shields.io/coveralls/wix/react-templates/gh-pages.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/wix/react-templates?branch=gh-pages
 [downloads-image]: http://img.shields.io/npm/dm/react-templates.svg?style=flat-square
 [downloads-url]: https://npmjs.org/package/react-templates
