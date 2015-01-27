@@ -22,11 +22,26 @@ test('invalid tests', function (t) {
         {file: 'invalid-scope.rt', issue: new reactTemplates.RTCodeError("invalid scope part 'a in a in a'", -1, -1)},
         {file: 'invalid-html.rt', issue: new reactTemplates.RTCodeError('Document should have a root element', -1, -1)},
         {file: 'invalid-exp.rt', issue: new reactTemplates.RTCodeError("Failed to parse text '\n    {z\n'", 5, -1)},
-        {file: 'invalid-lambda.rt', issue: new reactTemplates.RTCodeError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [onClick='']", -1, -1)},
-        {file: 'invalid-js.rt', issue: new reactTemplates.RTCodeError('Line 7: Unexpected token ILLEGAL', 187, undefined)},
-        {file: 'invalid-single-root.rt', issue: new reactTemplates.RTCodeError('Document should have no more than a single root element', 12, 1)},
-        {file: 'invalid-repeat.rt', issue: new reactTemplates.RTCodeError('rt-repeat invalid \'in\' expression \'a in b in c\'', -1, -1)},
-        {file: 'invalid-rt-require.rt', issue: new reactTemplates.RTCodeError("rt-require needs 'dependency' and 'as' attributes", -1, -1)}
+        {
+            file: 'invalid-lambda.rt',
+            issue: new reactTemplates.RTCodeError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [onClick='']", -1, -1)
+        },
+        {
+            file: 'invalid-js.rt',
+            issue: new reactTemplates.RTCodeError('Line 7: Unexpected token ILLEGAL', 187, undefined)
+        },
+        {
+            file: 'invalid-single-root.rt',
+            issue: new reactTemplates.RTCodeError('Document should have no more than a single root element', 12, 1)
+        },
+        {
+            file: 'invalid-repeat.rt',
+            issue: new reactTemplates.RTCodeError('rt-repeat invalid \'in\' expression \'a in b in c\'', -1, -1)
+        },
+        {
+            file: 'invalid-rt-require.rt',
+            issue: new reactTemplates.RTCodeError("rt-require needs 'dependency' and 'as' attributes", -1, -1)
+        }
     ];
     t.plan(files.length);
 
@@ -61,7 +76,10 @@ test('invalid tests json', function (t) {
         {file: 'invalid-scope.rt', issue: new reactTemplates.RTCodeError("invalid scope part 'a in a in a'", -1, -1)},
         {file: 'invalid-html.rt', issue: new reactTemplates.RTCodeError('Document should have a root element', -1, -1)},
         {file: 'invalid-exp.rt', issue: new reactTemplates.RTCodeError("Failed to parse text '\n    {z\n'", 5, -1)},
-        {file: 'invalid-lambda.rt', issue: new reactTemplates.RTCodeError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [onClick='']", -1, -1)},
+        {
+            file: 'invalid-lambda.rt',
+            issue: new reactTemplates.RTCodeError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [onClick='']", -1, -1)
+        },
         {file: 'invalid-js.rt', issue: new reactTemplates.RTCodeError('Line 7: Unexpected token ILLEGAL', 187, -1)}
     ];
     t.plan(files.length);
@@ -197,6 +215,47 @@ test('html tests', function (t) {
         expected = normalizeHtml(expected);
         compareAndWrite(t, actual, expected, filename);
     }
+});
+
+test('test context', function (t) {
+    t.plan(3);
+
+    var context = require('../../src/context');
+    context.clear();
+    t.equal(context.hasErrors(), false);
+    context.error('hi', '', 1, 1);
+    t.equal(context.hasErrors(), true);
+    context.clear();
+    t.equal(context.hasErrors(), false);
+});
+
+test('test shell', function (t) {
+    t.plan(3);
+
+    var shell = require('../../src/shell');
+    var context = require('../../src/context');
+    var newContext = _.cloneDeep(context);
+    var output;
+    newContext.options.format = 'json';
+    newContext.report = function (text) {
+        output = text;
+    };
+    var r = shell.printResults(newContext);
+    t.equal(r, 0);
+    context.error('hi', '', 1, 1);
+    r = shell.printResults(newContext);
+    t.equal(r, 1);
+    t.equal(output, '[\n  {\n    "level": "ERROR",\n    "msg": "hi",\n    "file": null,\n    "line": 1,\n    "column": 1,\n    "index": -1\n  }\n]');
+    context.clear();
+});
+
+test('test shell', function (t) {
+    t.plan(1);
+
+    var filename = path.join(dataPath, 'div.rt');
+    var cli = require('../../src/cli');
+    var r = cli.execute(filename + ' -r --dry-run');
+    t.equal(r, 0);
 });
 
 test('util.isStale', function (t) {
