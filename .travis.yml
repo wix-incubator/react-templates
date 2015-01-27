@@ -10,10 +10,13 @@ install:
 
 script:
   - grunt eslint
-  - npm test
+  - npm test-cov
 
 branches:
   only:
     - gh-pages
 #after_success:
 #    - npm run coveralls
+
+after_success:
+  - cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js

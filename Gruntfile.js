@@ -3,7 +3,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         clean: {
             main: {
-                src: ['playground/**/*.rt.js']
+                src: ['coverage', 'playground/**/*.rt.js']
             }
         },
         eslint: {
