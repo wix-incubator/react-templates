@@ -10,7 +10,7 @@ install:
 
 script:
   - grunt eslint
-  - npm test-cov
+  - npm run test-cov
 
 branches:
   only:
