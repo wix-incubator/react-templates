@@ -1,0 +1,6 @@
+<!--suppress CheckEmptyScriptTag -->
+<rt-require dependency="core" as="core"/>
+
+<div rt-scope="core.translate as tr">
+    <span>{tr('ANIMATION_PANEL_HEADER_LABEL'}</span>
+</div>

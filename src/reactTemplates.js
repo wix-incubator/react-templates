@@ -8,6 +8,8 @@ var esprima = require('esprima');
 var escodegen = require('escodegen');
 var reactDOMSupport = require('./reactDOMSupport');
 var stringUtils = require('./stringUtils');
+var rtError = require('./RTCodeError');
+var RTCodeError = rtError.RTCodeError;
 
 var repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
 var ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
@@ -34,6 +36,10 @@ var propsProp = 'rt-props';
 
 var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.12.2'};
 
+/**
+ * @param context
+ * @return {boolean}
+ */
 function shouldUseCreateElement(context) {
     switch (context.options.targetVersion) {
         case '0.11.2':
@@ -54,6 +60,10 @@ _.forEach(reactSupportedAttributes, function (attributeReactName) {
     }
 });
 
+/**
+ * @param children
+ * @return {string}
+ */
 function concatChildren(children) {
     var res = '';
     _.forEach(children, function (child) {
@@ -66,8 +76,17 @@ function concatChildren(children) {
     return res;
 }
 
+/**
+ * @const
+ */
 var curlyMap = {'{': 1, '}': -1};
 
+/**
+ * @param node
+ * @param context
+ * @param {string} txt
+ * @return {string}
+ */
 function convertText(node, context, txt) {
     var res = '';
     var first = true;
@@ -84,7 +103,7 @@ function convertText(node, context, txt) {
             curlyCounter += curlyMap[txt.charAt(end)] || 0;
         }
         if (curlyCounter !== 0) {
-            throw buildError("Failed to parse text '" + txt + "'", context, node);
+            throw RTCodeError.build("Failed to parse text '" + txt + "'", context, node);
         } else {
             var needsParens = start !== 0 || end !== txt.length - 1;
             res += (first ? '' : '+') + (needsParens ? '(' : '') + txt.substr(start + 1, end - start - 2) + (needsParens ? ')' : '');
@@ -99,6 +118,7 @@ function convertText(node, context, txt) {
         res = 'true';
     }
 
+    //validateJS(res, node, context);
     return res;
 }
 
@@ -120,81 +140,18 @@ function generateInjectedFunc(context, namePrefix, body, params) {
     return generatedFuncName;
 }
 
-/**
- * @param {string} html
- * @param node
- * @return {number}
- */
-function getLine(html, node) {
-    if (!node) {
-        return 0;
-    }
-    return html.substring(0, node.startIndex).split('\n').length - 1;
-}
-
-//function getLine(node) {
-//    if (!node) {
-//        return 0;
-//    }
-//    var line = 0;
-//    var prev = node.prev;
-//    while (prev) {
-//        var nl = prev.data.split('\n').length - 1;
-//        line += nl;
-//        prev = prev.prev;
-//    }
-//
-//    line += getLine(node.parent);
-//    return line + 1;
-//}
-
-//function RTCodeError(message, line) {
-//    this.name = 'RTCodeError';
-//    this.message = message || '';
-//    this.line = line || -1;
-//}
-//RTCodeError.prototype = Error.prototype;
-
-// Redefine properties on Error to be enumerable
-/*eslint no-extend-native:0*/
-Object.defineProperty(Error.prototype, 'message', { configurable: true, enumerable: true });
-Object.defineProperty(Error.prototype, 'stack', { configurable: true, enumerable: true });
-//Object.defineProperty(Error.prototype, 'line', { configurable: true, enumerable: true });
-
-function RTCodeError(message, index, line) {
-    Error.captureStackTrace(this, RTCodeError);
-    this.name = 'RTCodeError';
-    this.message = message || '';
-    this.index = index || -1;
-    this.line = line || -1;
-}
-
-RTCodeError.prototype = Object.create(Error.prototype);
-
-/**
- * @param {string} msg
- * @param {*} context
- * @param {*} node
- * @return {RTCodeError}
- */
-function buildError(msg, context, node) {
-    var line = getLine(context.html, node);
-    return new RTCodeError(msg, node.startIndex, line);
-}
-
-
 function generateProps(node, context) {
 //    console.log(node);
     var props = {};
     _.forOwn(node.attribs, function (val, key) {
         var propKey = attributesMapping[key.toLowerCase()] || key;
         if (props.hasOwnProperty(propKey)) {
-            throw buildError('duplicate definition of ' + propKey + ' ' + JSON.stringify(node.attribs), context, node);
+            throw RTCodeError.build('duplicate definition of ' + propKey + ' ' + JSON.stringify(node.attribs), context, node);
         }
         if (key.indexOf('on') === 0 && !isStringOnlyCode(val)) {
             var funcParts = val.split('=>');
             if (funcParts.length !== 2) {
-                throw buildError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [" + key + "='" + val + "']", context, node);
+                throw RTCodeError.build("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [" + key + "='" + val + "']", context, node);
             }
             var evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
             var funcBody = funcParts[1].trim();
@@ -276,22 +233,26 @@ function convertHtmlToReact(node, context) {
             _.each(node.attribs[scopeProp].split(';'), function (scopePart) {
                 var scopeSubParts = scopePart.split(' as ');
                 if (scopeSubParts.length < 2) {
-                    throw buildError("invalid scope part '" + scopePart + "'", context, node);
+                    throw RTCodeError.build("invalid scope part '" + scopePart + "'", context, node);
                 }
                 var scopeName = scopeSubParts[1].trim();
+                validateJS(scopeName, node, context);
                 stringUtils.addIfNotThere(context.boundParams, scopeName);
                 data.scopeName += stringUtils.capitalize(scopeName);
                 data.scopeMapping[scopeName] = scopeSubParts[0].trim();
+                validateJS(data.scopeMapping[scopeName], node, context);
             });
         }
 
         if (node.attribs[templateProp]) {
             var arr = node.attribs[templateProp].split(' in ');
             if (arr.length !== 2) {
-                throw buildError("rt-repeat invalid 'in' expression '" + node.attribs[templateProp] + "'", context, node);
+                throw RTCodeError.build("rt-repeat invalid 'in' expression '" + node.attribs[templateProp] + "'", context, node);
             }
             data.item = arr[0].trim();
             data.collection = arr[1].trim();
+            validateJS(data.item, node, context);
+            validateJS(data.collection, node, context);
             stringUtils.addIfNotThere(context.boundParams, data.item);
             stringUtils.addIfNotThere(context.boundParams, data.item + 'Index');
         }
@@ -303,7 +264,9 @@ function convertHtmlToReact(node, context) {
             data.condition = node.attribs[ifProp].trim();
         }
         data.children = node.children ? concatChildren(_.map(node.children, function (child) {
-            return convertHtmlToReact(child, context);
+            var code = convertHtmlToReact(child, context);
+            validateJS(code, child, context);
+            return code;
         })) : '';
 
         if (hasNonSimpleChildren(node)) {
@@ -344,7 +307,7 @@ function convertHtmlToReact(node, context) {
 //  return html;
 //}
 function isTag(node) {
-  return node.type === 'tag';
+    return node.type === 'tag';
 }
 
 function handleSelfClosingHtmlTags(nodes) {
@@ -375,29 +338,29 @@ function convertTemplateToReact(html, options) {
     options = _.defaults({}, options, defaultOptions);
     var defines = {'react/addons': 'React', lodash: '_'};
     var context = defaultContext(html, options);
-    var rootTags = _.filter(rootNode.root()[0].children, function (i) { return i.type === 'tag'; });
+    var rootTags = _.filter(rootNode.root()[0].children, {type: 'tag'});
     rootTags = handleSelfClosingHtmlTags(rootTags);
     if (!rootTags || rootTags.length === 0) {
         throw new RTCodeError('Document should have a root element');
     }
     var firstTag = null;
-    _.forEach(rootTags, function(tag) {
+    _.forEach(rootTags, function (tag) {
         if (tag.name === 'rt-require') {
-          if (!tag.attribs.dependency || !tag.attribs.as) {
-            throw buildError("rt-require needs 'dependency' and 'as' attributes", context, tag);
-          } else if (tag.children.length) {
-            throw buildError('rt-require may have no children', context, tag);
-          } else {
-            defines[tag.attribs.dependency] = tag.attribs.as;
-          }
+            if (!tag.attribs.dependency || !tag.attribs.as) {
+                throw RTCodeError.build("rt-require needs 'dependency' and 'as' attributes", context, tag);
+            } else if (tag.children.length) {
+                throw RTCodeError.build('rt-require may have no children', context, tag);
+            } else {
+                defines[tag.attribs.dependency] = tag.attribs.as;
+            }
         } else if (firstTag === null) {
-          firstTag = tag;
+            firstTag = tag;
         } else {
-          throw buildError('Document should have no more than a single root element', context, tag);
+            throw RTCodeError.build('Document should have no more than a single root element', context, tag);
         }
     });
     if (firstTag === null) {
-      throw buildError('Document should have a single root element', context, rootNode.root()[0]);
+        throw RTCodeError.build('Document should have a single root element', context, rootNode.root()[0]);
     }
     var body = convertHtmlToReact(firstTag, context);
     var requirePaths = _(defines).keys().map(function (reqName) { return '"' + reqName + '"'; }).value().join(',');
@@ -427,6 +390,19 @@ function generate(data, options) {
 }
 
 /**
+ * @param {string} code
+ * @param node
+ * @param context
+ */
+function validateJS(code, node, context) {
+    try {
+        esprima.parse(code);
+    } catch (e) {
+        throw RTCodeError.build(e.description, context, node);
+    }
+}
+
+/**
  * @param {string} name
  * @return {string}
  */
@@ -438,5 +414,7 @@ module.exports = {
     convertTemplateToReact: convertTemplateToReact,
     RTCodeError: RTCodeError,
     normalizeName: normalizeName,
-    _test: {}
+    _test: {
+        convertText: convertText
+    }
 };

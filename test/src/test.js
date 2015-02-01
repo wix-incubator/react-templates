@@ -6,7 +6,7 @@ var _ = require('lodash');
 var path = require('path');
 var React = require('react/addons');
 var cheerio = require('cheerio');
-
+var RTCodeError = reactTemplates.RTCodeError;
 var dataPath = path.resolve(__dirname, '..', 'data');
 
 /**
@@ -17,35 +17,23 @@ function readFileNormalized(filename) {
     return fs.readFileSync(filename).toString().replace(/\r/g, '').trim();
 }
 
-test('invalid tests', function (t) {
-    var files = [
-        {file: 'invalid-scope.rt', issue: new reactTemplates.RTCodeError("invalid scope part 'a in a in a'", -1, -1)},
-        {file: 'invalid-html.rt', issue: new reactTemplates.RTCodeError('Document should have a root element', -1, -1)},
-        {file: 'invalid-exp.rt', issue: new reactTemplates.RTCodeError("Failed to parse text '\n    {z\n'", 5, -1)},
-        {
-            file: 'invalid-lambda.rt',
-            issue: new reactTemplates.RTCodeError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [onClick='']", -1, -1)
-        },
-        {
-            file: 'invalid-js.rt',
-            issue: new reactTemplates.RTCodeError('Line 7: Unexpected token ILLEGAL', 187, undefined)
-        },
-        {
-            file: 'invalid-single-root.rt',
-            issue: new reactTemplates.RTCodeError('Document should have no more than a single root element', 12, 1)
-        },
-        {
-            file: 'invalid-repeat.rt',
-            issue: new reactTemplates.RTCodeError('rt-repeat invalid \'in\' expression \'a in b in c\'', -1, -1)
-        },
-        {
-            file: 'invalid-rt-require.rt',
-            issue: new reactTemplates.RTCodeError("rt-require needs 'dependency' and 'as' attributes", -1, -1)
-        }
-    ];
-    t.plan(files.length);
+var invalidFiles = [
+    {file: 'invalid-scope.rt', issue: new RTCodeError("invalid scope part 'a in a in a'", 0, 35, 1, 1)},
+    {file: 'invalid-html.rt', issue: new RTCodeError('Document should have a root element', -1, -1, -1, -1)},
+    {file: 'invalid-exp.rt', issue: new RTCodeError("Failed to parse text '\n    {z\n'", 5, 13, 1, 6)},
+    {file: 'invalid-lambda.rt', issue: new RTCodeError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [onClick='']", 0, 23, 1, 1)},
+    {file: 'invalid-js.rt', issue: new RTCodeError('Unexpected token ILLEGAL', 0, 32, 1, 1)},
+    {file: 'invalid-single-root.rt', issue: new RTCodeError('Document should have no more than a single root element', 12, 23, 2, 1)},
+    {file: 'invalid-repeat.rt', issue: new RTCodeError('rt-repeat invalid \'in\' expression \'a in b in c\'', 0, 35, 1, 1)},
+    {file: 'invalid-rt-require.rt', issue: new RTCodeError("rt-require needs 'dependency' and 'as' attributes", 0, 14, 1, 1)},
+    {file: 'invalid-brace.rt', issue: new RTCodeError('Unexpected end of input', 128, 163, 5, 11)},
+    {file: 'invalid-style.rt', issue: new RTCodeError('Unexpected token ILLEGAL', 10, 39, 2, 5)}
+];
 
-    files.forEach(check);
+test('invalid tests', function (t) {
+    t.plan(invalidFiles.length);
+
+    invalidFiles.forEach(check);
 
     function check(testFile) {
         var filename = path.join(dataPath, testFile.file);
@@ -56,9 +44,13 @@ test('invalid tests', function (t) {
         } catch (e) {
             error = e;
         }
-        t.deepEqual(errorEqual(error), errorEqual(testFile.issue), 'Expect convertTemplateToReact to throw an error');
+        t.deepEqual(omitStack(error), omitStack(testFile.issue), 'Expect convertTemplateToReact to throw an error');
     }
 });
+
+function omitStack(err) {
+    return _.omit(err, 'stack', 'toIssue');
+}
 
 /**
  * @param {ERR} err
@@ -72,19 +64,9 @@ function normalizeError(err) {
 test('invalid tests json', function (t) {
     var cli = require('../../src/cli');
     var context = require('../../src/context');
-    var files = [
-        {file: 'invalid-scope.rt', issue: new reactTemplates.RTCodeError("invalid scope part 'a in a in a'", -1, -1)},
-        {file: 'invalid-html.rt', issue: new reactTemplates.RTCodeError('Document should have a root element', -1, -1)},
-        {file: 'invalid-exp.rt', issue: new reactTemplates.RTCodeError("Failed to parse text '\n    {z\n'", 5, -1)},
-        {
-            file: 'invalid-lambda.rt',
-            issue: new reactTemplates.RTCodeError("when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [onClick='']", -1, -1)
-        },
-        {file: 'invalid-js.rt', issue: new reactTemplates.RTCodeError('Line 7: Unexpected token ILLEGAL', 187, -1)}
-    ];
-    t.plan(files.length);
+    t.plan(invalidFiles.length);
 
-    files.forEach(check);
+    invalidFiles.forEach(check);
 
     function check(testFile) {
         context.clear();
@@ -108,23 +90,12 @@ function errorEqualMessage(err, file) {
     return {
         index: err.index,
         line: err.line,
-        column: err.column || -1,
+        column: err.column,
+        startOffset: err.startOffset,
+        endOffset: err.endOffset,
         msg: err.message,
         level: 'ERROR',
         file: file
-    };
-}
-
-/**
- * @param {RTCodeError} err
- * @return {{index: number, line: number, message: string, name: string}}
- */
-function errorEqual(err) {
-    return {
-        index: err.index,
-        line: err.line,
-        message: err.message,
-        name: err.name
     };
 }
 
@@ -218,8 +189,6 @@ test('html tests', function (t) {
 });
 
 test('test context', function (t) {
-    t.plan(3);
-
     var context = require('../../src/context');
     context.clear();
     t.equal(context.hasErrors(), false);
@@ -227,39 +196,65 @@ test('test context', function (t) {
     t.equal(context.hasErrors(), true);
     context.clear();
     t.equal(context.hasErrors(), false);
+
+    t.end();
 });
 
 test('test shell', function (t) {
-    t.plan(3);
-
     var shell = require('../../src/shell');
     var context = require('../../src/context');
     var newContext = _.cloneDeep(context);
-    var output;
+    var outputJSON;
     newContext.options.format = 'json';
     newContext.report = function (text) {
-        output = text;
+        outputJSON = text;
     };
     var r = shell.printResults(newContext);
     t.equal(r, 0);
     context.error('hi', '', 1, 1);
     r = shell.printResults(newContext);
     t.equal(r, 1);
-    t.equal(output, '[\n  {\n    "level": "ERROR",\n    "msg": "hi",\n    "file": null,\n    "line": 1,\n    "column": 1,\n    "index": -1\n  }\n]');
+    var output = JSON.parse(outputJSON);
+    t.deepEqual(output, [{column: 1, endOffset: -1, file: null, index: -1, level: 'ERROR', line: 1, msg: 'hi', startOffset: -1}]);
     context.clear();
+    t.end();
 });
 
 test('test shell', function (t) {
-    t.plan(1);
-
     var filename = path.join(dataPath, 'div.rt');
     var cli = require('../../src/cli');
     var r = cli.execute(filename + ' -r --dry-run');
     t.equal(r, 0);
+    t.end();
+});
+
+test('test convertText', function (t) {
+    var texts = [
+        {input: '{}', expected: '()'},
+        {input: "a {'b'}", expected: '"a "+(\'b\')'}
+    ];
+    t.plan(texts.length);
+    texts.forEach(check);
+    function check(testData) {
+        var r = reactTemplates._test.convertText({}, {}, testData.input);
+        t.equal(r, testData.expected);
+    }
+});
+
+test('test convertText errors', function (t) {
+    var texts = [
+        {input: '{}', expected: '()'},
+        {input: "a {'b'}", expected: '"a "+(\'b\')'}
+    ];
+    t.plan(texts.length);
+    texts.forEach(check);
+    function check(testData) {
+        var r = reactTemplates._test.convertText({}, {}, testData.input);
+        t.equal(r, testData.expected);
+    }
 });
 
 test('util.isStale', function (t) {
-    t.plan(2);
     var a = path.join(dataPath, 'a.tmp');
     var b = path.join(dataPath, 'b.tmp');
 
@@ -280,4 +275,5 @@ test('util.isStale', function (t) {
 
     fs.unlinkSync(a);
     fs.unlinkSync(b);
+    t.end();
 });

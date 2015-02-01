@@ -57,25 +57,10 @@ function handleSingleFile(currentOptions, filename) {
         context.error('invalid file, only handle rt files', filename);
         return;// only handle html files
     }
-//    var html = fs.readFileSync(filename).toString();
-//    if (!html.match(/\<\!doctype jsx/)) {
-//        console.log('invalid file, missing header');
-//        return;
-//    }
-//    var js = reactTemplates.convertTemplateToReact(html);
-//    fs.writeFileSync(filename + '.js', js);
     try {
         api.convertFile(filename, filename + '.js', currentOptions, context);
     } catch (e) {
-        context.error(e.message, filename, e.line || -1, -1, e.index || -1);
-//        if (defaultOptions.json) {
-//            context.error(e.message, filename, e.line || -1, -1, e.index || -1);
-//            console.log(JSON.stringify(context.getMessages(), undefined, 2));
-//        } else {
-//            console.log('Error processing file: ' + filename + ', ' + e.message + ' line: ' + e.line || -1);
-//        }
-        // if (defaultOptions.stack)
-        // console.log(e.stack);
+        context.error(e.message, filename, e.line, e.column, e.startOffset, e.endOffset);
     }
 }
 
