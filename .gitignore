@@ -16,3 +16,7 @@ npm-debug.log
 ### bower ###
 /bower_components/*
 
+/web
+/target
+/coverage
+
