@@ -26,7 +26,7 @@ function convertFile(source, target, options, context) {
     }
 
     var html = fs.readFileSync(source).toString();
-    var shouldAddName = options.modules === 'none' && !options.name
+    var shouldAddName = options.modules === 'none' && !options.name;
     if (shouldAddName) {
         options.name = reactTemplates.normalizeName(path.basename(source, path.extname(source))) + 'RT';
     }
@@ -35,7 +35,7 @@ function convertFile(source, target, options, context) {
         fs.writeFileSync(target, js);
     }
     if (shouldAddName) {
-      delete options.name
+      delete options.name;
     }
 }
 
