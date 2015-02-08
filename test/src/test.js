@@ -158,7 +158,7 @@ function normalizeHtml(html) {
 }
 
 test('html tests', function (t) {
-    var files = ['scope.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt'];
+    var files = ['scope.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt'];
     t.plan(files.length);
 
     files.forEach(check);
@@ -231,7 +231,7 @@ test('test shell', function (t) {
 test('test convertText', function (t) {
     var texts = [
         {input: '{}', expected: '()'},
-        {input: "a {'b'}", expected: '"a "+(\'b\')'}
+        {input: "a {'b'}", expected: '"a ",(\'b\')'}
     ];
     t.plan(texts.length);
     texts.forEach(check);
@@ -244,7 +244,7 @@ test('test convertText', function (t) {
 test('test convertText errors', function (t) {
     var texts = [
         {input: '{}', expected: '()'},
-        {input: "a {'b'}", expected: '"a "+(\'b\')'}
+        {input: "a {'b'}", expected: '"a ",(\'b\')'}
     ];
     t.plan(texts.length);
     texts.forEach(check);
