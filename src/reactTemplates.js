@@ -90,11 +90,12 @@ var curlyMap = {'{': 1, '}': -1};
 function convertText(node, context, txt) {
     var res = '';
     var first = true;
+    var concatChar = node.type === 'text' ? ',' : '+';
     while (txt.indexOf('{') !== -1) {
         var start = txt.indexOf('{');
         var pre = txt.substr(0, start);
         if (pre) {
-            res += (first ? '' : ',') + JSON.stringify(pre);
+            res += (first ? '' : concatChar) + JSON.stringify(pre);
             first = false;
         }
         var curlyCounter = 1;
@@ -106,13 +107,13 @@ function convertText(node, context, txt) {
             throw RTCodeError.build("Failed to parse text '" + txt + "'", context, node);
         } else {
             var needsParens = start !== 0 || end !== txt.length - 1;
-            res += (first ? '' : ',') + (needsParens ? '(' : '') + txt.substr(start + 1, end - start - 2) + (needsParens ? ')' : '');
+            res += (first ? '' : concatChar) + (needsParens ? '(' : '') + txt.substr(start + 1, end - start - 2) + (needsParens ? ')' : '');
             first = false;
             txt = txt.substr(end);
         }
     }
     if (txt) {
-        res += (first ? '' : ',') + JSON.stringify(txt);
+        res += (first ? '' : concatChar) + JSON.stringify(txt);
     }
     if (res === '') {
         res = 'true';
