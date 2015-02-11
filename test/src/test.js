@@ -231,7 +231,7 @@ test('test shell', function (t) {
 test('test convertText', function (t) {
     var texts = [
         {input: '{}', expected: '()'},
-        {input: "a {'b'}", expected: '"a ",(\'b\')'}
+        {input: "a {'b'}", expected: '"a "+(\'b\')'}
     ];
     t.plan(texts.length);
     texts.forEach(check);
@@ -244,7 +244,7 @@ test('test convertText', function (t) {
 test('test convertText errors', function (t) {
     var texts = [
         {input: '{}', expected: '()'},
-        {input: "a {'b'}", expected: '"a ",(\'b\')'}
+        {input: "a {'b'}", expected: '"a "+(\'b\')'}
     ];
     t.plan(texts.length);
     texts.forEach(check);
