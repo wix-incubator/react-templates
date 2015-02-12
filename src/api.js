@@ -35,7 +35,7 @@ function convertFile(source, target, options, context) {
         fs.writeFileSync(target, js);
     }
     if (shouldAddName) {
-      delete options.name;
+        delete options.name;
     }
 }
 
