@@ -26,12 +26,16 @@ function convertFile(source, target, options, context) {
     }
 
     var html = fs.readFileSync(source).toString();
-    if (options.modules === 'none' && !options.name) {
+    var shouldAddName = options.modules === 'none' && !options.name;
+    if (shouldAddName) {
         options.name = reactTemplates.normalizeName(path.basename(source, path.extname(source))) + 'RT';
     }
     var js = convertTemplateToReact(html, options);
     if (!options.dryRun) {
         fs.writeFileSync(target, js);
+    }
+    if (shouldAddName) {
+      delete options.name;
     }
 }
 
