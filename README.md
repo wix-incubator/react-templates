@@ -10,7 +10,7 @@ Lightweight templates for [React](http://facebook.github.io/react/index.html).
 * Easy syntax that's similar to HTML, supported by most IDEs.
 * Clear separation of presentation and logic - almost zero HTML in component files.
 * Declarative coding ensures that the HTML that you write and the HTML you inspect look nearly identical.
-* Supports AMD, CommonJS, and globals.
+* Supports AMD, CommonJS, ES6, and globals.
 
 ## How does it work
 React Templates compiles an *.rt file (react template file - an extended HTML format) into a JavaScript file. This file, which uses AMD syntax, returns a function. When invoked, this function returns a virtual React DOM based on React.DOM elements and custom user components. 
@@ -340,6 +340,20 @@ function repeatItem1(item, itemIndex) {
     return React.createElement(MyComp, {}, React.createElement('div', {}, utils.toLower(item.name)));
 }
 module.exports = function () {
+    return _.map(items, repeatItem1.bind(this));
+};
+```
+###### Compiled (with ES6 flag):
+```javascript
+import { React } from 'react/addons';
+import { _ } from 'lodash';
+import { MyComp } from 'comps/myComp';
+import { utils } from 'utils/utils';
+
+function repeatItem1(item, itemIndex) {
+    return React.createElement(MyComp, {}, React.createElement('div', {}, utils.toLower(item.name)));
+}
+export default function () {
     return _.map(items, repeatItem1.bind(this));
 };
 ```

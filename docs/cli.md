@@ -25,7 +25,7 @@ $ rt <filename>[,<filename>] [<args>]
 Options:
   -h, --help           Show help.
   -c, --color          Use colors in output. - default: true
-  -m, --modules String Use output modules. (amd|commonjs|none) - default: none
+  -m, --modules String Use output modules. (amd|commonjs|es6|none) - default: none
   -r, --force          Force creation of output. skip file check. - default: false
   -f, --format String  Use a specific output format. (stylish|json) - default: stylish
   -t, --target-version String  React version to generate code for (0.12.1, 0.12.0, 0.11.2, 0.11.1, 0.11.0, 0.10.0) - default: 0.12.1

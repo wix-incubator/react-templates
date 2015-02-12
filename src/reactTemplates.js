@@ -4,7 +4,7 @@
 'use strict';
 var cheerio = require('cheerio');
 var _ = require('lodash');
-var esprima = require('esprima');
+var esprima = require('esprima-harmony');
 var escodegen = require('escodegen');
 var reactDOMSupport = require('./reactDOMSupport');
 var stringUtils = require('./stringUtils');
@@ -22,6 +22,7 @@ var tagTemplateCreateElement = _.template('React.createElement.apply(this,_.flat
 var commentTemplate = _.template(' /* <%= data %> */ ');
 var templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
 var templateCommonJSTemplate = _.template("'use strict';\n<%= vars %>\n\n<%= injectedFunctions %>\nmodule.exports = function(){ return <%= body %>};\n");
+var templateES6Template = _.template('<%= imports %>\n\n<%= injectedFunctions %>\nexport default function(){ return <%= body %>}\n');
 var templatePJSTemplate = _.template('var <%= name %> = function () {\n' +
                                 '<%= injectedFunctions %>\n' +
                                 'return <%= body %>\n' +
@@ -367,7 +368,8 @@ function convertTemplateToReact(html, options) {
     var requirePaths = _(defines).keys().map(function (reqName) { return '"' + reqName + '"'; }).value().join(',');
     var requireVars = _(defines).values().value().join(',');
     var vars = _(defines).map(function (reqVar, reqPath) { return 'var ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
-    var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars: vars, name: options.name};
+    var imports = _(defines).map(function (reqVar, reqPath) { return "import {" + reqVar + "} from '" + reqPath + "';"; }).join('\n');
+    var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars: vars, imports: imports, name: options.name};
     data.injectedFunctions = context.injectedFunctions.join('\n');
     var code = generate(data, options);
     try {
@@ -386,6 +388,9 @@ function generate(data, options) {
     }
     if (options.modules === 'commonjs') {
         return templateCommonJSTemplate(data);
+    }
+    if (options.modules === 'es6') {
+        return templateES6Template(data);
     }
     return templatePJSTemplate(data);
 }

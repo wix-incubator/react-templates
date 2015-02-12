@@ -131,6 +131,7 @@ test('conversion test commonjs', function (t) {
     var files = [
         {source: 'div.rt', expected: 'div.rt.commonjs.js', options: {modules: 'commonjs'}},
         {source: 'div.rt', expected: 'div.rt.amd.js', options: {modules: 'amd', name: 'div'}},
+        {source: 'div.rt', expected: 'div.rt.es6.js', options: {modules: 'es6', name: 'div'}},
         {source: 'div.rt', expected: 'div.rt.globals.js', options: {modules: 'none', name: 'div'}}
     ];
     t.plan(files.length);
