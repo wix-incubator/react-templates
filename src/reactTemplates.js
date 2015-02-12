@@ -312,21 +312,21 @@ function isTag(node) {
 }
 
 function handleSelfClosingHtmlTags(nodes) {
-  return _(nodes)
-    .map(function (node) {
-      var externalNodes = [];
-      node.children = handleSelfClosingHtmlTags(node.children);
-      if (node.type === 'tag' && _.contains(htmlSelfClosingTags, node.name)) {
-        externalNodes = _.filter(node.children, isTag);
-        _.forEach(externalNodes, function (child) {
-          child.parent = node;
-        });
-        node.children = _.reject(node.children, isTag);
-      }
-      return [node].concat(externalNodes);
-    })
-    .flatten()
-    .value();
+    return _(nodes)
+        .map(function (node) {
+            var externalNodes = [];
+            node.children = handleSelfClosingHtmlTags(node.children);
+            if (node.type === 'tag' && _.contains(htmlSelfClosingTags, node.name)) {
+                externalNodes = _.filter(node.children, isTag);
+                _.forEach(externalNodes, function (child) {
+                    child.parent = node;
+                });
+                node.children = _.reject(node.children, isTag);
+            }
+            return [node].concat(externalNodes);
+        })
+        .flatten()
+        .value();
 }
 
 /**

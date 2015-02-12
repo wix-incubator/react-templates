@@ -23,7 +23,7 @@ function executeOptions(currentOptions) {
     if (currentOptions.version) {
         console.log('v' + pkg.version);
     } else if (currentOptions.help) {
-        if  (files.length) {
+        if (files.length) {
             console.log(options.generateHelpForOption(files[0]));
         } else {
             console.log(options.generateHelp());

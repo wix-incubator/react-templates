@@ -67,6 +67,15 @@ module.exports = function (grunt) {
                 options: {
                     spawn: false
                 }
+            },
+            test: {
+                files: [
+                    'src/**/*.*', 'test/**/*.*'
+                ],
+                tasks: ['test'],
+                options: {
+                    spawn: false
+                }
             }
         },
         uglify: {
