@@ -338,7 +338,7 @@ function handleSelfClosingHtmlTags(nodes) {
 function convertTemplateToReact(html, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = _.defaults({}, options, defaultOptions);
-    var defines = {'react/addons': 'React', lodash: '_'};
+    var defines = options.defines ? options.defines : {'react/addons': 'React', lodash: '_'};
     var context = defaultContext(html, options);
     var rootTags = _.filter(rootNode.root()[0].children, {type: 'tag'});
     rootTags = handleSelfClosingHtmlTags(rootTags);
