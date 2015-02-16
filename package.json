@@ -25,7 +25,7 @@
     "cheerio": "^0.18.0",
     "escodegen": "^1.6.1",
     "esprima": "^2.0.0",
-    "lodash": "^3.1.0",
+    "lodash": "^3.2.0",
     "optionator": "^0.5.0",
     "text-table": "^0.2.0"
   },
