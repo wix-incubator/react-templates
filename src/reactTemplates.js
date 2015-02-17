@@ -26,6 +26,7 @@ var templatePJSTemplate = _.template('var <%= name %> = function () {\n' +
                                 '<%= injectedFunctions %>\n' +
                                 'return <%= body %>\n' +
                                 '};\n');
+var templateTypescriptTemplate = _.template("<%= vars %>\n\n<%= injectedFunctions %>\nvar fn = function() { return <%= body %> };\nexport = fn\n");
 var htmlSelfClosingTags = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
 var templateProp = 'rt-repeat';
@@ -352,7 +353,12 @@ function convertTemplateToReact(html, options) {
             } else if (tag.children.length) {
                 throw RTCodeError.build('rt-require may have no children', context, tag);
             } else {
-                defines[tag.attribs.dependency] = tag.attribs.as;
+                if (options.modules !== 'typescript') {
+                    defines[tag.attribs.dependency] = tag.attribs.as;
+                }
+                else {
+                    defines['./'+tag.attribs.dependency] = tag.attribs.as;
+                }
             }
         } else if (firstTag === null) {
             firstTag = tag;
@@ -366,16 +372,25 @@ function convertTemplateToReact(html, options) {
     var body = convertHtmlToReact(firstTag, context);
     var requirePaths = _(defines).keys().map(function (reqName) { return '"' + reqName + '"'; }).value().join(',');
     var requireVars = _(defines).values().value().join(',');
-    var vars = _(defines).map(function (reqVar, reqPath) { return 'var ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
+    var vars;
+    if (options.modules !== 'typescript') {
+        vars = _(defines).map(function (reqVar, reqPath) { return 'var ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
+    }
+    else {
+        vars = _(defines).map(function (reqVar, reqPath) { return 'import ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
+    }
     var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars: vars, name: options.name};
     data.injectedFunctions = context.injectedFunctions.join('\n');
     var code = generate(data, options);
-    try {
-        var tree = esprima.parse(code, {range: true, tokens: true, comment: true});
-        tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
-        code = escodegen.generate(tree, {comment: true});
-    } catch (e) {
-        throw new RTCodeError(e.message, e.index, -1);
+    if (options.modules !== 'typescript') {
+        try {
+            var tree = esprima.parse( code, {range: true, tokens: true, comment: true} );
+            tree = escodegen.attachComments( tree, tree.comments, tree.tokens );
+            code = escodegen.generate( tree, {comment: true} );
+        }
+        catch ( e ) {
+            throw new RTCodeError( e.message, e.index, -1 );
+        }
     }
     return code;
 }
@@ -386,6 +401,9 @@ function generate(data, options) {
     }
     if (options.modules === 'commonjs') {
         return templateCommonJSTemplate(data);
+    }
+    if (options.modules === 'typescript') {
+        return templateTypescriptTemplate(data);
     }
     return templatePJSTemplate(data);
 }
