@@ -58,7 +58,13 @@ function handleSingleFile(currentOptions, filename) {
         return;// only handle html files
     }
     try {
-        api.convertFile(filename, filename + '.js', currentOptions, context);
+        var ext;
+        if (currentOptions.modules !== 'typescript') {
+            ext = '.js';
+        } else {
+            ext = '.ts';
+        }
+        api.convertFile(filename, filename + ext, currentOptions, context);
     } catch (e) {
         context.error(e.message, filename, e.line, e.column, e.startOffset, e.endOffset);
     }

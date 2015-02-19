@@ -47,7 +47,7 @@ This option allows to override the output file even if there are no changes.
 
 ### `-m`, `--modules`
 
-Use output modules. (amd|commonjs|none) - default: none
+Use output modules. (amd|commonjs|none|typescript) - default: none
 
 ### `-f`, `--format`
 
