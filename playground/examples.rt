@@ -65,4 +65,11 @@
         </p>
         <viewer rt-props="this.state.cjs" mode="javascript" />
     </div>
+    <div id="es6" class="example">
+        <h3>ES6</h3>
+        <p>
+            This example shows the rt-require sample output with ES6 support.
+        </p>
+        <viewer rt-props="this.state.es6" mode="javascript" />
+    </div>
 </div>

@@ -33,6 +33,9 @@ define([
         }, React.createElement('h3', {}, 'AMD'), React.createElement('p', {}, '\n            This example shows the rt-require sample output with AMD support.\n        '), React.createElement(viewer, _.merge({}, { 'mode': 'javascript' }, this.state.amd))), React.createElement('div', {
             'id': 'commonjs',
             'className': 'example'
-        }, React.createElement('h3', {}, 'CommonJS'), React.createElement('p', {}, '\n            This example shows the rt-require sample output with CommonJS support.\n        '), React.createElement(viewer, _.merge({}, { 'mode': 'javascript' }, this.state.cjs))));
+        }, React.createElement('h3', {}, 'CommonJS'), React.createElement('p', {}, '\n            This example shows the rt-require sample output with CommonJS support.\n        '), React.createElement(viewer, _.merge({}, { 'mode': 'javascript' }, this.state.cjs))), React.createElement('div', {
+            'id': 'es6',
+            'className': 'example'
+        }, React.createElement('h3', {}, 'ES6'), React.createElement('p', {}, '\n            This example shows the rt-require sample output with ES6 support.\n        '), React.createElement(viewer, _.merge({}, { 'mode': 'javascript' }, this.state.es6))));
     };
 });

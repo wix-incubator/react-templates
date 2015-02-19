@@ -29,10 +29,12 @@ define(['lodash', 'react', './examples.rt',
         getInitialState: function () {
             var codeAmd = window.reactTemplates.convertTemplateToReact(rtRequireRT, {modules: 'amd', name: 'template'});
             var codeCJS = window.reactTemplates.convertTemplateToReact(rtRequireRT, {modules: 'commonjs', name: 'template'});
+            var codeES6 = window.reactTemplates.convertTemplateToReact(rtRequireRT, {modules: 'es6', name: 'template'});
             return {
                 rtRequire: {value: rtRequireRT},
                 amd: {value: codeAmd},
                 cjs: {value: codeCJS},
+                es6: {value: codeES6},
                 samples: samples
             };
         },
