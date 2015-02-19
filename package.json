@@ -24,7 +24,7 @@
     "chalk": "^0.5.1",
     "cheerio": "^0.18.0",
     "escodegen": "^1.6.1",
-    "esprima": "^2.0.0",
+    "esprima-harmony": "^7001.1.0-dev-harmony-fb",
     "lodash": "^3.2.0",
     "optionator": "^0.5.0",
     "text-table": "^0.2.0"

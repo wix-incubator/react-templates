@@ -45,7 +45,7 @@ module.exports = optionator({
         alias: 'm',
         default: 'none',
         type: 'String',
-        description: 'Use output modules. (amd|commonjs|none|typescript)'
+        description: 'Use output modules. (amd|commonjs|none|es6|typescript)'
     }, {
         option: 'name',
         alias: 'n',

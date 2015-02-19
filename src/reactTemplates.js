@@ -4,7 +4,7 @@
 'use strict';
 var cheerio = require('cheerio');
 var _ = require('lodash');
-var esprima = require('esprima');
+var esprima = require('esprima-harmony');
 var escodegen = require('escodegen');
 var reactDOMSupport = require('./reactDOMSupport');
 var stringUtils = require('./stringUtils');
@@ -20,13 +20,24 @@ var tagTemplate = _.template('<%= name %>.apply(this,_.flatten([<%= props %><%= 
 var simpleTagTemplateCreateElement = _.template('React.createElement(<%= name %>,<%= props %><%= children %>)');
 var tagTemplateCreateElement = _.template('React.createElement.apply(this,_.flatten([<%= name %>,<%= props %><%= children %>]))');
 var commentTemplate = _.template(' /* <%= data %> */ ');
+
 var templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
 var templateCommonJSTemplate = _.template("'use strict';\n<%= vars %>\n\n<%= injectedFunctions %>\nmodule.exports = function(){ return <%= body %>};\n");
+var templateES6Template = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nexport default function(){ return <%= body %>}\n');
 var templatePJSTemplate = _.template('var <%= name %> = function () {\n' +
                                 '<%= injectedFunctions %>\n' +
                                 'return <%= body %>\n' +
                                 '};\n');
 var templateTypescriptTemplate = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nvar fn = function() { return <%= body %> };\nexport = fn\n');
+
+var templates = {
+    amd: templateAMDTemplate,
+    commonjs: templateCommonJSTemplate,
+    typescript: templateTypescriptTemplate,
+    es6: templateES6Template,
+    none: templatePJSTemplate
+};
+
 var htmlSelfClosingTags = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
 var templateProp = 'rt-repeat';
@@ -338,7 +349,7 @@ function handleSelfClosingHtmlTags(nodes) {
 function convertTemplateToReact(html, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = _.defaults({}, options, defaultOptions);
-    var defines = {'react/addons': 'React', lodash: '_'};
+    var defines = options.defines ? options.defines : {'react/addons': 'React', lodash: '_'};
     var context = defaultContext(html, options);
     var rootTags = _.filter(rootNode.root()[0].children, {type: 'tag'});
     rootTags = handleSelfClosingHtmlTags(rootTags);
@@ -373,6 +384,8 @@ function convertTemplateToReact(html, options) {
     var vars;
     if (options.modules === 'typescript') {
         vars = _(defines).map(function (reqVar, reqPath) { return 'import ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
+    } else if (options.modules === 'es6') {
+        vars = _(defines).map(function (reqVar, reqPath) { return 'import {' + reqVar + "} from '" + reqPath + "';"; }).join('\n');
     } else {
         vars = _(defines).map(function (reqVar, reqPath) { return 'var ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
     }
@@ -392,16 +405,8 @@ function convertTemplateToReact(html, options) {
 }
 
 function generate(data, options) {
-    if (options.modules === 'amd') {
-        return templateAMDTemplate(data);
-    }
-    if (options.modules === 'commonjs') {
-        return templateCommonJSTemplate(data);
-    }
-    if (options.modules === 'typescript') {
-        return templateTypescriptTemplate(data);
-    }
-    return templatePJSTemplate(data);
+    var template = templates[options.modules];
+    return template(data);
 }
 
 /**
