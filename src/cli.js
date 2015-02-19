@@ -61,9 +61,8 @@ function handleSingleFile(currentOptions, filename) {
         var ext;
         if (currentOptions.modules !== 'typescript') {
             ext = '.js';
-        }
-        else {
-            ext='.ts';
+        } else {
+            ext = '.ts';
         }
         api.convertFile(filename, filename + ext, currentOptions, context);
     } catch (e) {
