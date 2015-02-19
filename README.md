@@ -349,7 +349,6 @@ import { React } from 'react/addons';
 import { _ } from 'lodash';
 import { MyComp } from 'comps/myComp';
 import { utils } from 'utils/utils';
-
 function repeatItem1(item, itemIndex) {
     return React.createElement(MyComp, {}, React.createElement('div', {}, utils.toLower(item.name)));
 }
