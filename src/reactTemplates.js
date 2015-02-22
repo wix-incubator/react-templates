@@ -49,7 +49,7 @@ var propsProp = 'rt-props';
 var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.12.2'};
 
 /**
- * @param context
+ * @param {Context} context
  * @return {boolean}
  */
 function shouldUseCreateElement(context) {
@@ -92,6 +92,11 @@ function concatChildren(children) {
  * @const
  */
 var curlyMap = {'{': 1, '}': -1};
+
+/**
+ * @typedef {{boundParams: Array.<string>, injectedFunctions: Array.<string>, html: string, options: *}} Context
+ */
+
 
 /**
  * @param node
@@ -144,6 +149,13 @@ function isStringOnlyCode(txt) {
     return txt.length && txt.charAt(0) === '{' && txt.charAt(txt.length - 1) === '}';
 }
 
+/**
+ * @param {Context} context
+ * @param {string} namePrefix
+ * @param {string} body
+ * @param {*?} params
+ * @return {string}
+ */
 function generateInjectedFunc(context, namePrefix, body, params) {
     params = params || context.boundParams;
     var generatedFuncName = namePrefix.replace(',', '') + (context.injectedFunctions.length + 1);
@@ -153,6 +165,11 @@ function generateInjectedFunc(context, namePrefix, body, params) {
     return generatedFuncName;
 }
 
+/**
+ * @param node
+ * @param {Context} context
+ * @return {string}
+ */
 function generateProps(node, context) {
 //    console.log(node);
     var props = {};
@@ -203,6 +220,11 @@ function generateProps(node, context) {
     }).join(',') + '}';
 }
 
+/**
+ * @param {string} tagName
+ * @param context
+ * @return {string}
+ */
 function convertTagNameToConstructor(tagName, context) {
     var isHtmlTag = _.contains(reactDOMSupport[context.options.targetVersion], tagName);
     if (shouldUseCreateElement(context)) {
@@ -212,6 +234,11 @@ function convertTagNameToConstructor(tagName, context) {
     return isHtmlTag ? 'React.DOM.' + tagName : tagName;
 }
 
+/**
+ * @param {string} html
+ * @param options
+ * @return {Context}
+ */
 function defaultContext(html, options) {
     return {
         boundParams: [],
@@ -221,12 +248,21 @@ function defaultContext(html, options) {
     };
 }
 
+/**
+ * @param node
+ * @return {boolean}
+ */
 function hasNonSimpleChildren(node) {
     return _.any(node.children, function (child) {
         return child.type === 'tag' && child.attribs[templateProp];
     });
 }
 
+/**
+ * @param node
+ * @param {Context} context
+ * @return {string}
+ */
 function convertHtmlToReact(node, context) {
     if (node.type === 'tag' || node.type === 'style') {
         context = {
@@ -319,6 +355,10 @@ function convertHtmlToReact(node, context) {
 //  });
 //  return html;
 //}
+/**
+ * @param node
+ * @return {boolean}
+ */
 function isTag(node) {
     return node.type === 'tag';
 }
@@ -343,7 +383,7 @@ function handleSelfClosingHtmlTags(nodes) {
 
 /**
  * @param {string} html
- * @param {{modules:string}?} options
+ * @param {{modules:string,defines:*}?} options
  * @return {string}
  */
 function convertTemplateToReact(html, options) {
@@ -412,7 +452,7 @@ function generate(data, options) {
 /**
  * @param {string} code
  * @param node
- * @param context
+ * @param {Context} context
  */
 function validateJS(code, node, context) {
     try {
