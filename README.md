@@ -59,8 +59,9 @@ rt [file.rt|dir]* [options]
 
 See more on CLI usage [here](https://github.com/wix/react-templates/blob/gh-pages/docs/cli.md).
 
-In most cases, this package will be wrapped in a Grunt task, so CLI will not be used explicitly:
-[grunt-react-templates](https://github.com/wix/grunt-react-templates).
+In most cases, this package will be wrapped in a build task, so CLI will not be used explicitly:
+* Grunt: [grunt-react-templates](https://github.com/wix/grunt-react-templates)
+* Broccoli: [broccoli-react-templates](https://github.com/kraftwer1/broccoli-react-templates)
 
 # Template directives and syntax
 
