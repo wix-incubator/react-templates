@@ -97,7 +97,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
         templateSource: '',
         validHTML: true,
         validProps: true,
-        setTimeout: function() {
+        setTimeout: function () {
             //console.log('setTimeout');
             clearTimeout(this.timeoutID);
             this.timeoutID = setTimeout.apply(null, arguments);
@@ -171,7 +171,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
         },
         showError: function (e, editor) {
             var mountNode = this.refs.mount.getDOMNode();
-            this.setTimeout(function() {
+            this.setTimeout(function () {
                 showMessage(editor, e.message);
                 React.render(
                     React.createElement('div', {className: 'playground-error'}, e.toString()),
@@ -181,7 +181,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
         },
         showErrorAnnotation: function (annot, editor) {
             var mountNode = this.refs.mount.getDOMNode();
-            this.setTimeout(function() {
+            this.setTimeout(function () {
                 editor.annotate(annot);
                 React.render(
                     React.createElement('div', {className: 'playground-error'}, annot.message),
@@ -229,7 +229,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             //this.updateSample(currentState);
             return currentState;
         },
-        componentDidMount: function() {
+        componentDidMount: function () {
             if (this.props.fiddle) {
                 window.addEventListener('resize', this.calcSize);
                 this.calcSize();
@@ -246,10 +246,10 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
         componentDidUpdate: function () {
             this.renderSample();
         },
-        componentWillUnmount: function(){
+        componentWillUnmount: function (){
             window.removeEventListener('resize', this.calcSize);
         },
-        calcSize: function() {
+        calcSize: function () {
             var contentHeight = $(window).height() - $('#header').height();
             var height = contentHeight / 2 - 10;
 

@@ -44,7 +44,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror'], fu
             inner.className = 'CodeMirror-lint-marker-multiple';
         }
         if (tooltips !== false) {
-            CodeMirror.on(inner, 'mouseover', function(e) {
+            CodeMirror.on(inner, 'mouseover', function (e) {
                 showTooltipFor(e, labels, inner);
             });
         }
@@ -84,7 +84,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror'], fu
             rm(tt);
         }
         tt.style.opacity = 0;
-        setTimeout(function() { rm(tt); }, 600);
+        setTimeout(function () { rm(tt); }, 600);
     }
 
     function showTooltipFor(e, content, node) {
@@ -93,7 +93,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror'], fu
             CodeMirror.off(node, 'mouseout', hide);
             if (tooltip) { hideTooltip(tooltip); tooltip = null; }
         }
-        var poll = setInterval(function() {
+        var poll = setInterval(function () {
             if (tooltip) {
                 for (var n = node;; n = n.parentNode) {
                     if (n === document.body) {
