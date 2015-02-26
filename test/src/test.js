@@ -160,7 +160,7 @@ function normalizeHtml(html) {
 }
 
 test('html tests', function (t) {
-    var files = ['scope.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt', 'js-in-attr.rt'];
+    var files = ['scope.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt', 'js-in-attr.rt', 'props-class.rt'];
     t.plan(files.length);
 
     files.forEach(check);

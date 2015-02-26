@@ -13,7 +13,9 @@ var RTCodeError = rtError.RTCodeError;
 
 var repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
 var ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
-var propsTemplate = _.template('_.merge({}, <%= generatedProps %>, <%= rtProps %>)');
+var propsTemplateSimple = _.template('_.assign({}, <%= generatedProps %>, <%= rtProps %>)');
+var propsTemplate = _.template('mergeProps( <%= generatedProps %>, <%= rtProps %>)');
+var propsMergeFunction = 'function mergeProps(inline,external) {\n var res = _.assign({},inline,external)\nif (inline.hasOwnProperty(\'style\')) {\n res.style = _.defaults(res.style, inline.style);\n}\n if (inline.hasOwnProperty(\'className\') && external.hasOwnProperty(\'className\')) {\n res.className = external.className + \' \' + inline.className;\n} return res;\n}\n';
 var classSetTemplate = _.template('React.addons.classSet(<%= classSet %>)');
 var simpleTagTemplate = _.template('<%= name %>(<%= props %><%= children %>)');
 var tagTemplate = _.template('<%= name %>.apply(this,_.flatten([<%= props %><%= children %>]))');
@@ -307,7 +309,16 @@ function convertHtmlToReact(node, context) {
         }
         data.props = generateProps(node, context);
         if (node.attribs[propsProp]) {
-            data.props = propsTemplate({generatedProps: data.props, rtProps: node.attribs[propsProp]});
+            if (data.props === '{}') {
+                data.props = node.attribs[propsProp];
+            } else if (!node.attribs.style && !node.attribs.class) {
+                data.props = propsTemplateSimple({generatedProps: data.props, rtProps: node.attribs[propsProp]});
+            } else {
+                data.props = propsTemplate({generatedProps: data.props, rtProps: node.attribs[propsProp]});
+                if (!_.contains(context.injectedFunctions,propsMergeFunction)) {
+                    context.injectedFunctions.push(propsMergeFunction);
+                }
+            }
         }
         if (node.attribs[ifProp]) {
             data.condition = node.attribs[ifProp].trim();
