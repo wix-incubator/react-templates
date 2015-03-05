@@ -11,7 +11,7 @@ var stringUtils = require('./stringUtils');
 var rtError = require('./RTCodeError');
 var RTCodeError = rtError.RTCodeError;
 
-var repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
+var repeatTemplate = _.template('(function(_<%= repeatBinds %>, collection) {\nvar pos = 0;\n return _.map(collection, function() {\nvar args = Array.prototype.slice.call(arguments, 0, 2);\nargs.push(pos++);\nreturn <%= repeatFunction %>.apply(_this, [<%= baseBinds %>].concat(args));});}).call(null, <%= repeatBinds %>, <%= collection %>)\n');
 var ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
 var propsTemplateSimple = _.template('_.assign({}, <%= generatedProps %>, <%= rtProps %>)');
 var propsTemplate = _.template('mergeProps( <%= generatedProps %>, <%= rtProps %>)');
@@ -306,6 +306,7 @@ function convertHtmlToReact(node, context) {
             validateJS(data.collection, node, context);
             stringUtils.addIfNotThere(context.boundParams, data.item);
             stringUtils.addIfNotThere(context.boundParams, data.item + 'Index');
+            stringUtils.addIfNotThere(context.boundParams, data.item + 'Pos');
         }
         data.props = generateProps(node, context);
         if (node.attribs[propsProp]) {
@@ -337,9 +338,11 @@ function convertHtmlToReact(node, context) {
 
         if (node.attribs[templateProp]) {
             data.repeatFunction = generateInjectedFunc(context, 'repeat' + stringUtils.capitalize(data.item), 'return ' + data.body);
-            data.repeatBinds = ['this'].concat(_.reject(context.boundParams, function (param) {
-                return (param === data.item || param === data.item + 'Index');
-            }));
+            var baseBinds = _.reject(context.boundParams, function (param) {
+                return (param === data.item || param === data.item + 'Index' || param === data.item + 'Pos');
+            });
+            data.baseBinds = [].concat(baseBinds);
+            data.repeatBinds = ['this'].concat(baseBinds);
             data.body = repeatTemplate(data);
         }
         if (node.attribs[ifProp]) {
