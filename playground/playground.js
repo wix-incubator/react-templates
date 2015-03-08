@@ -154,6 +154,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             //this.validHTML = this.sampleFunc !== emptyFunc;
             this.validHTML = true;
             this.sampleRender = generateRenderFunc(this.sampleFunc);
+            var editor;
             try {
                 this.validProps = true;
                 //console.log(state.templateProps);
@@ -163,7 +164,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             } catch (e) {
                 this.validProps = false;
                 this.sample = null;
-                var editor = this.refs.editorCode;
+                editor = this.refs.editorCode;
                 this.showError(e, editor);
             }
             //classBase.render = this.sampleRender;
@@ -202,11 +203,11 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             var editor = this.refs.editorRT;
             var name = window.reactTemplates.normalizeName(state.name) + 'RT';
             var code = null;
+            var annot = null;
             try {
                 code = window.reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g, ''), {modules: 'none', name: name});
                 clearMessage(editor);
             } catch (e) {
-                var annot = null;
                 if (e.name === 'RTCodeError') {
                     //index: -1 line: -1 message: "Document should have a root element" name: "RTCodeError"
                     annot = {line: e.line, message: e.message, index: e.index};

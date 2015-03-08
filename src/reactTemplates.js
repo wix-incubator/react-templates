@@ -315,7 +315,7 @@ function convertHtmlToReact(node, context) {
                 data.props = propsTemplateSimple({generatedProps: data.props, rtProps: node.attribs[propsProp]});
             } else {
                 data.props = propsTemplate({generatedProps: data.props, rtProps: node.attribs[propsProp]});
-                if (!_.contains(context.injectedFunctions,propsMergeFunction)) {
+                if (!_.contains(context.injectedFunctions, propsMergeFunction)) {
                     context.injectedFunctions.push(propsMergeFunction);
                 }
             }
