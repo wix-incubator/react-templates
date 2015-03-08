@@ -415,11 +415,11 @@ function convertTemplateToReact(html, options) {
             } else if (tag.children.length) {
                 throw RTCodeError.build('rt-require may have no children', context, tag);
             }
-            //if (options.modules === 'typescript') {
-            //    defines['./' + tag.attribs.dependency] = tag.attribs.as;
-            //} else {
-            defines[tag.attribs.dependency] = tag.attribs.as;
-            //}
+            if (options.modules === 'typescript') {
+                defines['./' + tag.attribs.dependency] = tag.attribs.as;
+            } else {
+                defines[tag.attribs.dependency] = tag.attribs.as;
+            }
         } else if (firstTag === null) {
             firstTag = tag;
         } else {
