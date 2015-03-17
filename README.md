@@ -61,7 +61,9 @@ See more on CLI usage [here](https://github.com/wix/react-templates/blob/gh-page
 
 In most cases, this package will be wrapped in a build task, so CLI will not be used explicitly:
 * Grunt: [grunt-react-templates](https://github.com/wix/grunt-react-templates)
+* Gulp: [gulp-react-templates](https://github.com/wix/gulp-react-templates)
 * Broccoli: [broccoli-react-templates](https://github.com/kraftwer1/broccoli-react-templates)
+* Browserify plugin: [react-templatify](https://www.npmjs.com/package/react-templatify)
 
 # Template directives and syntax
 
