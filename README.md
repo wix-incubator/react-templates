@@ -116,20 +116,27 @@ Repeats a DOM node with its subtree for each item in an array. The syntax is `rt
 
 ###### Sample:
 ```html
-<div rt-repeat="myNum in this.getMyNumbers()">{myNumIndex}. {myNum}</div>
+<div rt-repeat="myNum in this.getMyNumbers()">{myNumPos}. {myNumIndex}. {myNum}</div>
 ```
 ###### Compiled:
 ```javascript
 define([
-    'react',
+    'react/addons',
     'lodash'
 ], function (React, _) {
     'use strict';
-    function repeatMyNum1(myNum, myNumIndex) {
-        return React.DOM.div({}, myNumIndex + '. ' + myNum);
+    function repeatMyNum1(myNum, myNumIndex, myNumPos) {
+        return React.createElement('div', {}, myNumPos, '. ', myNumIndex, '. ', myNum);
     }
     return function () {
-        return _.map(this.getMyNumbers(), repeatMyNum1.bind(this));
+        return function (_this, collection) {
+            var pos = 0;
+            return _.map(collection, function () {
+                var args = Array.prototype.slice.call(arguments, 0, 2);
+                args.push(pos++);
+                return repeatMyNum1.apply(_this, [].concat(args));
+            });
+        }.call(null, this, this.getMyNumbers());
     };
 });
 ```
