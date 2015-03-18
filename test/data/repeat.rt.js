@@ -22,10 +22,10 @@ define([
         }, 'Mock'));
     }
     return function () {
-        return React.createElement.apply(this, _.flatten([
+        return React.createElement.apply(this, [
             'p',
             {},
             _.map(this.props.things, repeatItems3.bind(this))
-        ]));
+        ]);
     };
 });
