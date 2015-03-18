@@ -18,9 +18,9 @@ var propsTemplate = _.template('mergeProps( <%= generatedProps %>, <%= rtProps %
 var propsMergeFunction = 'function mergeProps(inline,external) {\n var res = _.assign({},inline,external)\nif (inline.hasOwnProperty(\'style\')) {\n res.style = _.defaults(res.style, inline.style);\n}\n if (inline.hasOwnProperty(\'className\') && external.hasOwnProperty(\'className\')) {\n res.className = external.className + \' \' + inline.className;\n} return res;\n}\n';
 var classSetTemplate = _.template('React.addons.classSet(<%= classSet %>)');
 var simpleTagTemplate = _.template('<%= name %>(<%= props %><%= children %>)');
-var tagTemplate = _.template('<%= name %>.apply(this,_.flatten([<%= props %><%= children %>]))');
+var tagTemplate = _.template('<%= name %>.apply(this, [<%= props %><%= children %>])');
 var simpleTagTemplateCreateElement = _.template('React.createElement(<%= name %>,<%= props %><%= children %>)');
-var tagTemplateCreateElement = _.template('React.createElement.apply(this,_.flatten([<%= name %>,<%= props %><%= children %>]))');
+var tagTemplateCreateElement = _.template('React.createElement.apply(this, [<%= name %>,<%= props %><%= children %>])');
 var commentTemplate = _.template(' /* <%= data %> */ ');
 
 var templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
