@@ -148,6 +148,21 @@ test('convert div with all module types', function (t) {
     }
 });
 
+test('convert jsrt and test source results', function (t) {
+    var files = ['simple.jsrt'];
+    t.plan(files.length);
+    files.forEach(check);
+
+    function check(file) {
+        var filename = path.join(dataPath, file);
+        var js = readFileNormalized(filename);
+        var expected = readFileNormalized(path.join(dataPath, file.replace('.jsrt','.js')));
+//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
+        var actual = reactTemplates.convertJSRTToJS(js).replace(/\r/g, '').trim();
+        compareAndWrite(t, actual, expected, filename);
+    }
+});
+
 /**
  * @param {string} html
  * @return {string}
