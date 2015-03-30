@@ -7,6 +7,14 @@ define(['react', 'lodash'/*, 'ace'*/], function (React, _/*, ace*/) {
 
     var editor = React.createClass({
         displayName: 'BraceEditor',
+        propTypes: {
+            id: React.PropTypes.string,
+            mode: React.PropTypes.string,
+            readOnly: React.PropTypes.bool,
+            value: React.PropTypes.string,
+            valueLink: React.PropTypes.string,
+            onChange: React.PropTypes.function
+        },
         getInitialState: function () {
             return {
                 editorId: _.uniqueId()

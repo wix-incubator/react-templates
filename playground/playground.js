@@ -92,7 +92,10 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
         propTypes: {
             direction: React.PropTypes.oneOf(['horizontal', 'vertical']),
             codeVisible: React.PropTypes.bool,
-            fiddle: React.PropTypes.bool
+            fiddle: React.PropTypes.bool,
+            templateHTML: React.PropTypes.string,
+            templateProps: React.PropTypes.string,
+            name: React.PropTypes.string
         },
         templateSource: '',
         validHTML: true,

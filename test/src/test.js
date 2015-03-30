@@ -180,8 +180,7 @@ test('html tests', function (t) {
             return content.apply(this, requirements);
         };
         var comp = React.createFactory(React.createClass({
-            /* eslint no-eval:0 */
-            render: eval(code)
+            render: eval(code) //eslint-disable-line no-eval
         }));
         var actual = React.renderToStaticMarkup(comp());
         actual = normalizeHtml(actual);
