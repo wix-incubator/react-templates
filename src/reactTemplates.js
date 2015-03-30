@@ -31,14 +31,17 @@ var templatePJSTemplate = _.template('var <%= name %> = function () {\n' +
                                 'return <%= body %>\n' +
                                 '};\n');
 var templateTypescriptTemplate = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nvar fn = function() { return <%= body %> };\nexport = fn\n');
+var templateJSRTTemplate = _.template('(function () {\n <%= injectedFunctions %>\n return function(){\nreturn <%= body %>}}\n)()');
 
 var templates = {
     amd: templateAMDTemplate,
     commonjs: templateCommonJSTemplate,
     typescript: templateTypescriptTemplate,
     es6: templateES6Template,
-    none: templatePJSTemplate
+    none: templatePJSTemplate,
+    jsrt: templateJSRTTemplate
 };
+
 
 var htmlSelfClosingTags = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
@@ -443,14 +446,32 @@ function convertTemplateToReact(html, options) {
     var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars: vars, name: options.name};
     data.injectedFunctions = context.injectedFunctions.join('\n');
     var code = generate(data, options);
-    if (options.modules !== 'typescript') {
+    if (options.modules !== 'typescript' && options.modules !== 'jsrt') {
         try {
             var tree = esprima.parse(code, {range: true, tokens: true, comment: true});
             tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
             code = escodegen.generate(tree, {comment: true});
         } catch (e) {
+            console.log(code);
             throw new RTCodeError(e.message, e.index, -1);
         }
+    }
+    return code;
+}
+
+function convertJSRTToJS(text, options) {
+    options = _.defaults({}, options, defaultOptions);
+    options.modules = 'jsrt';
+    var templateMatcherJSRT = /<template>([^]+)<\/template>/gm;
+    var code = text.replace(templateMatcherJSRT, function (template, html) {
+        return convertTemplateToReact(html, options).replace(/;$/,'');
+    });
+    try {
+        var tree = esprima.parse(code, {range: true, tokens: true, comment: true});
+        tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
+        code = escodegen.generate(tree, {comment: true});
+    } catch (e) {
+        throw new RTCodeError(e.message, e.index, -1);
     }
     return code;
 }
@@ -483,6 +504,7 @@ function normalizeName(name) {
 
 module.exports = {
     convertTemplateToReact: convertTemplateToReact,
+    convertJSRTToJS: convertJSRTToJS,
     RTCodeError: RTCodeError,
     normalizeName: normalizeName,
     _test: {

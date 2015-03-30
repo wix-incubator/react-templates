@@ -1,0 +1,10 @@
+define(['react','lodash'], function (React, _) {
+    var comp = React.createClass({
+        render:
+            <template>
+                <div>hello world</div>
+            </template>
+    });
+
+    return comp;
+});
