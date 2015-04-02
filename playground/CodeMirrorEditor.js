@@ -73,7 +73,10 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
             id: React.PropTypes.string,
             readOnly: React.PropTypes.bool,
             runMode: React.PropTypes.bool,
-            mode: React.PropTypes.string
+            mode: React.PropTypes.string,
+            value: React.PropTypes.string,
+            valueLink: React.PropTypes.string,
+            onChange: React.PropTypes.func
         },
         getDefaultProps: function () {
             return {

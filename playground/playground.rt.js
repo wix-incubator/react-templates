@@ -28,14 +28,14 @@ define([
         return React.createElement('div', { 'className': 'playground' }, React.createElement('div', {
             'id': this.props.id + '-myTab',
             'className': 'code-area ' + this.getLayoutClass()
-        }    /*  Nav tabs  */, React.createElement.apply(this, _.flatten([
+        }    /*  Nav tabs  */, React.createElement.apply(this, [
             'ul',
             {
                 'className': 'nav nav-tabs',
                 'role': 'tablist'
             },
             _.map(this.getTabs(), repeatTab2.bind(this))
-        ]))    /*  Tab panes  */, React.createElement('div', {}, this.state.currentTab === 'templateHTML' ? React.createElement('div', { 'className': 'tab-pane active' }, React.createElement(CodeEditor, {
+        ])    /*  Tab panes  */, React.createElement('div', {}, this.state.currentTab === 'templateHTML' ? React.createElement('div', { 'className': 'tab-pane active' }, React.createElement(CodeEditor, {
             'ref': 'editorRT',
             'className': 'large-text-area',
             'style': { border: this.validHTML ? '' : '2px solid red' },
