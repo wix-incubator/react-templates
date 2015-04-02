@@ -462,7 +462,7 @@ function convertTemplateToReact(html, options) {
 function convertJSRTToJS(text, options) {
     options = _.defaults({}, options, defaultOptions);
     options.modules = 'jsrt';
-    var templateMatcherJSRT = /<template>([^]+)<\/template>/gm;
+    var templateMatcherJSRT = /<template>([^]*?)<\/template>/gm;
     var code = text.replace(templateMatcherJSRT, function (template, html) {
         return convertTemplateToReact(html, options).replace(/;$/,'');
     });

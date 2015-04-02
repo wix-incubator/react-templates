@@ -5,6 +5,7 @@ var path = require('path');
 var chalk = require('chalk');
 var reactTemplates = require('./reactTemplates');
 var convertTemplateToReact = reactTemplates.convertTemplateToReact;
+var convertJSRTToJS = reactTemplates.convertJSRTToJS;
 
 /**
  * @param {string} source
@@ -30,7 +31,12 @@ function convertFile(source, target, options, context) {
     if (shouldAddName) {
         options.name = reactTemplates.normalizeName(path.basename(source, path.extname(source))) + 'RT';
     }
-    var js = convertTemplateToReact(html, options);
+    var js;
+    if (options.modules === 'jsrt') {
+        js = convertJSRTToJS(html, options)
+    } else {
+        js = convertTemplateToReact(html, options);
+    }
     if (!options.dryRun) {
         fs.writeFileSync(target, js);
     }

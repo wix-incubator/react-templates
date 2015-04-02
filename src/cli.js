@@ -53,18 +53,23 @@ function printVersions(currentOptions) {
  * @param {string} filename file name to process
  */
 function handleSingleFile(currentOptions, filename) {
-    if (path.extname(filename) !== '.rt') {
-        context.error('invalid file, only handle rt files', filename);
-        return;// only handle html files
-    }
     try {
-        var ext;
-        if (currentOptions.modules !== 'typescript') {
-            ext = '.js';
+        var sourceExt = path.extname(filename);
+        var outputFilename;
+        if (sourceExt == '.rt') {
+            if (currentOptions.modules !== 'typescript') {
+                outputFilename = filename + '.js';
+            } else {
+                outputFilename = filename + '.ts';
+            }
+        } else if (sourceExt === '.jsrt'){
+            outputFilename = filename.replace(/\.jsrt$/, '.js');
+            currentOptions = _.assign({},currentOptions, {'modules' : 'jsrt'});
         } else {
-            ext = '.ts';
+            context.error('invalid file, only handle rt/jsrt files', filename);
+            return;
         }
-        api.convertFile(filename, filename + ext, currentOptions, context);
+        api.convertFile(filename, outputFilename, currentOptions, context);
     } catch (e) {
         context.error(e.message, filename, e.line, e.column, e.startOffset, e.endOffset);
     }
