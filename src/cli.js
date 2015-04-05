@@ -56,7 +56,7 @@ function handleSingleFile(currentOptions, filename) {
     try {
         var sourceExt = path.extname(filename);
         var outputFilename;
-        if (sourceExt == '.rt') {
+        if (sourceExt === '.rt') {
             if (currentOptions.modules !== 'typescript') {
                 outputFilename = filename + '.js';
             } else {
@@ -64,7 +64,7 @@ function handleSingleFile(currentOptions, filename) {
             }
         } else if (sourceExt === '.jsrt'){
             outputFilename = filename.replace(/\.jsrt$/, '.js');
-            currentOptions = _.assign({},currentOptions, {'modules' : 'jsrt'});
+            currentOptions = _.assign({}, currentOptions, {modules: 'jsrt'});
         } else {
             context.error('invalid file, only handle rt/jsrt files', filename);
             return;

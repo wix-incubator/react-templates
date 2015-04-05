@@ -464,7 +464,7 @@ function convertJSRTToJS(text, options) {
     options.modules = 'jsrt';
     var templateMatcherJSRT = /<template>([^]*?)<\/template>/gm;
     var code = text.replace(templateMatcherJSRT, function (template, html) {
-        return convertTemplateToReact(html, options).replace(/;$/,'');
+        return convertTemplateToReact(html, options).replace(/;$/, '');
     });
     try {
         var tree = esprima.parse(code, {range: true, tokens: true, comment: true});
