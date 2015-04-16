@@ -103,8 +103,7 @@ module.exports = function (grunt) {
     });
 
     function readConfig(file) {
-        /*eslint no-eval:0*/
-        return eval(require('fs').readFileSync(file).toString());
+        return eval(require('fs').readFileSync(file).toString()); // eslint-disable-line no-eval
     }
 
     grunt.task.loadTasks('./internalTasks');
