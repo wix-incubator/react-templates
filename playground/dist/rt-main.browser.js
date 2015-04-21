@@ -56517,7 +56517,7 @@ function convertHtmlToReact(node, context) {
                 }
                 var scopeName = scopeSubParts[1].trim();
                 validateJS(scopeName, node, context);
-                stringUtils.addIfNotThere(context.boundParams, scopeName);
+                stringUtils.addIfMissing(context.boundParams, scopeName);
                 data.scopeName += stringUtils.capitalize(scopeName);
                 data.scopeMapping[scopeName] = scopeSubParts[0].trim();
                 validateJS(data.scopeMapping[scopeName], node, context);
@@ -56533,8 +56533,8 @@ function convertHtmlToReact(node, context) {
             data.collection = arr[1].trim();
             validateJS(data.item, node, context);
             validateJS(data.collection, node, context);
-            stringUtils.addIfNotThere(context.boundParams, data.item);
-            stringUtils.addIfNotThere(context.boundParams, data.item + 'Index');
+            stringUtils.addIfMissing(context.boundParams, data.item);
+            stringUtils.addIfMissing(context.boundParams, data.item + 'Index');
         }
         data.props = generateProps(node, context);
         if (node.attribs[propsProp]) {
@@ -56752,7 +56752,7 @@ function addIfNotThere(array, obj) {
 module.exports = {
     convertToCamelCase: convertToCamelCase,
     capitalize: capitalize,
-    addIfNotThere: addIfNotThere
+    addIfMissing: addIfNotThere
 };
 },{"lodash":110}],"react/addons":[function(require,module,exports){
 module.exports = require('./lib/ReactWithAddons');
