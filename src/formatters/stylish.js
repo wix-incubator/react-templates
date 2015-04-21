@@ -6,19 +6,19 @@ var chalk = require('chalk');
 var _ = require('lodash');
 var table = require('text-table');
 
-/**
- * @param {MESSAGE} message
- * @return {string}
- */
-function getMessageType(message) {
-    if (message.level === 'WARN') {
-        return chalk.yellow('warning');
-    }
-    if (message.level === 'ERROR') {
-        return chalk.red('error');
-    }
-    return chalk.cyan('info');
-}
+///**
+// * @param {MESSAGE} message
+// * @return {string}
+// */
+//function getMessageType(message) {
+//    if (message.level === 'WARN') {
+//        return chalk.yellow('warning');
+//    }
+//    if (message.level === 'ERROR') {
+//        return chalk.red('error');
+//    }
+//    return chalk.cyan('info');
+//}
 
 /**
  * Given a word and a count, append an s if count is not one.
@@ -34,9 +34,9 @@ function pluralize(word, count) {
 //    return n === 1 ? single : plural;
 //}
 
-function lineText(line) {
-    return line < 1 ? '' : line;
-}
+//function lineText(line) {
+//    return line < 1 ? '' : line;
+//}
 
 //module.exports = function (warnings/*, config*/) {
 //    var _ = require('lodash');
@@ -109,10 +109,10 @@ function lineText(line) {
 module.exports = function (results) {
     results = _.groupBy(results, 'file');
 
-    var output       = '\n',
-        total        = 0,
-        errors       = 0,
-        warnings     = 0,
+    var output = '\n',
+        total = 0,
+        errors = 0,
+        warnings = 0,
         summaryColor = 'yellow';
 
     _.each(results, function (result, k) {

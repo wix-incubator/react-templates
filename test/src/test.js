@@ -64,7 +64,6 @@ function normalizeError(err) {
 
 test('invalid tests json', function (t) {
     var cli = require('../../src/cli');
-    var context = require('../../src/context');
     t.plan(invalidFiles.length);
 
     invalidFiles.forEach(check);
@@ -210,7 +209,6 @@ test('html tests', function (t) {
 });
 
 test('test context', function (t) {
-    var context = require('../../src/context');
     context.clear();
     t.equal(context.hasErrors(), false);
     context.error('hi', '', 1, 1);
@@ -223,7 +221,6 @@ test('test context', function (t) {
 
 test('test shell', function (t) {
     var shell = require('../../src/shell');
-    var context = require('../../src/context');
     var newContext = _.cloneDeep(context);
     var outputJSON = '';
     newContext.options.format = 'json';
