@@ -34,9 +34,13 @@ function pluralize(word, count) {
 //    return n === 1 ? single : plural;
 //}
 
-//function lineText(line) {
-//    return line < 1 ? '' : line;
-//}
+/**
+ * @param {number} line
+ * @return {string}
+ */
+function lineText(line) {
+    return line < 1 ? '' : line;
+}
 
 //module.exports = function (warnings/*, config*/) {
 //    var _ = require('lodash');
@@ -113,7 +117,8 @@ module.exports = function (results) {
         total = 0,
         errors = 0,
         warnings = 0,
-        summaryColor = 'yellow';
+        infos = 0,
+        summaryColor = 'cyan';
 
     _.each(results, function (result, k) {
         var messages = result;
@@ -129,19 +134,23 @@ module.exports = function (results) {
             messages.map(function (message) {
                 var messageType;
 
-                if (message.fatal || message.severity === 2) {
+                if (message.level === 'ERROR') {
                     messageType = chalk.red('error');
                     summaryColor = 'red';
                     errors++;
-                } else {
+                } else if (message.level === 'WARN') {
                     messageType = chalk.yellow('warning');
+                    summaryColor = 'yellow';
                     warnings++;
+                } else {
+                    messageType = chalk.cyan('info');
+                    infos++;
                 }
 
                 return [
                     '',
-                    message.line || 0,
-                    message.column || 0,
+                    lineText(message.line),
+                    lineText(message.column),
                     messageType,
                     message.msg.replace(/\.$/, ''),
                     chalk.gray(message.ruleId || '')
@@ -162,9 +171,10 @@ module.exports = function (results) {
 
     if (total > 0) {
         output += chalk[summaryColor].bold([
-            '\u2716 ', total, pluralize(' problem', total),
+            '\u2716 ', total, pluralize(' message', total),
             ' (', errors, pluralize(' error', errors), ', ',
-            warnings, pluralize(' warning', warnings), ')\n'
+            warnings, pluralize(' warning', warnings), ', ',
+            infos, pluralize(' info', infos), ')\n'
         ].join(''));
     }
 
