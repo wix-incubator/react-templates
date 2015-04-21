@@ -15,8 +15,11 @@ var repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.b
 var ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
 var propsTemplateSimple = _.template('_.assign({}, <%= generatedProps %>, <%= rtProps %>)');
 var propsTemplate = _.template('mergeProps( <%= generatedProps %>, <%= rtProps %>)');
-var propsMergeFunction = 'function mergeProps(inline,external) {\n var res = _.assign({},inline,external)\nif (inline.hasOwnProperty(\'style\')) {\n res.style = _.defaults(res.style, inline.style);\n}\n if (inline.hasOwnProperty(\'className\') && external.hasOwnProperty(\'className\')) {\n res.className = external.className + \' \' + inline.className;\n} return res;\n}\n';
-var classSetTemplate = _.template('React.addons.classSet(<%= classSet %>)');
+var propsMergeFunction = 'function mergeProps(inline,external) {\n var res = _.assign({},inline,external)\nif (inline.hasOwnProperty(\'style\')) {\n res.style = _.defaults(res.style, inline.style);\n}\n' +
+    ' if (inline.hasOwnProperty(\'className\') && external.hasOwnProperty(\'className\')) {\n' +
+    ' res.className = external.className + \' \' + inline.className;\n} return res;\n}\n';
+//var classSetTemplate = _.template('React.addons.classSet(<%= classSet %>)');
+var classSetTemplate = _.template('_.keys(_.pick(<%= classSet %>, _.identity)).join(" ")');
 var simpleTagTemplate = _.template('<%= name %>(<%= props %><%= children %>)');
 var tagTemplate = _.template('<%= name %>.apply(this, [<%= props %><%= children %>])');
 var simpleTagTemplateCreateElement = _.template('React.createElement(<%= name %>,<%= props %><%= children %>)');
@@ -51,7 +54,7 @@ var classSetProp = 'rt-class';
 var scopeProp = 'rt-scope';
 var propsProp = 'rt-props';
 
-var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.12.2'};
+var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.13.1'};
 
 /**
  * @param {Context} context
@@ -69,7 +72,12 @@ function shouldUseCreateElement(context) {
     }
 }
 
-var reactSupportedAttributes = ['accept', 'acceptCharset', 'accessKey', 'action', 'allowFullScreen', 'allowTransparency', 'alt', 'async', 'autoComplete', 'autoPlay', 'cellPadding', 'cellSpacing', 'charSet', 'checked', 'classID', 'className', 'cols', 'colSpan', 'content', 'contentEditable', 'contextMenu', 'controls', 'coords', 'crossOrigin', 'data', 'dateTime', 'defer', 'dir', 'disabled', 'download', 'draggable', 'encType', 'form', 'formNoValidate', 'frameBorder', 'height', 'hidden', 'href', 'hrefLang', 'htmlFor', 'httpEquiv', 'icon', 'id', 'label', 'lang', 'list', 'loop', 'manifest', 'max', 'maxLength', 'media', 'mediaGroup', 'method', 'min', 'multiple', 'muted', 'name', 'noValidate', 'open', 'pattern', 'placeholder', 'poster', 'preload', 'radioGroup', 'readOnly', 'rel', 'required', 'role', 'rows', 'rowSpan', 'sandbox', 'scope', 'scrolling', 'seamless', 'selected', 'shape', 'size', 'sizes', 'span', 'spellCheck', 'src', 'srcDoc', 'srcSet', 'start', 'step', 'style', 'tabIndex', 'target', 'title', 'type', 'useMap', 'value', 'width', 'wmode'];
+var reactSupportedAttributes = ['accept', 'acceptCharset', 'accessKey', 'action', 'allowFullScreen', 'allowTransparency', 'alt', 'async', 'autoComplete', 'autoPlay', 'cellPadding', 'cellSpacing', 'charSet', 'checked',
+                                'classID', 'className', 'cols', 'colSpan', 'content', 'contentEditable', 'contextMenu', 'controls', 'coords', 'crossOrigin', 'data', 'dateTime', 'defer', 'dir', 'disabled', 'download',
+                                'draggable', 'encType', 'form', 'formNoValidate', 'frameBorder', 'height', 'hidden', 'href', 'hrefLang', 'htmlFor', 'httpEquiv', 'icon', 'id', 'label', 'lang', 'list', 'loop', 'manifest',
+                                'max', 'maxLength', 'media', 'mediaGroup', 'method', 'min', 'multiple', 'muted', 'name', 'noValidate', 'open', 'pattern', 'placeholder', 'poster', 'preload', 'radioGroup', 'readOnly', 'rel',
+                                'required', 'role', 'rows', 'rowSpan', 'sandbox', 'scope', 'scrolling', 'seamless', 'selected', 'shape', 'size', 'sizes', 'span', 'spellCheck', 'src', 'srcDoc', 'srcSet', 'start', 'step',
+                                'style', 'tabIndex', 'target', 'title', 'type', 'useMap', 'value', 'width', 'wmode'];
 var attributesMapping = {'class': 'className', 'rt-class': 'className'};
 _.forEach(reactSupportedAttributes, function (attributeReactName) {
     if (attributeReactName !== attributeReactName.toLowerCase()) {
@@ -291,7 +299,7 @@ function convertHtmlToReact(node, context) {
                 }
                 var scopeName = scopeSubParts[1].trim();
                 validateJS(scopeName, node, context);
-                stringUtils.addIfNotThere(context.boundParams, scopeName);
+                stringUtils.addIfMissing(context.boundParams, scopeName);
                 data.scopeName += stringUtils.capitalize(scopeName);
                 data.scopeMapping[scopeName] = scopeSubParts[0].trim();
                 validateJS(data.scopeMapping[scopeName], node, context);
@@ -307,8 +315,8 @@ function convertHtmlToReact(node, context) {
             data.collection = arr[1].trim();
             validateJS(data.item, node, context);
             validateJS(data.collection, node, context);
-            stringUtils.addIfNotThere(context.boundParams, data.item);
-            stringUtils.addIfNotThere(context.boundParams, data.item + 'Index');
+            stringUtils.addIfMissing(context.boundParams, data.item);
+            stringUtils.addIfMissing(context.boundParams, data.item + 'Index');
         }
         data.props = generateProps(node, context);
         if (node.attribs[propsProp]) {
@@ -377,10 +385,15 @@ function isTag(node) {
     return node.type === 'tag';
 }
 
+//function isEmptyText(node) {
+//    return node.type === 'text' && /^\s*$/g.test(node.data);
+//}
+
 function handleSelfClosingHtmlTags(nodes) {
     return _(nodes)
         .map(function (node) {
             var externalNodes = [];
+            //node.children = _.reject(node.children, isEmptyText);
             node.children = handleSelfClosingHtmlTags(node.children);
             if (node.type === 'tag' && _.contains(htmlSelfClosingTags, node.name)) {
                 externalNodes = _.filter(node.children, isTag);
@@ -396,15 +409,33 @@ function handleSelfClosingHtmlTags(nodes) {
 }
 
 /**
+ * @param options
+ * @param {*} context
+ * @param {CONTEXT} reportContext
+ * @param node
+ */
+function validate(options, context, reportContext, node) {
+    if (node.type === 'tag' && node.attribs['rt-if'] && !node.attribs.key) {
+        var loc = rtError.getNodeLoc(context, node);
+        reportContext.warn('rt-if without a key', options.fileName, loc.pos.line, loc.pos.col, loc.start, loc.end);
+    }
+    if (node.children) {
+        node.children.forEach(validate.bind(this, options, context, reportContext));
+    }
+}
+
+/**
  * @param {string} html
+ * @param {CONTEXT} reportContext
  * @param {{modules:string,defines:*}?} options
  * @return {string}
  */
-function convertTemplateToReact(html, options) {
+function convertTemplateToReact(html, reportContext, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = _.defaults({}, options, defaultOptions);
     var defines = options.defines ? options.defines : {'react/addons': 'React', lodash: '_'};
     var context = defaultContext(html, options);
+    validate(options, context, reportContext, rootNode.root()[0]);
     var rootTags = _.filter(rootNode.root()[0].children, {type: 'tag'});
     rootTags = handleSelfClosingHtmlTags(rootTags);
     if (!rootTags || rootTags.length === 0) {
@@ -452,7 +483,7 @@ function convertTemplateToReact(html, options) {
             tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
             code = escodegen.generate(tree, {comment: true});
         } catch (e) {
-            console.log(code);
+            //console.log(code);
             throw new RTCodeError(e.message, e.index, -1);
         }
     }

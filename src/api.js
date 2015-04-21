@@ -9,8 +9,8 @@ var convertJSRTToJS = reactTemplates.convertJSRTToJS;
 
 /**
  * @param {string} source
- * @param {{modules:string, dryRun:boolean}?} options
  * @param {string} target
+ * @param {{modules:string, dryRun:boolean}?} options
  * @param {CONTEXT} context
  */
 function convertFile(source, target, options, context) {
@@ -19,6 +19,7 @@ function convertFile(source, target, options, context) {
 //        return;// only handle html files
 //    }
     options = options || {};
+    options.fileName = source;
     var fsUtil = require('./fsUtil');
 
     if (!options.force && !fsUtil.isStale(source, target)) {
@@ -35,7 +36,7 @@ function convertFile(source, target, options, context) {
     if (options.modules === 'jsrt') {
         js = convertJSRTToJS(html, options);
     } else {
-        js = convertTemplateToReact(html, options);
+        js = convertTemplateToReact(html, context, options);
     }
     if (!options.dryRun) {
         fs.writeFileSync(target, js);

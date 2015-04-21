@@ -21,7 +21,7 @@ function capitalize(str) {
  * @param {Array.<*>} array
  * @param {*} obj
  */
-function addIfNotThere(array, obj) {
+function addIfMissing(array, obj) {
     if (!_.contains(array, obj)) {
         array.push(obj);
     }
@@ -30,5 +30,5 @@ function addIfNotThere(array, obj) {
 module.exports = {
     convertToCamelCase: convertToCamelCase,
     capitalize: capitalize,
-    addIfNotThere: addIfNotThere
+    addIfMissing: addIfMissing
 };

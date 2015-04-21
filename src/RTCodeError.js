@@ -1,13 +1,17 @@
 'use strict';
 
 /**
+ * @typedef {{line: number, col: number}} Pos
+ */
+
+/**
  * @param {string} html
  * @param node
- * @return {{line: number, col: number}}}
+ * @return {Pos}
  */
 function getLine(html, node) {
     if (!node) {
-        return {col: 1, line: 1};
+        return {line: 1, col: 1};
     }
     var linesUntil = html.substring(0, node.startIndex).split('\n');
     return {line: linesUntil.length, col: linesUntil[linesUntil.length - 1].length + 1};
@@ -80,6 +84,16 @@ RTCodeError.prototype.toIssue = function () {
  * @return {RTCodeError}
  */
 function buildError(msg, context, node) {
+    var loc = getNodeLoc(context, node);
+    return new RTCodeError(msg, loc.start, loc.end, loc.pos.line, loc.pos.col);
+}
+
+/**
+ * @param context
+ * @param node
+ * @return {{pos:Pos, start:number, end:number}}
+ */
+function getNodeLoc(context, node) {
     var pos = getLine(context.html, node);
     var end;
     if (node.data) {
@@ -89,9 +103,14 @@ function buildError(msg, context, node) {
     } else {
         end = context.html.length;
     }
-    return new RTCodeError(msg, node.startIndex, end, pos.line, pos.col);
+    return {
+        pos: pos,
+        start: node.startIndex,
+        end: end
+    };
 }
 
 module.exports = {
-    RTCodeError: RTCodeError
+    RTCodeError: RTCodeError,
+    getNodeLoc: getNodeLoc
 };
