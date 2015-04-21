@@ -1,6 +1,7 @@
 'use strict';
 var test = require('tape');
 var reactTemplates = require('../../src/reactTemplates');
+var context = require('../../src/context');
 var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
@@ -40,7 +41,7 @@ test('invalid tests', function (t) {
         var html = readFileNormalized(filename);
         var error = null;
         try {
-            reactTemplates.convertTemplateToReact(html);
+            reactTemplates.convertTemplateToReact(html, context);
         } catch (e) {
             error = e;
         }
@@ -109,7 +110,7 @@ test('conversion test', function (t) {
         var html = readFileNormalized(filename);
         var expected = readFileNormalized(filename + '.js');
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '').trim();
+        var actual = reactTemplates.convertTemplateToReact(html, context).replace(/\r/g, '').trim();
         compareAndWrite(t, actual, expected, filename);
     }
 });
@@ -143,7 +144,7 @@ test('convert div with all module types', function (t) {
         var html = readFileNormalized(filename);
         var expected = readFileNormalized(path.join(dataPath, testData.expected));
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
+        var actual = reactTemplates.convertTemplateToReact(html, context, testData.options).replace(/\r/g, '').trim();
         compareAndWrite(t, actual, expected, filename);
     }
 });
@@ -158,7 +159,7 @@ test('convert jsrt and test source results', function (t) {
         var js = readFileNormalized(filename);
         var expected = readFileNormalized(path.join(dataPath, file.replace('.jsrt', '.js')));
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertJSRTToJS(js).replace(/\r/g, '').trim();
+        var actual = reactTemplates.convertJSRTToJS(js, context).replace(/\r/g, '').trim();
         compareAndWrite(t, actual, expected, filename);
     }
 });
@@ -175,32 +176,36 @@ function normalizeHtml(html) {
 }
 
 test('html tests', function (t) {
-    var files = ['scope.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt', 'js-in-attr.rt', 'props-class.rt'];
+    var files = ['scope.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt', 'js-in-attr.rt', 'props-class.rt', 'rt-class.rt'];
     t.plan(files.length);
 
     files.forEach(check);
 
     function check(testFile) {
-        var filename = path.join(dataPath, testFile);
-        var html = fs.readFileSync(filename).toString();
-        var expected = readFileNormalized(filename + '.html');
+        try {
+            var filename = path.join(dataPath, testFile);
+            var html = fs.readFileSync(filename).toString();
+            var expected = readFileNormalized(filename + '.html');
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var code = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '');
-        var defineMap = {'react/addons': React, lodash: _};
-        /*eslint no-unused-vars:0*/
-        var define = function (requirementsNames, content) {
-            var requirements = _.map(requirementsNames, function (reqName) {
-                return defineMap[reqName];
-            });
-            return content.apply(this, requirements);
-        };
-        var comp = React.createFactory(React.createClass({
-            render: eval(code) //eslint-disable-line no-eval
-        }));
-        var actual = React.renderToStaticMarkup(comp());
-        actual = normalizeHtml(actual);
-        expected = normalizeHtml(expected);
-        compareAndWrite(t, actual, expected, filename);
+            var code = reactTemplates.convertTemplateToReact(html, context).replace(/\r/g, '');
+            var defineMap = {'react/addons': React, lodash: _};
+            //noinspection JSUnusedLocalSymbols
+            var define = function (requirementsNames, content) { //eslint-disable-line no-unused-vars
+                var requirements = _.map(requirementsNames, function (reqName) {
+                    return defineMap[reqName];
+                });
+                return content.apply(this, requirements);
+            };
+            var comp = React.createFactory(React.createClass({
+                render: eval(code) //eslint-disable-line no-eval
+            }));
+            var actual = React.renderToStaticMarkup(comp());
+            actual = normalizeHtml(actual);
+            expected = normalizeHtml(expected);
+            compareAndWrite(t, actual, expected, filename);
+        } catch (e) {
+            console.log(testFile, e);
+        }
     }
 });
 
@@ -220,7 +225,7 @@ test('test shell', function (t) {
     var shell = require('../../src/shell');
     var context = require('../../src/context');
     var newContext = _.cloneDeep(context);
-    var outputJSON;
+    var outputJSON = '';
     newContext.options.format = 'json';
     newContext.report = function (text) {
         outputJSON = text;

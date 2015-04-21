@@ -490,12 +490,12 @@ function convertTemplateToReact(html, reportContext, options) {
     return code;
 }
 
-function convertJSRTToJS(text, options) {
+function convertJSRTToJS(text, reportContext, options) {
     options = _.defaults({}, options, defaultOptions);
     options.modules = 'jsrt';
     var templateMatcherJSRT = /<template>([^]*?)<\/template>/gm;
     var code = text.replace(templateMatcherJSRT, function (template, html) {
-        return convertTemplateToReact(html, options).replace(/;$/, '');
+        return convertTemplateToReact(html, reportContext, options).replace(/;$/, '');
     });
     try {
         var tree = esprima.parse(code, {range: true, tokens: true, comment: true});

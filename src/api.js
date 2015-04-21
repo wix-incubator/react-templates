@@ -34,7 +34,7 @@ function convertFile(source, target, options, context) {
     }
     var js;
     if (options.modules === 'jsrt') {
-        js = convertJSRTToJS(html, options);
+        js = convertJSRTToJS(html, context, options);
     } else {
         js = convertTemplateToReact(html, context, options);
     }
