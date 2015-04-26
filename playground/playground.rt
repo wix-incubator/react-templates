@@ -13,19 +13,19 @@
         </ul>
         <!-- Tab panes -->
         <div>
-            <div rt-if="this.state.currentTab === 'templateHTML'" class="tab-pane active" >
+            <div rt-if="this.state.currentTab === 'templateHTML'" key="editorRT" class="tab-pane active" >
                 <CodeEditor ref="editorRT" class="large-text-area" style="border: {this.validHTML? '':'2px solid red'};"
                             value="{this.state.templateHTML}"
                             mode="html"
                             onChange="(evt) => this.setState({templateHTML:evt.target.value})" />
             </div>
-            <div rt-if="this.state.currentTab === 'templateProps'" class="tab-pane active">
+            <div rt-if="this.state.currentTab === 'templateProps'" key="editorCode" class="tab-pane active">
                 <CodeEditor ref="editorCode" class="large-text-area" style="border: {this.validProps? '':'2px solid red'};"
                             value="{this.state.templateProps}"
                             mode="javascript"
                             onChange="(evt) => this.setState({templateProps:evt.target.value})" />
             </div>
-            <div rt-if="this.state.currentTab === 'templateSource'" class="tab-pane active">
+            <div rt-if="this.state.currentTab === 'templateSource'" key="templateSource" class="tab-pane active">
                 <CodeEditor class="large-text-area"
                             value="{this.templateSource}"
                             mode="javascript"

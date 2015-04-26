@@ -11,7 +11,7 @@ define([
     function repeatTab2(tab, tabIndex) {
         return React.createElement('li', {
             'role': 'presentation',
-            'className': React.addons.classSet({ active: this.state.currentTab === tab[0] }),
+            'className': _.keys(_.pick({ active: this.state.currentTab === tab[0] }, _.identity)).join(' '),
             'onClick': onClick1.bind(this, tab, tabIndex)
         }, React.createElement('a', { 'aria-controls': tab[1] }, tab[1]));
     }
@@ -35,21 +35,30 @@ define([
                 'role': 'tablist'
             },
             _.map(this.getTabs(), repeatTab2.bind(this))
-        ])    /*  Tab panes  */, React.createElement('div', {}, this.state.currentTab === 'templateHTML' ? React.createElement('div', { 'className': 'tab-pane active' }, React.createElement(CodeEditor, {
+        ])    /*  Tab panes  */, React.createElement('div', {}, this.state.currentTab === 'templateHTML' ? React.createElement('div', {
+            'key': 'editorRT',
+            'className': 'tab-pane active'
+        }, React.createElement(CodeEditor, {
             'ref': 'editorRT',
             'className': 'large-text-area',
             'style': { border: this.validHTML ? '' : '2px solid red' },
             'value': this.state.templateHTML,
             'mode': 'html',
             'onChange': onChange3.bind(this)
-        })) : null, this.state.currentTab === 'templateProps' ? React.createElement('div', { 'className': 'tab-pane active' }, React.createElement(CodeEditor, {
+        })) : null, this.state.currentTab === 'templateProps' ? React.createElement('div', {
+            'key': 'editorCode',
+            'className': 'tab-pane active'
+        }, React.createElement(CodeEditor, {
             'ref': 'editorCode',
             'className': 'large-text-area',
             'style': { border: this.validProps ? '' : '2px solid red' },
             'value': this.state.templateProps,
             'mode': 'javascript',
             'onChange': onChange4.bind(this)
-        })) : null, this.state.currentTab === 'templateSource' ? React.createElement('div', { 'className': 'tab-pane active' }, React.createElement(CodeEditor, {
+        })) : null, this.state.currentTab === 'templateSource' ? React.createElement('div', {
+            'key': 'templateSource',
+            'className': 'tab-pane active'
+        }, React.createElement(CodeEditor, {
             'className': 'large-text-area',
             'value': this.templateSource,
             'mode': 'javascript',
