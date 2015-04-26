@@ -424,13 +424,18 @@ function validate(options, context, reportContext, node) {
     }
 }
 
+function convertTemplateToReact(html, options) {
+    var context = require('./context');
+    return convertRT(html, context, options);
+}
+
 /**
  * @param {string} html
  * @param {CONTEXT} reportContext
  * @param {{modules:string,defines:*}?} options
  * @return {string}
  */
-function convertTemplateToReact(html, reportContext, options) {
+function convertRT(html, reportContext, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = _.defaults({}, options, defaultOptions);
     var defines = options.defines ? options.defines : {'react/addons': 'React', lodash: '_'};
@@ -495,7 +500,7 @@ function convertJSRTToJS(text, reportContext, options) {
     options.modules = 'jsrt';
     var templateMatcherJSRT = /<template>([^]*?)<\/template>/gm;
     var code = text.replace(templateMatcherJSRT, function (template, html) {
-        return convertTemplateToReact(html, reportContext, options).replace(/;$/, '');
+        return convertRT(html, reportContext, options).replace(/;$/, '');
     });
     try {
         var tree = esprima.parse(code, {range: true, tokens: true, comment: true});
@@ -535,6 +540,7 @@ function normalizeName(name) {
 
 module.exports = {
     convertTemplateToReact: convertTemplateToReact,
+    convertRT: convertRT,
     convertJSRTToJS: convertJSRTToJS,
     RTCodeError: RTCodeError,
     normalizeName: normalizeName,

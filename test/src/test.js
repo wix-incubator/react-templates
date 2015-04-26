@@ -41,7 +41,7 @@ test('invalid tests', function (t) {
         var html = readFileNormalized(filename);
         var error = null;
         try {
-            reactTemplates.convertTemplateToReact(html, context);
+            reactTemplates.convertTemplateToReact(html);
         } catch (e) {
             error = e;
         }
@@ -109,7 +109,7 @@ test('conversion test', function (t) {
         var html = readFileNormalized(filename);
         var expected = readFileNormalized(filename + '.js');
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertTemplateToReact(html, context).replace(/\r/g, '').trim();
+        var actual = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '').trim();
         compareAndWrite(t, actual, expected, filename);
     }
 });
@@ -143,7 +143,7 @@ test('convert div with all module types', function (t) {
         var html = readFileNormalized(filename);
         var expected = readFileNormalized(path.join(dataPath, testData.expected));
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertTemplateToReact(html, context, testData.options).replace(/\r/g, '').trim();
+        var actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
         compareAndWrite(t, actual, expected, filename);
     }
 });
@@ -186,7 +186,7 @@ test('html tests', function (t) {
             var html = fs.readFileSync(filename).toString();
             var expected = readFileNormalized(filename + '.html');
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-            var code = reactTemplates.convertTemplateToReact(html, context).replace(/\r/g, '');
+            var code = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '');
             var defineMap = {'react/addons': React, lodash: _};
             //noinspection JSUnusedLocalSymbols
             var define = function (requirementsNames, content) { //eslint-disable-line no-unused-vars
