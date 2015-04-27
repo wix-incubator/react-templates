@@ -64,6 +64,7 @@ In most cases, this package will be wrapped in a build task, so CLI will not be 
 * Gulp: [gulp-react-templates](https://github.com/wix/gulp-react-templates)
 * Broccoli: [broccoli-react-templates](https://github.com/kraftwer1/broccoli-react-templates)
 * Browserify plugin: [react-templatify](https://www.npmjs.com/package/react-templatify)
+* Webpack loader : [react-templates-loader](https://github.com/AlexanderPavlenko/react-templates-loader)
 
 # Template directives and syntax
 
