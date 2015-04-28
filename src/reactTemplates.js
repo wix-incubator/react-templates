@@ -78,7 +78,7 @@ var reactSupportedAttributes = ['accept', 'acceptCharset', 'accessKey', 'action'
                                 'max', 'maxLength', 'media', 'mediaGroup', 'method', 'min', 'multiple', 'muted', 'name', 'noValidate', 'open', 'pattern', 'placeholder', 'poster', 'preload', 'radioGroup', 'readOnly', 'rel',
                                 'required', 'role', 'rows', 'rowSpan', 'sandbox', 'scope', 'scrolling', 'seamless', 'selected', 'shape', 'size', 'sizes', 'span', 'spellCheck', 'src', 'srcDoc', 'srcSet', 'start', 'step',
                                 'style', 'tabIndex', 'target', 'title', 'type', 'useMap', 'value', 'width', 'wmode'];
-var attributesMapping = {'class': 'className', 'rt-class': 'className'};
+var attributesMapping = {'class': 'className', 'rt-class': 'className', 'for': 'htmlFor'};
 _.forEach(reactSupportedAttributes, function (attributeReactName) {
     if (attributeReactName !== attributeReactName.toLowerCase()) {
         attributesMapping[attributeReactName.toLowerCase()] = attributeReactName;
