@@ -475,7 +475,7 @@ function convertRT(html, reportContext, options) {
     if (options.modules === 'typescript') {
         vars = _(defines).map(function (reqVar, reqPath) { return 'import ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
     } else if (options.modules === 'es6') {
-        vars = _(defines).map(function (reqVar, reqPath) { return 'import {' + reqVar + "} from '" + reqPath + "';"; }).join('\n');
+        vars = _(defines).map(function (reqVar, reqPath) { return 'import ' + reqVar + " from '" + reqPath + "';"; }).join('\n');
     } else {
         vars = _(defines).map(function (reqVar, reqPath) { return 'var ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
     }
