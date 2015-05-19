@@ -3,14 +3,12 @@
  * Created by idok on 11/10/14.
  */
 'use strict';
-//var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
 var api = require('./api');
 var context = require('./context');
 var shell = require('./shell');
 var pkg = require('../package.json');
-//var defaultOptions = {commonJS: false, force: false, json: false};
 var options = require('./options');
 var reactDOMSupport = require('./reactDOMSupport');
 var reactTemplates = require('./reactTemplates');
@@ -49,6 +47,7 @@ function printVersions(currentOptions) {
 }
 
 /**
+ * @param {CONTEXT} context
  * @param {*} currentOptions
  * @param {string} filename file name to process
  */
@@ -88,11 +87,11 @@ function execute(args) {
         console.error(error.message);
         return 1;
     }
-    //console.log(currentOptions);
     return executeOptions(currentOptions);
 }
 
 module.exports = {
+    context: context,
     execute: execute,
     executeOptions: executeOptions,
     handleSingleFile: handleSingleFile,

@@ -34,6 +34,11 @@ var context = {
     report: function (msg) {
         console.log(msg);
     },
+    verbose: function (msg) {
+        if (context.options.verbose) {
+            console.log(msg);
+        }
+    },
     info: function (msg, file, line, column) {
         context.issue(MESSAGE_LEVEL.INFO, msg, file, line, column);
     },

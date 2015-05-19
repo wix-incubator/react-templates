@@ -33,7 +33,7 @@
     "brace": "^0.5.1",
     "brfs": "^1.4.0",
     "coveralls": "^2.11.2",
-    "eslint-plugin-react": "^2.2.0",
+    "eslint-plugin-react": "^2.3.0",
     "grunt": "^0.4.5",
     "grunt-browserify": "^3.8.0",
     "grunt-contrib-requirejs": "^0.4.4",
