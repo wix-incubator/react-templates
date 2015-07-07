@@ -51,8 +51,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
     function completeIfAfterLt(cm) {
         return completeAfter(cm, function () {
             var cur = cm.getCursor();
-            /*eslint new-cap:0*/
-            return cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur) === '<';
+            return cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur) === '<'; //eslint-disable-line new-cap
         });
     }
 
@@ -67,7 +66,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
         });
     }
 
-    var editor = React.createClass({
+    return React.createClass({
         displayName: 'CodeMirrorEditor',
         propTypes: {
             id: React.PropTypes.string,
@@ -172,6 +171,4 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
             this.editor.toTextArea();
         }
     });
-
-    return editor;
 });

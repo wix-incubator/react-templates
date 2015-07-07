@@ -3,9 +3,9 @@
  */
 'use strict';
 /*global ace:true*/
-define(['react', 'lodash'/*, 'ace'*/], function (React, _/*, ace*/) {
+define(['react', 'lodash']/*, 'ace'*/, function (React, _/*, ace*/) {
 
-    var editor = React.createClass({
+    return React.createClass({
         displayName: 'BraceEditor',
         propTypes: {
             id: React.PropTypes.string,
@@ -64,6 +64,4 @@ define(['react', 'lodash'/*, 'ace'*/], function (React, _/*, ace*/) {
             this.editor.destroy();
         }
     });
-
-    return editor;
 });

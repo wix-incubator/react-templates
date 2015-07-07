@@ -2,7 +2,7 @@ requirejs.config({
 //    baseUrl: '/',
     paths: {
         lodash: '//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min',
-        jquery: '//code.jquery.com/jquery-1.11.0.min',
+        jquery: '//code.jquery.com/jquery-2.1.4.min',
         firebase: 'https://cdn.firebase.com/js/client/2.0.5/firebase',
         react: '//fb.me/react-with-addons-0.12.2',
         text: 'libs/requirejs-plugins/text',

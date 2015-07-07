@@ -30,7 +30,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
     }
 
     function clearMessage(editor) {
-        if (editor && editor.clearMessage) {
+        if (editor && editor.clearAnnotations) {
             editor.clearAnnotations();
         }
     }
@@ -70,9 +70,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
 
     var templateHTML = '<div></div>';
     var templateProps = 'var template = React.createClass({\n' +
-        '   render: function () {\n' +
-        '       return templateRT.apply(this);\n' +
-        '   }\n' +
+        '   render: templateRT\n' +
         '});';
 
     //var selfCleaningTimeout = {
@@ -161,8 +159,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             try {
                 this.validProps = true;
                 //console.log(state.templateProps);
-                /*eslint no-eval:0*/
-                this.sample = eval('(function () {' + this.templateSource + '\n' + state.templateProps + '\n return React.createElement(' + state.name + ');})()');
+                this.sample = eval('(function () {' + this.templateSource + '\n' + state.templateProps + '\n return React.createElement(' + state.name + ');})()'); //eslint-disable-line no-eval
                 clearMessage(this.refs.editorCode);
             } catch (e) {
                 this.validProps = false;

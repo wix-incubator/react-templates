@@ -38,7 +38,7 @@ define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React
             firebase.child('fiddles').child(newHash).set(playgroundState, function () {
                 Firebase.goOffline();
                 alert('saved the fiddle, you can share your url');
-            }/*.bind(this)*/);
+            });
         },
         clear: function () {
             this.refs.playground.clear();
