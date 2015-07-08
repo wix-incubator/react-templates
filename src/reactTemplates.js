@@ -442,8 +442,8 @@ function convertRT(html, reportContext, options) {
     var reactPath = options.reactImportPath || 'react/addons';
     var lodashPath = options.lodashImportPath || 'lodash';
     var defaultDefines = {};
-    defaultDefines[reactPath] = 'react';
-    defaultDefines[lodashPath] = 'lodash';
+    defaultDefines[reactPath] = 'React';
+    defaultDefines[lodashPath] = '_';
 
     var defines = options.defines ? _.clone(options.defines) : defaultDefines;
 
