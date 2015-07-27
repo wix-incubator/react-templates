@@ -48,11 +48,12 @@ var templates = {
 
 var htmlSelfClosingTags = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
-var templateProp = 'rt-repeat';
-var ifProp = 'rt-if';
-var classSetProp = 'rt-class';
-var scopeProp = 'rt-scope';
-var propsProp = 'rt-props';
+var templateAttr = 'rt-repeat';
+var ifAttr = 'rt-if';
+var classSetAttr = 'rt-class';
+var classAttr = 'class';
+var scopeAttr = 'rt-scope';
+var propsAttr = 'rt-props';
 
 var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.13.1'};
 
@@ -78,7 +79,8 @@ var reactSupportedAttributes = ['accept', 'acceptCharset', 'accessKey', 'action'
                                 'max', 'maxLength', 'media', 'mediaGroup', 'method', 'min', 'multiple', 'muted', 'name', 'noValidate', 'open', 'pattern', 'placeholder', 'poster', 'preload', 'radioGroup', 'readOnly', 'rel',
                                 'required', 'role', 'rows', 'rowSpan', 'sandbox', 'scope', 'scrolling', 'seamless', 'selected', 'shape', 'size', 'sizes', 'span', 'spellCheck', 'src', 'srcDoc', 'srcSet', 'start', 'step',
                                 'style', 'tabIndex', 'target', 'title', 'type', 'useMap', 'value', 'width', 'wmode'];
-var attributesMapping = {'class': 'className', 'rt-class': 'className', 'for': 'htmlFor'};
+var classNameProp = 'className';
+var attributesMapping = {'class': classNameProp, 'rt-class': classNameProp, 'for': 'htmlFor'};
 _.forEach(reactSupportedAttributes, function (attributeReactName) {
     if (attributeReactName !== attributeReactName.toLowerCase()) {
         attributesMapping[attributeReactName.toLowerCase()] = attributeReactName;
@@ -188,7 +190,7 @@ function generateProps(node, context) {
     var props = {};
     _.forOwn(node.attribs, function (val, key) {
         var propKey = attributesMapping[key.toLowerCase()] || key;
-        if (props.hasOwnProperty(propKey)) {
+        if (props.hasOwnProperty(propKey) && propKey !== classNameProp) {
             throw RTCodeError.build('duplicate definition of ' + propKey + ' ' + JSON.stringify(node.attribs), context, node);
         }
         if (key.indexOf('on') === 0 && !isStringOnlyCode(val)) {
@@ -221,8 +223,17 @@ function generateProps(node, context) {
                 styleArray.push(stringUtils.convertToCamelCase(stylePart[0]) + ' : ' + convertText(node, context, stylePart[1].trim()));
             });
             props[propKey] = '{' + styleArray.join(',') + '}';
-        } else if (key === classSetProp) {
-            props[propKey] = classSetTemplate({classSet: val});
+        } else if (propKey === classNameProp) {
+            // Processing for both class and rt-class conveniently return strings that
+            // represent JS expressions, each evaluating to a space-separated set of class names.
+            // We can just join them with another space here.
+            var existing = props[propKey] ? props[propKey] + ' + " " + ' : '';
+            if (key === classSetAttr) {
+                props[propKey] = existing + classSetTemplate({classSet: val});
+            }
+            else if (key === classAttr) {
+                props[propKey] = existing + convertText(node, context, val.trim());
+            }
         } else if (key.indexOf('rt-') !== 0) {
             props[propKey] = convertText(node, context, val.trim());
         }
@@ -267,7 +278,7 @@ function defaultContext(html, options) {
  */
 function hasNonSimpleChildren(node) {
     return _.any(node.children, function (child) {
-        return child.type === 'tag' && child.attribs[templateProp];
+        return child.type === 'tag' && child.attribs[templateAttr];
     });
 }
 
@@ -286,13 +297,13 @@ function convertHtmlToReact(node, context) {
         };
 
         var data = {name: convertTagNameToConstructor(node.name, context)};
-        if (node.attribs[scopeProp]) {
+        if (node.attribs[scopeAttr]) {
             data.scopeMapping = {};
             data.scopeName = '';
             _.each(context.boundParams, function (boundParam) {
                 data.scopeMapping[boundParam] = boundParam;
             });
-            _.each(node.attribs[scopeProp].split(';'), function (scopePart) {
+            _.each(node.attribs[scopeAttr].split(';'), function (scopePart) {
                 var scopeSubParts = scopePart.split(' as ');
                 if (scopeSubParts.length < 2) {
                     throw RTCodeError.build("invalid scope part '" + scopePart + "'", context, node);
@@ -306,10 +317,10 @@ function convertHtmlToReact(node, context) {
             });
         }
 
-        if (node.attribs[templateProp]) {
-            var arr = node.attribs[templateProp].split(' in ');
+        if (node.attribs[templateAttr]) {
+            var arr = node.attribs[templateAttr].split(' in ');
             if (arr.length !== 2) {
-                throw RTCodeError.build("rt-repeat invalid 'in' expression '" + node.attribs[templateProp] + "'", context, node);
+                throw RTCodeError.build("rt-repeat invalid 'in' expression '" + node.attribs[templateAttr] + "'", context, node);
             }
             data.item = arr[0].trim();
             data.collection = arr[1].trim();
@@ -319,20 +330,20 @@ function convertHtmlToReact(node, context) {
             stringUtils.addIfMissing(context.boundParams, data.item + 'Index');
         }
         data.props = generateProps(node, context);
-        if (node.attribs[propsProp]) {
+        if (node.attribs[propsAttr]) {
             if (data.props === '{}') {
-                data.props = node.attribs[propsProp];
+                data.props = node.attribs[propsAttr];
             } else if (!node.attribs.style && !node.attribs.class) {
-                data.props = propsTemplateSimple({generatedProps: data.props, rtProps: node.attribs[propsProp]});
+                data.props = propsTemplateSimple({generatedProps: data.props, rtProps: node.attribs[propsAttr]});
             } else {
-                data.props = propsTemplate({generatedProps: data.props, rtProps: node.attribs[propsProp]});
+                data.props = propsTemplate({generatedProps: data.props, rtProps: node.attribs[propsAttr]});
                 if (!_.contains(context.injectedFunctions, propsMergeFunction)) {
                     context.injectedFunctions.push(propsMergeFunction);
                 }
             }
         }
-        if (node.attribs[ifProp]) {
-            data.condition = node.attribs[ifProp].trim();
+        if (node.attribs[ifAttr]) {
+            data.condition = node.attribs[ifAttr].trim();
         }
         data.children = node.children ? concatChildren(_.map(node.children, function (child) {
             var code = convertHtmlToReact(child, context);
@@ -346,17 +357,18 @@ function convertHtmlToReact(node, context) {
             data.body = shouldUseCreateElement(context) ? simpleTagTemplateCreateElement(data) : simpleTagTemplate(data);
         }
 
-        if (node.attribs[templateProp]) {
+
+        if (node.attribs[templateAttr]) {
             data.repeatFunction = generateInjectedFunc(context, 'repeat' + stringUtils.capitalize(data.item), 'return ' + data.body);
             data.repeatBinds = ['this'].concat(_.reject(context.boundParams, function (param) {
                 return (param === data.item || param === data.item + 'Index');
             }));
             data.body = repeatTemplate(data);
         }
-        if (node.attribs[ifProp]) {
+        if (node.attribs[ifAttr]) {
             data.body = ifTemplate(data);
         }
-        if (node.attribs[scopeProp]) {
+        if (node.attribs[scopeAttr]) {
             var generatedFuncName = generateInjectedFunc(context, 'scope' + data.scopeName, 'return ' + data.body, _.keys(data.scopeMapping));
             data.body = generatedFuncName + '.apply(this, [' + _.values(data.scopeMapping).join(',') + '])';
         }
