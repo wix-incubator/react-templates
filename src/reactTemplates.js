@@ -286,6 +286,22 @@ function convertHtmlToReact(node, context) {
         };
 
         var data = {name: convertTagNameToConstructor(node.name, context)};
+
+        // Order matters. We need to add the item and itemIndex to context.boundParams before
+        // the rt-scope directive is processed, lest they are not passed to the child scopes
+        if (node.attribs[templateProp]) {
+            var arr = node.attribs[templateProp].split(' in ');
+            if (arr.length !== 2) {
+                throw RTCodeError.build("rt-repeat invalid 'in' expression '" + node.attribs[templateProp] + "'", context, node);
+            }
+            data.item = arr[0].trim();
+            data.collection = arr[1].trim();
+            validateJS(data.item, node, context);
+            validateJS(data.collection, node, context);
+            stringUtils.addIfMissing(context.boundParams, data.item);
+            stringUtils.addIfMissing(context.boundParams, data.item + 'Index');
+        }
+
         if (node.attribs[scopeProp]) {
             data.scopeName = '';
 
@@ -316,18 +332,6 @@ function convertHtmlToReact(node, context) {
             });
         }
 
-        if (node.attribs[templateProp]) {
-            var arr = node.attribs[templateProp].split(' in ');
-            if (arr.length !== 2) {
-                throw RTCodeError.build("rt-repeat invalid 'in' expression '" + node.attribs[templateProp] + "'", context, node);
-            }
-            data.item = arr[0].trim();
-            data.collection = arr[1].trim();
-            validateJS(data.item, node, context);
-            validateJS(data.collection, node, context);
-            stringUtils.addIfMissing(context.boundParams, data.item);
-            stringUtils.addIfMissing(context.boundParams, data.item + 'Index');
-        }
         data.props = generateProps(node, context);
         if (node.attribs[propsProp]) {
             if (data.props === '{}') {
@@ -356,13 +360,6 @@ function convertHtmlToReact(node, context) {
             data.body = shouldUseCreateElement(context) ? simpleTagTemplateCreateElement(data) : simpleTagTemplate(data);
         }
 
-        if (node.attribs[templateProp]) {
-            data.repeatFunction = generateInjectedFunc(context, 'repeat' + stringUtils.capitalize(data.item), 'return ' + data.body);
-            data.repeatBinds = ['this'].concat(_.reject(context.boundParams, function (param) {
-                return (param === data.item || param === data.item + 'Index');
-            }));
-            data.body = repeatTemplate(data);
-        }
         if (node.attribs[scopeProp]) {
             var scopeVarDeclarations = _.reduce(data.innerScopeMapping, function(acc, rightHandSide, leftHandSide) {
                 var declaration = "var " + leftHandSide + " = " + rightHandSide + ";"
@@ -371,6 +368,23 @@ function convertHtmlToReact(node, context) {
             var functionBody = scopeVarDeclarations + 'return ' + data.body;
             var generatedFuncName = generateInjectedFunc(context, 'scope' + data.scopeName, functionBody, _.keys(data.outerScopeMapping));
             data.body = generatedFuncName + '.apply(this, [' + _.values(data.outerScopeMapping).join(',') + '])';
+        }
+
+        // Order matters here. Each rt-repeat iteration wraps over the rt-scope, so
+        // the scope variables are evaluated in context of the current iteration.
+        if (node.attribs[templateProp]) {
+            // Remove any inner scope mappings. Even though they've been added to the boundParams list,
+            // they will be bound one function call deeper, and are thus not available in the top level
+            // repeat function scope.
+            var boundParams = _.reject(context.boundParams, function(paramName) {
+                return data.innerScopeMapping !== undefined && data.innerScopeMapping[paramName] !== undefined;
+            });
+
+            data.repeatFunction = generateInjectedFunc(context, 'repeat' + stringUtils.capitalize(data.item), 'return ' + data.body, boundParams);
+            data.repeatBinds = ['this'].concat(_.reject(boundParams, function (param) {
+                return (param === data.item || param === data.item + 'Index');
+            }));
+            data.body = repeatTemplate(data);
         }
 
         // Order matters here. The rt-if directive wraps over rt-scope, thus making sure
