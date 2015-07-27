@@ -119,12 +119,15 @@ test('conversion test', function (t) {
  * @param {string} actual
  * @param {string} expected
  * @param {string} filename
+ * @return {boolean} whether actual is equal to expected
  */
 function compareAndWrite(t, actual, expected, filename) {
     t.equal(actual, expected);
     if (actual !== expected) {
         fs.writeFileSync(filename + '.actual.js', actual);
+        return false;
     }
+    return true;
 }
 
 test('convert div with all module types', function (t) {
@@ -175,7 +178,7 @@ function normalizeHtml(html) {
 }
 
 test('html tests', function (t) {
-    var files = ['scope.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt', 'js-in-attr.rt', 'props-class.rt', 'rt-class.rt'];
+    var files = ['scope.rt', 'scope-variable-references.rt', 'scope-evaluated-after-if.rt', 'scope-evaluated-after-repeat.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt', 'js-in-attr.rt', 'props-class.rt', 'rt-class.rt'];
     t.plan(files.length);
 
     files.forEach(check);
@@ -202,9 +205,13 @@ test('html tests', function (t) {
             var actual = React.renderToStaticMarkup(comp());
             actual = normalizeHtml(actual);
             expected = normalizeHtml(expected);
-            compareAndWrite(t, actual, expected, filename);
+            var equal = compareAndWrite(t, actual, expected, filename);
+            if (!equal) {
+                fs.writeFileSync(filename + '.code.js', code);
+            }
         } catch (e) {
             console.log(testFile, e);
+            fs.writeFileSync(filename + '.code.js', code);
         }
     }
 });
