@@ -21,5 +21,7 @@ npm-debug.log
 /coverage
 
 ### Test Output ###
-test/data/*.rt.actual.js
+test/data/**/*.rt.actual.js
+
+### generated code output ###
 test/data/*.code.js

@@ -71,7 +71,10 @@ test('invalid tests json', function (t) {
     function check(testFile) {
         context.clear();
         var filename = path.join(dataPath, testFile.file);
-        var options = {format: 'json'};
+        var options = {
+            format: 'json',
+            force: true // otherwise it won't try to reprocess files that already have output
+        };
         cli.handleSingleFile(options, filename);
         t.deepEqual(normalizeError(context.getMessages()[0]), errorEqualMessage(testFile.issue, filename), 'Expect cli to produce valid output messages');
     }
@@ -224,8 +227,22 @@ function normalizeHtml(html) {
 }
 
 test('html tests', function (t) {
-    var files = ['scope.rt', 'scope-trailing-semicolon.rt', 'scope-variable-references.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt',
-                 'js-in-attr.rt', 'props-class.rt', 'rt-class.rt', 'className.rt'];
+    var files = [
+        'scope.rt',
+        'inner-scope-trailing-semicolon.rt',
+        'inner-scope-variable-references.rt',
+        'inner-scope-evaluated-after-if.rt',
+        'inner-scope-evaluated-after-repeat.rt',
+        'lambda.rt',
+        'eval.rt',
+        'props.rt',
+        'custom-element.rt',
+        'style.rt',
+        'concat.rt',
+        'js-in-attr.rt',
+        'props-class.rt',
+        'rt-class.rt'
+    ];
     t.plan(files.length);
 
     files.forEach(check);
