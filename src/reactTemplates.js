@@ -440,7 +440,15 @@ function convertTemplateToReact(html, options) {
 function convertRT(html, reportContext, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = _.defaults({}, options, defaultOptions);
-    var defines = options.defines ? _.clone(options.defines) : {'react/addons': 'React', lodash: '_'};
+    
+    var reactPath = options.reactImportPath || 'react/addons';
+    var lodashPath = options.lodashImportPath || 'lodash';
+    var defaultDefines = {};
+    defaultDefines[reactPath] = 'React';
+    defaultDefines[lodashPath] = '_';
+
+    var defines = options.defines ? _.clone(options.defines) : defaultDefines;
+
     var context = defaultContext(html, options);
     validate(options, context, reportContext, rootNode.root()[0]);
     var rootTags = _.filter(rootNode.root()[0].children, {type: 'tag'});
