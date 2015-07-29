@@ -4,11 +4,10 @@ requirejs.config({
         lodash: '//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min',
         jquery: '//code.jquery.com/jquery-2.1.4.min',
         firebase: 'https://cdn.firebase.com/js/client/2.0.5/firebase',
-        react: '//fb.me/react-with-addons-0.13.3.min',
+        react: '//cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react-with-addons',
         text: 'libs/requirejs-plugins/text',
         json: 'libs/requirejs-plugins/json'
         //ace: '../ace-builds-1.1.8/src-min/ace',
-        //'react/addons': '//fb.me/react-with-addons-0.12.1'
     },
     shim: {
         lodash: {exports: '_'},
@@ -29,4 +28,3 @@ requirejs(['jquery', 'react', './examples'], function ($, React, Examples) {
     React.render(elem, document.getElementById('home-section'));
     //window.fiddle = React.render(fiddle(), document.getElementById('container'));
 });
-

@@ -3,8 +3,8 @@ requirejs.config({
     paths: {
         lodash: '//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min',
         jquery: '//code.jquery.com/jquery-2.1.4.min',
-        firebase: 'https://cdn.firebase.com/js/client/2.0.5/firebase',
-        react: '//fb.me/react-with-addons-0.13.3.min',
+        firebase: '//cdn.firebase.com/js/client/2.0.5/firebase',
+        react: '//cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react-with-addons',
         //ace: '../ace-builds-1.1.8/src-min/ace',
         fiddle: './fiddle',
         text: 'libs/requirejs-plugins/text',
@@ -13,7 +13,6 @@ requirejs.config({
         //codeMirror: 'libs/codemirror-4.8/lib/codemirror',
         //htmlmixed: 'libs/codemirror-4.8/mode/htmlmixed/htmlmixed',
         //javascript: 'libs/codemirror-4.8/mode/javascript/javascript'
-        //'react/addons': '//fb.me/react-with-addons-0.12.1'
     },
     shim: {
         lodash: {exports: '_'},
@@ -51,4 +50,3 @@ requirejs(['jquery', 'react', 'fiddle', 'bootstrap'], function ($, React, fiddle
     //    window.editorGenerated.refresh();
     //}
 });
-
