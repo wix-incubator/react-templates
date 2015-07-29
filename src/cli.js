@@ -61,7 +61,7 @@ function handleSingleFile(currentOptions, filename) {
             } else {
                 outputFilename = filename + '.ts';
             }
-        } else if (sourceExt === '.jsrt'){
+        } else if (sourceExt === '.jsrt') {
             outputFilename = filename.replace(/\.jsrt$/, '.js');
             currentOptions = _.assign({}, currentOptions, {modules: 'jsrt'});
         } else {

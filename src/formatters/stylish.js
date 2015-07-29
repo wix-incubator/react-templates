@@ -27,7 +27,7 @@ var table = require('text-table');
  * @returns {string} The original word with an s on the end if count is not one.
  */
 function pluralize(word, count) {
-    return (count === 1 ? word : word + 's');
+    return count === 1 ? word : word + 's';
 }
 
 //function pluralize(n, single, plural) {

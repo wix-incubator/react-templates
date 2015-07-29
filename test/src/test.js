@@ -189,7 +189,7 @@ test('html tests', function (t) {
             var code = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '');
             var defineMap = {'react/addons': React, lodash: _};
             //noinspection JSUnusedLocalSymbols
-            var define = function (requirementsNames, content) { //eslint-disable-line no-unused-vars
+            var define = function (requirementsNames, content) { //eslint-disable-line no-unused-vars,func-style
                 var requirements = _.map(requirementsNames, function (reqName) {
                     return defineMap[reqName];
                 });

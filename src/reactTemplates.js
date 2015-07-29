@@ -293,7 +293,9 @@ function convertHtmlToReact(node, context) {
                 data.scopeMapping[boundParam] = boundParam;
             });
             _.each(node.attribs[scopeProp].split(';'), function (scopePart) {
-                if (scopePart.trim().length === 0) return;
+                if (scopePart.trim().length === 0) {
+                    return;
+                }
 
                 var scopeSubParts = scopePart.split(' as ');
                 if (scopeSubParts.length < 2) {
@@ -351,7 +353,7 @@ function convertHtmlToReact(node, context) {
         if (node.attribs[templateProp]) {
             data.repeatFunction = generateInjectedFunc(context, 'repeat' + stringUtils.capitalize(data.item), 'return ' + data.body);
             data.repeatBinds = ['this'].concat(_.reject(context.boundParams, function (param) {
-                return (param === data.item || param === data.item + 'Index');
+                return param === data.item || param === data.item + 'Index';
             }));
             data.body = repeatTemplate(data);
         }
@@ -364,7 +366,7 @@ function convertHtmlToReact(node, context) {
         }
         return data.body;
     } else if (node.type === 'comment') {
-        return (commentTemplate(node));
+        return commentTemplate(node);
     } else if (node.type === 'text') {
         if (node.data.trim()) {
             return convertText(node, context, node.data);
