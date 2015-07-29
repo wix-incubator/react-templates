@@ -91,5 +91,15 @@ module.exports = optionator({
         alias: 'k',
         type: 'Boolean',
         description: 'Show stack trace on errors.'
+    }, {
+        option: 'react-import-path',
+        default: 'react/addons',
+        type: 'String',
+        description: 'Dependency path for importing React.'
+    }, {
+        option: 'lodash-import-path',
+        default: 'lodash',
+        type: 'String',
+        description: 'Dependency path for importing lodash.'
     }]
 });
