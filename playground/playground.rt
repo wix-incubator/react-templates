@@ -5,7 +5,7 @@
     <div id="{this.props.id}-myTab" class="code-area {this.getLayoutClass()}">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-            <li rt-repeat="tab in this.getTabs()" role="presentation"
+            <li rt-repeat="tab in this.getTabs()" role="presentation" key="tab{tabIndex}"
                 rt-class="{active:this.state.currentTab === tab[0]}"
                 onClick="(evt)=> evt.preventDefault();this.setState({'currentTab':tab[0]});">
                 <a aria-controls="{tab[1]}">{tab[1]}</a>

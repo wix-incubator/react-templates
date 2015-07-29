@@ -9,7 +9,7 @@ define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React
     function generateRandomId() {
         var uuid = 'xxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = _.random(0, 15);
-            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            return (c === 'x' ? r : r & 0x3 | 0x8).toString(16);
         });
         return uuid;
     }

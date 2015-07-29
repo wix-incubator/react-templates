@@ -1,8 +1,7 @@
 {
     mixins: [React.addons.LinkedStateMixin],
-        getInitialState: function () {
-    return {
-        edited: '', todos: [], counter: 0};
+    getInitialState: function () {
+        return {edited: '', todos: [], counter: 0};
     },
     add: function () {
         if (this.state.edited.trim().length === 0) {

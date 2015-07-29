@@ -5,7 +5,5 @@ var <%= name %> = React.createClass({
     toggle: function() {
         this.setState({open: !this.state.open});
     },
-    render: function () {
-        return <%= name %>RT.apply(this);
-    }
+    render: <%= name %>RT
 });

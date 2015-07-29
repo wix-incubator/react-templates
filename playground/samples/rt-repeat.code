@@ -4,7 +4,5 @@ var <%= name %> = React.createClass({
             items: ['One', 'Two', 'Three']
         };
     },
-    render: function () {
-        return <%= name %>RT.apply(this);
-    }
+    render: <%= name %>RT
 });

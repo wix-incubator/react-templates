@@ -1,7 +1,7 @@
 <div>
-    <strong>{_.filter(this.state.todos, {done:true}).length}</strong>
+    <strong>{this.getDone().length}</strong>
     done,
-    <strong>{_.filter(this.state.todos, {done:false}).length}</strong>
+    <strong>{this.getPending().length}</strong>
     pending
     <br/>
     <div rt-repeat="todo in this.state.todos" key="{todo.key}">

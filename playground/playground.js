@@ -111,7 +111,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             };
         },
         getLayoutClass: function () {
-            return (this.props.direction === 'horizontal' && 'horizontal') || 'vertical';
+            return (this.props.direction === 'horizontal' && 'horizontal') || 'vertical'; //eslint-disable-line no-extra-parens
         },
         //executeCode: function() {
         //    var mountNode = this.refs.mount.getDOMNode();
@@ -247,7 +247,7 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
         componentDidUpdate: function () {
             this.renderSample();
         },
-        componentWillUnmount: function (){
+        componentWillUnmount: function () {
             window.removeEventListener('resize', this.calcSize);
         },
         calcSize: function () {

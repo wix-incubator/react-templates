@@ -11,6 +11,7 @@ define([
     function repeatTab2(tab, tabIndex) {
         return React.createElement('li', {
             'role': 'presentation',
+            'key': 'tab' + tabIndex,
             'className': _.keys(_.pick({ active: this.state.currentTab === tab[0] }, _.identity)).join(' '),
             'onClick': onClick1.bind(this, tab, tabIndex)
         }, React.createElement('a', { 'aria-controls': tab[1] }, tab[1]));

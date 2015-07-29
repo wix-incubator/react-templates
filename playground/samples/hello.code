@@ -1,5 +1,3 @@
 var <%= name %> = React.createClass({
-    render: function () {
-        return <%= name %>RT.apply(this);
-    }
+    render: <%= name %>RT
 });

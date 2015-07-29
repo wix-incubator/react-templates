@@ -62,7 +62,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror'], fu
                 return CodeMirror.off(document, 'mousemove', position);
             }
             tt.style.top = Math.max(0, ev.clientY - tt.offsetHeight - 5) + 'px';
-            tt.style.left = (ev.clientX + 5) + 'px';
+            tt.style.left = (ev.clientX + 5) + 'px'; //eslint-disable-line no-extra-parens
         }
         CodeMirror.on(document, 'mousemove', position);
         position(e);

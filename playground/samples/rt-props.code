@@ -12,7 +12,5 @@ var <%= name %> = React.createClass({
         ret.style[this.state.key] = this.state.val;
         return ret;
     },
-    render: function () {
-        return <%= name %>RT.apply(this);
-    }
+    render: <%= name %>RT
 });

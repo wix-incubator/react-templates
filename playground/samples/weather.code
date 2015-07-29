@@ -30,7 +30,5 @@ var <%= name %> = React.createClass({
     fetchWeatherCallback: function(result) {
         this.setState({ loading:false, info: result.list });
     },
-    render: function () {
-        return <%= name %>RT.apply(this);
-    }
+    render: <%= name %>RT
 });

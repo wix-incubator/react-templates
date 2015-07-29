@@ -19,9 +19,13 @@ var <%= name %> = React.createClass({
         this.setState({todos: todos});
     },
     clearDone: function () {
-        this.setState({todos: _.filter(this.state.todos, {done: false})});
+        this.setState({todos: this.getPending()});
     },
-    render: function () {
-        return <%= name %>RT.apply(this);
-    }
+    getDone: function () {
+        return _.filter(this.state.todos, {done: true});
+    },
+    getPending: function () {
+        return _.filter(this.state.todos, {done: false});
+    },
+    render: <%= name %>RT
 });
