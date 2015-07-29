@@ -175,7 +175,7 @@ function normalizeHtml(html) {
 }
 
 test('html tests', function (t) {
-    var files = ['scope.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt', 'js-in-attr.rt', 'props-class.rt', 'rt-class.rt'];
+    var files = ['scope.rt', 'scope-trailing-semicolon.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt', 'js-in-attr.rt', 'props-class.rt', 'rt-class.rt'];
     t.plan(files.length);
 
     files.forEach(check);

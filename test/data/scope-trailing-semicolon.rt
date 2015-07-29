@@ -1,0 +1,6 @@
+<div>
+	<div rt-scope="15 as a; 20 as b;">
+		{a + b}
+	</div>
+	<div rt-if="typeof a === 'undefined'">good</div>
+</div>

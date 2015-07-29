@@ -293,6 +293,8 @@ function convertHtmlToReact(node, context) {
                 data.scopeMapping[boundParam] = boundParam;
             });
             _.each(node.attribs[scopeProp].split(';'), function (scopePart) {
+                if (scopePart.trim().length === 0) return;
+
                 var scopeSubParts = scopePart.split(' as ');
                 if (scopeSubParts.length < 2) {
                     throw RTCodeError.build("invalid scope part '" + scopePart + "'", context, node);
