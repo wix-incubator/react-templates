@@ -1,18 +1,18 @@
 requirejs.config({
-//    baseUrl: '/',
+    //baseUrl: '.',
+    baseUrl: './playground',
     paths: {
-        lodash: '//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min',
+        lodash: '//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.0/lodash.min',
         jquery: '//code.jquery.com/jquery-2.1.4.min',
         firebase: 'https://cdn.firebase.com/js/client/2.0.5/firebase',
         react: '//cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react-with-addons',
         text: 'libs/requirejs-plugins/text',
         json: 'libs/requirejs-plugins/json'
-        //ace: '../ace-builds-1.1.8/src-min/ace',
+        //examples: './examples'
     },
     shim: {
         lodash: {exports: '_'},
         firebase: {exports: 'Firebase'},
-        //ace: { exports: 'ace' },
         jquery: {exports: '$'},
         react: {exports: 'React'}
     },
@@ -21,10 +21,8 @@ requirejs.config({
     }
 });
 
-requirejs(['jquery', 'react', './examples'], function ($, React, Examples) {
+requirejs(['./examples', 'react', 'jquery'], function (Examples, React) {
     'use strict';
-    /*eslint new-cap:0*/
     var elem = React.createElement(Examples);
     React.render(elem, document.getElementById('home-section'));
-    //window.fiddle = React.render(fiddle(), document.getElementById('container'));
 });

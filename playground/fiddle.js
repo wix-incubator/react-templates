@@ -1,8 +1,6 @@
 /**
  * Created by avim on 12/2/2014.
  */
-/*eslint global-strict:0, no-alert:0*/
-/*global alert:true*/
 define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React, Firebase, _, fiddleTemplate, $) {
     'use strict';
 
@@ -37,7 +35,7 @@ define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React
             var firebase = new Firebase('https://reacttemplates.firebaseio-demo.com/');
             firebase.child('fiddles').child(newHash).set(playgroundState, function () {
                 Firebase.goOffline();
-                alert('saved the fiddle, you can share your url');
+                alert('Saved the fiddle, you can share your url'); //eslint-disable-line no-alert
             });
         },
         clear: function () {
@@ -59,7 +57,7 @@ define(['react', 'firebase', 'lodash', './fiddle.rt', 'jquery'], function (React
                 $.get('playground/samples/' + name + '.code', null, function (data2/*, textStatus2, jqXHR2*/) {
                     var currentState = {
                         templateHTML: rt,
-                        templateProps: _.template(data2, {name: 'template'})
+                        templateProps: _.template(data2)({name: 'template'})
                     };
                     //this.updateSample(currentState);
                     playground.setState(currentState);

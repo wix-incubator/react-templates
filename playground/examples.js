@@ -16,14 +16,14 @@ define(['lodash', 'react', './examples.rt',
         repeat: [rtRepeatCode, rtRepeatRT],
         weather: [weatherCode, weatherRT]
     };
-    //samples = _.map(samples, function (tuple) {
-    //    return {templateProps: tuple[0], templateHTML: tuple[1]};
+    //samples = _.map(samples, function (v, k) {
+    //    return {name: k, templateProps: _.template(v[0])({name: k}), templateHTML: v[1]};
     //});
-    Object.keys(samples).forEach(function (k) {
-        samples[k] = {name: k, templateProps: _.template(samples[k][0], {name: k}), templateHTML: samples[k][1]};
+    _.each(samples, function (v, k) {
+        samples[k] = {name: k, templateProps: _.template(v[0])({name: k}), templateHTML: v[1]};
     });
 
-    var Examples = React.createClass({
+    return React.createClass({
         displayName: 'Examples',
         mixins: [React.addons.LinkedStateMixin],
         getInitialState: function () {
@@ -40,6 +40,4 @@ define(['lodash', 'react', './examples.rt',
         },
         render: examplesTemplate
     });
-
-    return Examples;
 });
