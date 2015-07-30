@@ -4,7 +4,7 @@
 
 # React Templates
 
-Lightweight templates for [React](http://facebook.github.io/react/index.html). 
+Lightweight templates for [React](http://facebook.github.io/react/index.html).
 
 * No runtime libraries. No magic. Simply precompile your way to clear React code.
 * Easy syntax that's similar to HTML, supported by most IDEs.
@@ -13,7 +13,7 @@ Lightweight templates for [React](http://facebook.github.io/react/index.html).
 * Supports AMD, CommonJS, ES6, Typescript and globals.
 
 ## How does it work
-React Templates compiles an *.rt file (react template file - an extended HTML format) into a JavaScript file. This file, which uses AMD syntax, returns a function. When invoked, this function returns a virtual React DOM based on React.DOM elements and custom user components. 
+React Templates compiles an *.rt file (react template file - an extended HTML format) into a JavaScript file. This file, which uses AMD syntax, returns a function. When invoked, this function returns a virtual React DOM based on React.DOM elements and custom user components.
 <p>A common use case would be that a regular React component would require a JavaScript file generated from a template, and then perform `func.apply(this)`, causing the template to have that component as its context.
 
 ## Playground
@@ -31,7 +31,7 @@ http://plugins.jetbrains.com/plugin/7648
 
 
 ###### Basic concepts for React templates
-* Any valid HTML (including comments) is a template 
+* Any valid HTML (including comments) is a template
 * {} to identify JS expression
 * Built-in directives:
     * [rt-if](#rt-if)
@@ -238,7 +238,7 @@ define([
 ```
 
 ## style
-React templates allow the settings of styles inline in HTML, optionally returning an object from the evaluation context. By default, style names will be converted from hyphen-style to camelCase-style naming. 
+React templates allow the settings of styles inline in HTML, optionally returning an object from the evaluation context. By default, style names will be converted from hyphen-style to camelCase-style naming.
 
 To embed JavaScript inside a style attribute, single curly braces are used. To embed an entire object, double curly braces are used. *Note*: When embedding objects, styles must conform to camelCase-style naming.
 
@@ -274,7 +274,7 @@ define([
 ```
 
 ## event handlers
-React event handlers accept function references inside of {}, such as `onClick="{this.myClickHandler}"`. When functions are not needed, lambda notation can be used, which will create a React template that creates a function for the included code. There is no performance impact, as the function created is bound to the context instead of being recreated. 
+React event handlers accept function references inside of {}, such as `onClick="{this.myClickHandler}"`. When functions are not needed, lambda notation can be used, which will create a React template that creates a function for the included code. There is no performance impact, as the function created is bound to the context instead of being recreated.
 <p>The lambda notation has the form: `onClick="(evt) => console.log(evt)"`. In this example, **evt** is the name of the first argument passed into the inline function. With browser events, this will most likely be the React synthetic event. However, if you expect a property that starts with **on**Something, then React templates will treat it as an event handler. If you have an event handler called **onBoxSelected** that triggers an event with row and column params, you can write `onBoxSelected="(row, col)=>this.doSomething(row,col)"`. A no-param version is supported as well: `onClick="()=>console.log('just wanted to know it clicked')"`.
 
 ###### Sample:
@@ -361,8 +361,12 @@ export default function () {
 };
 ```
 
+## Contributing
+
+See the [Contributing page](CONTRIBUTING.md).
+
 ## License
-Copyright (c) 2014 Wix. Licensed under the MIT license.
+Copyright (c) 2015 Wix. Licensed under the MIT license.
 
 [npm-image]: https://img.shields.io/npm/v/react-templates.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/react-templates
