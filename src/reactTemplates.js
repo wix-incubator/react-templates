@@ -297,11 +297,17 @@ function convertHtmlToReact(node, context) {
 
         var data = {name: convertTagNameToConstructor(node.name, context)};
         if (node.attribs[scopeAttr]) {
-            data.scopeMapping = {};
+            //data.scopeMapping = {};
             data.scopeName = '';
+
+            // these are variables that were already in scope, unrelated to the ones declared in rt-scope
+            data.outerScopeMapping = {};
             _.each(context.boundParams, function (boundParam) {
-                data.scopeMapping[boundParam] = boundParam;
+                data.outerScopeMapping[boundParam] = boundParam;
             });
+            
+            // these are variables declared in the rt-scope attribute
+            data.innerScopeMapping = {};
             _.each(node.attribs[scopeAttr].split(';'), function (scopePart) {
                 if (scopePart.trim().length === 0) {
                     return;
@@ -313,10 +319,15 @@ function convertHtmlToReact(node, context) {
                 }
                 var scopeName = scopeSubParts[1].trim();
                 validateJS(scopeName, node, context);
+
+                // this adds both parameters to the list of parameters passed further down
+                // the scope chain, as well as variables that are locally bound before any
+                // function call, as with the ones we generate for rt-scope.
                 stringUtils.addIfMissing(context.boundParams, scopeName);
+
                 data.scopeName += stringUtils.capitalize(scopeName);
-                data.scopeMapping[scopeName] = scopeSubParts[0].trim();
-                validateJS(data.scopeMapping[scopeName], node, context);
+                data.innerScopeMapping[scopeName] = scopeSubParts[0].trim();
+                validateJS(data.innerScopeMapping[scopeName], node, context);
             });
         }
 
@@ -372,8 +383,13 @@ function convertHtmlToReact(node, context) {
             data.body = ifTemplate(data);
         }
         if (node.attribs[scopeAttr]) {
-            var generatedFuncName = generateInjectedFunc(context, 'scope' + data.scopeName, 'return ' + data.body, _.keys(data.scopeMapping));
-            data.body = generatedFuncName + '.apply(this, [' + _.values(data.scopeMapping).join(',') + '])';
+            var scopeVarDeclarations = _.reduce(data.innerScopeMapping, function (acc, rightHandSide, leftHandSide) {
+                var declaration = 'var ' + leftHandSide + ' = ' + rightHandSide + ';';
+                return acc + declaration;
+            }, '');
+            var functionBody = scopeVarDeclarations + 'return ' + data.body;
+            var generatedFuncName = generateInjectedFunc(context, 'scope' + data.scopeName, functionBody, _.keys(data.outerScopeMapping));
+            data.body = generatedFuncName + '.apply(this, [' + _.values(data.outerScopeMapping).join(',') + '])';
         }
         return data.body;
     } else if (node.type === 'comment') {
