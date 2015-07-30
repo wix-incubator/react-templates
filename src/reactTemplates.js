@@ -383,10 +383,10 @@ function convertHtmlToReact(node, context) {
             data.body = ifTemplate(data);
         }
         if (node.attribs[scopeAttr]) {
-            var scopeVarDeclarations = _.reduce(data.innerScopeMapping, function(acc, rightHandSide, leftHandSide) {
-                var declaration = "var " + leftHandSide + " = " + rightHandSide + ";"
+            var scopeVarDeclarations = _.reduce(data.innerScopeMapping, function (acc, rightHandSide, leftHandSide) {
+                var declaration = 'var ' + leftHandSide + ' = ' + rightHandSide + ';';
                 return acc + declaration;
-            }, "");
+            }, '');
             var functionBody = scopeVarDeclarations + 'return ' + data.body;
             var generatedFuncName = generateInjectedFunc(context, 'scope' + data.scopeName, functionBody, _.keys(data.outerScopeMapping));
             data.body = generatedFuncName + '.apply(this, [' + _.values(data.outerScopeMapping).join(',') + '])';

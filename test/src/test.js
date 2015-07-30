@@ -184,12 +184,13 @@ test('html tests', function (t) {
     files.forEach(check);
 
     function check(testFile) {
+        var filename = path.join(dataPath, testFile);
+        var code = '';
         try {
-            var filename = path.join(dataPath, testFile);
             var html = fs.readFileSync(filename).toString();
             var expected = readFileNormalized(filename + '.html');
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-            var code = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '');
+            code = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '');
             var defineMap = {'react/addons': React, lodash: _};
             //noinspection JSUnusedLocalSymbols
             var define = function (requirementsNames, content) { //eslint-disable-line no-unused-vars,func-style
