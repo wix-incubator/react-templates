@@ -13,7 +13,6 @@ module.exports = function (grunt) {
                     'test/src/**/*.js',
                     '!playground/libs/**/*.js',
                     '!playground/dist/**/*.js',
-                    '!playground/rt-main.browser.js',
                     '!playground/**/*.rt.js'
                 ]
             },
