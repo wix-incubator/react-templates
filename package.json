@@ -8,7 +8,10 @@
   },
   "scripts": {
     "test": "node test/src/test.js",
-    "test-cov": "istanbul cover test/src/test.js -- --require test/support/env --reporter dot --check-leaks test/ test/acceptance/"
+    "test-cov": "istanbul cover test/src/test.js -- --require test/support/env --reporter dot --check-leaks test/ test/acceptance/",
+    "patch": "npm version patch -m\"update version to %s\" && git push && git push --tags",
+    "minor": "npm version minor -m\"update version to %s\" && git push && git push --tags",
+    "major": "npm version major -m\"update version to %s\" && git push && git push --tags"
   },
   "repository": {
     "type": "git",
