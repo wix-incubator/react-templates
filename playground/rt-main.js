@@ -1,3 +1,4 @@
+/*eslint strict:0*/
 'use strict';
 /*eslint-env browser*/
 /*var _ = */require('lodash');

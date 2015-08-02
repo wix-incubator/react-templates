@@ -79,7 +79,7 @@ var reactSupportedAttributes = ['accept', 'acceptCharset', 'accessKey', 'action'
                                 'required', 'role', 'rows', 'rowSpan', 'sandbox', 'scope', 'scrolling', 'seamless', 'selected', 'shape', 'size', 'sizes', 'span', 'spellCheck', 'src', 'srcDoc', 'srcSet', 'start', 'step',
                                 'style', 'tabIndex', 'target', 'title', 'type', 'useMap', 'value', 'width', 'wmode'];
 var classNameProp = 'className';
-var attributesMapping = {'class': classNameProp, 'rt-class': classNameProp, 'for': 'htmlFor'};
+var attributesMapping = {'class': classNameProp, 'rt-class': classNameProp, 'for': 'htmlFor'}; //eslint-disable-line quote-props
 _.forEach(reactSupportedAttributes, function (attributeReactName) {
     if (attributeReactName !== attributeReactName.toLowerCase()) {
         attributesMapping[attributeReactName.toLowerCase()] = attributeReactName;

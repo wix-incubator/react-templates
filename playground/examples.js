@@ -1,4 +1,3 @@
-'use strict';
 define(['lodash', 'react', './examples.rt',
         'text!./samples/hello.code', 'text!./samples/hello.rt',
         'text!./samples/todo.code', 'text!./samples/todo.rt',
@@ -8,6 +7,7 @@ define(['lodash', 'react', './examples.rt',
         'text!./samples/weather.code', 'text!./samples/weather.rt',
         'text!./samples/rt-require.rt'
 ], function (_, React, examplesTemplate, helloCode, helloRT, todoCode, todoRT, rtIfCode, rtIfRT, rtPropsCode, rtPropsRT, rtRepeatCode, rtRepeatRT, weatherCode, weatherRT, rtRequireRT) {
+    'use strict';
     var samples = {
         hello: [helloCode, helloRT],
         todo: [todoCode, todoRT],

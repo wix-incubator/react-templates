@@ -1,6 +1,6 @@
 {
     "rules": {
-        "global-strict": 0
+        "strict": [2, "function"]
     },
     "env": {
         "browser": true,

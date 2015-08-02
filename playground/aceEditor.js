@@ -1,10 +1,9 @@
 /**
  * Created by avim on 11/25/2014.
  */
-'use strict';
 /*global ace:true*/
 define(['react', 'lodash']/*, 'ace'*/, function (React, _/*, ace*/) {
-
+    'use strict';
     return React.createClass({
         displayName: 'BraceEditor',
         propTypes: {
