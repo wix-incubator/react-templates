@@ -2,4 +2,5 @@
 	<div class="f g-{1+2} h-i" rt-class="{'a': true, b: false, c: 1, 'd-e': true}"></div>
 	Order should not matter
 	<div rt-class="{'a': true, b: false, c: 1, 'd-e': true}" class="f g-{1+2} h-i"></div>
+	<div className="a"></div>
 </div>

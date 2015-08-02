@@ -18,7 +18,6 @@ var propsTemplate = _.template('mergeProps( <%= generatedProps %>, <%= rtProps %
 var propsMergeFunction = 'function mergeProps(inline,external) {\n var res = _.assign({},inline,external)\nif (inline.hasOwnProperty(\'style\')) {\n res.style = _.defaults(res.style, inline.style);\n}\n' +
     ' if (inline.hasOwnProperty(\'className\') && external.hasOwnProperty(\'className\')) {\n' +
     ' res.className = external.className + \' \' + inline.className;\n} return res;\n}\n';
-//var classSetTemplate = _.template('React.addons.classSet(<%= classSet %>)');
 var classSetTemplate = _.template('_.keys(_.pick(<%= classSet %>, _.identity)).join(" ")');
 var simpleTagTemplate = _.template('<%= name %>(<%= props %><%= children %>)');
 var tagTemplate = _.template('<%= name %>.apply(this, [<%= props %><%= children %>])');
@@ -55,7 +54,7 @@ var classAttr = 'class';
 var scopeAttr = 'rt-scope';
 var propsAttr = 'rt-props';
 
-var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.13.1'};
+var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.13.1', reactImportPath: 'react/addons', lodashImportPath: 'lodash'};
 
 /**
  * @param {Context} context
@@ -230,7 +229,7 @@ function generateProps(node, context) {
             var existing = props[propKey] ? props[propKey] + ' + " " + ' : '';
             if (key === classSetAttr) {
                 props[propKey] = existing + classSetTemplate({classSet: val});
-            } else if (key === classAttr) {
+            } else if (key === classAttr || key === classNameProp) {
                 props[propKey] = existing + convertText(node, context, val.trim());
             }
         } else if (key.indexOf('rt-') !== 0) {
@@ -402,12 +401,6 @@ function convertHtmlToReact(node, context) {
     }
 }
 
-//function removeDocType(html) {
-//  html = html.replace(/^\s*\<\!doctype\s+rt\s*>/mi, function () {
-//    return '';
-//  });
-//  return html;
-//}
 /**
  * @param node
  * @return {boolean}
@@ -416,15 +409,10 @@ function isTag(node) {
     return node.type === 'tag';
 }
 
-//function isEmptyText(node) {
-//    return node.type === 'text' && /^\s*$/g.test(node.data);
-//}
-
 function handleSelfClosingHtmlTags(nodes) {
     return _(nodes)
         .map(function (node) {
             var externalNodes = [];
-            //node.children = _.reject(node.children, isEmptyText);
             node.children = handleSelfClosingHtmlTags(node.children);
             if (node.type === 'tag' && _.contains(htmlSelfClosingTags, node.name)) {
                 externalNodes = _.filter(node.children, isTag);
@@ -470,11 +458,9 @@ function convertRT(html, reportContext, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = _.defaults({}, options, defaultOptions);
     
-    var reactPath = options.reactImportPath || 'react/addons';
-    var lodashPath = options.lodashImportPath || 'lodash';
     var defaultDefines = {};
-    defaultDefines[reactPath] = 'React';
-    defaultDefines[lodashPath] = '_';
+    defaultDefines[options.reactImportPath] = 'React';
+    defaultDefines[options.lodashImportPath] = '_';
 
     var defines = options.defines ? _.clone(options.defines) : defaultDefines;
 
@@ -493,11 +479,7 @@ function convertRT(html, reportContext, options) {
             } else if (tag.children.length) {
                 throw RTCodeError.build('rt-require may have no children', context, tag);
             }
-            //if (options.modules === 'typescript') {
-            //    defines['./' + tag.attribs.dependency] = tag.attribs.as;
-            //} else {
             defines[tag.attribs.dependency] = tag.attribs.as;
-            //}
         } else if (firstTag === null) {
             firstTag = tag;
         } else {
@@ -527,7 +509,6 @@ function convertRT(html, reportContext, options) {
             tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
             code = escodegen.generate(tree, {comment: true});
         } catch (e) {
-            //console.log(code);
             throw new RTCodeError(e.message, e.index, -1);
         }
     }
