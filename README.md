@@ -362,13 +362,16 @@ export default function () {
 ```
 
 ## properties template functions
-In cases you'd like to use a property that accepts a function and return renderable React component. Using of a **template** tag lets you do exactly that: `<template prop="propName" arguments="arg1, arg2"/>`. templates can be used only as an immediate child of the component that it will be used in.
+In cases you'd like to use a property that accepts a function and return renderable React component.
+You should use a **template** tag that will let you do exactly that: `<template prop="propName" arguments="arg1, arg2"/>`.
+
+Templates can be used only as an immediate child of the component that it will be used in and all scope variable will be available in the template function.
 
 ###### Sample:
 ```html
 <MyComp data="{[1,2,3]}">
     <template prop="renderItem" arguments="item">
-        <div>{utils.toLower(item.name)}</div>
+        <div>{item}</div>
     </template>
 </MyComp>
 ```
@@ -380,7 +383,7 @@ define([
 ], function (React, _) {
     'use strict';
     function renderItem1(item) {
-        return React.createElement('div', {}, utils.toLower(item.name));
+        return React.createElement('div', {}, item);
     }
     return function () {
         return React.createElement(MyComp, {
@@ -400,7 +403,7 @@ define([
 var React = require('react/addons');
 var _ = require('lodash');
 function renderItem1(item) {
-    return React.createElement('div', {}, utils.toLower(item.name));
+    return React.createElement('div', {}, item);
 }
 module.exports = function () {
     return React.createElement(MyComp, {
@@ -419,7 +422,7 @@ module.exports = function () {
 import React from 'react/addons';
 import _ from 'lodash';
 function renderItem1(item) {
-    return React.createElement('div', {}, utils.toLower(item.name));
+    return React.createElement('div', {}, item);
 }
 export default function () {
     return React.createElement(MyComp, {
