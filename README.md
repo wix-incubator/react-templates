@@ -365,7 +365,7 @@ export default function () {
 In cases you'd like to use a property that accepts a function and return renderable React component.
 You should use a **template** tag that will let you do exactly that: `<template prop="propName" arguments="arg1, arg2"/>`.
 
-Templates can be used only as an immediate child of the component that it will be used in and all scope variable will be available in the template function.
+Templates can be used only as an immediate child of the component that it will be used in. All scope variable will be available in the template function.
 
 ###### Sample:
 ```html
