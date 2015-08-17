@@ -1,5 +1,5 @@
 <div>
-    <template prop="templateProp" arguments="arg1">
+    <rt-template prop="templateProp" arguments="arg1">
         <div>{arg1}</div>
-    </template>
+    </rt-template>
 </div>

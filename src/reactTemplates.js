@@ -53,6 +53,7 @@ var classSetAttr = 'rt-class';
 var classAttr = 'class';
 var scopeAttr = 'rt-scope';
 var propsAttr = 'rt-props';
+var templateNode = 'rt-template';
 
 var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.13.1', reactImportPath: 'react/addons', lodashImportPath: 'lodash'};
 
@@ -184,11 +185,15 @@ function generateTemplateProps(node, context) {
     var propertiesTemplates = _(node.children)
         .map(function (child, index) {
             var templateProp = null;
-            if (child.name === 'template' && child.attribs.prop) { // Generic explicit template tag
+            if (child.name === templateNode) { // Generic explicit template tag
+                if (!_.has(child.attribs, 'prop')) {
+                    throw RTCodeError.build('rt-template must have a prop attribute', context, child);
+                }
+
                 var childTemplate = _.find(context.options.templates, {prop: child.attribs.prop}) || {arguments: []};
                 templateProp = {
                     prop: child.attribs.prop,
-                    arguments: child.attribs.arguments ? child.attribs.arguments.split(',') : childTemplate.arguments
+                    arguments: (child.attribs.arguments ? child.attribs.arguments.split(',') : childTemplate.arguments) || []
                 };
             } else if (propTemplateDefinition && propTemplateDefinition[child.name]) { // Implicit child template from configuration
                 templateProp = {

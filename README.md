@@ -363,16 +363,16 @@ export default function () {
 
 ## properties template functions
 In cases you'd like to use a property that accepts a function and return renderable React component.
-You should use a **template** tag that will let you do exactly that: `<template prop="propName" arguments="arg1, arg2"/>`.
+You should use a **rt-template** tag that will let you do exactly that: `<rt-template prop="propName" arguments="arg1, arg2"/>`.
 
 Templates can be used only as an immediate child of the component that it will be used in. All scope variable will be available in the template function.
 
 ###### Sample:
 ```html
 <MyComp data="{[1,2,3]}">
-    <template prop="renderItem" arguments="item">
+    <rt-template prop="renderItem" arguments="item">
         <div>{item}</div>
-    </template>
+    </rt-template>
 </MyComp>
 ```
 ###### Compiled (AMD):
