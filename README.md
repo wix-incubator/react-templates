@@ -361,6 +361,44 @@ export default function () {
 };
 ```
 
+## Inline Templates
+Although we recommend separating the templates to a separate `.rt` file, there's an option to use a template inline as the render method (à la JSX).
+To do that, write your code in a `.jsrt` file, and send it to react-templates with the `modules` flag set to `jsrt`.
+###### Sample:
+```javascript
+define(['react','lodash'], function (React, _) {
+    var comp = React.createClass({
+        render:
+            <template>
+                <div>hello world</div>
+            </template>
+    });
+
+    return comp;
+});
+
+```
+
+###### Compiled (with jsrt flag):
+
+```javascript
+
+define([
+    'react',
+    'lodash'
+], function (React, _) {
+    var comp = React.createClass({
+        render: function () {
+            return function () {
+                return React.createElement('div', {}, 'hello world');
+            };
+        }()
+    });
+    return comp;
+});
+
+```
+
 ## Contributing
 
 See the [Contributing page](CONTRIBUTING.md).
