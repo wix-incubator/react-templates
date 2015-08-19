@@ -40,6 +40,7 @@ http://plugins.jetbrains.com/plugin/7648
     * [rt-props](#rt-props)
     * [rt-class](#rt-class)
     * [rt-require](#rt-require)
+    * [rt-template](#rt-template)
 * [styles](#styles)
 * [event handlers](#event-handlers)
 
@@ -65,6 +66,9 @@ In most cases, this package will be wrapped in a build task, so CLI will not be 
 * Broccoli: [broccoli-react-templates](https://github.com/kraftwer1/broccoli-react-templates)
 * Browserify plugin: [react-templatify](https://www.npmjs.com/package/react-templatify)
 * Webpack loader : [react-templates-loader](https://github.com/AlexanderPavlenko/react-templates-loader)
+
+### Use React Templates for Native Apps?
+You can get all the react templates functionality and more. [Click here for more info](https://github.com/wix/react-templates/blob/gh-pages/docs/native.md)
 
 # Template directives and syntax
 
@@ -399,7 +403,7 @@ define([
 
 ```
 
-## properties template functions
+## rt-template, and defining properties template functions
 In cases you'd like to use a property that accepts a function and return renderable React component.
 You should use a **rt-template** tag that will let you do exactly that: `<rt-template prop="propName" arguments="arg1, arg2"/>`.
 

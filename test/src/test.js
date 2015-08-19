@@ -116,7 +116,7 @@ test('conversion test', function (t) {
 
 test('prop template conversion test', function (t) {
     var options = {
-        templates: {
+        propTemplates: {
             List: {
                 Row: {prop: 'renderRow', arguments: ['rowData']}
             }
@@ -131,6 +131,30 @@ test('prop template conversion test', function (t) {
         var filename = path.join(dataPath, testFile);
         var html = readFileNormalized(filename);
         var expected = readFileNormalized(filename + '.js');
+        var actual = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '').trim();
+        compareAndWrite(t, actual, expected, filename);
+    }
+});
+
+test('conversion test - native', function (t) {
+    var options = {
+        propTemplates: {
+            MyComp: {
+                Row: {prop: 'renderRow', arguments: ['rowData']}
+            }
+        },
+        native: true
+    };
+
+    var files = ['nativeView.rt', 'listViewTemplate.rt', 'listViewAndCustomTemplate.rt'];
+    t.plan(files.length);
+    files.forEach(check);
+
+    function check(testFile) {
+        var filename = path.join(dataPath, testFile);
+        var html = readFileNormalized(filename);
+        var expected = readFileNormalized(filename + '.js');
+//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
         var actual = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '').trim();
         compareAndWrite(t, actual, expected, filename);
     }
