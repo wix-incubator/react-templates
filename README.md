@@ -399,6 +399,81 @@ define([
 
 ```
 
+## properties template functions
+In cases you'd like to use a property that accepts a function and return renderable React component.
+You should use a **rt-template** tag that will let you do exactly that: `<rt-template prop="propName" arguments="arg1, arg2"/>`.
+
+Templates can be used only as an immediate child of the component that it will be used in. All scope variable will be available in the template function.
+
+###### Sample:
+```html
+<MyComp data="{[1,2,3]}">
+    <rt-template prop="renderItem" arguments="item">
+        <div>{item}</div>
+    </rt-template>
+</MyComp>
+```
+###### Compiled (AMD):
+```javascript
+define([
+    'react/addons',
+    'lodash'
+], function (React, _) {
+    'use strict';
+    function renderItem1(item) {
+        return React.createElement('div', {}, item);
+    }
+    return function () {
+        return React.createElement(MyComp, {
+            'data': [
+                1,
+                2,
+                3
+            ],
+            'renderItem': renderItem1.bind(this)
+        });
+    };
+});
+```
+###### Compiled (with CommonJS flag):
+```javascript
+'use strict';
+var React = require('react/addons');
+var _ = require('lodash');
+function renderItem1(item) {
+    return React.createElement('div', {}, item);
+}
+module.exports = function () {
+    return React.createElement(MyComp, {
+        'data': [
+            1,
+            2,
+            3
+        ],
+        'renderItem': renderItem1.bind(this)
+    });
+};
+```
+
+###### Compiled (with ES6 flag):
+```javascript
+import React from 'react/addons';
+import _ from 'lodash';
+function renderItem1(item) {
+    return React.createElement('div', {}, item);
+}
+export default function () {
+    return React.createElement(MyComp, {
+        'data': [
+            1,
+            2,
+            3
+        ],
+        'renderItem': renderItem1.bind(this)
+    });
+};
+```
+
 ## Contributing
 
 See the [Contributing page](CONTRIBUTING.md).

@@ -1,0 +1,10 @@
+<div>
+    <rt-template prop="templateProp" arguments="arg1">
+        <div>
+            <rt-template prop="templateProp2" arguments="inner1, inner2">
+                <div>{arg1 + inner1 + inner2}</div>
+            </rt-template>
+            <div>{arg1}</div>
+        </div>
+    </rt-template>
+</div>

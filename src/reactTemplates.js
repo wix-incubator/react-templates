@@ -53,6 +53,7 @@ var classSetAttr = 'rt-class';
 var classAttr = 'class';
 var scopeAttr = 'rt-scope';
 var propsAttr = 'rt-props';
+var templateNode = 'rt-template';
 
 var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.13.1', reactImportPath: 'react/addons', lodashImportPath: 'lodash'};
 
@@ -179,6 +180,55 @@ function generateInjectedFunc(context, namePrefix, body, params) {
     return generatedFuncName;
 }
 
+function generateTemplateProps(node, context) {
+    var propTemplateDefinition = context.options.templates && context.options.templates[node.name];
+    var propertiesTemplates = _(node.children)
+        .map(function (child, index) {
+            var templateProp = null;
+            if (child.name === templateNode) { // Generic explicit template tag
+                if (!_.has(child.attribs, 'prop')) {
+                    throw RTCodeError.build('rt-template must have a prop attribute', context, child);
+                }
+
+                var childTemplate = _.find(context.options.templates, {prop: child.attribs.prop}) || {arguments: []};
+                templateProp = {
+                    prop: child.attribs.prop,
+                    arguments: (child.attribs.arguments ? child.attribs.arguments.split(',') : childTemplate.arguments) || []
+                };
+            } else if (propTemplateDefinition && propTemplateDefinition[child.name]) { // Implicit child template from configuration
+                templateProp = {
+                    prop: propTemplateDefinition[child.name].prop,
+                    arguments: child.attribs.arguments ? child.attribs.arguments.split(',') : propTemplateDefinition[child.name].arguments
+                };
+            }
+
+            if (templateProp) {
+                _.assign(templateProp, {childIndex: index, content: _.find(child.children, {type: 'tag'})});
+            }
+
+            return templateProp;
+        })
+        .compact()
+        .value();
+
+    return _.transform(propertiesTemplates, function (props, templateProp) {
+        var functionParams = _.values(context.boundParams).concat(templateProp.arguments);
+
+        var oldBoundParams = context.boundParams;
+        context.boundParams = context.boundParams.concat(templateProp.arguments);
+
+        var functionBody = 'return ' + convertHtmlToReact(templateProp.content, context);
+        context.boundParams = oldBoundParams;
+
+        var generatedFuncName = generateInjectedFunc(context, templateProp.prop, functionBody, functionParams);
+        var boundArguments = _.values(context.boundParams).join(',');
+        props[templateProp.prop] = generatedFuncName + '.bind(this' + (boundArguments.length ? ', ' + boundArguments : '') + ')';
+
+        // Remove the template child from the children definition.
+        node.children.splice(templateProp.childIndex, 1);
+    }, {});
+}
+
 /**
  * @param node
  * @param {Context} context
@@ -236,6 +286,8 @@ function generateProps(node, context) {
             props[propKey] = convertText(node, context, val.trim());
         }
     });
+
+    _.assign(props, generateTemplateProps(node, context));
 
     return '{' + _.map(props, function (val, key) {
         return JSON.stringify(key) + ' : ' + val;
@@ -304,7 +356,7 @@ function convertHtmlToReact(node, context) {
             _.each(context.boundParams, function (boundParam) {
                 data.outerScopeMapping[boundParam] = boundParam;
             });
-            
+
             // these are variables declared in the rt-scope attribute
             data.innerScopeMapping = {};
             _.each(node.attribs[scopeAttr].split(';'), function (scopePart) {
@@ -457,7 +509,7 @@ function convertTemplateToReact(html, options) {
 function convertRT(html, reportContext, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     options = _.defaults({}, options, defaultOptions);
-    
+
     var defaultDefines = {};
     defaultDefines[options.reactImportPath] = 'React';
     defaultDefines[options.lodashImportPath] = '_';
@@ -490,15 +542,23 @@ function convertRT(html, reportContext, options) {
         throw RTCodeError.build('Document should have a single root element', context, rootNode.root()[0]);
     }
     var body = convertHtmlToReact(firstTag, context);
-    var requirePaths = _(defines).keys().map(function (reqName) { return '"' + reqName + '"'; }).value().join(',');
+    var requirePaths = _(defines).keys().map(function (reqName) {
+        return '"' + reqName + '"';
+    }).value().join(',');
     var requireVars = _(defines).values().value().join(',');
     var vars;
     if (options.modules === 'typescript') {
-        vars = _(defines).map(function (reqVar, reqPath) { return 'import ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
+        vars = _(defines).map(function (reqVar, reqPath) {
+            return 'import ' + reqVar + " = require('" + reqPath + "');";
+        }).join('\n');
     } else if (options.modules === 'es6') {
-        vars = _(defines).map(function (reqVar, reqPath) { return 'import ' + reqVar + " from '" + reqPath + "';"; }).join('\n');
+        vars = _(defines).map(function (reqVar, reqPath) {
+            return 'import ' + reqVar + " from '" + reqPath + "';";
+        }).join('\n');
     } else {
-        vars = _(defines).map(function (reqVar, reqPath) { return 'var ' + reqVar + " = require('" + reqPath + "');"; }).join('\n');
+        vars = _(defines).map(function (reqVar, reqPath) {
+            return 'var ' + reqVar + " = require('" + reqPath + "');";
+        }).join('\n');
     }
     var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars: vars, name: options.name};
     data.injectedFunctions = context.injectedFunctions.join('\n');
