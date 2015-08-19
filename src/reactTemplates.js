@@ -300,7 +300,7 @@ function generateProps(node, context) {
  * @return {string}
  */
 function convertTagNameToConstructor(tagName, context) {
-    var isHtmlTag = _.contains(reactDOMSupport[context.options.targetVersion], tagName);
+    var isHtmlTag = _.includes(reactDOMSupport[context.options.targetVersion], tagName);
     if (shouldUseCreateElement(context)) {
         isHtmlTag = isHtmlTag || tagName.match(/^\w+(-\w+)$/);
         return isHtmlTag ? "'" + tagName + "'" : tagName;
@@ -327,7 +327,7 @@ function defaultContext(html, options) {
  * @return {boolean}
  */
 function hasNonSimpleChildren(node) {
-    return _.any(node.children, function (child) {
+    return _.some(node.children, function (child) {
         return child.type === 'tag' && child.attribs[templateAttr];
     });
 }
@@ -353,13 +353,13 @@ function convertHtmlToReact(node, context) {
 
             // these are variables that were already in scope, unrelated to the ones declared in rt-scope
             data.outerScopeMapping = {};
-            _.each(context.boundParams, function (boundParam) {
+            _.forEach(context.boundParams, function (boundParam) {
                 data.outerScopeMapping[boundParam] = boundParam;
             });
 
             // these are variables declared in the rt-scope attribute
             data.innerScopeMapping = {};
-            _.each(node.attribs[scopeAttr].split(';'), function (scopePart) {
+            _.forEach(node.attribs[scopeAttr].split(';'), function (scopePart) {
                 if (scopePart.trim().length === 0) {
                     return;
                 }
@@ -402,7 +402,7 @@ function convertHtmlToReact(node, context) {
                 data.props = propsTemplateSimple({generatedProps: data.props, rtProps: node.attribs[propsAttr]});
             } else {
                 data.props = propsTemplate({generatedProps: data.props, rtProps: node.attribs[propsAttr]});
-                if (!_.contains(context.injectedFunctions, propsMergeFunction)) {
+                if (!_.includes(context.injectedFunctions, propsMergeFunction)) {
                     context.injectedFunctions.push(propsMergeFunction);
                 }
             }
@@ -466,7 +466,7 @@ function handleSelfClosingHtmlTags(nodes) {
         .map(function (node) {
             var externalNodes = [];
             node.children = handleSelfClosingHtmlTags(node.children);
-            if (node.type === 'tag' && _.contains(htmlSelfClosingTags, node.name)) {
+            if (node.type === 'tag' && _.includes(htmlSelfClosingTags, node.name)) {
                 externalNodes = _.filter(node.children, isTag);
                 _.forEach(externalNodes, function (child) {
                     child.parent = node;

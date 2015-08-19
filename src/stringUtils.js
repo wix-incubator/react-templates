@@ -22,7 +22,7 @@ function capitalize(str) {
  * @param {*} obj
  */
 function addIfMissing(array, obj) {
-    if (!_.contains(array, obj)) {
+    if (!_.includes(array, obj)) {
         array.push(obj);
     }
 }

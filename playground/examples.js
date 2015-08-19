@@ -19,7 +19,7 @@ define(['lodash', 'react', './examples.rt',
     //samples = _.map(samples, function (v, k) {
     //    return {name: k, templateProps: _.template(v[0])({name: k}), templateHTML: v[1]};
     //});
-    _.each(samples, function (v, k) {
+    _.forEach(samples, function (v, k) {
         samples[k] = {name: k, templateProps: _.template(v[0])({name: k}), templateHTML: v[1]};
     });
 

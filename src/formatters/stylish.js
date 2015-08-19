@@ -120,7 +120,7 @@ module.exports = function (results) {
         infos = 0,
         summaryColor = 'cyan';
 
-    _.each(results, function (result, k) {
+    _.forEach(results, function (result, k) {
         var messages = result;
 
         if (messages.length === 0) {

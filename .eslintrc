@@ -1,5 +1,5 @@
 {
-    "plugins": ["react"],
+    "plugins": ["react", "lodash3"],
     "rules": {
         "no-array-constructor": 2,
         "no-catch-shadow": 2,
@@ -156,7 +156,12 @@
         "react/react-in-jsx-scope": 1,
         "react/self-closing-comp": 1,
         "react/wrap-multilines": 1,
-        "react/sort-comp": 1
+        "react/sort-comp": 1,
+
+        "lodash3/prop-shorthand": 2,
+        "lodash3/matches-prop-shorthand": 2,
+        "lodash3/prefer-chain": 1,
+        "lodash3/preferred-alias": 2
     },
     "env": {
         "browser": false,

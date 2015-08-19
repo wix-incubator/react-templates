@@ -15,13 +15,6 @@ module.exports = function (grunt) {
                     '!playground/dist/**/*.js',
                     '!playground/**/*.rt.js'
                 ]
-            },
-            teamcity: {
-                options: {
-                    format: 'checkstyle',
-                    'output-file': 'target/eslint.xml'
-                },
-                src: ['<%= eslint.all.src %>']
             }
         },
         jasmine_node: {
@@ -115,8 +108,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', ['eslint:all']);
     grunt.registerTask('test', ['node_tap']);
-
-    grunt.registerTask('teamcity', ['eslint:teamcity']);
 
     grunt.registerTask('rt', function () {
         var reactTemplates = require('./src/cli');
