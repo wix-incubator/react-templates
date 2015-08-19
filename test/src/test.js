@@ -114,6 +114,28 @@ test('conversion test', function (t) {
     }
 });
 
+test('prop template conversion test', function (t) {
+    var options = {
+        templates: {
+            List: {
+                Row: {prop: 'renderRow', arguments: ['rowData']}
+            }
+        }
+    };
+
+    var files = ['propTemplates/simpleTemplate.rt', 'propTemplates/templateInScope.rt', 'propTemplates/implicitTemplate.rt', 'propTemplates/twoTemplates.rt'];
+    t.plan(files.length);
+    files.forEach(check);
+
+    function check(testFile) {
+        var filename = path.join(dataPath, testFile);
+        var html = readFileNormalized(filename);
+        var expected = readFileNormalized(filename + '.js');
+        var actual = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '').trim();
+        compareAndWrite(t, actual, expected, filename);
+    }
+});
+
 /**
  * @param {*} t
  * @param {string} actual
