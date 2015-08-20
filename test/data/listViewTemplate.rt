@@ -1,0 +1,7 @@
+<View>
+    <ListView dataSource="{this.state.dataSource}">
+        <Row arguments="rowData">
+            <Text>{rowData}</Text>
+        </Row>
+    </ListView>
+</View>

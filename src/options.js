@@ -11,6 +11,7 @@
 var optionator = require('optionator');
 var pkg = require('../package.json');
 var reactDOMSupport = require('./reactDOMSupport');
+var reactNativeSupport = require('./reactNativeSupport');
 
 //------------------------------------------------------------------------------
 // Initialization and Public Interface
@@ -74,7 +75,7 @@ module.exports = optionator({
         option: 'target-version',
         alias: 't',
         type: 'String',
-        default: '0.13.1',
+        default: reactDOMSupport.default,
         description: 'React version to generate code for (' + Object.keys(reactDOMSupport).join(', ') + ')'
     }, {
         option: 'list-target-version',
@@ -101,5 +102,16 @@ module.exports = optionator({
         default: 'lodash',
         type: 'String',
         description: 'Dependency path for importing lodash.'
+    }, {
+        option: 'native',
+        alias: 'rn',
+        type: 'Boolean',
+        description: 'Renders react native templates.'
+    }, {
+        option: 'native-target-version',
+        alias: 'rnv',
+        type: 'String',
+        default: reactNativeSupport.default,
+        description: 'React native version to generate code for (' + Object.keys(reactNativeSupport).join(', ') + ')'
     }]
 });

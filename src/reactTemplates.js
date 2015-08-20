@@ -7,6 +7,8 @@ var _ = require('lodash');
 var esprima = require('esprima-harmony');
 var escodegen = require('escodegen');
 var reactDOMSupport = require('./reactDOMSupport');
+var reactNativeSupport = require('./reactNativeSupport');
+var reactPropTemplates = require('./reactPropTemplates');
 var stringUtils = require('./stringUtils');
 var rtError = require('./RTCodeError');
 var RTCodeError = rtError.RTCodeError;
@@ -55,7 +57,29 @@ var scopeAttr = 'rt-scope';
 var propsAttr = 'rt-props';
 var templateNode = 'rt-template';
 
-var defaultOptions = {modules: 'amd', version: false, force: false, format: 'stylish', targetVersion: '0.13.1', reactImportPath: 'react/addons', lodashImportPath: 'lodash'};
+function getOptions(options) {
+    options = options || {};
+    var defaultOptions = {
+        modules: options.native ? 'commonjs': 'amd',
+        version: false,
+        force: false,
+        format: 'stylish',
+        targetVersion: reactDOMSupport.default,
+        reactImportPath: options.native ? 'react-native' : 'react/addons',
+        lodashImportPath: 'lodash',
+        native: false,
+        nativeTargetVersion: reactNativeSupport.default
+    };
+
+    var finalOptions = _.defaults({}, options, defaultOptions);
+
+    var defaultPropTemplates = finalOptions.native ?
+        reactPropTemplates.native[finalOptions.nativeTargetVersion] :
+        reactPropTemplates.dom[finalOptions.targetVersion];
+
+    finalOptions.propTemplates = _.defaults({}, options.propTemplates, defaultPropTemplates);
+    return finalOptions;
+}
 
 /**
  * @param {Context} context
@@ -181,7 +205,7 @@ function generateInjectedFunc(context, namePrefix, body, params) {
 }
 
 function generateTemplateProps(node, context) {
-    var propTemplateDefinition = context.options.templates && context.options.templates[node.name];
+    var propTemplateDefinition = context.options.propTemplates[node.name];
     var propertiesTemplates = _(node.children)
         .map(function (child, index) {
             var templateProp = null;
@@ -190,7 +214,7 @@ function generateTemplateProps(node, context) {
                     throw RTCodeError.build('rt-template must have a prop attribute', context, child);
                 }
 
-                var childTemplate = _.find(context.options.templates, {prop: child.attribs.prop}) || {arguments: []};
+                var childTemplate = _.find(context.options.propTemplates, {prop: child.attribs.prop}) || {arguments: []};
                 templateProp = {
                     prop: child.attribs.prop,
                     arguments: (child.attribs.arguments ? child.attribs.arguments.split(',') : childTemplate.arguments) || []
@@ -300,6 +324,10 @@ function generateProps(node, context) {
  * @return {string}
  */
 function convertTagNameToConstructor(tagName, context) {
+    if (context.options.native) {
+        return _.includes(reactNativeSupport[context.options.nativeTargetVersion], tagName) ? 'React.' + tagName : tagName;
+    }
+
     var isHtmlTag = _.includes(reactDOMSupport[context.options.targetVersion], tagName);
     if (shouldUseCreateElement(context)) {
         isHtmlTag = isHtmlTag || tagName.match(/^\w+(-\w+)$/);
@@ -508,7 +536,7 @@ function convertTemplateToReact(html, options) {
  */
 function convertRT(html, reportContext, options) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
-    options = _.defaults({}, options, defaultOptions);
+    options = getOptions(options);
 
     var defaultDefines = {};
     defaultDefines[options.reactImportPath] = 'React';
@@ -576,7 +604,7 @@ function convertRT(html, reportContext, options) {
 }
 
 function convertJSRTToJS(text, reportContext, options) {
-    options = _.defaults({}, options, defaultOptions);
+    options = getOptions(options)
     options.modules = 'jsrt';
     var templateMatcherJSRT = /<template>([^]*?)<\/template>/gm;
     var code = text.replace(templateMatcherJSRT, function (template, html) {
