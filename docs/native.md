@@ -7,7 +7,7 @@ In native mode the default `modules` option is set to `commonjs` and the default
 
 In native mode we define a default properties template configuration in order to easily write native templates.
 
-```json
+```javascript
  {
      ListView: {
          Row: {prop: 'renderRow', arguments: ['rowData', 'sectionID', 'rowID', 'highlightRow']},
