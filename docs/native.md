@@ -1,7 +1,7 @@
 # React Template for Native Apps
 
 In order to use React Templates for [React Native](https://facebook.github.io/react-native/) you should set the `native` option to true.
-In native mode the default `modules` option is set to `commonjs`.
+In native mode the default `modules` option is set to `commonjs` and the default `react-import-path` is set to `react-native`.
 
 ## Default properties templates configuration
 
