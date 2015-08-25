@@ -160,8 +160,14 @@
 
         "lodash3/prop-shorthand": 2,
         "lodash3/matches-prop-shorthand": 2,
-        "lodash3/prefer-chain": 1,
-        "lodash3/preferred-alias": 2
+        "lodash3/prefer-chain": 2,
+        "lodash3/preferred-alias": 2,
+        "lodash3/no-single-chain": 2,
+        "lodash3/prefer-reject": 2,
+        "lodash3/prefer-filter": 2,
+        "lodash3/no-unnecessary-bind": 2,
+        "lodash3/unwrap": 2,
+        "lodash3/prefer-compact": 2
     },
     "env": {
         "browser": false,

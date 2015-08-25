@@ -60,7 +60,7 @@ var templateNode = 'rt-template';
 function getOptions(options) {
     options = options || {};
     var defaultOptions = {
-        modules: options.native ? 'commonjs': 'amd',
+        modules: options.native ? 'commonjs' : 'amd',
         version: false,
         force: false,
         format: 'stylish',
@@ -105,6 +105,7 @@ var reactSupportedAttributes = ['accept', 'acceptCharset', 'accessKey', 'action'
                                 'style', 'tabIndex', 'target', 'title', 'type', 'useMap', 'value', 'width', 'wmode'];
 var classNameProp = 'className';
 var attributesMapping = {'class': classNameProp, 'rt-class': classNameProp, 'for': 'htmlFor'}; //eslint-disable-line quote-props
+
 _.forEach(reactSupportedAttributes, function (attributeReactName) {
     if (attributeReactName !== attributeReactName.toLowerCase()) {
         attributesMapping[attributeReactName.toLowerCase()] = attributeReactName;
@@ -573,7 +574,7 @@ function convertRT(html, reportContext, options) {
     var requirePaths = _(defines).keys().map(function (reqName) {
         return '"' + reqName + '"';
     }).value().join(',');
-    var requireVars = _(defines).values().value().join(',');
+    var requireVars = _.values(defines).join(',');
     var vars;
     if (options.modules === 'typescript') {
         vars = _(defines).map(function (reqVar, reqPath) {
@@ -604,7 +605,7 @@ function convertRT(html, reportContext, options) {
 }
 
 function convertJSRTToJS(text, reportContext, options) {
-    options = getOptions(options)
+    options = getOptions(options);
     options.modules = 'jsrt';
     var templateMatcherJSRT = /<template>([^]*?)<\/template>/gm;
     var code = text.replace(templateMatcherJSRT, function (template, html) {
