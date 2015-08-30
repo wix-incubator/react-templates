@@ -586,7 +586,6 @@ function convertRT(html, reportContext, options) {
             return 'import ' + reqVar + " from '" + reqPath + "';";
         }).join('\n');
     } else {
-    } else {
         vars = _(defines).map(function (reqVar, reqPath) {
             return 'var ' + reqVar + " = require('" + reqPath + "');";
         }).join('\n');
