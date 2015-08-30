@@ -108,6 +108,10 @@ module.exports = optionator({
         type: 'Boolean',
         description: 'Renders react native templates.'
     }, {
+        option: 'flow',
+        type: 'Boolean',
+        description: 'Add /* @flow */ to the top of the generated file'
+    }, {
         option: 'native-target-version',
         alias: 'rnv',
         type: 'String',

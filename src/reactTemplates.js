@@ -68,7 +68,8 @@ function getOptions(options) {
         reactImportPath: options.native ? 'react-native' : 'react/addons',
         lodashImportPath: 'lodash',
         native: false,
-        nativeTargetVersion: reactNativeSupport.default
+        nativeTargetVersion: reactNativeSupport.default,
+        flow: options.flow
     };
 
     var finalOptions = _.defaults({}, options, defaultOptions);
@@ -588,6 +589,9 @@ function convertRT(html, reportContext, options) {
         vars = _(defines).map(function (reqVar, reqPath) {
             return 'var ' + reqVar + " = require('" + reqPath + "');";
         }).join('\n');
+    }
+    if (options.flow){
+      vars = '/* @flow */\n' + vars
     }
     var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars: vars, name: options.name};
     data.injectedFunctions = context.injectedFunctions.join('\n');
