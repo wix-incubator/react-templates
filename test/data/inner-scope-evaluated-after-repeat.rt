@@ -1,0 +1,9 @@
+<div>
+	<div rt-inner-scope="15 as fifteen; 10 as ten">
+		<div rt-repeat="number in [111]">
+			<div rt-repeat="pirate in [{name: 'Jack Sparrow', profile: {age: 99}}, {name: 'Someone Else', profile: {age: 98}}]" rt-inner-scope="pirate.profile as profile; 20 as twenty">
+				{number}-{numberIndex}-{fifteen}-{ten}-{pirateIndex}-{pirate.name}-{profile.age}
+			</div>
+		</div>
+	</div>
+</div>

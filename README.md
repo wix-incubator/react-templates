@@ -36,7 +36,8 @@ http://plugins.jetbrains.com/plugin/7648
 * Built-in directives:
     * [rt-if](#rt-if)
     * [rt-repeat](#rt-repeat)
-    * [rt-scope](#rt-scope)
+    * [rt-inner-scope](#rt-scope)
+    * [rt-scope (deprecated)](#rt-scope)
     * [rt-props](#rt-props)
     * [rt-class](#rt-class)
     * [rt-require](#rt-require)
@@ -76,7 +77,21 @@ You can get all the react templates functionality and more. [Click here for more
 Any HTML that you write is a valid template, except for inline event handlers ("on" attributes). See the "event handlers" section below for more information.
 
 ## {} to identify JavaScript expressions
-To embed JavaScript expressions in both attribute values and tag content, encapsulate them in {}. If this is done inside an attribute value, the value still needs to be wrapped in quotes. For directives (see below), {} are not used.
+To embed JavaScript expressions in both attribute values and tag content, encapsulate them in {}.
+If this is done inside an attribute value, the value still needs to be wrapped in quotes.
+For directives (see below), {} are not used.
+
+This syntax unfortunately means that it's not possible to write object literals as the first thing in the value of a directive attribute:
+
+```html
+<div rt-state="{first: 'Jack', last: 'Sparrow'} as user">
+```
+
+does not work. While this is probably a rare use case, one can hack around it by doing something like
+
+```html
+<div rt-state="[{first: 'Jack', last: 'Sparrow'}][0] as user">
+```
 
 ###### Sample:
 ```html
@@ -139,8 +154,21 @@ define([
 });
 ```
 
-## rt-scope
+## rt-scope (deprecated)
+
+**This directive is deprecated in favour of the more semantically useful rt-inner-scope. It is kept around for backwards compatibility.**
+
 This directive creates a new JavaScript scope by creating a new method and invoking it with its current context. The syntax is `rt-scope="expr1 as var1; expr2 as var2`. This allows for a convenient shorthand to make the code more readable. It also helps to execute an expression only once per scope.
+
+When used together with `rt-if`, the `rt-scope` mappings are evaluated irrespective of whether the `rt-if` condition's value.
+This is often inconvenient, so use `rt-inner-scope` instead.
+
+When used together with `rt-repeat`, the `rt-scope` mappings are evaluated outside of the repeat loop,
+which means you are often forced to have a nested element just to facilitate an inner `rt-scope`.
+This is often inconvenient, so use `rt-inner-scope` instead.
+
+Because of the underying implementation, it is not possible to reference `var1` inside of `expr2`,
+which is often inconvenient. Use `rt-inner-scope` if you want this behaviour.
 
 ###### Sample:
 ```html
@@ -172,6 +200,30 @@ define([
     };
 });
 ```
+
+## rt-inner-scope
+
+This directive creates a new JavaScript scope by creating a new method and invoking it with its current context.
+The syntax is `rt-scope="expr1 as var1; expr2 as var2`.
+This allows for a convenient shorthand to make the code more readable.
+It also helps to execute an expression only once per scope.
+
+Subsequent expressions may reference preceding variables, since generated code declares each alias as a `var` (as opposed to a function parameter, which get bound to formal parameter names only after evaluation), so you can do stuff like
+
+```html
+<div rt-inner-scope="users[userId] as user; user.profile as profile; profile.avatar as avatar;">
+```
+
+When used with `rt-if`, the `rt-if` condition is evaluated first, and only if it is truthy, the `rt-inner-scope` mappings are processed. This means you can write things like
+
+```html
+<div rt-if="user.profile" rt-inner-scope="user.profile.image as image">
+```
+
+without risking accessing a field on an `undefined`, or doing something ugly like `user.profile && user.profile.image as image`.
+
+When used with `rt-repeat`, the `rt-inner-scope` is evaluated for every iteration, so that iteration's `item` and `itemIndex` are in scope.
+
 
 ## rt-props
 rt-props is used to inject properties into an element programmatically. It will merge the properties with the properties received in the template. This option allows you to build properties based on external logic and pass them to the template. It is also useful when passing properties set on the component to an element within the template. The expected value of this attribute is an expression returning an object. The keys will be the property name, and the values will be the property values.
@@ -206,7 +258,7 @@ To reduce the boilerplate code when setting class names programatically, you can
 
 <p>Note the following:<br/>
 1. In React templates, you can use the "class" attribute as you would in HTML. <br/>
-2. You cannot use class and rt-class on the same HTML element.
+2. If you use both class and rt-class on the same HTML element, they get merged as expected.
 
 ###### Sample:
 ```html
@@ -215,28 +267,33 @@ To reduce the boilerplate code when setting class names programatically, you can
     <div rt-class="classes">Reference</div>
     <div rt-class="{blue: true, selected: this.isSelected()}">Inline</div>
     <div class="blue{this.isSelected() ? ' selected' : ''}">Using the class attribute</div>
+    <div class="blue" rt-class="{selected: this.isSelected()}">Using the combination of class and rt-class</div>
 </div>
 ```
-###### Compiled:
+###### Compiled (and manually formatted for readability):
 ```javascript
 define([
-    'react',
+    'react/addons',
     'lodash'
 ], function (React, _) {
     'use strict';
     function scopeClasses1(classes) {
-        return React.DOM.div({}, 'These are logically equivalent', React.DOM.div({ 'className': React.addons.classSet(classes) }, 'Reference'), React.DOM.div({
-            'className': React.addons.classSet({
+        return React.createElement('div', {}, '\n    These are logically equivalent\n    ',
+        React.createElement('div', { 'className': _.keys(_.pick(classes, _.identity)).join(' ') }, 'Reference'),
+        React.createElement('div', {
+            'className': _.keys(_.pick({
                 blue: true,
                 selected: this.isSelected()
-            })
-        }, 'Inline'), React.DOM.div({ 'className': 'blue' + this.isSelected() ? ' selected' : '' }, 'Using the class attribute'));
+            }, _.identity)).join(' ')
+        }, 'Inline'),
+        React.createElement('div', { 'className': 'blue' + (this.isSelected() ? ' selected' : '') }, 'Using the class attribute'),
+        React.createElement('div', { 'className': 'blue' + ' ' + _.keys(_.pick({ selected: this.isSelected() }, _.identity)).join(' ') }, 'Using the combination of class and rt-class'));
     }
     return function () {
-        return scopeClasses1.apply(this, [{
-                blue: true,
-                selected: this.isSelected()
-            }]);
+        return scopeClasses1.apply(this, [[{
+                    blue: true,
+                    selected: this.isSelected()
+                }][0]]);
     };
 });
 ```
