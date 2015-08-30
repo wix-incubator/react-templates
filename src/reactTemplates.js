@@ -586,12 +586,13 @@ function convertRT(html, reportContext, options) {
             return 'import ' + reqVar + " from '" + reqPath + "';";
         }).join('\n');
     } else {
+    } else {
         vars = _(defines).map(function (reqVar, reqPath) {
             return 'var ' + reqVar + " = require('" + reqPath + "');";
         }).join('\n');
     }
-    if (options.flow){
-      vars = '/* @flow */\n' + vars
+    if (options.flow) {
+        vars = '/* @flow */\n' + vars;
     }
     var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars: vars, name: options.name};
     data.injectedFunctions = context.injectedFunctions.join('\n');
