@@ -9,7 +9,6 @@ var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
 var React = require('react/addons');
-var cheerio = require('cheerio');
 var RTCodeError = reactTemplates.RTCodeError;
 var dataPath = path.resolve(__dirname, '..', 'data');
 
@@ -194,7 +193,7 @@ test('convert jsrt and test source results', function (t) {
 test('html tests', function (t) {
     var files = ['scope.rt', 'scope-trailing-semicolon.rt', 'scope-variable-references.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt',
                  'js-in-attr.rt', 'props-class.rt', 'rt-class.rt', 'className.rt',
-                 'scope-evaluated-after-repeat.rt', 'scope-evaluated-after-repeat2.rt', 'scope-evaluated-after-if.rt'
+                 'scope-evaluated-after-repeat.rt', 'scope-evaluated-after-repeat2.rt', 'scope-evaluated-after-if.rt', 'scope-obj.rt'
     ];
     t.plan(files.length);
 

@@ -1,10 +1,10 @@
 <div>
-	<div rt-repeat="foo in [1]">
+	<div rt-repeat="foo in [1]" key="a{fooIndex}">
 		<!-- can't seem to have an object literal here; will deal with this separately -->
 		<div rt-scope="[{first: 'Jack', last: 'Sparrow', skills: ['talking', 'fighting', 'commandeering']}][0] as pirate; pirate.first as first">
 			<h1>{first} {pirate.last}</h1>
 			<div rt-scope="pirate.skills as skills">
-				<span rt-repeat="skill in skills">{skill}</span>
+				<span rt-repeat="skill in skills" key="a{skillIndex}">{skill}</span>
 			</div>
 		</div>
 	</div>

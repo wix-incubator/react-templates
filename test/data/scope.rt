@@ -1,8 +1,7 @@
 <div>
     <div rt-scope="['a','b','c'] as items">
-        <span rt-repeat="item in items">Item:#{itemIndex} = {item}</span>
+        <span rt-repeat="item in items" key="i-{itemIndex}">Item:#{itemIndex} = {item}</span>
     </div>
     <span>{typeof (items) == 'undefined'?'items not in scope':'items in scope'}</span>
     <span>{typeof (item) == 'undefined'?'item not in scope':'item in scope'}</span>
-
 </div>

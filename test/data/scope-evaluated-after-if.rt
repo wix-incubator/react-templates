@@ -1,5 +1,5 @@
 <div>
-	<div rt-repeat="pirate in [{first: 'Jack', last: 'Sparrow', photo: {url: 'jack.jpg'}}, {first: 'Unknown', last: 'Pirate'}]">
+	<div rt-repeat="pirate in [{first: 'Jack', last: 'Sparrow', photo: {url: 'jack.jpg'}}, {first: 'Unknown', last: 'Pirate'}]" key="a{pirateIndex}">
 		<h1>{pirate.first} {pirate.last}</h1>
 		<div rt-if="pirate.photo" rt-scope="pirate.photo.url as url">
 			<img src="{url}"/>

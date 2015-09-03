@@ -1,6 +1,3 @@
-/**
- * Created by avim on 11/9/2014.
- */
 'use strict';
 var cheerio = require('cheerio');
 var _ = require('lodash');
@@ -451,7 +448,7 @@ function convertHtmlToReact(node, context) {
                 stringUtils.addIfMissing(context.boundParams, alias);
 
                 data.innerScope.scopeName += stringUtils.capitalize(alias);
-                data.innerScope.innerMapping[alias] = value;
+                data.innerScope.innerMapping[alias] = 'var ' + alias + ' = ' + value + ';';
                 validateJS(data.innerScope.innerMapping[alias], node, context);
             });
         }
@@ -485,7 +482,7 @@ function convertHtmlToReact(node, context) {
         }
 
         if (node.attribs[scopeAttr]) {
-            var scopeVarDeclarations = _.map(data.innerScope.innerMapping, function (v, k) { return 'var ' + k + ' = ' + v + ';'; }).join('\n');
+            var scopeVarDeclarations = _.map(data.innerScope.innerMapping, function (v) { return v; }).join('\n');
             var functionBody = scopeVarDeclarations + 'return ' + data.body;
             var generatedFuncName = generateInjectedFunc(context, 'scope' + data.innerScope.scopeName, functionBody, _.keys(data.innerScope.outerMapping));
             data.body = generatedFuncName + '.apply(this, [' + _.values(data.innerScope.outerMapping).join(',') + '])';
