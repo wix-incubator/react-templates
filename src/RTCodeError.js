@@ -1,4 +1,7 @@
 'use strict';
+var util = require('util');
+var _ = require('lodash');
+
 
 /**
  * @typedef {{line: number, col: number}} Pos
@@ -76,6 +79,19 @@ RTCodeError.norm = norm;
 
 RTCodeError.prototype.toIssue = function () {
 };
+
+function buildFormat(context, node, msg, args) {
+    return buildError(util.format.apply(this, [msg].concat(args)), context, node);
+}
+
+/**
+ * @param {*} context
+ * @param {*} node
+ * @param {string} msg
+ * @param {Array.<string>} args
+ * @return {RTCodeError}
+ */
+RTCodeError.buildFormat = _.restParam(buildFormat, 3);
 
 /**
  * @param {string} msg

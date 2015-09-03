@@ -95,17 +95,7 @@ function errorEqualMessage(err, file) {
 
 test('conversion test', function (t) {
     var files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt', 'require.rt'];
-    t.plan(files.length);
-    files.forEach(check);
-
-    function check(testFile) {
-        var filename = path.join(dataPath, testFile);
-        var html = readFileNormalized(filename);
-        var expected = readFileNormalized(filename + '.js');
-//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '').trim();
-        compareAndWrite(t, actual, expected, filename);
-    }
+    testFiles(t, files);
 });
 
 test('prop template conversion test', function (t) {
@@ -116,19 +106,22 @@ test('prop template conversion test', function (t) {
             }
         }
     };
-
     var files = ['propTemplates/simpleTemplate.rt', 'propTemplates/templateInScope.rt', 'propTemplates/implicitTemplate.rt', 'propTemplates/twoTemplates.rt'];
-    t.plan(files.length);
-    files.forEach(check);
-
-    function check(testFile) {
-        var filename = path.join(dataPath, testFile);
-        var html = readFileNormalized(filename);
-        var expected = readFileNormalized(filename + '.js');
-        var actual = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '').trim();
-        compareAndWrite(t, actual, expected, filename);
-    }
+    testFiles(t, files, options);
 });
+
+function checkFile(t, options, testFile) {
+    var filename = path.join(dataPath, testFile);
+    var html = readFileNormalized(filename);
+    var expected = readFileNormalized(filename + '.js');
+    var actual = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '').trim();
+    compareAndWrite(t, actual, expected, filename);
+}
+
+function testFiles(t, files, options) {
+    t.plan(files.length);
+    files.forEach(checkFile.bind(this, t, options));
+}
 
 test('conversion test - native', function (t) {
     var options = {
@@ -139,19 +132,8 @@ test('conversion test - native', function (t) {
         },
         native: true
     };
-
     var files = ['nativeView.rt', 'listViewTemplate.rt', 'listViewAndCustomTemplate.rt'];
-    t.plan(files.length);
-    files.forEach(check);
-
-    function check(testFile) {
-        var filename = path.join(dataPath, testFile);
-        var html = readFileNormalized(filename);
-        var expected = readFileNormalized(filename + '.js');
-//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '').trim();
-        compareAndWrite(t, actual, expected, filename);
-    }
+    testFiles(t, files, options);
 });
 
 test('convert div with all module types', function (t) {
@@ -272,19 +254,6 @@ test('test shell', function (t) {
 });
 
 test('test convertText', function (t) {
-    var texts = [
-        {input: '{}', expected: '()'},
-        {input: "a {'b'}", expected: '"a "+(\'b\')'}
-    ];
-    t.plan(texts.length);
-    texts.forEach(check);
-    function check(testData) {
-        var r = reactTemplates._test.convertText({}, {}, testData.input);
-        t.equal(r, testData.expected);
-    }
-});
-
-test('test convertText errors', function (t) {
     var texts = [
         {input: '{}', expected: '()'},
         {input: "a {'b'}", expected: '"a "+(\'b\')'}
