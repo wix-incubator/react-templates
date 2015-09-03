@@ -2,6 +2,9 @@
 var test = require('tape');
 var reactTemplates = require('../../src/reactTemplates');
 var context = require('../../src/context');
+var util = require('./util');
+var readFileNormalized = util.readFileNormalized;
+var compareAndWrite = util.compareAndWrite;
 var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
@@ -9,14 +12,6 @@ var React = require('react/addons');
 var cheerio = require('cheerio');
 var RTCodeError = reactTemplates.RTCodeError;
 var dataPath = path.resolve(__dirname, '..', 'data');
-
-/**
- * @param {string} filename
- * @return {string}
- */
-function readFileNormalized(filename) {
-    return fs.readFileSync(filename).toString().replace(/\r/g, '').trim();
-}
 
 var invalidFiles = [
     {file: 'invalid-scope.rt', issue: new RTCodeError("invalid scope part 'a in a in a'", 0, 35, 1, 1)},
@@ -38,7 +33,7 @@ test('invalid tests', function (t) {
 
     function check(testFile) {
         var filename = path.join(dataPath, testFile.file);
-        var html = readFileNormalized(filename);
+        var html = util.readFileNormalized(filename);
         var error = null;
         try {
             reactTemplates.convertTemplateToReact(html);
@@ -71,7 +66,7 @@ test('invalid tests json', function (t) {
     function check(testFile) {
         context.clear();
         var filename = path.join(dataPath, testFile.file);
-        var options = {format: 'json'};
+        var options = {format: 'json', force: true};
         cli.handleSingleFile(options, filename);
         t.deepEqual(normalizeError(context.getMessages()[0]), errorEqualMessage(testFile.issue, filename), 'Expect cli to produce valid output messages');
     }
@@ -160,22 +155,6 @@ test('conversion test - native', function (t) {
     }
 });
 
-/**
- * @param {*} t
- * @param {string} actual
- * @param {string} expected
- * @param {string} filename
- * @return {boolean} whether actual is equal to expected
- */
-function compareAndWrite(t, actual, expected, filename) {
-    t.equal(actual, expected);
-    if (actual !== expected) {
-        fs.writeFileSync(filename + '.actual.js', actual);
-        return false;
-    }
-    return true;
-}
-
 test('convert div with all module types', function (t) {
     var files = [
         {source: 'div.rt', expected: 'div.rt.commonjs.js', options: {modules: 'commonjs'}},
@@ -212,20 +191,11 @@ test('convert jsrt and test source results', function (t) {
     }
 });
 
-/**
- * @param {string} html
- * @return {string}
- */
-function normalizeHtml(html) {
-    return cheerio.load(html, {normalizeWhitespace: true}).html()
-        .replace(/\>\s+/mg, '>')
-        .replace(/\s+\</mg, '<')
-        .replace(/\>\s+\</mg, '><');
-}
-
 test('html tests', function (t) {
     var files = ['scope.rt', 'scope-trailing-semicolon.rt', 'scope-variable-references.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt',
-                 'js-in-attr.rt', 'props-class.rt', 'rt-class.rt', 'className.rt'];
+                 'js-in-attr.rt', 'props-class.rt', 'rt-class.rt', 'className.rt',
+                 'scope-evaluated-after-repeat.rt', 'scope-evaluated-after-repeat2.rt', 'scope-evaluated-after-if.rt'
+    ];
     t.plan(files.length);
 
     files.forEach(check);
@@ -251,8 +221,8 @@ test('html tests', function (t) {
                 render: eval(code) //eslint-disable-line no-eval
             }));
             var actual = React.renderToStaticMarkup(comp());
-            actual = normalizeHtml(actual);
-            expected = normalizeHtml(expected);
+            actual = util.normalizeHtml(actual);
+            expected = util.normalizeHtml(expected);
             var equal = compareAndWrite(t, actual, expected, filename);
             if (!equal) {
                 fs.writeFileSync(filename + '.code.js', code);
