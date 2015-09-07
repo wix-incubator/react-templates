@@ -140,6 +140,9 @@
         "object-curly-spacing": [2, "never"],
         "no-throw-literal": 2,
 
+        "no-useless-concat": 1,
+        "block-spacing": [0, "always"],
+
         "react/display-name": 2,
         "react/jsx-boolean-value": 1,
         "react/jsx-quotes": 1,
@@ -167,7 +170,13 @@
         "lodash3/prefer-filter": 2,
         "lodash3/no-unnecessary-bind": 2,
         "lodash3/unwrap": 2,
-        "lodash3/prefer-compact": 2
+        "lodash3/prefer-compact": 2,
+        "lodash3/prefer-compact": 2,
+        "lodash3/no-double-unwrap": 2,
+        "lodash3/prefer-map": 2,
+        "lodash3/prefer-wrapper-method": 2,
+        "lodash3/prefer-invoke": 2,
+        "lodash3/prefer-thru": 2
     },
     "env": {
         "browser": false,
