@@ -163,10 +163,10 @@ module.exports = function (results) {
                 }
             }
         ).split('\n').map(function (el) {
-                return el.replace(/(\d+)\s+(\d+)/, function (m, p1, p2) {
-                    return chalk.gray(p1 + ':' + p2);
-                });
-            }).join('\n') + '\n\n';
+            return el.replace(/(\d+)\s+(\d+)/, function (m, p1, p2) {
+                return chalk.gray(p1 + ':' + p2);
+            });
+        }).join('\n') + '\n\n';
     });
 
     if (total > 0) {

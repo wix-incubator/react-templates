@@ -11,6 +11,7 @@ var rtError = require('./RTCodeError');
 var reactSupport = require('./reactSupport');
 var templates = reactSupport.templates;
 var utils = require('./utils');
+var util = require('util');
 var validateJS = utils.validateJS;
 var RTCodeError = rtError.RTCodeError;
 
@@ -138,8 +139,7 @@ function convertText(node, context, txt) {
 function generateInjectedFunc(context, namePrefix, body, params) {
     params = params || context.boundParams;
     var generatedFuncName = namePrefix.replace(',', '') + (context.injectedFunctions.length + 1);
-    var funcText = 'function ' + generatedFuncName + '(' + params.join(',');
-    funcText += ') {\n' + body + '\n}\n';
+    var funcText = util.format('function %s(%s) {\n%s\n}\n', generatedFuncName, params.join(','), body);
     context.injectedFunctions.push(funcText);
     return generatedFuncName;
 }
@@ -218,7 +218,7 @@ function generateProps(node, context) {
                 params = params.concat([evtParams.trim()]);
             }
             var generatedFuncName = generateInjectedFunc(context, key, funcBody, params);
-            props[propKey] = generatedFuncName + '.bind(' + (['this'].concat(context.boundParams)).join(',') + ')';
+            props[propKey] = util.format('%s.bind(%s)', generatedFuncName, (['this'].concat(context.boundParams)).join(','));
         } else if (key === 'style' && !utils.isStringOnlyCode(val)) {
             var styleParts = val.trim().split(';');
             styleParts = _.compact(_.map(styleParts, function (str) {
@@ -411,11 +411,11 @@ function convertHtmlToReact(node, context) {
         if (node.attribs[ifAttr]) {
             data.condition = node.attribs[ifAttr].trim();
         }
-        data.children = node.children ? utils.concatChildren(_.map(node.children, function (child) {
+        data.children = utils.concatChildren(_.map(node.children, function (child) {
             var code = convertHtmlToReact(child, context);
             validateJS(code, child, context);
             return code;
-        })) : '';
+        }));
 
         if (hasNonSimpleChildren(node)) {
             data.body = reactSupport.shouldUseCreateElement(context) ? tagTemplateCreateElement(data) : tagTemplate(data);
@@ -424,10 +424,9 @@ function convertHtmlToReact(node, context) {
         }
 
         if (node.attribs[scopeAttr]) {
-            var scopeVarDeclarations = _.map(data.innerScope.innerMapping, function (v) { return v; }).join('\n');
-            var functionBody = scopeVarDeclarations + 'return ' + data.body;
+            var functionBody = _.values(data.innerScope.innerMapping).join('\n') + 'return ' + data.body;
             var generatedFuncName = generateInjectedFunc(context, 'scope' + data.innerScope.scopeName, functionBody, _.keys(data.innerScope.outerMapping));
-            data.body = generatedFuncName + '.apply(this, [' + _.values(data.innerScope.outerMapping).join(',') + '])';
+            data.body = util.format('%s.apply(this, [%s])', generatedFuncName, _.values(data.innerScope.outerMapping).join(','));
         }
 
         // Order matters here. Each rt-repeat iteration wraps over the rt-scope, so
@@ -502,7 +501,7 @@ function convertRT(html, reportContext, options) {
 
     var context = defaultContext(html, options);
     utils.validate(options, context, reportContext, rootNode.root()[0]);
-    var rootTags = _.filter(rootNode.root()[0].children, {type: 'tag'});
+    var rootTags = _.filter(rootNode.root()[0].children, isTag);
     rootTags = handleSelfClosingHtmlTags(rootTags);
     if (!rootTags || rootTags.length === 0) {
         throw new RTCodeError('Document should have a root element');

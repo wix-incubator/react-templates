@@ -25,7 +25,7 @@ define([
             };
         },
 
-        search: function() {
+        search: function () {
             this.state.items = [[], [], []];
             this.total = 0;
             this.heights = [0, 0, 0];
@@ -34,24 +34,25 @@ define([
             this.loadMore();
         },
 
-        indexOfMin: function(array) {
-            var indexAndMin = _.reduce(array, function(accum, height, index) {
-                return (height < accum.min) ? { i: index, min: height } : accum;
+        indexOfMin: function (array) {
+            var indexAndMin = _.reduce(array, function (accum, height, index) {
+                /*eslint no-extra-parens:0*/
+                return (height < accum.min) ? {i: index, min: height} : accum;
             }, {i: -1, min: Number.MAX_VALUE});
             return indexAndMin.i;
         },
 
-        loadMore: function(done) {
-            done = done || function() {};
+        loadMore: function (done) {
+            done = done || function () {};
             if (!this.hasMore) {
                 done();
                 return;
             }
-            var url = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&start=' + this.total + '&q=' + this.realTerm + "&callback=?";
+            var url = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&start=' + this.total + '&q=' + this.realTerm + '&callback=?';
 
             var self = this;
             $.ajax({url: url, dataType: 'jsonp'})
-                .done(function(data){
+                .done(function (data) {
                     if (!data.responseData) {
                         self.hasMore = false;
                         done();
@@ -83,7 +84,7 @@ define([
                 });
         },
 
-        shouldComponentUpdate: function(nextProps, nextState) {
+        shouldComponentUpdate: function (nextProps, nextState) {
             return !_.isEqual(this.state, nextState);
         },
 

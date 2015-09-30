@@ -1,5 +1,3 @@
-'use strict';
-
 requirejs.config({
 //    baseUrl: '/',
     paths: {
@@ -8,12 +6,13 @@ requirejs.config({
         react: '//cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react-with-addons'
     },
     shim: {
-        lodash: { exports: '_' },
-        jquery: { exports: '$' },
-        react: { exports: 'React' }
+        lodash: {exports: '_'},
+        jquery: {exports: '$'},
+        react: {exports: 'React'}
     }
 });
 
 requirejs(['jquery', 'react', 'ImageSearch'], function ($, React, ImageSearch) {
-    React.renderComponent(ImageSearch(), $('#main').get(0));
+    'use strict';
+    React.renderComponent(ImageSearch(), $('#main').get(0)); //eslint-disable-line new-cap
 });

@@ -10,11 +10,11 @@ define([
         displayName: 'InfiniteScroll',
         gettingMore: false,
 
-        onLoadMoreFinished: function() {
+        onLoadMoreFinished: function () {
             this.gettingMore = false;
         },
 
-        onScroll: function(evt) {
+        onScroll: function (evt) {
             if (!this.props.onLoadMore || this.gettingMore) {
                 return;
             }

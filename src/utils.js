@@ -30,23 +30,23 @@ function normalizeName(name) {
  * @return {boolean}
  */
 function isStringOnlyCode(txt) {
-    txt = txt.trim();
-    return txt.length && txt.charAt(0) === '{' && txt.charAt(txt.length - 1) === '}';
+    return /^\s*\{.*}\s*$/g.test(txt);
+    //txt = txt.trim();
+    //return txt.length && txt.charAt(0) === '{' && txt.charAt(txt.length - 1) === '}';
 }
 
 /**
- * @param children
+ * @param {Array.<string>} children
  * @return {string}
  */
 function concatChildren(children) {
     var res = '';
     _.forEach(children, function (child) {
-        if (child && child.indexOf(' /*') !== 0 ) {
-            res += ',' + child;
-        } else {
-            res += child;
+        if (child && child.indexOf(' /*') !== 0) {
+            res += ',';
         }
-    }, this);
+        res += child;
+    });
     return res;
 }
 
