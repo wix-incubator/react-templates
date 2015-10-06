@@ -110,7 +110,7 @@ function convertText(node, context, txt) {
             curlyCounter += curlyMap[txt.charAt(end)] || 0;
         }
         if (curlyCounter !== 0) {
-            throw RTCodeError.build("Failed to parse text '" + txt + "'", context, node);
+            throw RTCodeError.buildFormat(context, node, "Failed to parse text '%s'", txt);
         } else {
             var needsParens = start !== 0 || end !== txt.length - 1;
             res += (first ? '' : concatChar) + (needsParens ? '(' : '') + txt.substr(start + 1, end - start - 2) + (needsParens ? ')' : '');
@@ -185,8 +185,7 @@ function generateTemplateProps(node, context) {
         context.boundParams = oldBoundParams;
 
         var generatedFuncName = generateInjectedFunc(context, templateProp.prop, functionBody, functionParams);
-        var boundArguments = _.values(context.boundParams).join(',');
-        props[templateProp.prop] = generatedFuncName + '.bind(this' + (boundArguments.length ? ', ' + boundArguments : '') + ')';
+        props[templateProp.prop] = genBind(generatedFuncName, _.values(context.boundParams));
 
         // Remove the template child from the children definition.
         node.children.splice(templateProp.childIndex, 1);
@@ -207,34 +206,9 @@ function generateProps(node, context) {
             throw RTCodeError.buildFormat(context, node, 'duplicate definition of %s %s', propKey, JSON.stringify(node.attribs));
         }
         if (key.indexOf('on') === 0 && !utils.isStringOnlyCode(val)) {
-            var funcParts = val.split('=>');
-            if (funcParts.length !== 2) {
-                throw RTCodeError.buildFormat(context, node, "when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [%s='%s']", key, val);
-            }
-            var evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
-            var funcBody = funcParts[1].trim();
-            var params = context.boundParams;
-            if (evtParams.trim() !== '') {
-                params = params.concat([evtParams.trim()]);
-            }
-            var generatedFuncName = generateInjectedFunc(context, key, funcBody, params);
-            props[propKey] = util.format('%s.bind(%s)', generatedFuncName, (['this'].concat(context.boundParams)).join(','));
+            props[propKey] = handleEventHandler(val, context, node, key);
         } else if (key === 'style' && !utils.isStringOnlyCode(val)) {
-            var styleParts = val.trim().split(';');
-            styleParts = _.compact(_.map(styleParts, function (str) {
-                str = str.trim();
-                if (!str || str.indexOf(':') === -1) {
-                    return null;
-                }
-                var res = str.split(':');
-                res[0] = res[0].trim();
-                res[1] = res.slice(1).join(':').trim();
-                return res;
-            }));
-            var styleArray = _.map(styleParts, function (stylePart) {
-                return stringUtils.convertToCamelCase(stylePart[0]) + ' : ' + convertText(node, context, stylePart[1].trim());
-            });
-            props[propKey] = '{' + styleArray.join(',') + '}';
+            props[propKey] = handleStyleProp(val, node, context);
         } else if (propKey === reactSupport.classNameProp) {
             // Processing for both class and rt-class conveniently return strings that
             // represent JS expressions, each evaluating to a space-separated set of class names.
@@ -249,12 +223,49 @@ function generateProps(node, context) {
             props[propKey] = convertText(node, context, val.trim());
         }
     });
-
     _.assign(props, generateTemplateProps(node, context));
 
     return '{' + _.map(props, function (val, key) {
         return JSON.stringify(key) + ' : ' + val;
     }).join(',') + '}';
+}
+
+function handleEventHandler(val, context, node, key) {
+    var funcParts = val.split('=>');
+    if (funcParts.length !== 2) {
+        throw RTCodeError.buildFormat(context, node, "when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [%s='%s']", key, val);
+    }
+    var evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
+    var funcBody = funcParts[1].trim();
+    var params = context.boundParams;
+    if (evtParams.trim() !== '') {
+        params = params.concat([evtParams.trim()]);
+    }
+    var generatedFuncName = generateInjectedFunc(context, key, funcBody, params);
+    return genBind(generatedFuncName, context.boundParams);
+}
+
+function genBind(func, args) {
+    //return util.format('%s.bind(%s)', generatedFuncName, (['this'].concat(context.boundParams)).join(','));
+    return util.format('%s.bind(%s)', func, (['this'].concat(args)).join(','));
+}
+
+function handleStyleProp(val, node, context) {
+    var styleParts = val.trim().split(';');
+    styleParts = _.compact(_.map(styleParts, function (str) {
+        str = str.trim();
+        if (!str || str.indexOf(':') === -1) {
+            return null;
+        }
+        var res = str.split(':');
+        res[0] = res[0].trim();
+        res[1] = res.slice(1).join(':').trim();
+        return res;
+    }));
+    var styleArray = _.map(styleParts, function (stylePart) {
+        return stringUtils.convertToCamelCase(stylePart[0]) + ' : ' + convertText(node, context, stylePart[1].trim());
+    });
+    return '{' + styleArray.join(',') + '}';
 }
 
 /**
@@ -347,7 +358,7 @@ function convertHtmlToReact(node, context) {
         if (node.attribs[repeatAttr]) {
             var arr = node.attribs[repeatAttr].split(' in ');
             if (arr.length !== 2) {
-                throw RTCodeError.build("rt-repeat invalid 'in' expression '" + node.attribs[repeatAttr] + "'", context, node);
+                throw RTCodeError.buildFormat(context, node, "rt-repeat invalid 'in' expression '%s'", node.attribs[repeatAttr]);
             }
             data.item = arr[0].trim();
             data.collection = arr[1].trim();
@@ -377,7 +388,7 @@ function convertHtmlToReact(node, context) {
 
                 var scopeSubParts = scopePart.split(' as ');
                 if (scopeSubParts.length < 2) {
-                    throw RTCodeError.build("invalid scope part '" + scopePart + "'", context, node);
+                    throw RTCodeError.buildFormat(context, node, "invalid scope part '%s'", scopePart);
                 }
                 var alias = scopeSubParts[1].trim();
                 var value = scopeSubParts[0].trim();
@@ -525,9 +536,11 @@ function convertRT(html, reportContext, options) {
         throw RTCodeError.build('Document should have a single root element', context, rootNode.root()[0]);
     }
     var body = convertHtmlToReact(firstTag, context);
-    var requirePaths = _(defines).keys().map(function (reqName) {
-        return '"' + reqName + '"';
-    }).value().join(',');
+    var requirePaths = _(defines)
+        .keys()
+        .map(function (reqName) { return '"' + reqName + '"'; })
+        .value()
+        .join(',');
     var requireVars = _.values(defines).join(',');
     var buildImport;
     if (options.modules === 'typescript') {
