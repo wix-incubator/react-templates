@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - 0.10
   - 0.12
-  - iojs
+  - 4
 
 sudo: false
 
@@ -22,5 +22,5 @@ branches:
 #after_success:
 #    - npm run coveralls
 
-after_success:
-  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+#after_success:
+#  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
