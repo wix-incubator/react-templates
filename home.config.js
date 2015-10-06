@@ -1,3 +1,4 @@
+/*eslint semi:0,no-unused-expressions:0,no-extra-parens:0,strict:0*/
 ({
     baseUrl: 'playground',
     //name: 'node_modules/almond/almond.js', // assumes a production build using almond
