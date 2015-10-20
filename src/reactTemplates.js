@@ -109,13 +109,13 @@ function convertText(node, context, txt) {
         for (end = start + 1; end < txt.length && curlyCounter > 0; end++) {
             curlyCounter += curlyMap[txt.charAt(end)] || 0;
         }
-        if (curlyCounter !== 0) {
-            throw RTCodeError.buildFormat(context, node, "Failed to parse text '%s'", txt);
-        } else {
+        if (curlyCounter === 0) {
             var needsParens = start !== 0 || end !== txt.length - 1;
             res += (first ? '' : concatChar) + (needsParens ? '(' : '') + txt.substr(start + 1, end - start - 2) + (needsParens ? ')' : '');
             first = false;
             txt = txt.substr(end);
+        } else {
+            throw RTCodeError.buildFormat(context, node, "Failed to parse text '%s'", txt);
         }
     }
     if (txt) {

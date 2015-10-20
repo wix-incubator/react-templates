@@ -1,5 +1,5 @@
 {
-    "plugins": ["lodash3"],
+    "plugins": ["lodash3", "wix-editor"],
     "rules": {
         "no-array-constructor": 2,
         "no-catch-shadow": 2,
@@ -162,7 +162,19 @@
         "lodash3/prefer-map": 2,
         "lodash3/prefer-wrapper-method": 2,
         "lodash3/prefer-invoke": 2,
-        "lodash3/prefer-thru": 2
+        "lodash3/prefer-thru": 2,
+        "lodash3/prefer-lodash-method": 0,
+        "lodash3/prefer-lodash-typecheck": 1,
+        "lodash3/no-commit": 1,
+        "lodash3/prefer-get": [2, 3],
+
+        "wix-editor/augmented-assignment": 1,
+        "wix-editor/no-not-not": 1,
+        "wix-editor/no-unneeded-match": 1,
+        "wix-editor/prefer-filter": 1,
+        "wix-editor/prefer-ternary": 1,
+        "wix-editor/return-boolean": 1,
+        "wix-editor/simplify-boolean-expression": 1
     },
     "env": {
         "browser": false,
