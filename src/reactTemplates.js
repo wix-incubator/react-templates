@@ -545,15 +545,15 @@ function convertRT(html, reportContext, options) {
     var buildImport;
     if (options.modules === 'typescript') {
         buildImport = function (reqVar, reqPath) {
-            return 'import ' + reqVar + " = require('" + reqPath + "');";
+            return util.format("import %s = require('%s');", reqVar, reqPath);
         };
     } else if (options.modules === 'es6') {
         buildImport = function (reqVar, reqPath) {
-            return 'import ' + reqVar + " from '" + reqPath + "';";
+            return util.format("import %s from '%s';", reqVar, reqPath);
         };
     } else {
         buildImport = function (reqVar, reqPath) {
-            return 'var ' + reqVar + " = require('" + reqPath + "');";
+            return util.format("var %s = require('%s');", reqVar, reqPath);
         };
     }
     var vars = _(defines).map(buildImport).join('\n');
