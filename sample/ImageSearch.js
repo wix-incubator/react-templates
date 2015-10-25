@@ -59,11 +59,8 @@ define([
                         return;
                     }
                     var results = data.responseData.results;
-
                     var items = _.cloneDeep(self.state.items);
-
-                    for (var i = 0; i < results.length; i++) {
-                        var result = data.responseData.results[i];
+                    results.forEach(function (result) {
                         var minHeightIndex = self.indexOfMin(self.heights);
 
                         items[minHeightIndex].push({
@@ -74,11 +71,11 @@ define([
                             originalContext: result.originalContextUrl
                         });
 
-                        var relativeHeight = result.height / result.width;
-                        self.heights[minHeightIndex] = self.heights[minHeightIndex] + relativeHeight;
+                        self.heights[minHeightIndex] += result.height / result.width;
                         self.total++;
                         self.seq++;
-                    }
+                    });
+
                     self.setState({items: items});
                     done();
                 });
