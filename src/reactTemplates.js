@@ -60,7 +60,7 @@ function getOptions(options) {
         force: false,
         format: 'stylish',
         targetVersion: reactDOMSupport.default,
-        reactImportPath: options.native ? 'react-native' : 'react/addons',
+        reactImportPath: options.native ? 'react-native' : (options.targetVersion === '0.14.0' ? 'react' : 'react/addons'),
         lodashImportPath: 'lodash',
         native: false,
         nativeTargetVersion: reactNativeSupport.default,
