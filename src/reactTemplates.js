@@ -60,7 +60,7 @@ function getOptions(options) {
         force: false,
         format: 'stylish',
         targetVersion: reactDOMSupport.default,
-        reactImportPath: options.native ? 'react-native' : (options.targetVersion === '0.14.0' ? 'react' : 'react/addons'),
+        reactImportPath: reactImport(options),
         lodashImportPath: 'lodash',
         native: false,
         nativeTargetVersion: reactNativeSupport.default,
@@ -75,6 +75,16 @@ function getOptions(options) {
 
     finalOptions.propTemplates = _.defaults({}, options.propTemplates, defaultPropTemplates);
     return finalOptions;
+}
+
+function reactImport(options) {
+    if (options.native) {
+        return 'react-native';
+    }
+    if (options.targetVersion === '0.14.0') {
+        return 'react';
+    }
+    return 'react/addons';
 }
 
 /**
