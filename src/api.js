@@ -29,6 +29,14 @@ function convertFile(source, target, options, context) {
     }
 
     var html = fs.readFileSync(source).toString();
+    if (path.extname(source) === '.rts') {
+        var rtStyle = require('./rtStyle');
+        var out = rtStyle.convert(html);
+        if (!options.dryRun) {
+            fs.writeFileSync(target, out);
+        }
+        return;
+    }
     var shouldAddName = options.modules === 'none' && !options.name;
     if (shouldAddName) {
         options.name = reactTemplates.normalizeName(path.basename(source, path.extname(source))) + 'RT';

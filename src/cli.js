@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-/**
- * Created by idok on 11/10/14.
- */
 'use strict';
 var _ = require('lodash');
 var path = require('path');
@@ -47,7 +44,6 @@ function printVersions(currentOptions) {
 }
 
 /**
- * @param {CONTEXT} context
  * @param {*} currentOptions
  * @param {string} filename file name to process
  */
@@ -56,14 +52,13 @@ function handleSingleFile(currentOptions, filename) {
         var sourceExt = path.extname(filename);
         var outputFilename;
         if (sourceExt === '.rt') {
-            if (currentOptions.modules !== 'typescript') {
-                outputFilename = filename + '.js';
-            } else {
-                outputFilename = filename + '.ts';
-            }
+            outputFilename = filename + (currentOptions.modules === 'typescript' ? '.ts' : '.js');
         } else if (sourceExt === '.jsrt') {
             outputFilename = filename.replace(/\.jsrt$/, '.js');
             currentOptions = _.assign({}, currentOptions, {modules: 'jsrt'});
+        } else if (sourceExt === '.rts') {
+            outputFilename = filename + '.js';
+            currentOptions = _.assign({}, currentOptions, {modules: 'rts'});
         } else {
             context.error('invalid file, only handle rt/jsrt files', filename);
             return;

@@ -1,6 +1,7 @@
 'use strict';
 var cheerio = require('cheerio');
 var fs = require('fs');
+var path = require('path');
 
 /**
  * @param {string} html
@@ -34,11 +35,27 @@ function compareAndWrite(t, actual, expected, filename) {
  * @return {string}
  */
 function readFileNormalized(filename) {
-    return fs.readFileSync(filename).toString().replace(/\r/g, '').trim();
+    return readFile(filename).replace(/\r/g, '').trim();
+}
+
+//var dataPath = path.resolve(__dirname, '..', 'data');
+/**
+ * @param {string} filename
+ * @return {string}
+ */
+function readFile(filename) {
+    return fs.readFileSync(filename).toString();
+}
+
+function joinDataPath(fileName) {
+    var dataPath = path.resolve(__dirname, '..', 'data');
+    return path.join(dataPath, fileName);
 }
 
 module.exports = {
     normalizeHtml: normalizeHtml,
     compareAndWrite: compareAndWrite,
-    readFileNormalized: readFileNormalized
+    readFileNormalized: readFileNormalized,
+    readFile: readFile,
+    joinDataPath: joinDataPath
 };

@@ -1,4 +1,4 @@
-# React Template for Native Apps
+# React Templates for Native Apps
 
 In order to use React Templates for [React Native](https://facebook.github.io/react-native/) you should set the `native` option to true.
 In native mode the default `modules` option is set to `commonjs` and the default `react-import-path` is set to `react-native`.
@@ -77,4 +77,47 @@ module.exports = function () {
     }));
 };
 ```
+
+## Native style support
+
+This feature is **Experimental** and is subject to change.
+
+You can use rt to compile a style file similar to css:
+
+```
+.text {
+    background-color: #00346E;
+    padding: 3px;
+}
+
+.fonts {
+    background-color: #000099;
+    height: 30px;
+}
+```
+
+will result in:
+
+```javascript
+'use strict';
+var style = {
+  "text": {
+    "backgroundColor": "#00346E",
+    "padding": 3
+  },
+  "fonts": {
+    "backgroundColor": "#000099",
+    "height": 30
+  }
+};
+module.exports = style;
+```
+
+Which later you can import in your react native component:
+
+```javascript
+var styles = StyleSheet.create(require('./style.rts'))
+```
+
+
 

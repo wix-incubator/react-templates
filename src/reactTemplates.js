@@ -396,12 +396,12 @@ function convertHtmlToReact(node, context) {
                     return;
                 }
 
-                var scopeSubParts = scopePart.split(' as ');
+                var scopeSubParts = _(scopePart).split(' as ').invoke('trim').value();
                 if (scopeSubParts.length < 2) {
                     throw RTCodeError.buildFormat(context, node, "invalid scope part '%s'", scopePart);
                 }
-                var alias = scopeSubParts[1].trim();
-                var value = scopeSubParts[0].trim();
+                var alias = scopeSubParts[1];
+                var value = scopeSubParts[0];
 
                 validateJS(alias, node, context);
 

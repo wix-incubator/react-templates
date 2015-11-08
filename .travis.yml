@@ -6,14 +6,14 @@ node_js:
 
 sudo: false
 
-before_script:
-  - npm install -g grunt-cli
+#before_script:
+#  - npm install -g grunt-cli
 
 install:
   - npm install
 
 script:
-  - grunt eslint
+  - npm run lint
   - npm run test-cov
 
 branches:
