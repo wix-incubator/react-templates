@@ -9,6 +9,7 @@ var pkg = require('../package.json');
 var options = require('./options');
 var reactDOMSupport = require('./reactDOMSupport');
 var reactTemplates = require('./reactTemplates');
+var rtStyle = require('./rtStyle');
 
 function executeOptions(currentOptions) {
     var ret = 0;
@@ -90,5 +91,6 @@ module.exports = {
     execute: execute,
     executeOptions: executeOptions,
     handleSingleFile: handleSingleFile,
-    convertTemplateToReact: reactTemplates.convertTemplateToReact
+    convertTemplateToReact: reactTemplates.convertTemplateToReact,
+    convertStyle: rtStyle.convert
 };
