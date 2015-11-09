@@ -41,6 +41,8 @@
     "brace": "^0.5.1",
     "brfs": "^1.4.1",
     "coveralls": "^2.11.4",
+    "eslint": "^1.9.0",
+    "eslint-config-wix-editor": "0.0.1",
     "eslint-plugin-lodash3": "^0.1.13",
     "eslint-plugin-react": "^3.6.3",
     "eslint-plugin-wix-editor": "^1.0.1",
