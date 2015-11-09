@@ -31,7 +31,8 @@ function processRule2(result, rule) {
 }
 
 function processDeclaration(result, dec) {
-    result[stringUtils.convertToCamelCase(dec.property)] = convertValue(dec.property, dec.value);
+    var prop = stringUtils.convertToCamelCase(dec.property);
+    result[prop] = convertValue(prop, dec.value);
     return result;
 }
 

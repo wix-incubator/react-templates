@@ -10,7 +10,7 @@
     "prepublish": "npm run build",
     "build": "npm run lint && npm run test",
     "lint": "eslint .",
-    "test": "node test/src/test.js",
+    "test": "node test/src/test.js && node test/src/styleTest.js",
     "test-cov": "istanbul cover test/src/test.js -- --require test/support/env --reporter dot --check-leaks test/ test/acceptance/",
     "patch": "npm version patch -m\"update version to %s\" && git push && git push --tags",
     "minor": "npm version minor -m\"update version to %s\" && git push && git push --tags",
