@@ -1,0 +1,1 @@
+<svg class="badge"><use xlink:href="#logo"/></svg>
