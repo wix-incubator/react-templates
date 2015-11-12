@@ -8,7 +8,6 @@ var compareAndWrite = util.compareAndWrite;
 var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
-var React = require('react/addons');
 var RTCodeError = reactTemplates.RTCodeError;
 var dataPath = path.resolve(__dirname, '..', 'data');
 
@@ -189,19 +188,7 @@ test('html tests', function (t) {
             var expected = readFileNormalized(filename + '.html');
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
             code = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '');
-            var defineMap = {'react/addons': React, lodash: _};
-            //noinspection JSUnusedLocalSymbols
-            var define = function (requirementsNames, content) { //eslint-disable-line no-unused-vars,func-style
-                var requirements = _.map(requirementsNames, function (reqName) {
-                    return defineMap[reqName];
-                });
-                return content.apply(this, requirements);
-            };
-            var comp = React.createFactory(React.createClass({
-                displayName: 'testClass',
-                render: eval(code) //eslint-disable-line no-eval
-            }));
-            var actual = React.renderToStaticMarkup(comp());
+            var actual = util.codeToHtml(code);
             actual = util.normalizeHtml(actual);
             expected = util.normalizeHtml(expected);
             var equal = compareAndWrite(t, actual, expected, filename);

@@ -7,7 +7,6 @@
     "rt": "./bin/rt.js"
   },
   "scripts": {
-    "prepublish": "npm run build",
     "build": "npm run lint && npm run test",
     "lint": "eslint .",
     "test": "node test/src/test.js && node test/src/styleTest.js",
@@ -54,7 +53,8 @@
     "grunt-eslint": "^17.3.1",
     "grunt-node-tap": "^0.1.61",
     "istanbul": "^0.4.0",
-    "react": "^0.12.2",
+    "react": "^0.14.2",
+    "react-dom": "^0.14.2",
     "react-native": "^0.11.4",
     "react-templates": "^0.1.22",
     "tape": "^4.2.1"

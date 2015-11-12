@@ -20,10 +20,6 @@ var ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
 var propsTemplateSimple = _.template('_.assign({}, <%= generatedProps %>, <%= rtProps %>)');
 var propsTemplate = _.template('mergeProps( <%= generatedProps %>, <%= rtProps %>)');
 
-//var propsMergeFunction3 = 'function mergeProps(inline,external) {\n var res = _.assign({},inline,external)\nif (inline.hasOwnProperty(\'style\')) {\n res.style = _.defaults(res.style, inline.style);\n}\n' +
-//    ' if (inline.hasOwnProperty(\'className\') && external.hasOwnProperty(\'className\')) {\n' +
-//    ' res.className = external.className + \' \' + inline.className;\n} return res;\n}\n';
-
 var propsMergeFunction = [
     'function mergeProps(inline,external) {',
     ' var res = _.assign({},inline,external)',
@@ -135,7 +131,6 @@ function convertText(node, context, txt) {
         res = 'true';
     }
 
-    //validateJS(res, node, context);
     return res;
 }
 
@@ -208,7 +203,6 @@ function generateTemplateProps(node, context) {
  * @return {string}
  */
 function generateProps(node, context) {
-//    console.log(node);
     var props = {};
     _.forOwn(node.attribs, function (val, key) {
         var propKey = reactSupport.attributesMapping[key.toLowerCase()] || key;
@@ -256,7 +250,6 @@ function handleEventHandler(val, context, node, key) {
 }
 
 function genBind(func, args) {
-    //return util.format('%s.bind(%s)', generatedFuncName, (['this'].concat(context.boundParams)).join(','));
     return util.format('%s.bind(%s)', func, (['this'].concat(args)).join(','));
 }
 
@@ -287,7 +280,6 @@ function convertTagNameToConstructor(tagName, context) {
     if (context.options.native) {
         return _.includes(reactNativeSupport[context.options.nativeTargetVersion], tagName) ? 'React.' + tagName : tagName;
     }
-
     var isHtmlTag = _.includes(reactDOMSupport[context.options.targetVersion], tagName);
     if (reactSupport.shouldUseCreateElement(context)) {
         isHtmlTag = isHtmlTag || tagName.match(/^\w+(-\w+)$/);
@@ -319,33 +311,6 @@ function hasNonSimpleChildren(node) {
         return child.type === 'tag' && child.attribs[repeatAttr];
     });
 }
-
-/*
-interface NodeConversionData {
-    innerScopeData:     InnerScopeData;
-    repeatChildrenData: RepeatChildrenData;
-    ifData:             IfData;
-}
-
-interface InnerScopeData {
-    scopeName: string;
-    // these are variables that were already in scope, unrelated to the ones declared in rt-inner-scope
-    innerMapping: {[alias: string]: any};
-    // these are variables declared in the rt-inner-scope attribute
-    outerMapping: {[alias: string]: any};
-}
-
-interface RepeatChildrenData {
-    itemAlias:            string;
-    collectionExpression: string;
-    binds:                string[];
-    fn();
-}
-
-interface IfData {
-    conditionExpression: string;
-}
-*/
 
 /**
  * @param node
@@ -385,24 +350,15 @@ function convertHtmlToReact(node, context) {
                 outerMapping: {}
             };
 
-            //data.innerScope.outerMapping = _.zipObject(context.boundParams, context.boundParams);
-            _.forEach(context.boundParams, function (boundParam) {
-                data.innerScope.outerMapping[boundParam] = boundParam;
-            });
+            data.innerScope.outerMapping = _.zipObject(context.boundParams, context.boundParams);
 
-            //_(node.attribs[scopeAttr]).split(';').invoke('trim').compact().forEach().value()
-            _.forEach(node.attribs[scopeAttr].split(';'), function (scopePart) {
-                if (scopePart.trim().length === 0) {
-                    return;
-                }
-
+            _(node.attribs[scopeAttr]).split(';').invoke('trim').compact().forEach( function (scopePart) {
                 var scopeSubParts = _(scopePart).split(' as ').invoke('trim').value();
                 if (scopeSubParts.length < 2) {
                     throw RTCodeError.buildFormat(context, node, "invalid scope part '%s'", scopePart);
                 }
                 var alias = scopeSubParts[1];
                 var value = scopeSubParts[0];
-
                 validateJS(alias, node, context);
 
                 // this adds both parameters to the list of parameters passed further down
@@ -413,7 +369,7 @@ function convertHtmlToReact(node, context) {
                 data.innerScope.scopeName += stringUtils.capitalize(alias);
                 data.innerScope.innerMapping[alias] = 'var ' + alias + ' = ' + value + ';';
                 validateJS(data.innerScope.innerMapping[alias], node, context);
-            });
+            }).value();
         }
 
         data.props = generateProps(node, context);
