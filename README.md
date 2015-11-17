@@ -29,7 +29,7 @@ Here's a sample Hello project:<br/>
 https://github.com/wix/hello-react-templates
 
 Here's a sample Hello project with webpack, es6 and hot reload:<br/>
-https://github.com/wix/react-templates-hot-reload
+https://github.com/wix/react-templates-transform-boilerplate
 
 ## IntelliJ / WebStorm plugin
 http://plugins.jetbrains.com/plugin/7648
