@@ -1,7 +1,7 @@
 'use strict';
 var cheerio = require('cheerio');
 var _ = require('lodash');
-var esprima = require('esprima-harmony');
+var esprima = require('esprima-fb');
 var escodegen = require('escodegen');
 var reactDOMSupport = require('./reactDOMSupport');
 var reactNativeSupport = require('./reactNativeSupport');
@@ -505,7 +505,6 @@ function convertRT(html, reportContext, options) {
     var requirePaths = _(defines)
         .keys()
         .map(function (reqName) { return '"' + reqName + '"'; })
-        .value()
         .join(',');
     var requireVars = _.values(defines).join(',');
     var buildImport;
@@ -538,7 +537,7 @@ function convertRT(html, reportContext, options) {
 
 function parseJS(code) {
     try {
-        var tree = esprima.parse(code, {range: true, tokens: true, comment: true});
+        var tree = esprima.parse(code, {range: true, tokens: true, comment: true, sourceType: 'module'});
         tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
         return escodegen.generate(tree, {comment: true});
     } catch (e) {

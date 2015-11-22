@@ -98,7 +98,6 @@ module.exports = function (grunt) {
         return eval(require('fs').readFileSync(file).toString()); // eslint-disable-line no-eval
     }
 
-    grunt.task.loadTasks('./internalTasks');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
@@ -107,6 +106,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.registerTask('default', ['eslint:all']);
+    grunt.registerTask('lint', ['eslint:all']);
     grunt.registerTask('test', ['node_tap']);
 
     grunt.registerTask('rt', function () {

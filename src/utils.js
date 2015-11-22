@@ -1,6 +1,6 @@
 'use strict';
 var _ = require('lodash');
-var esprima = require('esprima-harmony');
+var esprima = require('esprima-fb');
 var rtError = require('./RTCodeError');
 var RTCodeError = rtError.RTCodeError;
 
