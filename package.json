@@ -37,7 +37,6 @@
     "text-table": "^0.2.0"
   },
   "devDependencies": {
-    "babel-eslint": "^4.1.5",
     "brace": "^0.5.1",
     "brfs": "^1.4.1",
     "coveralls": "^2.11.4",
