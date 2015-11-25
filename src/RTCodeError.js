@@ -114,7 +114,7 @@ function getNodeLoc(context, node) {
     var end;
     if (node.data) {
         end = node.startIndex + node.data.length;
-    } else if (node.next) {
+    } else if (node.next) { // eslint-disable-line
         end = node.next.startIndex;
     } else {
         end = context.html.length;

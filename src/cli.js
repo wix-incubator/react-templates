@@ -26,11 +26,11 @@ function executeOptions(currentOptions) {
         }
     } else if (currentOptions.listTargetVersion) {
         printVersions(currentOptions);
-    } else if (!files.length) {
-        console.log(options.generateHelp());
-    } else {
+    } else if (files.length) {
         _.forEach(files, handleSingleFile.bind(this, currentOptions));
         ret = shell.printResults(context);
+    } else {
+        console.log(options.generateHelp());
     }
     return ret;
 }

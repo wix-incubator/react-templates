@@ -67,7 +67,55 @@ function validate(options, context, reportContext, node) {
     }
 }
 
+/**
+ * return true if any node in the given tree uses a scope name from the given set, false - otherwise.
+ * @param scopeNames a set of scope names to find
+ * @param node root of a syntax tree generated from an ExpressionStatement or one of its children.
+ */
+function usesScopeName(scopeNames, node) {
+    function usesScope(root) {
+        return usesScopeName(scopeNames, root);
+    }
+    if (_.isEmpty(scopeNames)) {
+        return false;
+    }
+    // rt-if="x"
+    if (node.type === 'Identifier') {
+        return _.includes(scopeNames, node.name);
+    }
+    // rt-if="e({key1: value1})"
+    if (node.type === 'Property') {
+        return usesScope(node.value);
+    }
+    // rt-if="e.x" or rt-if="e1[e2]"
+    if (node.type === 'MemberExpression') {
+        return node.computed ? usesScope(node.object) || usesScope(node.property) : usesScope(node.object);
+    }
+    // rt-if="!e"
+    if (node.type === 'UnaryExpression') {
+        return usesScope(node.argument);
+    }
+    // rt-if="e1 || e2" or rt-if="e1 | e2"
+    if (node.type === 'LogicalExpression' || node.type === 'BinaryExpression') {
+        return usesScope(node.left) || usesScope(node.right);
+    }
+    // rt-if="e1(e2, ... eN)"
+    if (node.type === 'CallExpression') {
+        return usesScope(node.callee) || _.some(node.arguments, usesScope);
+    }
+    // rt-if="f({e1: e2})"
+    if (node.type === 'ObjectExpression') {
+        return _.some(node.properties, usesScope);
+    }
+    // rt-if="e1[e2]"
+    if (node.type === 'ArrayExpression') {
+        return _.some(node.elements, usesScope);
+    }
+    return false;
+}
+
 module.exports = {
+    usesScopeName: usesScopeName,
     normalizeName: normalizeName,
     validateJS: validateJS,
     isStringOnlyCode: isStringOnlyCode,

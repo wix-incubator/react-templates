@@ -34,10 +34,15 @@ var propsMergeFunction = [
 ].join('\n');
 
 var classSetTemplate = _.template('_.keys(_.pick(<%= classSet %>, _.identity)).join(" ")');
-var simpleTagTemplate = _.template('<%= name %>(<%= props %><%= children %>)');
-var tagTemplate = _.template('<%= name %>.apply(this, [<%= props %><%= children %>])');
-var simpleTagTemplateCreateElement = _.template('React.createElement(<%= name %>,<%= props %><%= children %>)');
-var tagTemplateCreateElement = _.template('React.createElement.apply(this, [<%= name %>,<%= props %><%= children %>])');
+
+function getTagTemplateString(simpleTagTemplate, shouldCreateElement) {
+    if (simpleTagTemplate) {
+        return shouldCreateElement ? 'React.createElement(<%= name %>,<%= props %><%= children %>)' : '<%= name %>(<%= props %><%= children %>)';
+    }
+    return shouldCreateElement ? 'React.createElement.apply(this, [<%= name %>,<%= props %><%= children %>])' : '<%= name %>.apply(this, [<%= props %><%= children %>])';
+}
+
+
 var commentTemplate = _.template(' /* <%= data %> */ ');
 
 var repeatAttr = 'rt-repeat';
@@ -344,32 +349,12 @@ function convertHtmlToReact(node, context) {
         }
 
         if (node.attribs[scopeAttr]) {
-            data.innerScope = {
-                scopeName: '',
-                innerMapping: {},
-                outerMapping: {}
-            };
+            handleScopeAttribute(node, context, data);
+        }
 
-            data.innerScope.outerMapping = _.zipObject(context.boundParams, context.boundParams);
-
-            _(node.attribs[scopeAttr]).split(';').invoke('trim').compact().forEach( function (scopePart) {
-                var scopeSubParts = _(scopePart).split(' as ').invoke('trim').value();
-                if (scopeSubParts.length < 2) {
-                    throw RTCodeError.buildFormat(context, node, "invalid scope part '%s'", scopePart);
-                }
-                var alias = scopeSubParts[1];
-                var value = scopeSubParts[0];
-                validateJS(alias, node, context);
-
-                // this adds both parameters to the list of parameters passed further down
-                // the scope chain, as well as variables that are locally bound before any
-                // function call, as with the ones we generate for rt-scope.
-                stringUtils.addIfMissing(context.boundParams, alias);
-
-                data.innerScope.scopeName += stringUtils.capitalize(alias);
-                data.innerScope.innerMapping[alias] = 'var ' + alias + ' = ' + value + ';';
-                validateJS(data.innerScope.innerMapping[alias], node, context);
-            }).value();
+        if (node.attribs[ifAttr]) {
+            validateIfAttribute(node, context, data);
+            data.condition = node.attribs[ifAttr].trim();
         }
 
         data.props = generateProps(node, context);
@@ -385,20 +370,14 @@ function convertHtmlToReact(node, context) {
                 }
             }
         }
-        if (node.attribs[ifAttr]) {
-            data.condition = node.attribs[ifAttr].trim();
-        }
+
         data.children = utils.concatChildren(_.map(node.children, function (child) {
             var code = convertHtmlToReact(child, context);
             validateJS(code, child, context);
             return code;
         }));
 
-        if (hasNonSimpleChildren(node)) {
-            data.body = reactSupport.shouldUseCreateElement(context) ? tagTemplateCreateElement(data) : tagTemplate(data);
-        } else {
-            data.body = reactSupport.shouldUseCreateElement(context) ? simpleTagTemplateCreateElement(data) : simpleTagTemplate(data);
-        }
+        data.body = _.template(getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context)))(data);
 
         if (node.attribs[scopeAttr]) {
             var functionBody = _.values(data.innerScope.innerMapping).join('\n') + 'return ' + data.body;
@@ -426,6 +405,54 @@ function convertHtmlToReact(node, context) {
             return convertText(node, context, node.data);
         }
         return '';
+    }
+}
+
+function handleScopeAttribute(node, context, data) {
+    data.innerScope = {
+        scopeName: '',
+        innerMapping: {},
+        outerMapping: {}
+    };
+
+    data.innerScope.outerMapping = _.zipObject(context.boundParams, context.boundParams);
+
+    _(node.attribs[scopeAttr]).split(';').invoke('trim').compact().forEach( function (scopePart) {
+        var scopeSubParts = _(scopePart).split(' as ').invoke('trim').value();
+        if (scopeSubParts.length < 2) {
+            throw RTCodeError.buildFormat(context, node, "invalid scope part '%s'", scopePart);
+        }
+        var alias = scopeSubParts[1];
+        var value = scopeSubParts[0];
+        validateJS(alias, node, context);
+
+        // this adds both parameters to the list of parameters passed further down
+        // the scope chain, as well as variables that are locally bound before any
+        // function call, as with the ones we generate for rt-scope.
+        stringUtils.addIfMissing(context.boundParams, alias);
+
+        data.innerScope.scopeName += stringUtils.capitalize(alias);
+        data.innerScope.innerMapping[alias] = 'var ' + alias + ' = ' + value + ';';
+        validateJS(data.innerScope.innerMapping[alias], node, context);
+    }).value();
+}
+
+function validateIfAttribute(node, context, data) {
+    var innerMappingKeys = _.keys(data.innerScope && data.innerScope.innerMapping || {});
+    var ifAttributeTree = null;
+    try {
+        ifAttributeTree = esprima.parse(node.attribs[ifAttr]);
+    } catch (e) {
+        throw new RTCodeError(e.message, e.index, -1);
+    }
+    if (ifAttributeTree && ifAttributeTree.body && ifAttributeTree.body.length === 1 &&
+        ifAttributeTree.body[0].type === 'ExpressionStatement') {
+        // make sure that rt-if does not use an inner mapping
+        if (ifAttributeTree.body[0].expression && utils.usesScopeName(innerMappingKeys, ifAttributeTree.body[0].expression)) {
+            throw RTCodeError.buildFormat(context, node, "invalid scope mapping used in if part '%s'", node.attribs[ifAttr]);
+        }
+    } else {
+        throw RTCodeError.buildFormat(context, node, "invalid if part '%s'", node.attribs[ifAttr]);
     }
 }
 
@@ -507,21 +534,17 @@ function convertRT(html, reportContext, options) {
         .map(function (reqName) { return '"' + reqName + '"'; })
         .join(',');
     var requireVars = _.values(defines).join(',');
-    var buildImport;
+    var buildImportString;
     if (options.modules === 'typescript') {
-        buildImport = function (reqVar, reqPath) {
-            return util.format("import %s = require('%s');", reqVar, reqPath);
-        };
-    } else if (options.modules === 'es6') {
-        buildImport = function (reqVar, reqPath) {
-            return util.format("import %s from '%s';", reqVar, reqPath);
-        };
+        buildImportString = "import %s = require('%s');";
+    } else if (options.modules === 'es6') { // eslint-disable-line
+        buildImportString = "import %s from '%s';";
     } else {
-        buildImport = function (reqVar, reqPath) {
-            return util.format("var %s = require('%s');", reqVar, reqPath);
-        };
+        buildImportString = "var %s = require('%s');";
     }
-    var vars = _(defines).map(buildImport).join('\n');
+    var vars = _(defines).map(function (reqVar, reqPath) {
+        return util.format(buildImportString, reqVar, reqPath);
+    }).join('\n');
 
     if (options.flow) {
         vars = '/* @flow */\n' + vars;

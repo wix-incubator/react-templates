@@ -1,0 +1,5 @@
+<div key="active-users"
+     rt-scope="this.getCurrentActiveUsers() as activeUsers"
+     rt-if="this.bar[activeUsers || 0]">
+    <span>some text</span>
+</div>

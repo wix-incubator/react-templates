@@ -203,17 +203,11 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             var editor = this.refs.editorRT;
             var name = window.reactTemplates.normalizeName(state.name) + 'RT';
             var code = null;
-            var annot = null;
             try {
                 code = window.reactTemplates.convertTemplateToReact(html.trim().replace(/\r/g, ''), {modules: 'none', name: name});
                 clearMessage(editor);
             } catch (e) {
-                if (e.name === 'RTCodeError') {
-                    //index: -1 line: -1 message: "Document should have a root element" name: "RTCodeError"
-                    annot = {line: e.line, message: e.message, index: e.index};
-                } else {
-                    annot = {line: 1, message: e.message};
-                }
+                var annot = e.name === 'RTCodeError' ? {line: e.line, message: e.message, index: e.index} : {line: 1, message: e.message};
                 this.showErrorAnnotation(annot, editor);
                 //showMessage(editor, msg);
                 console.log(e);

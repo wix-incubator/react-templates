@@ -41,12 +41,7 @@ function convertFile(source, target, options, context) {
     if (shouldAddName) {
         options.name = reactTemplates.normalizeName(path.basename(source, path.extname(source))) + 'RT';
     }
-    var js;
-    if (options.modules === 'jsrt') {
-        js = convertJSRTToJS(html, context, options);
-    } else {
-        js = convertRT(html, context, options);
-    }
+    var js = options.modules === 'jsrt' ? convertJSRTToJS(html, context, options) : convertRT(html, context, options);
     if (!options.dryRun) {
         fs.writeFileSync(target, js);
     }
