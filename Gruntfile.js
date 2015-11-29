@@ -39,16 +39,12 @@ module.exports = function (grunt) {
                 }
             }
         },
-        node_tap: {
-            default_options: {
-                options: {
-                    outputType: 'tap',
-                    outputTo: 'console'
-                },
-                files: {
-                    tests: ['./test/src/*.js']
-                }
-            }
+        tape: {
+            options: {
+                pretty: true,
+                output: 'console'
+            },
+            files: ['test/src/*.js']
         },
         watch: {
             rt: {
@@ -98,16 +94,16 @@ module.exports = function (grunt) {
         return eval(require('fs').readFileSync(file).toString()); // eslint-disable-line no-eval
     }
 
+    grunt.loadNpmTasks('grunt-tape');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-eslint');
-    grunt.loadNpmTasks('grunt-node-tap');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.registerTask('default', ['eslint:all']);
     grunt.registerTask('lint', ['eslint:all']);
-    grunt.registerTask('test', ['node_tap']);
+    grunt.registerTask('test', ['tape']);
 
     grunt.registerTask('rt', function () {
         var reactTemplates = require('./src/cli');

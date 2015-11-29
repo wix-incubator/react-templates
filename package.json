@@ -14,7 +14,8 @@
     "patch": "npm version patch -m\"update version to %s\" && git push && git push --tags",
     "minor": "npm version minor -m\"update version to %s\" && git push && git push --tags",
     "major": "npm version major -m\"update version to %s\" && git push && git push --tags",
-    "buildwp": "webpack --config webpack-production.config.js --progress --profile --colors"
+    "buildwp": "webpack --config webpack-production.config.js --progress --profile --colors",
+    "babel": "rm -rf dist; babel src/ --out-dir dist/"
   },
   "repository": {
     "type": "git",
@@ -41,8 +42,8 @@
     "brfs": "^1.4.1",
     "coveralls": "^2.11.4",
     "eslint": "^1.10.1",
-    "eslint-config-wix-editor": "0.0.1",
-    "eslint-plugin-lodash3": "^0.2.0",
+    "eslint-config-wix-editor": "^0.1.1",
+    "eslint-plugin-lodash3": "^0.2.1",
     "eslint-plugin-react": "^3.10.0",
     "eslint-plugin-wix-editor": "^1.0.1",
     "grunt": "^0.4.5",
@@ -51,7 +52,7 @@
     "grunt-contrib-uglify": "^0.11.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-eslint": "^17.3.1",
-    "grunt-node-tap": "^0.1.61",
+    "grunt-tape": "0.0.2",
     "istanbul": "^0.4.0",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
