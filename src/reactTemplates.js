@@ -417,7 +417,7 @@ function handleScopeAttribute(node, context, data) {
 
     data.innerScope.outerMapping = _.zipObject(context.boundParams, context.boundParams);
 
-    _(node.attribs[scopeAttr]).split(';').invoke('trim').compact().forEach( function (scopePart) {
+    _(node.attribs[scopeAttr]).split(';').invoke('trim').compact().forEach(function (scopePart) {
         var scopeSubParts = _(scopePart).split(' as ').invoke('trim').value();
         if (scopeSubParts.length < 2) {
             throw RTCodeError.buildFormat(context, node, "invalid scope part '%s'", scopePart);
