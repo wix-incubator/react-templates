@@ -1,6 +1,6 @@
 {
   "name": "react-templates",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Light weight templates for react -> write html get valid react code",
   "main": "./dist/cli.js",
   "bin": {
