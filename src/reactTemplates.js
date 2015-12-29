@@ -63,6 +63,7 @@ function getOptions(options) {
         version: false,
         force: false,
         format: 'stylish',
+        brackets: '{ }',
         targetVersion: reactDOMSupport.default,
         reactImportPath: reactImport(options),
         lodashImportPath: 'lodash',
@@ -92,11 +93,6 @@ function reactImport(options) {
 }
 
 /**
- * @const
- */
-const curlyMap = {'{': 1, '}': -1};
-
-/**
  * @typedef {{boundParams: Array.<string>, injectedFunctions: Array.<string>, html: string, options: *}} Context
  */
 
@@ -105,43 +101,72 @@ const curlyMap = {'{': 1, '}': -1};
  */
 
 /**
+  * Get brackets from command line option parameter
+  * Brackets must be specified with the regex syntax and
+  * separated by a space character (e.g. "\{ \}")
+  * @param {string} brackets open and close brackets separated by a space
+  */
+function getBrackets(brackets) {
+    var s = brackets.split(' ');
+
+    if (s.length !== 2 || s[0].length === 0 && s[1].length === 0) {
+        throw new RTCodeError('Invalid delimiters ' + brackets);
+    }
+
+    return {
+        open: s[0],
+        close: s[1]
+    };
+}
+
+/**
  * @param node
  * @param {Context} context
  * @param {string} txt
  * @return {string}
  */
-function convertText(node, context, txt) {
-    var res = '';
-    var first = true;
-    var concatChar = node.type === 'text' ? ',' : '+';
-    while (txt.indexOf('{') !== -1) {
-        var start = txt.indexOf('{');
+function convertText(node, context, txt) {    
+    var bracket = getBrackets(context.options.brackets);    
+    
+    var res = [];
+    
+    while (txt.indexOf(bracket.open) !== -1) {
+        var start = txt.indexOf(bracket.open);
         var pre = txt.substr(0, start);
         if (pre) {
-            res += (first ? '' : concatChar) + JSON.stringify(pre);
-            first = false;
+            res.push(JSON.stringify(pre));            
         }
         var curlyCounter = 1;
         var end;
-        for (end = start + 1; end < txt.length && curlyCounter > 0; end++) { //eslint-disable-line no-restricted-syntax
-            curlyCounter += curlyMap[txt.charAt(end)] || 0;
+        for (end = start + bracket.open.length; end < txt.length && curlyCounter > 0; end++) { //eslint-disable-line no-restricted-syntax           
+            if (txt.indexOf(bracket.open, end) == end) { 
+                curlyCounter++;
+                end += bracket.open.length - 1;
+            } else if (txt.indexOf(bracket.close, end) == end) {
+                curlyCounter--;
+                end += bracket.close.length - 1;
+            }
         }
         if (curlyCounter === 0) {
-            var needsParens = start !== 0 || end !== txt.length - 1;
-            res += (first ? '' : concatChar) + (needsParens ? '(' : '') + txt.substr(start + 1, end - start - 2) + (needsParens ? ')' : '');
-            first = false;
-            txt = txt.substr(end);
+            var needsParens = start !== 0 || end !== txt.length - bracket.close.length;
+            var expr = txt.substr(start + bracket.open.length, end - (start + bracket.open.length) - 1);
+            res.push(needsParens ? '('+expr+')' : expr);
+            txt = txt.substr(end+bracket.close.length - 1);
         } else {
-            throw RTCodeError.build(context, node, `Failed to parse text '${txt}'`);
+            throw RTCodeError.buildFormat(context, node, "Failed to parse text '%s'", txt);
         }
     }
     if (txt) {
-        res += (first ? '' : concatChar) + JSON.stringify(txt);
+        res.push(JSON.stringify(txt));
     }
-    if (res === '') {
-        res = 'true';
+
+    if (res.length) {
+        var concatChar = node.type === 'text' ? ',' : '+';
+        var r = res.join(concatChar);        
+        return r;
     }
-    return res;
+
+    return 'true';
 }
 
 /**
