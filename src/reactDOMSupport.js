@@ -18,6 +18,6 @@ var versions = {
     '0.11.1': ver0_11_0,
     '0.11.0': ver0_11_0,
     '0.10.0': ver0_10_0,
-    default: '0.13.1'
+    default: '0.14.0'
 };
 module.exports = versions;
