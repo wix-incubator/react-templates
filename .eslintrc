@@ -12,7 +12,7 @@
         "no-restricted-syntax": [2, "WithStatement", "ContinueStatement", "ForStatement"],
         "no-negated-condition": 1,
         "lodash3/prop-shorthand": 2,
-        "lodash3/matches-shorthand": [2, 3],
+        "lodash3/matches-shorthand": [2, "always", 3],
         "lodash3/matches-prop-shorthand": 2,
         "lodash3/prefer-chain": 2,
         "lodash3/preferred-alias": 2,
