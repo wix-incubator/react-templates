@@ -5,13 +5,14 @@ var path = require('path');
 var util = require('util');
 var chalk = require('chalk');
 var reactTemplates = require('./reactTemplates');
+var fsUtil = require('./fsUtil');
 var convertRT = reactTemplates.convertRT;
 var convertJSRTToJS = reactTemplates.convertJSRTToJS;
 
 /**
  * @param {string} source
  * @param {string} target
- * @param {{modules:string, dryRun:boolean}?} options
+ * @param {Options} options
  * @param {CONTEXT} context
  */
 function convertFile(source, target, options, context) {
@@ -21,10 +22,9 @@ function convertFile(source, target, options, context) {
 //    }
     options = options || {};
     options.fileName = source;
-    var fsUtil = require('./fsUtil');
 
     if (!options.force && !fsUtil.isStale(source, target)) {
-        context.verbose(util.format('target file %s is up to date, skipping', chalk.cyan(target)));
+        context.verbose(`target file ${chalk.cyan(target)} is up to date, skipping`);
         return;
     }
 

@@ -228,9 +228,7 @@ test('test shell', function (t) {
     var newContext = _.cloneDeep(context);
     var outputJSON = '';
     newContext.options.format = 'json';
-    newContext.report = function (text) {
-        outputJSON = text;
-    };
+    newContext.report = function (text) { outputJSON = text; };
     var r = shell.printResults(newContext);
     t.equal(r, 0);
     context.error('hi', '', 1, 1);
@@ -245,7 +243,7 @@ test('test shell', function (t) {
 test('test shell', function (t) {
     var filename = path.join(dataPath, 'div.rt');
     var cli = require('../../src/cli');
-    var r = cli.execute(filename + ' -r --dry-run');
+    var r = cli.execute(`${filename} -r --dry-run`);
     t.equal(r, 0);
     t.end();
 });

@@ -45,8 +45,8 @@ function getLine(html, node) {
 
 // Redefine properties on Error to be enumerable
 /*eslint no-extend-native:0*/
-Object.defineProperty(Error.prototype, 'message', {configurable: true, enumerable: true});
-Object.defineProperty(Error.prototype, 'stack', {configurable: true, enumerable: true});
+//Object.defineProperty(Error.prototype, 'message', {configurable: true, enumerable: true});
+//Object.defineProperty(Error.prototype, 'stack', {configurable: true, enumerable: true});
 //Object.defineProperty(Error.prototype, 'line', { configurable: true, enumerable: true });
 
 /**
@@ -57,31 +57,42 @@ Object.defineProperty(Error.prototype, 'stack', {configurable: true, enumerable:
  * @param {number=} column
  * @constructor
  */
-function RTCodeError(message, startOffset, endOffset, line, column) {
-    Error.captureStackTrace(this, RTCodeError);
-    this.name = 'RTCodeError';
-    this.message = message || '';
-    this.index = norm(startOffset);
-    this.startOffset = norm(startOffset);
-    this.endOffset = norm(endOffset);
-    this.line = norm(line);
-    this.column = norm(column);
+class RTCodeError extends Error {
+    constructor(message, startOffset, endOffset, line, column) {
+        super();
+        Error.captureStackTrace(this, RTCodeError);
+        this.name = 'RTCodeError';
+        this.message = message || '';
+        this.index = norm(startOffset);
+        this.startOffset = norm(startOffset);
+        this.endOffset = norm(endOffset);
+        this.line = norm(line);
+        this.column = norm(column);
+    }
+    //build buildError
 }
 
 function norm(n) {
     return n === undefined ? -1 : n;
 }
 
-RTCodeError.prototype = Object.create(Error.prototype);
+//const norm = n => n === undefined ? -1 : n;
 
+/**
+ * @type {buildError}
+ */
 RTCodeError.build = buildError;
 RTCodeError.norm = norm;
 
-RTCodeError.prototype.toIssue = function () {
-};
-
+/**
+ * @param {*} context
+ * @param {*} node
+ * @param {string} msg
+ * @param args
+ * @return {RTCodeError}
+ */
 function buildFormat(context, node, msg, args) {
-    return buildError(util.format.apply(this, [msg].concat(args)), context, node);
+    return buildError(context, node, util.format.apply(this, [msg].concat(args)));
 }
 
 /**
@@ -94,12 +105,12 @@ function buildFormat(context, node, msg, args) {
 RTCodeError.buildFormat = _.restParam(buildFormat, 3);
 
 /**
- * @param {string} msg
  * @param {*} context
  * @param {*} node
+ * @param {string} msg
  * @return {RTCodeError}
  */
-function buildError(msg, context, node) {
+function buildError(context, node, msg) {
     var loc = getNodeLoc(context, node);
     return new RTCodeError(msg, loc.start, loc.end, loc.pos.line, loc.pos.col);
 }

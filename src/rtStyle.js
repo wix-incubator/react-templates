@@ -6,10 +6,10 @@ var rtnData = require('./rt-style-support-data.js');
 
 
 var templateCommonJSTemplate = _.template(
-    "'use strict';\n" +
-    'var style = <%= body %>;\n' +
-    'module.exports = style;\n'
-);
+`'use strict';
+var style = <%= body %>;
+module.exports = style;
+`);
 
 function convert(text) {
     return templateCommonJSTemplate({body: convertBody(text)});
@@ -31,7 +31,7 @@ function processRule2(result, rule) {
 }
 
 function processDeclaration(result, dec) {
-    var prop = stringUtils.convertToCamelCase(dec.property);
+    var prop = _.camelCase(dec.property);
     result[prop] = convertValue(prop, dec.value);
     return result;
 }

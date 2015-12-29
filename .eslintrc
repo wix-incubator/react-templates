@@ -1,18 +1,24 @@
 {
-    "extends": "wix-editor",
+    "extends": "wix-editor/node",
     "plugins": ["lodash3", "wix-editor"],
     "rules": {
-        "strict": [2, "global"],
-        "no-restricted-syntax": [2, "WithStatement"],
+        "no-var": 0,
+        "object-shorthand": 0,
+        "prefer-arrow-callback": 0,
+        "prefer-const": 0,
+        "prefer-spread": 0,
+        "prefer-template": 0,
+
+        "no-restricted-syntax": [2, "WithStatement", "ContinueStatement", "ForStatement"],
         "no-negated-condition": 1,
         "lodash3/prop-shorthand": 2,
-        "lodash3/matches-shorthand": 2,
+        "lodash3/matches-shorthand": [2, 3],
         "lodash3/matches-prop-shorthand": 2,
         "lodash3/prefer-chain": 2,
         "lodash3/preferred-alias": 2,
         "lodash3/no-single-chain": 2,
-        "lodash3/prefer-reject": 2,
-        "lodash3/prefer-filter": 2,
+        "lodash3/prefer-reject": [2, 3],
+        "lodash3/prefer-filter": [2, 3],
         "lodash3/no-unnecessary-bind": 2,
         "lodash3/unwrap": 2,
         "lodash3/prefer-compact": 2,
@@ -21,6 +27,7 @@
         "lodash3/prefer-wrapper-method": 2,
         "lodash3/prefer-invoke": 2,
         "lodash3/prefer-thru": 2,
+        "lodash3/prefer-lodash-chain": 2,
         "lodash3/prefer-lodash-method": 0,
         "lodash3/prefer-lodash-typecheck": 2,
         "lodash3/no-commit": 2,
@@ -36,13 +43,5 @@
         "wix-editor/prefer-ternary": 1,
         "wix-editor/return-boolean": 1,
         "wix-editor/simplify-boolean-expression": 1
-    },
-    "env": {
-        "browser": false,
-        "node": true,
-        "amd": true
-    },
-    "globals": {
-        "requirejs": true
     }
 }

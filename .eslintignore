@@ -16,6 +16,7 @@ web/**
 
 playground/sample/**
 test/data/**
+dist
 
 internalTasks/release.js
 playground.config.js

@@ -16,6 +16,9 @@ npm-debug.log
 ### bower ###
 /bower_components/*
 
+### babel ###
+/dist
+
 /web
 /target
 /coverage

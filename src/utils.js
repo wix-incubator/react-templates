@@ -13,7 +13,7 @@ function validateJS(code, node, context) {
     try {
         esprima.parse(code);
     } catch (e) {
-        throw RTCodeError.build(e.description, context, node);
+        throw RTCodeError.build(context, node, e.description);
     }
 }
 
@@ -33,6 +33,16 @@ function isStringOnlyCode(txt) {
     return /^\s*\{.*}\s*$/g.test(txt);
     //txt = txt.trim();
     //return txt.length && txt.charAt(0) === '{' && txt.charAt(txt.length - 1) === '}';
+}
+
+/**
+ * @param {Array.<*>} array
+ * @param {*} obj
+ */
+function addIfMissing(array, obj) {
+    if (!_.includes(array, obj)) {
+        array.push(obj);
+    }
 }
 
 /**
@@ -115,10 +125,11 @@ function usesScopeName(scopeNames, node) {
 }
 
 module.exports = {
-    usesScopeName: usesScopeName,
-    normalizeName: normalizeName,
-    validateJS: validateJS,
-    isStringOnlyCode: isStringOnlyCode,
-    concatChildren: concatChildren,
-    validate: validate
+    usesScopeName,
+    normalizeName,
+    validateJS,
+    isStringOnlyCode,
+    concatChildren,
+    validate,
+    addIfMissing
 };
