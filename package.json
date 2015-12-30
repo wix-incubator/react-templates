@@ -15,7 +15,7 @@
     "minor": "npm version minor -m\"update version to %s\" && git push && git push --tags",
     "major": "npm version major -m\"update version to %s\" && git push && git push --tags",
     "buildwp": "webpack --config webpack-production.config.js --progress --profile --colors",
-    "babel": "rm -rf dist; babel src/ --out-dir dist/",
+    "babel": "rm -rf dist && babel src/ --out-dir dist/",
     "all": "npm run lint && npm run test && npm run babel"
   },
   "repository": {
