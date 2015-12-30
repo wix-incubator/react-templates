@@ -415,7 +415,7 @@ function handleScopeAttribute(node, context, data) {
 
     data.innerScope.outerMapping = _.zipObject(context.boundParams, context.boundParams);
 
-    _(node.attribs[scopeAttr]).split(';').invoke('trim').compact().forEach(scopePart => { //eslint-disable-line lodash3/collection-return
+    _(node.attribs[scopeAttr]).split(';').invoke('trim').compact().forEach(scopePart => {
         var scopeSubParts = _(scopePart).split(' as ').invoke('trim').value();
         if (scopeSubParts.length < 2) {
             throw RTCodeError.build(context, node, `invalid scope part '${scopePart}'`);
@@ -506,7 +506,7 @@ function convertRT(html, reportContext, options) {
         throw new RTCodeError('Document should have a root element');
     }
     var firstTag = null;
-    _.forEach(rootTags, function (tag) { //eslint-disable-line lodash3/collection-return
+    _.forEach(rootTags, function (tag) {
         if (tag.name === 'rt-require') {
             if (!tag.attribs.dependency || !tag.attribs.as) {
                 throw RTCodeError.build(context, tag, "rt-require needs 'dependency' and 'as' attributes");
