@@ -378,6 +378,7 @@ function convertHtmlToReact(node, context) {
             var code = convertHtmlToReact(child, context);
             validateJS(code, child, context);
             return code;
+        });    
 
         data.children = utils.concatChildren(children);
 
