@@ -51,6 +51,7 @@ var classAttr = 'class';
 var scopeAttr = 'rt-scope';
 var propsAttr = 'rt-props';
 var templateNode = 'rt-template';
+var virtualNode = 'rt-virtual';
 
 /**
  * @param {Options} options
@@ -378,13 +379,12 @@ function convertHtmlToReact(node, context) {
             var code = convertHtmlToReact(child, context);
             validateJS(code, child, context);
             return code;
-        });    
+        });
 
         data.children = utils.concatChildren(children);
 
-        if (node.name === 'virtual') {
+        if (node.name === virtualNode) { //eslint-disable-line wix-editor/prefer-ternary
             data.body = "[" + _.compact(children).join(',') + "]"
-            console.log(data.body)
         }
         else {
             data.body = _.template(getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context)))(data);
@@ -530,6 +530,8 @@ function convertRT(html, reportContext, options) {
     });
     if (firstTag === null) {
         throw RTCodeError.build(context, rootNode.root()[0], 'Document should have a single root element');
+    } else if (firstTag.name === virtualNode) {
+        throw RTCodeError.build(context, firstTag, `Document should not have <${virtualNode}> as root element`);
     }
     var body = convertHtmlToReact(firstTag, context);
     var requirePaths = _(defines)
