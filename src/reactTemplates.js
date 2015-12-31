@@ -374,13 +374,20 @@ function convertHtmlToReact(node, context) {
             }
         }
 
-        data.children = utils.concatChildren(_.map(node.children, function (child) {
+        var children = _.map(node.children, function (child) {
             var code = convertHtmlToReact(child, context);
             validateJS(code, child, context);
             return code;
-        }));
 
-        data.body = _.template(getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context)))(data);
+        data.children = utils.concatChildren(children);
+
+        if (node.name === 'virtual') {
+            data.body = "[" + _.compact(children).join(',') + "]"
+            console.log(data.body)
+        }
+        else {
+            data.body = _.template(getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context)))(data);
+        }
 
         if (node.attribs[scopeAttr]) {
             var functionBody = _.values(data.innerScope.innerMapping).join('\n') + `return ${data.body}`;
