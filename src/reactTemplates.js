@@ -1,7 +1,7 @@
 'use strict';
 var cheerio = require('cheerio');
 var _ = require('lodash');
-var esprima = require('esprima-fb');
+var esprima = require('esprima');
 var escodegen = require('escodegen');
 var reactDOMSupport = require('./reactDOMSupport');
 var reactNativeSupport = require('./reactNativeSupport');
