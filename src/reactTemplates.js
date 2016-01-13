@@ -1,7 +1,7 @@
 'use strict';
 var cheerio = require('cheerio');
 var _ = require('lodash');
-var esprima = require('esprima-fb');
+var esprima = require('esprima');
 var escodegen = require('escodegen');
 var reactDOMSupport = require('./reactDOMSupport');
 var reactNativeSupport = require('./reactNativeSupport');
@@ -347,7 +347,7 @@ function convertHtmlToReact(node, context) {
             data.item = arr[0].trim();
             data.collection = arr[1].trim();
             validateJS(data.item, node, context);
-            validateJS(data.collection, node, context);
+            validateJS("(" + data.collection + ")", node, context);
             stringUtils.addIfMissing(context.boundParams, data.item);
             stringUtils.addIfMissing(context.boundParams, `${data.item}Index`);
         }
