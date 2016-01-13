@@ -95,7 +95,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror'], fu
         }
         var poll = setInterval(function () {
             if (tooltip) {
-                for (var n = node; ; n = n.parentNode) {
+                for (var n = node; ; n = n.parentNode) { //eslint-disable-line no-restricted-syntax
                     if (n === document.body) {
                         return undefined;
                     }

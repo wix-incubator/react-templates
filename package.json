@@ -1,8 +1,8 @@
 {
   "name": "react-templates",
-  "version": "0.3.2",
+  "version": "0.4.1",
   "description": "Light weight templates for react -> write html get valid react code",
-  "main": "./src/cli.js",
+  "main": "./dist/cli.js",
   "bin": {
     "rt": "./bin/rt.js"
   },
@@ -15,7 +15,8 @@
     "minor": "npm version minor -m\"update version to %s\" && git push && git push --tags",
     "major": "npm version major -m\"update version to %s\" && git push && git push --tags",
     "buildwp": "webpack --config webpack-production.config.js --progress --profile --colors",
-    "babel": "rm -rf dist; babel src/ --out-dir dist/"
+    "babel": "rm -rf dist && babel src/ --out-dir dist/",
+    "all": "npm run lint && npm run test && npm run babel"
   },
   "repository": {
     "type": "git",
@@ -31,20 +32,21 @@
     "chalk": "^1.1.1",
     "cheerio": "^0.19.0",
     "css": "^2.2.1",
-    "escodegen": "^1.7.0",
+    "escodegen": "1.7.1",
     "esprima-fb": "^15001.1001.0-dev-harmony-fb",
     "lodash": "^3.10.1",
-    "optionator": "^0.6.0",
+    "optionator": "^0.8.0",
     "text-table": "^0.2.0"
   },
   "devDependencies": {
-    "brace": "^0.5.1",
+    "babel-cli": "^6.3.17",
+    "brace": "0.7.0",
     "brfs": "^1.4.1",
-    "coveralls": "^2.11.4",
-    "eslint": "^1.10.1",
+    "coveralls": "2.11.6",
+    "eslint": "1.10.3",
     "eslint-config-wix-editor": "^0.1.1",
-    "eslint-plugin-lodash3": "^0.2.1",
-    "eslint-plugin-react": "^3.10.0",
+    "eslint-plugin-lodash3": "^0.5.0",
+    "eslint-plugin-react": "^3.13.1",
     "eslint-plugin-wix-editor": "^1.0.1",
     "grunt": "^0.4.5",
     "grunt-browserify": "^4.0.0",
@@ -53,11 +55,11 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-eslint": "^17.3.1",
     "grunt-tape": "0.0.2",
-    "istanbul": "^0.4.0",
+    "istanbul": "0.4.1",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
-    "react-native": "^0.11.4",
-    "tape": "^4.2.1"
+    "react-native": "^0.17.0",
+    "tape": "^4.4.0"
   },
   "keywords": [
     "templates",

@@ -11,13 +11,17 @@ var reactDOMSupport = require('./reactDOMSupport');
 var reactTemplates = require('./reactTemplates');
 var rtStyle = require('./rtStyle');
 
+/**
+ * @param {Options} currentOptions
+ * @return {number}
+ */
 function executeOptions(currentOptions) {
     var ret = 0;
     var files = currentOptions._;
     context.options.format = currentOptions.format || 'stylish';
 
     if (currentOptions.version) {
-        console.log('v' + pkg.version);
+        console.log(`v${pkg.version}`);
     } else if (currentOptions.help) {
         if (files.length) {
             console.log(options.generateHelpForOption(files[0]));
@@ -37,6 +41,8 @@ function executeOptions(currentOptions) {
 
 function printVersions(currentOptions) {
     var ret = Object.keys(reactDOMSupport);
+    //const out = currentOptions.format === 'json' ? JSON.stringify(ret, undefined, 2) : ret.join(', ');
+    //console.log(out);
     if (currentOptions.format === 'json') {
         console.log(JSON.stringify(ret, undefined, 2));
     } else {
@@ -45,7 +51,7 @@ function printVersions(currentOptions) {
 }
 
 /**
- * @param {*} currentOptions
+ * @param {Options} currentOptions
  * @param {string} filename file name to process
  */
 function handleSingleFile(currentOptions, filename) {

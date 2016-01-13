@@ -20,18 +20,17 @@ var ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
 var propsTemplateSimple = _.template('_.assign({}, <%= generatedProps %>, <%= rtProps %>)');
 var propsTemplate = _.template('mergeProps( <%= generatedProps %>, <%= rtProps %>)');
 
-var propsMergeFunction = [
-    'function mergeProps(inline,external) {',
-    ' var res = _.assign({},inline,external)',
-    'if (inline.hasOwnProperty(\'style\')) {',
-    ' res.style = _.defaults(res.style, inline.style);',
-    '}',
-    ' if (inline.hasOwnProperty(\'className\') && external.hasOwnProperty(\'className\')) {',
-    ' res.className = external.className + \' \' + inline.className;',
-    '} return res;',
-    '}',
-    ''
-].join('\n');
+const propsMergeFunction = `function mergeProps(inline,external) {
+    var res = _.assign({},inline,external)
+    if (inline.hasOwnProperty('style')) {
+        res.style = _.defaults(res.style, inline.style);
+    }
+    if (inline.hasOwnProperty('className') && external.hasOwnProperty('className')) {
+        res.className = external.className + ' ' + inline.className;
+    }
+    return res;
+}
+`
 
 var classSetTemplate = _.template('_.keys(_.pick(<%= classSet %>, _.identity)).join(" ")');
 
@@ -52,7 +51,12 @@ var classAttr = 'class';
 var scopeAttr = 'rt-scope';
 var propsAttr = 'rt-props';
 var templateNode = 'rt-template';
+var virtualNode = 'rt-virtual';
 
+/**
+ * @param {Options} options
+ * @return {Options}
+ */
 function getOptions(options) {
     options = options || {};
     var defaultOptions = {
@@ -91,16 +95,19 @@ function reactImport(options) {
 /**
  * @const
  */
-var curlyMap = {'{': 1, '}': -1};
+const curlyMap = {'{': 1, '}': -1};
 
 /**
  * @typedef {{boundParams: Array.<string>, injectedFunctions: Array.<string>, html: string, options: *}} Context
  */
 
+/**
+ * @typedef {{fileName:string,force:boolean,modules:string,defines:*,reactImportPath:string=,lodashImportPath:string=,flow:boolean,name:string,native:boolean,propTemplates:*,format:string,_:*,version:boolean,help:boolean,listTargetVersion:boolean,modules:string, dryRun:boolean}} Options
+ */
 
 /**
  * @param node
- * @param context
+ * @param {Context} context
  * @param {string} txt
  * @return {string}
  */
@@ -117,7 +124,7 @@ function convertText(node, context, txt) {
         }
         var curlyCounter = 1;
         var end;
-        for (end = start + 1; end < txt.length && curlyCounter > 0; end++) {
+        for (end = start + 1; end < txt.length && curlyCounter > 0; end++) { //eslint-disable-line no-restricted-syntax
             curlyCounter += curlyMap[txt.charAt(end)] || 0;
         }
         if (curlyCounter === 0) {
@@ -126,7 +133,7 @@ function convertText(node, context, txt) {
             first = false;
             txt = txt.substr(end);
         } else {
-            throw RTCodeError.buildFormat(context, node, "Failed to parse text '%s'", txt);
+            throw RTCodeError.build(context, node, `Failed to parse text '${txt}'`);
         }
     }
     if (txt) {
@@ -135,7 +142,6 @@ function convertText(node, context, txt) {
     if (res === '') {
         res = 'true';
     }
-
     return res;
 }
 
@@ -148,10 +154,13 @@ function convertText(node, context, txt) {
  */
 function generateInjectedFunc(context, namePrefix, body, params) {
     params = params || context.boundParams;
-    var generatedFuncName = namePrefix.replace(',', '') + (context.injectedFunctions.length + 1);
-    var funcText = util.format('function %s(%s) {\n%s\n}\n', generatedFuncName, params.join(','), body);
+    var funcName = namePrefix.replace(',', '') + (context.injectedFunctions.length + 1);
+    var funcText = `function ${funcName}(${params.join(',')}) {
+        ${body}
+        }
+        `;
     context.injectedFunctions.push(funcText);
-    return generatedFuncName;
+    return funcName;
 }
 
 function generateTemplateProps(node, context) {
@@ -161,7 +170,7 @@ function generateTemplateProps(node, context) {
             var templateProp = null;
             if (child.name === templateNode) { // Generic explicit template tag
                 if (!_.has(child.attribs, 'prop')) {
-                    throw RTCodeError.build('rt-template must have a prop attribute', context, child);
+                    throw RTCodeError.build(context, child, 'rt-template must have a prop attribute');
                 }
 
                 var childTemplate = _.find(context.options.propTemplates, {prop: child.attribs.prop}) || {arguments: []};
@@ -212,7 +221,7 @@ function generateProps(node, context) {
     _.forOwn(node.attribs, function (val, key) {
         var propKey = reactSupport.attributesMapping[key.toLowerCase()] || key;
         if (props.hasOwnProperty(propKey) && propKey !== reactSupport.classNameProp) {
-            throw RTCodeError.buildFormat(context, node, 'duplicate definition of %s %s', propKey, JSON.stringify(node.attribs));
+            throw RTCodeError.build(context, node, `duplicate definition of ${propKey} ${JSON.stringify(node.attribs)}`);
         }
         if (key.indexOf('on') === 0 && !utils.isStringOnlyCode(val)) {
             props[propKey] = handleEventHandler(val, context, node, key);
@@ -222,7 +231,7 @@ function generateProps(node, context) {
             // Processing for both class and rt-class conveniently return strings that
             // represent JS expressions, each evaluating to a space-separated set of class names.
             // We can just join them with another space here.
-            var existing = props[propKey] ? props[propKey] + ' + " " + ' : '';
+            var existing = props[propKey] ? `${props[propKey]} + " " + ` : '';
             if (key === classSetAttr) {
                 props[propKey] = existing + classSetTemplate({classSet: val});
             } else if (key === classAttr || key === reactSupport.classNameProp) {
@@ -234,15 +243,14 @@ function generateProps(node, context) {
     });
     _.assign(props, generateTemplateProps(node, context));
 
-    return '{' + _.map(props, function (val, key) {
-        return JSON.stringify(key) + ' : ' + val;
-    }).join(',') + '}';
+    const propStr = _.map(props, (v, k) => `${JSON.stringify(k)} : ${v}`).join(',');
+    return `{${propStr}}`;
 }
 
 function handleEventHandler(val, context, node, key) {
     var funcParts = val.split('=>');
     if (funcParts.length !== 2) {
-        throw RTCodeError.buildFormat(context, node, "when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [%s='%s']", key, val);
+        throw RTCodeError.build(context, node, `when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [${key}='${val}']`);
     }
     var evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
     var funcBody = funcParts[1].trim();
@@ -259,21 +267,19 @@ function genBind(func, args) {
 }
 
 function handleStyleProp(val, node, context) {
-    var styleParts = val.trim().split(';');
-    styleParts = _.compact(_.map(styleParts, function (str) {
-        str = str.trim();
-        if (!str || str.indexOf(':') === -1) {
-            return null;
-        }
-        var res = str.split(':');
-        res[0] = res[0].trim();
-        res[1] = res.slice(1).join(':').trim();
-        return res;
-    }));
-    var styleArray = _.map(styleParts, function (stylePart) {
-        return stringUtils.convertToCamelCase(stylePart[0]) + ' : ' + convertText(node, context, stylePart[1].trim());
-    });
-    return '{' + styleArray.join(',') + '}';
+    const styleStr = _(val)
+        .split(';')
+        .map(_.trim)
+        .filter(i => _.includes(i, ':'))
+        .map(i => {
+            const pair = i.split(':');
+            //const val = pair[1];
+            const val = pair.slice(1).join(':').trim();
+            return _.camelCase(pair[0].trim()) + ' : ' + convertText(node, context, val.trim())
+            //return stringUtils.convertToCamelCase(pair[0].trim()) + ' : ' + convertText(node, context, val.trim())
+        })
+        .join(',');
+    return `{${styleStr}}`;
 }
 
 /**
@@ -288,7 +294,7 @@ function convertTagNameToConstructor(tagName, context) {
     var isHtmlTag = _.includes(reactDOMSupport[context.options.targetVersion], tagName);
     if (reactSupport.shouldUseCreateElement(context)) {
         isHtmlTag = isHtmlTag || tagName.match(/^\w+(-\w+)$/);
-        return isHtmlTag ? "'" + tagName + "'" : tagName;
+        return isHtmlTag ? `'${tagName}'` : tagName;
     }
     return isHtmlTag ? 'React.DOM.' + tagName : tagName;
 }
@@ -312,9 +318,7 @@ function defaultContext(html, options) {
  * @return {boolean}
  */
 function hasNonSimpleChildren(node) {
-    return _.some(node.children, function (child) {
-        return child.type === 'tag' && child.attribs[repeatAttr];
-    });
+    return _.some(node.children, child => child.type === 'tag' && child.attribs[repeatAttr]);
 }
 
 /**
@@ -338,14 +342,14 @@ function convertHtmlToReact(node, context) {
         if (node.attribs[repeatAttr]) {
             var arr = node.attribs[repeatAttr].split(' in ');
             if (arr.length !== 2) {
-                throw RTCodeError.buildFormat(context, node, "rt-repeat invalid 'in' expression '%s'", node.attribs[repeatAttr]);
+                throw RTCodeError.build(context, node, `rt-repeat invalid 'in' expression '${node.attribs[repeatAttr]}'`);
             }
             data.item = arr[0].trim();
             data.collection = arr[1].trim();
             validateJS(data.item, node, context);
             validateJS(data.collection, node, context);
             stringUtils.addIfMissing(context.boundParams, data.item);
-            stringUtils.addIfMissing(context.boundParams, data.item + 'Index');
+            stringUtils.addIfMissing(context.boundParams, `${data.item}Index`);
         }
 
         if (node.attribs[scopeAttr]) {
@@ -371,27 +375,32 @@ function convertHtmlToReact(node, context) {
             }
         }
 
-        data.children = utils.concatChildren(_.map(node.children, function (child) {
+        var children = _.map(node.children, function (child) {
             var code = convertHtmlToReact(child, context);
             validateJS(code, child, context);
             return code;
-        }));
+        });
 
-        data.body = _.template(getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context)))(data);
+        data.children = utils.concatChildren(children);
+
+        if (node.name === virtualNode) { //eslint-disable-line wix-editor/prefer-ternary
+            data.body = "[" + _.compact(children).join(',') + "]"
+        }
+        else {
+            data.body = _.template(getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context)))(data);
+        }
 
         if (node.attribs[scopeAttr]) {
-            var functionBody = _.values(data.innerScope.innerMapping).join('\n') + 'return ' + data.body;
+            var functionBody = _.values(data.innerScope.innerMapping).join('\n') + `return ${data.body}`;
             var generatedFuncName = generateInjectedFunc(context, 'scope' + data.innerScope.scopeName, functionBody, _.keys(data.innerScope.outerMapping));
-            data.body = util.format('%s.apply(this, [%s])', generatedFuncName, _.values(data.innerScope.outerMapping).join(','));
+            data.body = `${generatedFuncName}.apply(this, [${_.values(data.innerScope.outerMapping).join(',')}])`;
         }
 
         // Order matters here. Each rt-repeat iteration wraps over the rt-scope, so
         // the scope variables are evaluated in context of the current iteration.
         if (node.attribs[repeatAttr]) {
-            data.repeatFunction = generateInjectedFunc(context, 'repeat' + stringUtils.capitalize(data.item), 'return ' + data.body);
-            data.repeatBinds = ['this'].concat(_.reject(context.boundParams, function (param) {
-                return param === data.item || param === data.item + 'Index' || data.innerScope && param in data.innerScope.innerMapping;
-            }));
+            data.repeatFunction = generateInjectedFunc(context, 'repeat' + _.capitalize(data.item), 'return ' + data.body);
+            data.repeatBinds = ['this'].concat(_.reject(context.boundParams, p => p === data.item || p === data.item + 'Index' || data.innerScope && p in data.innerScope.innerMapping));
             data.body = repeatTemplate(data);
         }
         if (node.attribs[ifAttr]) {
@@ -401,10 +410,7 @@ function convertHtmlToReact(node, context) {
     } else if (node.type === 'comment') {
         return commentTemplate(node);
     } else if (node.type === 'text') {
-        if (node.data.trim()) {
-            return convertText(node, context, node.data);
-        }
-        return '';
+        return node.data.trim() ? convertText(node, context, node.data) : '';
     }
 }
 
@@ -417,10 +423,10 @@ function handleScopeAttribute(node, context, data) {
 
     data.innerScope.outerMapping = _.zipObject(context.boundParams, context.boundParams);
 
-    _(node.attribs[scopeAttr]).split(';').invoke('trim').compact().forEach(function (scopePart) {
+    _(node.attribs[scopeAttr]).split(';').invoke('trim').compact().forEach(scopePart => { //eslint-disable-line lodash3/collection-return
         var scopeSubParts = _(scopePart).split(' as ').invoke('trim').value();
         if (scopeSubParts.length < 2) {
-            throw RTCodeError.buildFormat(context, node, "invalid scope part '%s'", scopePart);
+            throw RTCodeError.build(context, node, `invalid scope part '${scopePart}'`);
         }
         var alias = scopeSubParts[1];
         var value = scopeSubParts[0];
@@ -431,8 +437,8 @@ function handleScopeAttribute(node, context, data) {
         // function call, as with the ones we generate for rt-scope.
         stringUtils.addIfMissing(context.boundParams, alias);
 
-        data.innerScope.scopeName += stringUtils.capitalize(alias);
-        data.innerScope.innerMapping[alias] = 'var ' + alias + ' = ' + value + ';';
+        data.innerScope.scopeName += _.capitalize(alias);
+        data.innerScope.innerMapping[alias] = `var ${alias} = ${value};`;
         validateJS(data.innerScope.innerMapping[alias], node, context);
     }).value();
 }
@@ -445,8 +451,7 @@ function validateIfAttribute(node, context, data) {
     } catch (e) {
         throw new RTCodeError(e.message, e.index, -1);
     }
-    if (ifAttributeTree && ifAttributeTree.body && ifAttributeTree.body.length === 1 &&
-        ifAttributeTree.body[0].type === 'ExpressionStatement') {
+    if (ifAttributeTree && ifAttributeTree.body && ifAttributeTree.body.length === 1 && ifAttributeTree.body[0].type === 'ExpressionStatement') {
         // make sure that rt-if does not use an inner mapping
         if (ifAttributeTree.body[0].expression && utils.usesScopeName(innerMappingKeys, ifAttributeTree.body[0].expression)) {
             throw RTCodeError.buildFormat(context, node, "invalid scope mapping used in if part '%s'", node.attribs[ifAttr]);
@@ -471,9 +476,7 @@ function handleSelfClosingHtmlTags(nodes) {
             node.children = handleSelfClosingHtmlTags(node.children);
             if (node.type === 'tag' && _.includes(reactSupport.htmlSelfClosingTags, node.name)) {
                 externalNodes = _.filter(node.children, isTag);
-                _.forEach(externalNodes, function (child) {
-                    child.parent = node;
-                });
+                _.forEach(externalNodes, i => i.parent = node);
                 node.children = _.reject(node.children, isTag);
             }
             return [node].concat(externalNodes);
@@ -490,7 +493,7 @@ function convertTemplateToReact(html, options) {
 /**
  * @param {string} html
  * @param {CONTEXT} reportContext
- * @param {{modules:string,defines:*}?} options
+ * @param {Options?} options
  * @return {string}
  */
 function convertRT(html, reportContext, options) {
@@ -511,46 +514,41 @@ function convertRT(html, reportContext, options) {
         throw new RTCodeError('Document should have a root element');
     }
     var firstTag = null;
-    _.forEach(rootTags, function (tag) {
+    _.forEach(rootTags, function (tag) { //eslint-disable-line lodash3/collection-return
         if (tag.name === 'rt-require') {
             if (!tag.attribs.dependency || !tag.attribs.as) {
-                throw RTCodeError.build("rt-require needs 'dependency' and 'as' attributes", context, tag);
+                throw RTCodeError.build(context, tag, "rt-require needs 'dependency' and 'as' attributes");
             } else if (tag.children.length) {
-                throw RTCodeError.build('rt-require may have no children', context, tag);
+                throw RTCodeError.build(context, tag, 'rt-require may have no children');
             }
             defines[tag.attribs.dependency] = tag.attribs.as;
         } else if (firstTag === null) {
             firstTag = tag;
         } else {
-            throw RTCodeError.build('Document should have no more than a single root element', context, tag);
+            throw RTCodeError.build(context, tag, 'Document should have no more than a single root element');
         }
     });
     if (firstTag === null) {
-        throw RTCodeError.build('Document should have a single root element', context, rootNode.root()[0]);
+        throw RTCodeError.build(context, rootNode.root()[0], 'Document should have a single root element');
+    } else if (firstTag.name === virtualNode) {
+        throw RTCodeError.build(context, firstTag, `Document should not have <${virtualNode}> as root element`);
     }
     var body = convertHtmlToReact(firstTag, context);
     var requirePaths = _(defines)
         .keys()
-        .map(function (reqName) { return '"' + reqName + '"'; })
+        .map(def => `"${def}"`)
         .join(',');
-    var requireVars = _.values(defines).join(',');
-    var buildImportString;
+    var buildImport;
     if (options.modules === 'typescript') {
-        buildImportString = "import %s = require('%s');";
+        buildImport = (v, p) => `import ${v} = require('${p}');`;
     } else if (options.modules === 'es6') { // eslint-disable-line
-        buildImportString = "import %s from '%s';";
+        buildImport = (v, p) => `import ${v} from '${p}';`
     } else {
-        buildImportString = "var %s = require('%s');";
+        buildImport = (v, p) => `var ${v} = require('${p}');`
     }
-    var vars = _(defines).map(function (reqVar, reqPath) {
-        return util.format(buildImportString, reqVar, reqPath);
-    }).join('\n');
-
-    if (options.flow) {
-        vars = '/* @flow */\n' + vars;
-    }
-    var data = {body: body, injectedFunctions: '', requireNames: requireVars, requirePaths: requirePaths, vars: vars, name: options.name};
-    data.injectedFunctions = context.injectedFunctions.join('\n');
+    const header = options.flow ? '/* @flow */\n' : '';
+    const vars = header + _(defines).map(buildImport).join('\n');
+    var data = {body, injectedFunctions: context.injectedFunctions.join('\n'), requireNames: _.values(defines).join(','), requirePaths, vars, name: options.name};
     var code = generate(data, options);
     if (options.modules !== 'typescript' && options.modules !== 'jsrt') {
         code = parseJS(code);
@@ -572,9 +570,7 @@ function convertJSRTToJS(text, reportContext, options) {
     options = getOptions(options);
     options.modules = 'jsrt';
     var templateMatcherJSRT = /<template>([^]*?)<\/template>/gm;
-    var code = text.replace(templateMatcherJSRT, function (template, html) {
-        return convertRT(html, reportContext, options).replace(/;$/, '');
-    });
+    var code = text.replace(templateMatcherJSRT, (template, html) => convertRT(html, reportContext, options).replace(/;$/, ''));
     code = parseJS(code);
     return code;
 }

@@ -65,9 +65,7 @@ function codeToHtml(code) {
     var defineMap = {'react/addons': React, lodash: _};
     //noinspection JSUnusedLocalSymbols
     var define = function (requirementsNames, content) { //eslint-disable-line no-unused-vars,func-style
-        var requirements = _.map(requirementsNames, function (reqName) {
-            return defineMap[reqName];
-        });
+        var requirements = _.map(requirementsNames, reqName => defineMap[reqName]);
         return content.apply(this, requirements);
     };
     var comp = React.createFactory(React.createClass({

@@ -1,6 +1,6 @@
 'use strict';
 /**
- * @typedef {{color: boolean, cwd: string, report: function(string), warn: function(string), getMessages: function():Array.<MESSAGE>}} CONTEXT
+ * @typedef {{color: boolean, cwd: string, report: function(string), issue: function(string, string,string,number,number,number=,number=), warn: function(string), verbose: function(string), getMessages: function():Array.<MESSAGE>, options:Options, messages: Array.<MESSAGE>}} CONTEXT
  */
 /**
  * @typedef {{msg: string, level: MESSAGE_LEVEL, file: string,line:number,column:number,startOffset:number,endOffset:number}} MESSAGE
@@ -58,7 +58,7 @@ var context = {
      * @param {number=} endOffset
      */
     issue: function (level, msg, file, line, column, startOffset, endOffset) {
-        context.messages.push({level: level, msg: msg, file: file || null, line: norm(line), column: norm(column), index: norm(startOffset), startOffset: norm(startOffset), endOffset: norm(endOffset)});
+        context.messages.push({level, msg, file: file || null, line: norm(line), column: norm(column), index: norm(startOffset), startOffset: norm(startOffset), endOffset: norm(endOffset)});
     },
     getMessages: function () {
         return context.messages;

@@ -38,10 +38,11 @@ var htmlSelfClosingTags = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr'
 var templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
 var templateCommonJSTemplate = _.template("'use strict';\n<%= vars %>\n\n<%= injectedFunctions %>\nmodule.exports = function(){ return <%= body %>};\n");
 var templateES6Template = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nexport default function(){ return <%= body %>}\n');
-var templatePJSTemplate = _.template('var <%= name %> = function () {\n' +
-    '<%= injectedFunctions %>\n' +
-    'return <%= body %>\n' +
-    '};\n');
+var templatePJSTemplate = _.template(`var <%= name %> = function () {
+<%= injectedFunctions %>
+return <%= body %>
+};
+`);
 var templateTypescriptTemplate = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nvar fn = function() { return <%= body %> };\nexport = fn\n');
 var templateJSRTTemplate = _.template('(function () {\n <%= injectedFunctions %>\n return function(){\nreturn <%= body %>}}\n)()');
 

@@ -19,13 +19,12 @@ var reactNativeSupport = require('./reactNativeSupport');
 
 // exports 'parse(args)', 'generateHelp()', and 'generateHelpForOption(optionName)'
 module.exports = optionator({
-    prepend: [
-        pkg.name + ' v' + pkg.version,
-        pkg.description,
-        '',
-        'Usage:',
-        '$ rt <filename> [<filename> ...] [<args>]'
-    ].join('\n'),
+    prepend:
+`${pkg.name}  v${pkg.version}
+${pkg.description}
+
+Usage:
+$ rt <filename> [<filename> ...] [<args>]`,
     concatRepeatedArrays: true,
     mergeRepeatedObjects: true,
     options: [{
@@ -76,7 +75,7 @@ module.exports = optionator({
         alias: 't',
         type: 'String',
         default: reactDOMSupport.default,
-        description: 'React version to generate code for (' + Object.keys(reactDOMSupport).join(', ') + ')'
+        description: `'React version to generate code for (${Object.keys(reactDOMSupport).join(', ')})'`
     }, {
         option: 'list-target-version',
         type: 'Boolean',
@@ -116,6 +115,6 @@ module.exports = optionator({
         alias: 'rnv',
         type: 'String',
         default: reactNativeSupport.default,
-        description: 'React native version to generate code for (' + Object.keys(reactNativeSupport).join(', ') + ')'
+        description: `'React native version to generate code for (${Object.keys(reactNativeSupport).join(', ')})'`
     }]
 });
