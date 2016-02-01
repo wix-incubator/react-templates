@@ -26,7 +26,8 @@ var invalidFiles = [
     {file: 'invalid-repeat.rt', issue: new RTCodeError('rt-repeat invalid \'in\' expression \'a in b in c\'', 0, 35, 1, 1)},
     {file: 'invalid-rt-require.rt', issue: new RTCodeError("rt-require needs 'dependency' and 'as' attributes", 0, 14, 1, 1)},
     {file: 'invalid-brace.rt', issue: new RTCodeError('Unexpected end of input', 128, 163, 5, 11)},
-    {file: 'invalid-style.rt', issue: new RTCodeError('Unexpected token ILLEGAL', 10, 39, 2, 5)}
+    {file: 'invalid-style.rt', issue: new RTCodeError('Unexpected token ILLEGAL', 10, 39, 2, 5)},
+    {file: 'invalid-virtual.rt', issue: new RTCodeError('Document should not have <rt-virtual> as root element', 0, 60, 1, 1)}
 ];
 
 test('invalid tests', function (t) {
@@ -182,10 +183,28 @@ test('convert jsrt and test source results', function (t) {
 });
 
 test('html tests', function (t) {
-    var files = ['scope.rt', 'scope-trailing-semicolon.rt', 'scope-variable-references.rt', 'lambda.rt', 'eval.rt', 'props.rt', 'custom-element.rt', 'style.rt', 'concat.rt',
-                 'js-in-attr.rt', 'props-class.rt', 'rt-class.rt', 'className.rt', 'svg.rt',
-                 'scope-evaluated-after-repeat.rt', 'scope-evaluated-after-repeat2.rt', 'scope-evaluated-after-if.rt', 'scope-obj.rt'
-    ];
+  var files = [
+    "scope.rt",
+    "scope-trailing-semicolon.rt",
+    "scope-variable-references.rt",
+    "lambda.rt",
+    "eval.rt",
+    "props.rt",
+    "custom-element.rt",
+    "style.rt",
+    "concat.rt",
+    "js-in-attr.rt",
+    "props-class.rt",
+    "rt-class.rt",
+    "className.rt",
+    "svg.rt",
+    "virtual.rt",
+    "scope-evaluated-after-repeat.rt",
+    "scope-evaluated-after-repeat2.rt",
+    "scope-evaluated-after-if.rt",
+    "scope-obj.rt",
+    "repeat-literal-collection.rt"
+  ];
     t.plan(files.length);
 
     files.forEach(check);
