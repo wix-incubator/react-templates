@@ -1,3 +1,4 @@
 <div>
-  <rt-include src="className.rt"/>
+  <rt-include src="className.rt">
+  <span>test</span>
 </div>

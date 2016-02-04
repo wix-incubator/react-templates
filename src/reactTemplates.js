@@ -55,6 +55,8 @@ var virtualNode = 'rt-virtual';
 var includeNode = 'rt-include';
 var includeSrcAttr = 'src';
 
+var reactTemplatesSelfClosingTags = [includeNode];
+
 /**
  * @param {Options} options
  * @return {Options}
@@ -496,7 +498,8 @@ function handleSelfClosingHtmlTags(nodes) {
         .map(function (node) {
             var externalNodes = [];
             node.children = handleSelfClosingHtmlTags(node.children);
-            if (node.type === 'tag' && _.includes(reactSupport.htmlSelfClosingTags, node.name)) {
+            if (node.type === 'tag' && (_.includes(reactSupport.htmlSelfClosingTags, node.name) ||
+              _.includes(reactTemplatesSelfClosingTags, node.name))) {
                 externalNodes = _.filter(node.children, isTag);
                 _.forEach(externalNodes, i => i.parent = node);
                 node.children = _.reject(node.children, isTag);
