@@ -52,6 +52,8 @@ var scopeAttr = 'rt-scope';
 var propsAttr = 'rt-props';
 var templateNode = 'rt-template';
 var virtualNode = 'rt-virtual';
+var includeNode = 'rt-include';
+var includeSrcAttr = 'src';
 
 /**
  * @param {Options} options
@@ -304,12 +306,17 @@ function convertTagNameToConstructor(tagName, context) {
  * @param options
  * @return {Context}
  */
-function defaultContext(html, options) {
+function defaultContext(html, options, reportContext) {
+    var defaultDefines = {};
+    defaultDefines[options.reactImportPath] = 'React';
+    defaultDefines[options.lodashImportPath] = '_';
     return {
         boundParams: [],
         injectedFunctions: [],
         html: html,
-        options: options
+        options: options,
+        defines: options.defines ? _.clone(options.defines) : defaultDefines,
+        reportContext: reportContext
     };
 }
 
@@ -328,12 +335,27 @@ function hasNonSimpleChildren(node) {
  */
 function convertHtmlToReact(node, context) {
     if (node.type === 'tag' || node.type === 'style') {
-        context = {
-            boundParams: _.clone(context.boundParams),
-            injectedFunctions: context.injectedFunctions,
-            html: context.html,
-            options: context.options
-        };
+        context = _.defaults({
+            boundParams: _.clone(context.boundParams)
+        }, context);
+
+        if (node.type === 'tag' && node.name === includeNode) {
+            var srcFile = node.attribs[includeSrcAttr];
+            if (!srcFile) {
+                throw RTCodeError.build(context, node, 'rt-include must supply a source attribute');
+            }
+            if (!context.options.readFileSync) {
+                throw RTCodeError.build(context, node, 'rt-include needs a readFileSync polyfill on options');
+            }
+            try {
+                var newHtml = context.options.readFileSync(srcFile);
+            } catch (e) {
+                console.error(e);
+                throw RTCodeError.build(context, node, `rt-include failed to read file '${srcFile}'`);
+            }
+            context.html = newHtml;
+            return parseAndConvertHtmlToReact(newHtml, context);
+        }
 
         var data = {name: convertTagNameToConstructor(node.name, context)};
 
@@ -490,24 +512,9 @@ function convertTemplateToReact(html, options) {
     return convertRT(html, context, options);
 }
 
-/**
- * @param {string} html
- * @param {CONTEXT} reportContext
- * @param {Options?} options
- * @return {string}
- */
-function convertRT(html, reportContext, options) {
+function parseAndConvertHtmlToReact(html, context) {
     var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
-    options = getOptions(options);
-
-    var defaultDefines = {};
-    defaultDefines[options.reactImportPath] = 'React';
-    defaultDefines[options.lodashImportPath] = '_';
-
-    var defines = options.defines ? _.clone(options.defines) : defaultDefines;
-
-    var context = defaultContext(html, options);
-    utils.validate(options, context, reportContext, rootNode.root()[0]);
+    utils.validate(context.options, context, context.reportContext, rootNode.root()[0]);
     var rootTags = _.filter(rootNode.root()[0].children, isTag);
     rootTags = handleSelfClosingHtmlTags(rootTags);
     if (!rootTags || rootTags.length === 0) {
@@ -521,7 +528,7 @@ function convertRT(html, reportContext, options) {
             } else if (tag.children.length) {
                 throw RTCodeError.build(context, tag, 'rt-require may have no children');
             }
-            defines[tag.attribs.dependency] = tag.attribs.as;
+            context.defines[tag.attribs.dependency] = tag.attribs.as;
         } else if (firstTag === null) {
             firstTag = tag;
         } else {
@@ -533,8 +540,22 @@ function convertRT(html, reportContext, options) {
     } else if (firstTag.name === virtualNode) {
         throw RTCodeError.build(context, firstTag, `Document should not have <${virtualNode}> as root element`);
     }
-    var body = convertHtmlToReact(firstTag, context);
-    var requirePaths = _(defines)
+    return convertHtmlToReact(firstTag, context);
+}
+
+/**
+ * @param {string} html
+ * @param {CONTEXT} reportContext
+ * @param {Options?} options
+ * @return {string}
+ */
+function convertRT(html, reportContext, options) {
+    options = getOptions(options);
+
+    var context = defaultContext(html, options, reportContext);
+    var body = parseAndConvertHtmlToReact(html, context);
+
+    var requirePaths = _(context.defines)
         .keys()
         .map(def => `"${def}"`)
         .join(',');
@@ -547,8 +568,8 @@ function convertRT(html, reportContext, options) {
         buildImport = (v, p) => `var ${v} = require('${p}');`
     }
     const header = options.flow ? '/* @flow */\n' : '';
-    const vars = header + _(defines).map(buildImport).join('\n');
-    var data = {body, injectedFunctions: context.injectedFunctions.join('\n'), requireNames: _.values(defines).join(','), requirePaths, vars, name: options.name};
+    const vars = header + _(context.defines).map(buildImport).join('\n');
+    var data = {body, injectedFunctions: context.injectedFunctions.join('\n'), requireNames: _.values(context.defines).join(','), requirePaths, vars, name: options.name};
     var code = generate(data, options);
     if (options.modules !== 'typescript' && options.modules !== 'jsrt') {
         code = parseJS(code);

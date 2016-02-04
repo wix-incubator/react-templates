@@ -3,6 +3,7 @@ var test = require('tape');
 var reactTemplates = require('../../src/reactTemplates');
 var context = require('../../src/context');
 var util = require('./util');
+var fsUtil = require('../../src/fsUtil');
 var readFileNormalized = util.readFileNormalized;
 var compareAndWrite = util.compareAndWrite;
 var fs = require('fs');
@@ -203,7 +204,8 @@ test('html tests', function (t) {
     "scope-evaluated-after-repeat2.rt",
     "scope-evaluated-after-if.rt",
     "scope-obj.rt",
-    "repeat-literal-collection.rt"
+    "repeat-literal-collection.rt",
+    "include.rt"
   ];
     t.plan(files.length);
 
@@ -211,12 +213,15 @@ test('html tests', function (t) {
 
     function check(testFile) {
         var filename = path.join(dataPath, testFile);
+        var options = {
+          readFileSync: fsUtil.createRelativeReadFileSync(filename)
+        }
         var code = '';
         try {
             var html = fs.readFileSync(filename).toString();
             var expected = readFileNormalized(filename + '.html');
 //        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-            code = reactTemplates.convertTemplateToReact(html).replace(/\r/g, '');
+            code = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '');
             var actual = util.codeToHtml(code);
             actual = util.normalizeHtml(actual);
             expected = util.normalizeHtml(expected);
