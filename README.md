@@ -46,6 +46,7 @@ http://plugins.jetbrains.com/plugin/7648
     * [rt-class](#rt-class)
     * [rt-require](#rt-require)
     * [rt-template](#rt-template)
+    * [rt-include](#rt-include)
 * [styles](#styles)
 * [event handlers](#event-handlers)
 
@@ -267,6 +268,34 @@ define([
             }]);
     };
 });
+```
+
+## rt-include
+Optionally choose to extract static contents out of rt files.<br>
+rt-include is a "macro" that takes a text file (e.g svg/html/xml) and injects it into the file as if it was part of the original markup.
+
+###### Sample:
+given `main.rt`: 
+```html
+<div>
+  <rt-include src="./my-icon.svg" />
+</div>
+```
+
+and `my-icon.svg`:
+```html
+<svg xmlns="http://www.w3.org/2000/svg">
+  <rect height="50" width="50" style="fill: #00f"/>
+</svg>
+```
+
+is equivalent to:
+```html
+<div>
+  <svg xmlns="http://www.w3.org/2000/svg">
+      <rect height="50" width="50" style="fill: #00f"/>
+  </svg>
+</div>
 ```
 
 ## style
