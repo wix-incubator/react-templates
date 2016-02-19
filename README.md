@@ -45,7 +45,7 @@ http://plugins.jetbrains.com/plugin/7648
     * [rt-props](#rt-props)
     * [rt-class](#rt-class)
     * [rt-require](#rt-require-and-using-other-components-in-the-template)
-    * [rt-template](#rt-template)
+    * [rt-template](#rt-template-and-defining-properties-template-functions)
     * [rt-include](#rt-include)
 * [styles](#styles)
 * [event handlers](#event-handlers)
