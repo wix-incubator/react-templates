@@ -18,6 +18,7 @@ npm-debug.log
 
 ### babel ###
 /dist
+/dist-test
 
 /web
 /target

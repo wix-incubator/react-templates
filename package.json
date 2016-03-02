@@ -9,14 +9,15 @@
   "scripts": {
     "build": "npm run lint && npm run test",
     "lint": "eslint .",
-    "test": "node test/src/test.js && node test/src/styleTest.js",
+    "test": "node dist-test/src/test.js && node dist-test/src/styleTest.js",
     "test-cov": "istanbul cover test/src/test.js -- --require test/support/env --reporter dot --check-leaks test/ test/acceptance/",
     "patch": "npm version patch -m\"update version to %s\" && git push && git push --tags",
     "minor": "npm version minor -m\"update version to %s\" && git push && git push --tags",
     "major": "npm version major -m\"update version to %s\" && git push && git push --tags",
     "buildwp": "webpack --config webpack-production.config.js --progress --profile --colors",
-    "babel": "rm -rf dist && babel src/ --out-dir dist/",
-    "all": "npm run lint && npm run test && npm run babel"
+    "babel": "rm -rf build && babel src/ --out-dir dist && babel test/src/ --out-dir dist-test/src && cp -R test/data dist-test/data",
+    "babel2": "rm -rf build && babel src/ --out-dir build/src && babel test/src/ --out-dir build/test/src && cp -R test/data build/test/data && cp package.json build/",
+    "all": "npm run lint && npm run babel && npm run test"
   },
   "repository": {
     "type": "git",
@@ -40,15 +41,19 @@
   },
   "devDependencies": {
     "babel-cli": "^6.3.17",
+    "babel-core": "^6.3.26",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.3.13",
     "brace": "0.7.0",
     "brfs": "^1.4.1",
     "coveralls": "2.11.6",
     "eslint": "1.10.3",
     "eslint-config-wix-editor": "^0.1.1",
-    "eslint-plugin-lodash3": "^0.5.0",
+    "eslint-plugin-lodash3": "^0.5.1",
     "eslint-plugin-react": "^3.13.1",
     "eslint-plugin-wix-editor": "^1.0.1",
     "grunt": "^0.4.5",
+    "grunt-babel": "^6.0.0",
     "grunt-browserify": "^4.0.0",
     "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-uglify": "^0.11.0",
@@ -56,10 +61,12 @@
     "grunt-eslint": "^17.3.1",
     "grunt-tape": "0.0.2",
     "istanbul": "0.4.1",
+    "json-loader": "^0.5.4",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
     "react-native": "^0.17.0",
-    "tape": "^4.4.0"
+    "tape": "^4.4.0",
+    "webpack": "^1.12.9"
   },
   "keywords": [
     "templates",
