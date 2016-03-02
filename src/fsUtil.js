@@ -1,5 +1,6 @@
 'use strict';
 var fs = require('fs');
+var path = require('path');
 
 /**
  * @param {string} source
@@ -15,6 +16,14 @@ function isStale(source, target) {
     return sourceTime.getTime() > targetTime.getTime();
 }
 
+function createRelativeReadFileSync(baseFile) {
+    var basePath = path.dirname(baseFile);
+    return function(filename) {
+        return fs.readFileSync(path.resolve(basePath, filename));
+    }
+}
+
 module.exports = {
-    isStale: isStale
+    isStale: isStale,
+    createRelativeReadFileSync: createRelativeReadFileSync
 };

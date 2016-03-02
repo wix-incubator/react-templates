@@ -7,7 +7,7 @@
 Lightweight templates for [React](http://facebook.github.io/react/index.html).
 
 * No runtime libraries. No magic. Simply precompile your way to clear React code.
-* Easy syntax that's similar to HTML, supported by most IDEs.
+* Easy syntax that's similar to HTML, surpported by most IDEs.
 * Clear separation of presentation and logic - almost zero HTML in component files.
 * Declarative coding ensures that the HTML that you write and the HTML you inspect look nearly identical.
 * Supports AMD, CommonJS, ES6, Typescript and globals.
@@ -44,8 +44,9 @@ http://plugins.jetbrains.com/plugin/7648
     * [rt-scope](#rt-scope)
     * [rt-props](#rt-props)
     * [rt-class](#rt-class)
-    * [rt-require](#rt-require)
-    * [rt-template](#rt-template)
+    * [rt-require](#rt-require-and-using-other-components-in-the-template)
+    * [rt-template](#rt-template-and-defining-properties-template-functions)
+    * [rt-include](#rt-include)
 * [styles](#styles)
 * [event handlers](#event-handlers)
 
@@ -267,6 +268,34 @@ define([
             }]);
     };
 });
+```
+
+## rt-include
+Optionally choose to extract static contents out of rt files.<br>
+rt-include is a "macro" that takes a text file (e.g svg/html/xml) and injects it into the file as if it was part of the original markup.
+
+###### Sample:
+given `main.rt`: 
+```html
+<div>
+  <rt-include src="./my-icon.svg" />
+</div>
+```
+
+and `my-icon.svg`:
+```html
+<svg xmlns="http://www.w3.org/2000/svg">
+  <rect height="50" width="50" style="fill: #00f"/>
+</svg>
+```
+
+is equivalent to:
+```html
+<div>
+  <svg xmlns="http://www.w3.org/2000/svg">
+      <rect height="50" width="50" style="fill: #00f"/>
+  </svg>
+</div>
 ```
 
 ## style
