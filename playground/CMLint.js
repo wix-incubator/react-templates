@@ -37,7 +37,8 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror'], fu
     }
 
     function makeMarker(labels, severity, multiple, tooltips) {
-        var marker = document.createElement('div'), inner = marker;
+        var marker = document.createElement('div');
+        var inner = marker;
         marker.className = 'CodeMirror-lint-marker-' + severity;
         if (multiple) {
             inner = marker.appendChild(document.createElement('div'));

@@ -215,7 +215,7 @@ test('html tests', function (t) {
         var filename = path.join(dataPath, testFile);
         var options = {
           readFileSync: fsUtil.createRelativeReadFileSync(filename)
-        }
+        };
         var code = '';
         try {
             var html = fs.readFileSync(filename).toString();

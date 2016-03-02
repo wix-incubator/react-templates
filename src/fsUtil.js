@@ -20,7 +20,7 @@ function createRelativeReadFileSync(baseFile) {
     var basePath = path.dirname(baseFile);
     return function(filename) {
         return fs.readFileSync(path.resolve(basePath, filename));
-    }
+    };
 }
 
 module.exports = {

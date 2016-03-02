@@ -113,12 +113,12 @@ function lineText(line) {
 module.exports = function (results) {
     results = _.groupBy(results, 'file');
 
-    var output = '\n',
-        total = 0,
-        errors = 0,
-        warnings = 0,
-        infos = 0,
-        summaryColor = 'cyan';
+    var output = '\n';
+    var total = 0;
+    var errors = 0;
+    var warnings = 0;
+    var infos = 0;
+    var summaryColor = 'cyan';
 
     _.forEach(results, function (result, k) {
         var messages = result;

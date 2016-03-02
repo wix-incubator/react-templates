@@ -30,7 +30,7 @@ const propsMergeFunction = `function mergeProps(inline,external) {
     }
     return res;
 }
-`
+`;
 
 var classSetTemplate = _.template('_.keys(_.pick(<%= classSet %>, _.identity)).join(" ")');
 
@@ -271,6 +271,7 @@ function genBind(func, args) {
 }
 
 function handleStyleProp(val, node, context) {
+    /*eslint lodash/prefer-lodash-chain:0*/
     const styleStr = _(val)
         .split(';')
         .map(_.trim)
@@ -279,7 +280,7 @@ function handleStyleProp(val, node, context) {
             const pair = i.split(':');
             //const val = pair[1];
             const val = pair.slice(1).join(':').trim();
-            return _.camelCase(pair[0].trim()) + ' : ' + convertText(node, context, val.trim())
+            return _.camelCase(pair[0].trim()) + ' : ' + convertText(node, context, val.trim());
             //return stringUtils.convertToCamelCase(pair[0].trim()) + ' : ' + convertText(node, context, val.trim())
         })
         .join(',');
@@ -306,6 +307,7 @@ function convertTagNameToConstructor(tagName, context) {
 /**
  * @param {string} html
  * @param options
+ * @param reportContext
  * @return {Context}
  */
 function defaultContext(html, options, reportContext) {
@@ -408,7 +410,7 @@ function convertHtmlToReact(node, context) {
         data.children = utils.concatChildren(children);
 
         if (node.name === virtualNode) { //eslint-disable-line wix-editor/prefer-ternary
-            data.body = "[" + _.compact(children).join(',') + "]"
+            data.body = "[" + _.compact(children).join(',') + "]";
         }
         else {
             data.body = _.template(getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context)))(data);
@@ -566,9 +568,9 @@ function convertRT(html, reportContext, options) {
     if (options.modules === 'typescript') {
         buildImport = (v, p) => `import ${v} = require('${p}');`;
     } else if (options.modules === 'es6') { // eslint-disable-line
-        buildImport = (v, p) => `import ${v} from '${p}';`
+        buildImport = (v, p) => `import ${v} from '${p}';`;
     } else {
-        buildImport = (v, p) => `var ${v} = require('${p}');`
+        buildImport = (v, p) => `var ${v} = require('${p}');`;
     }
     const header = options.flow ? '/* @flow */\n' : '';
     const vars = header + _(context.defines).map(buildImport).join('\n');
