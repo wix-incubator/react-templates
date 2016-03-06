@@ -566,9 +566,9 @@ function convertRT(html, reportContext, options) {
         .join(',');
     var buildImport;
     if (options.modules === 'typescript') {
-        buildImport = (v, p) => `import ${v} = require('${p}');`;
+        buildImport = (v, p) => `import ${v}` + ` = require('${p}');`;
     } else if (options.modules === 'es6') { // eslint-disable-line
-        buildImport = (v, p) => `import ${v} from '${p}';`;
+        buildImport = (v, p) => `import ${v}` + ` from '${p}';`;
     } else {
         buildImport = (v, p) => `var ${v} = require('${p}');`;
     }
