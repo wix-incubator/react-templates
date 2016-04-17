@@ -3,7 +3,7 @@
     "plugins": ["lodash", "wix-editor"],
     "settings": {
         "lodash": {
-            "version": 3
+            "version": 4
         }
     },
     "rules": {
