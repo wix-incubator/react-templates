@@ -90,7 +90,7 @@ function reactImport(options) {
     if (options.native) {
         return 'react-native';
     }
-    if (options.targetVersion === '0.14.0') {
+    if (options.targetVersion === '0.14.0' || options.targetVersion === '0.15.0') {
         return 'react';
     }
     return 'react/addons';
