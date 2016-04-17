@@ -102,7 +102,7 @@ function buildFormat(context, node, msg, args) {
  * @param {Array.<string>} args
  * @return {RTCodeError}
  */
-RTCodeError.buildFormat = _.restParam(buildFormat, 3);
+RTCodeError.buildFormat = _.rest(buildFormat, 3);
 
 /**
  * @param {*} context

@@ -425,7 +425,7 @@ function convertHtmlToReact(node, context) {
         // Order matters here. Each rt-repeat iteration wraps over the rt-scope, so
         // the scope variables are evaluated in context of the current iteration.
         if (node.attribs[repeatAttr]) {
-            data.repeatFunction = generateInjectedFunc(context, 'repeat' + _.capitalize(data.item), 'return ' + data.body);
+            data.repeatFunction = generateInjectedFunc(context, 'repeat' + stringUtils.capitalize(data.item), 'return ' + data.body);
             data.repeatBinds = ['this'].concat(_.reject(context.boundParams, p => p === data.item || p === data.item + 'Index' || data.innerScope && p in data.innerScope.innerMapping));
             data.body = repeatTemplate(data);
         }
@@ -449,8 +449,8 @@ function handleScopeAttribute(node, context, data) {
 
     data.innerScope.outerMapping = _.zipObject(context.boundParams, context.boundParams);
 
-    _(node.attribs[scopeAttr]).split(';').invoke('trim').compact().forEach(scopePart => {
-        var scopeSubParts = _(scopePart).split(' as ').invoke('trim').value();
+    _(node.attribs[scopeAttr]).split(';').invokeMap('trim').compact().forEach(scopePart => {
+        var scopeSubParts = _(scopePart).split(' as ').invokeMap('trim').value();
         if (scopeSubParts.length < 2) {
             throw RTCodeError.build(context, node, `invalid scope part '${scopePart}'`);
         }
@@ -463,10 +463,10 @@ function handleScopeAttribute(node, context, data) {
         // function call, as with the ones we generate for rt-scope.
         stringUtils.addIfMissing(context.boundParams, alias);
 
-        data.innerScope.scopeName += _.capitalize(alias);
+        data.innerScope.scopeName += stringUtils.capitalize(alias);
         data.innerScope.innerMapping[alias] = `var ${alias} = ${value};`;
         validateJS(data.innerScope.innerMapping[alias], node, context);
-    }).value();
+    });
 }
 
 function validateIfAttribute(node, context, data) {
@@ -501,7 +501,7 @@ function handleSelfClosingHtmlTags(nodes) {
             var externalNodes = [];
             node.children = handleSelfClosingHtmlTags(node.children);
             if (node.type === 'tag' && (_.includes(reactSupport.htmlSelfClosingTags, node.name) ||
-              _.includes(reactTemplatesSelfClosingTags, node.name))) {
+                _.includes(reactTemplatesSelfClosingTags, node.name))) {
                 externalNodes = _.filter(node.children, isTag);
                 _.forEach(externalNodes, i => i.parent = node);
                 node.children = _.reject(node.children, isTag);

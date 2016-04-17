@@ -11,4 +11,12 @@ function addIfMissing(array, obj) {
     }
 }
 
-module.exports = {addIfMissing};
+/**
+ * @param {string} str
+ * @return {string}
+ */
+function capitalize(str) {
+    return str[0].toUpperCase() + str.slice(1);
+}
+
+module.exports = {addIfMissing, capitalize};
