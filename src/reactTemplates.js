@@ -401,6 +401,21 @@ function convertHtmlToReact(node, context) {
             }
         }
 
+        // provide a key to virtual node children if missing
+        if (node.name === virtualNode) {
+           if (node.children.length > 1) {
+              var keyCounter = 0;
+              _.forEach(node.children, function(child) {
+                 if (!child.attribs) {
+                    child.attribs = {};
+                 }
+                 if (!child.attribs["key"]) {
+                    child.attribs["key"] = String(node.startIndex + keyCounter++);
+                 }
+              });
+           }
+        }
+
         var children = _.map(node.children, function (child) {
             var code = convertHtmlToReact(child, context);
             validateJS(code, child, context);
