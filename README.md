@@ -7,7 +7,7 @@
 Lightweight templates for [React](http://facebook.github.io/react/index.html).
 
 * No runtime libraries. No magic. Simply precompile your way to clear React code.
-* Easy syntax that's similar to HTML, surpported by most IDEs.
+* Easy syntax that's similar to HTML, supported by most IDEs.
 * Clear separation of presentation and logic - almost zero HTML in component files.
 * Declarative coding ensures that the HTML that you write and the HTML you inspect look nearly identical.
 * Supports AMD, CommonJS, ES6, Typescript and globals.
