@@ -565,12 +565,14 @@ function convertRT(html, reportContext, options) {
         .map(def => `"${def}"`)
         .join(',');
     var buildImport;
+    var importString = 'import'
+    var requireString = 'require';
     if (options.modules === 'typescript') {
-        buildImport = (v, p) => `import ${v} = require('${p}');`;
+        buildImport = (v, p) => `${importString} ${v} = ${requireString}('${p}');`;
     } else if (options.modules === 'es6') { // eslint-disable-line
-        buildImport = (v, p) => `import ${v} from '${p}';`;
+        buildImport = (v, p) => `${importString} ${v} from '${p}';`
     } else {
-        buildImport = (v, p) => `var ${v} = require('${p}');`;
+        buildImport = (v, p) => `var ${v} = ${requireString}('${p}');`
     }
     const header = options.flow ? '/* @flow */\n' : '';
     const vars = header + _(context.defines).map(buildImport).join('\n');
