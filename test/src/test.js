@@ -275,12 +275,14 @@ test('test shell', function (t) {
 test('test convertText', function (t) {
     var texts = [
         {input: '{}', expected: '()'},
-        {input: "a {'b'}", expected: '"a "+(\'b\')'}
+        {input: "a {'b'}", expected: '"a "+(\'b\')'},
+        {input: "a {'{ b }'}", expected: '"a "+(\'{ b }\')'},
     ];
     t.plan(texts.length);
     texts.forEach(check);
     function check(testData) {
-        var r = reactTemplates._test.convertText({}, {}, testData.input);
+        var context = { options: { brackets: '{ }'} }; 
+        var r = reactTemplates._test.convertText({}, context, testData.input);
         t.equal(r, testData.expected);
     }
 });

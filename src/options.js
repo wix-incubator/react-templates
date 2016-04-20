@@ -71,6 +71,12 @@ $ rt <filename> [<filename> ...] [<args>]`,
         //enum: ['stylish', 'json'],
         description: 'Use a specific output format. (stylish|json)'
     }, {
+        option: 'brackets',
+        alias: 'b',
+        type: 'String',
+        default: '{ }',
+        description: 'Sets bracket delimiters for template expressions'
+    }, {
         option: 'target-version',
         alias: 't',
         type: 'String',
