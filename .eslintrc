@@ -1,11 +1,6 @@
 {
     "extends": "wix-editor/node",
     "plugins": ["lodash", "wix-editor"],
-    "settings": {
-        "lodash": {
-            "version": 4
-        }
-    },
     "rules": {
         "semi": [2, "always"],
         "no-var": 0,
