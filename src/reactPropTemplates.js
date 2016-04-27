@@ -1,6 +1,6 @@
 'use strict';
 
-var native = {
+const native = {
     '0.9.0': {
         ListView: {
             Row: {prop: 'renderRow', arguments: ['rowData', 'sectionID', 'rowID', 'highlightRow']},

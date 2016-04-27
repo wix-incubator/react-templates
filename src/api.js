@@ -1,12 +1,12 @@
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
-var chalk = require('chalk');
-var reactTemplates = require('./reactTemplates');
-var fsUtil = require('./fsUtil');
-var convertRT = reactTemplates.convertRT;
-var convertJSRTToJS = reactTemplates.convertJSRTToJS;
+const fs = require('fs');
+const path = require('path');
+const chalk = require('chalk');
+const reactTemplates = require('./reactTemplates');
+const fsUtil = require('./fsUtil');
+const convertRT = reactTemplates.convertRT;
+const convertJSRTToJS = reactTemplates.convertJSRTToJS;
 
 /**
  * @param {string} source
@@ -15,10 +15,6 @@ var convertJSRTToJS = reactTemplates.convertJSRTToJS;
  * @param {CONTEXT} context
  */
 function convertFile(source, target, options, context) {
-//    if (path.extname(filename) !== ".html") {
-//        console.log('invalid file, only handle html files');
-//        return;// only handle html files
-//    }
     options = options || {};
     options.fileName = source;
 
@@ -27,21 +23,21 @@ function convertFile(source, target, options, context) {
         return;
     }
 
-    var html = fs.readFileSync(source).toString();
+    const html = fs.readFileSync(source).toString();
     if (path.extname(source) === '.rts') {
-        var rtStyle = require('./rtStyle');
-        var out = rtStyle.convert(html);
+        const rtStyle = require('./rtStyle');
+        const out = rtStyle.convert(html);
         if (!options.dryRun) {
             fs.writeFileSync(target, out);
         }
         return;
     }
-    var shouldAddName = options.modules === 'none' && !options.name;
+    const shouldAddName = options.modules === 'none' && !options.name;
     if (shouldAddName) {
         options.name = reactTemplates.normalizeName(path.basename(source, path.extname(source))) + 'RT';
     }
     options.readFileSync = fsUtil.createRelativeReadFileSync(source);
-    var js = options.modules === 'jsrt' ? convertJSRTToJS(html, context, options) : convertRT(html, context, options);
+    const js = options.modules === 'jsrt' ? convertJSRTToJS(html, context, options) : convertRT(html, context, options);
     if (!options.dryRun) {
         fs.writeFileSync(target, js);
     }
@@ -51,7 +47,6 @@ function convertFile(source, target, options, context) {
 }
 
 module.exports = {
-//    convertTemplateToReact: convertTemplateToReact,
     convertFile: convertFile,
     context: require('./context'),
     _test: {}

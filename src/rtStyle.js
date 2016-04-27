@@ -1,10 +1,10 @@
 'use strict';
-var css = require('css');
-var _ = require('lodash');
-var rtnData = require('./rt-style-support-data.js');
+const css = require('css');
+const _ = require('lodash');
+const rtnData = require('./rt-style-support-data.js');
 
 
-var templateCommonJSTemplate = _.template(
+const templateCommonJSTemplate = _.template(
 `'use strict';
 var style = <%= body %>;
 module.exports = style;
@@ -16,34 +16,26 @@ function convert(text) {
 
 function convertBody(text) {
     //source
-    var obj = css.parse(text, {silent: false});
-    var result = _.reduce(obj.stylesheet.rules, processRule2, {});
-    //var out = _.map(obj.stylesheet.rules, processRule).join(', ');
+    const obj = css.parse(text, {silent: false});
+    const result = _.reduce(obj.stylesheet.rules, processRule2, {});
     console.log(result);
     return JSON.stringify(result, undefined, 2);
 }
 
 function processRule2(result, rule) {
-    var name = rule.selectors[0].substring(1);
+    const name = rule.selectors[0].substring(1);
     result[name] = _.reduce(rule.declarations, processDeclaration, {});
     return result;
 }
 
 function processDeclaration(result, dec) {
-    var prop = _.camelCase(dec.property);
+    const prop = _.camelCase(dec.property);
     result[prop] = convertValue(prop, dec.value);
     return result;
 }
 
-//function processRule(rule) {
-//    return rule.declarations.map(function (dec) {
-//        return stringUtils.convertToCamelCase(dec.property) + ': ' + convertValue(dec.property, dec.value);
-//    }).join(', ');
-//}
-
 function convertValue(p, v) {
     if (rtnData[p] === 'string') {
-        //return "'" + v + "'";
         return v;
     }
     // TODO remove units

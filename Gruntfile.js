@@ -106,10 +106,9 @@ module.exports = function (grunt) {
     grunt.registerTask('test', ['tape']);
 
     grunt.registerTask('rt', function () {
-        var reactTemplates = require('./src/cli');
-        var files = grunt.file.expand('playground/*.rt');
-        var conf = {modules: 'amd', force: true, _: files};
-        var ret = reactTemplates.execute(conf);
+        const reactTemplates = require('./src/cli');
+        const files = grunt.file.expand('playground/*.rt');
+        const ret = reactTemplates.execute({modules: 'amd', force: true, _: files});
         return ret === 0;
     });
 

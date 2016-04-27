@@ -10,21 +10,21 @@
  * Enum for tri-state values.
  * @enum {string}
  */
-var MESSAGE_LEVEL = {
+const MESSAGE_LEVEL = {
     ERROR: 'ERROR',
     WARN: 'WARN',
     INFO: 'INFO'
 };
 
-var _ = require('lodash');
-var err = require('./RTCodeError');
-var norm = err.RTCodeError.norm;
+const _ = require('lodash');
+const err = require('./RTCodeError');
+const norm = err.RTCodeError.norm;
 
 
 /**
  * @type {CONTEXT}
  */
-var context = {
+const context = {
     /** @type {Array.<MESSAGE>} */
     messages: [],
     /** @type {boolean} */

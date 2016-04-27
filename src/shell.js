@@ -1,15 +1,15 @@
 'use strict';
-var _ = require('lodash');
+const _ = require('lodash');
 
 /**
  * @param {CONTEXT} context
  * @return {number}
  */
 function printResults(context) {
-    var warnings = context.getMessages();
-    var out = require(`./formatters/${context.options.format}`)(warnings);
+    const warnings = context.getMessages();
+    const out = require(`./formatters/${context.options.format}`)(warnings);
     context.report(out);
-    var grouped = _.groupBy(warnings, 'level');
+    const grouped = _.groupBy(warnings, 'level');
     return grouped.ERROR ? grouped.ERROR.length : 0;
 }
 

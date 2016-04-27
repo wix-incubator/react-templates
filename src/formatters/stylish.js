@@ -2,9 +2,9 @@
 /**
  * @type {Chalk.ChalkModule}
  */
-var chalk = require('chalk');
-var _ = require('lodash');
-var table = require('text-table');
+const chalk = require('chalk');
+const _ = require('lodash');
+const table = require('text-table');
 
 ///**
 // * @param {MESSAGE} message
@@ -43,13 +43,13 @@ function lineText(line) {
 }
 
 //module.exports = function (warnings/*, config*/) {
-//    var _ = require('lodash');
-//    var table = require('text-table');
-//    //var verbosity = false;
-//    var UNICODE_HEAVY_MULTIPLICATION_X = '\u2716';
+//    const _ = require('lodash');
+//    const table = require('text-table');
+//    //const verbosity = false;
+//    const UNICODE_HEAVY_MULTIPLICATION_X = '\u2716';
 //
 //    // context.report(JSON.stringify(warnings, undefined, 2));
-//    var output = table(
+//    const output = table(
 //        warnings.map(function (message) {
 //            return [
 //                '',
@@ -71,22 +71,22 @@ function lineText(line) {
 //        //}
 //    );
 //
-//    var buf = [];
+//    const buf = [];
 //
 //    buf.push(output);
 //
-//    var grouped = _.groupBy(warnings, 'level');
+//    const grouped = _.groupBy(warnings, 'level');
 //
-//    var errCount = grouped.ERROR ? grouped.ERROR.length : 0;
-//    var warnCount = grouped.WARN ? grouped.WARN.length : 0;
-//    //var infoCount = grouped.INFO ? grouped.INFO.length : 0;
+//    const errCount = grouped.ERROR ? grouped.ERROR.length : 0;
+//    const warnCount = grouped.WARN ? grouped.WARN.length : 0;
+//    //const infoCount = grouped.INFO ? grouped.INFO.length : 0;
 //
 ////    buf.push(errCount + ' ' + warnCount + ' ' + infoCount + '\n');
 //
 //    if (errCount === 0 && warnCount === 0) {
 //        buf.push(chalk.green('React templates done'));
 //    } else {
-//        var msg = [];
+//        const msg = [];
 //        if (errCount > 0) {
 //            msg.push(errCount + ' ' + pluralize(errCount, 'error', 'errors'));
 //        } else {
@@ -113,15 +113,15 @@ function lineText(line) {
 module.exports = function (results) {
     results = _.groupBy(results, 'file');
 
-    var output = '\n';
-    var total = 0;
-    var errors = 0;
-    var warnings = 0;
-    var infos = 0;
-    var summaryColor = 'cyan';
+    let output = '\n';
+    let total = 0;
+    let errors = 0;
+    let warnings = 0;
+    let infos = 0;
+    let summaryColor = 'cyan';
 
     _.forEach(results, function (result, k) {
-        var messages = result;
+        const messages = result;
 
         if (messages.length === 0) {
             return;
@@ -132,7 +132,7 @@ module.exports = function (results) {
 
         output += table(
             messages.map(function (message) {
-                var messageType;
+                let messageType;
 
                 if (message.level === 'ERROR') {
                     messageType = chalk.red('error');

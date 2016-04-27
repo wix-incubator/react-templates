@@ -1,11 +1,11 @@
 'use strict';
-var cheerio = require('cheerio');
-var fs = require('fs');
-var path = require('path');
-var reactTemplates = require('../../src/reactTemplates');
-var React = require('react');
-var ReactDOMServer = require('react-dom/server');
-var _ = require('lodash');
+const cheerio = require('cheerio');
+const fs = require('fs');
+const path = require('path');
+const reactTemplates = require('../../src/reactTemplates');
+const React = require('react');
+const ReactDOMServer = require('react-dom/server');
+const _ = require('lodash');
 
 /**
  * @param {string} html
@@ -42,7 +42,7 @@ function readFileNormalized(filename) {
     return readFile(filename).replace(/\r/g, '').trim();
 }
 
-//var dataPath = path.resolve(__dirname, '..', 'data');
+//const dataPath = path.resolve(__dirname, '..', 'data');
 /**
  * @param {string} filename
  * @return {string}
@@ -52,23 +52,23 @@ function readFile(filename) {
 }
 
 function joinDataPath(fileName) {
-    var dataPath = path.resolve(__dirname, '..', 'data');
+    const dataPath = path.resolve(__dirname, '..', 'data');
     return path.join(dataPath, fileName);
 }
 
 function rtToHtml(rt) {
-    var code = reactTemplates.convertTemplateToReact(rt).replace(/\r/g, '');
+    const code = reactTemplates.convertTemplateToReact(rt).replace(/\r/g, '');
     return codeToHtml(code);
 }
 
 function codeToHtml(code) {
-    var defineMap = {'react/addons': React, lodash: _};
+    const defineMap = {'react/addons': React, lodash: _};
     //noinspection JSUnusedLocalSymbols
-    var define = function (requirementsNames, content) { //eslint-disable-line no-unused-vars,func-style
-        var requirements = _.map(requirementsNames, reqName => defineMap[reqName]);
+    const define = function (requirementsNames, content) { //eslint-disable-line no-unused-vars,func-style
+        const requirements = _.map(requirementsNames, reqName => defineMap[reqName]);
         return content.apply(this, requirements);
     };
-    var comp = React.createFactory(React.createClass({
+    const comp = React.createFactory(React.createClass({
         displayName: 'testClass',
         render: eval(code) //eslint-disable-line no-eval
     }));

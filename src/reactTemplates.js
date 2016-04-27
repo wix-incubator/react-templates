@@ -1,24 +1,24 @@
 'use strict';
-var cheerio = require('cheerio');
-var _ = require('lodash');
-var esprima = require('esprima');
-var escodegen = require('escodegen');
-var reactDOMSupport = require('./reactDOMSupport');
-var reactNativeSupport = require('./reactNativeSupport');
-var reactPropTemplates = require('./reactPropTemplates');
-var stringUtils = require('./stringUtils');
-var rtError = require('./RTCodeError');
-var reactSupport = require('./reactSupport');
-var templates = reactSupport.templates;
-var utils = require('./utils');
-var util = require('util');
-var validateJS = utils.validateJS;
-var RTCodeError = rtError.RTCodeError;
+const cheerio = require('cheerio');
+const _ = require('lodash');
+const esprima = require('esprima');
+const escodegen = require('escodegen');
+const reactDOMSupport = require('./reactDOMSupport');
+const reactNativeSupport = require('./reactNativeSupport');
+const reactPropTemplates = require('./reactPropTemplates');
+const stringUtils = require('./stringUtils');
+const rtError = require('./RTCodeError');
+const reactSupport = require('./reactSupport');
+const templates = reactSupport.templates;
+const utils = require('./utils');
+const util = require('util');
+const validateJS = utils.validateJS;
+const RTCodeError = rtError.RTCodeError;
 
-var repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
-var ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
-var propsTemplateSimple = _.template('_.assign({}, <%= generatedProps %>, <%= rtProps %>)');
-var propsTemplate = _.template('mergeProps( <%= generatedProps %>, <%= rtProps %>)');
+const repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
+const ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
+const propsTemplateSimple = _.template('_.assign({}, <%= generatedProps %>, <%= rtProps %>)');
+const propsTemplate = _.template('mergeProps( <%= generatedProps %>, <%= rtProps %>)');
 
 const propsMergeFunction = `function mergeProps(inline,external) {
     var res = _.assign({},inline,external)
@@ -32,7 +32,7 @@ const propsMergeFunction = `function mergeProps(inline,external) {
 }
 `;
 
-var classSetTemplate = _.template('_(<%= classSet %>).transform(function(res, value, key){ if(value){ res.push(key); } }, []).join(" ")');
+const classSetTemplate = _.template('_(<%= classSet %>).transform(function(res, value, key){ if(value){ res.push(key); } }, []).join(" ")');
 
 function getTagTemplateString(simpleTagTemplate, shouldCreateElement) {
     if (simpleTagTemplate) {
@@ -42,20 +42,20 @@ function getTagTemplateString(simpleTagTemplate, shouldCreateElement) {
 }
 
 
-var commentTemplate = _.template(' /* <%= data %> */ ');
+const commentTemplate = _.template(' /* <%= data %> */ ');
 
-var repeatAttr = 'rt-repeat';
-var ifAttr = 'rt-if';
-var classSetAttr = 'rt-class';
-var classAttr = 'class';
-var scopeAttr = 'rt-scope';
-var propsAttr = 'rt-props';
-var templateNode = 'rt-template';
-var virtualNode = 'rt-virtual';
-var includeNode = 'rt-include';
-var includeSrcAttr = 'src';
+const repeatAttr = 'rt-repeat';
+const ifAttr = 'rt-if';
+const classSetAttr = 'rt-class';
+const classAttr = 'class';
+const scopeAttr = 'rt-scope';
+const propsAttr = 'rt-props';
+const templateNode = 'rt-template';
+const virtualNode = 'rt-virtual';
+const includeNode = 'rt-include';
+const includeSrcAttr = 'src';
 
-var reactTemplatesSelfClosingTags = [includeNode];
+const reactTemplatesSelfClosingTags = [includeNode];
 
 /**
  * @param {Options} options
@@ -63,7 +63,7 @@ var reactTemplatesSelfClosingTags = [includeNode];
  */
 function getOptions(options) {
     options = options || {};
-    var defaultOptions = {
+    const defaultOptions = {
         modules: options.native ? 'commonjs' : 'amd',
         version: false,
         force: false,
@@ -76,9 +76,9 @@ function getOptions(options) {
         flow: options.flow
     };
 
-    var finalOptions = _.defaults({}, options, defaultOptions);
+    const finalOptions = _.defaults({}, options, defaultOptions);
 
-    var defaultPropTemplates = finalOptions.native ?
+    const defaultPropTemplates = finalOptions.native ?
         reactPropTemplates.native[finalOptions.nativeTargetVersion] :
         reactPropTemplates.dom[finalOptions.targetVersion];
 
@@ -116,23 +116,23 @@ const curlyMap = {'{': 1, '}': -1};
  * @return {string}
  */
 function convertText(node, context, txt) {
-    var res = '';
-    var first = true;
-    var concatChar = node.type === 'text' ? ',' : '+';
+    let res = '';
+    let first = true;
+    const concatChar = node.type === 'text' ? ',' : '+';
     while (_.includes(txt, '{')) {
-        var start = txt.indexOf('{');
-        var pre = txt.substr(0, start);
+        const start = txt.indexOf('{');
+        const pre = txt.substr(0, start);
         if (pre) {
             res += (first ? '' : concatChar) + JSON.stringify(pre);
             first = false;
         }
-        var curlyCounter = 1;
-        var end;
+        let curlyCounter = 1;
+        let end;
         for (end = start + 1; end < txt.length && curlyCounter > 0; end++) { //eslint-disable-line no-restricted-syntax
             curlyCounter += curlyMap[txt.charAt(end)] || 0;
         }
         if (curlyCounter === 0) {
-            var needsParens = start !== 0 || end !== txt.length - 1;
+            const needsParens = start !== 0 || end !== txt.length - 1;
             res += (first ? '' : concatChar) + (needsParens ? '(' : '') + txt.substr(start + 1, end - start - 2) + (needsParens ? ')' : '');
             first = false;
             txt = txt.substr(end);
@@ -158,8 +158,8 @@ function convertText(node, context, txt) {
  */
 function generateInjectedFunc(context, namePrefix, body, params) {
     params = params || context.boundParams;
-    var funcName = namePrefix.replace(',', '') + (context.injectedFunctions.length + 1);
-    var funcText = `function ${funcName}(${params.join(',')}) {
+    const funcName = namePrefix.replace(',', '') + (context.injectedFunctions.length + 1);
+    const funcText = `function ${funcName}(${params.join(',')}) {
         ${body}
         }
         `;
@@ -168,16 +168,16 @@ function generateInjectedFunc(context, namePrefix, body, params) {
 }
 
 function generateTemplateProps(node, context) {
-    var propTemplateDefinition = context.options.propTemplates[node.name];
-    var propertiesTemplates = _(node.children)
+    const propTemplateDefinition = context.options.propTemplates[node.name];
+    const propertiesTemplates = _(node.children)
         .map(function (child, index) {
-            var templateProp = null;
+            let templateProp = null;
             if (child.name === templateNode) { // Generic explicit template tag
                 if (!_.has(child.attribs, 'prop')) {
                     throw RTCodeError.build(context, child, 'rt-template must have a prop attribute');
                 }
 
-                var childTemplate = _.find(context.options.propTemplates, {prop: child.attribs.prop}) || {arguments: []};
+                const childTemplate = _.find(context.options.propTemplates, {prop: child.attribs.prop}) || {arguments: []};
                 templateProp = {
                     prop: child.attribs.prop,
                     arguments: (child.attribs.arguments ? child.attribs.arguments.split(',') : childTemplate.arguments) || []
@@ -199,15 +199,15 @@ function generateTemplateProps(node, context) {
         .value();
 
     return _.transform(propertiesTemplates, function (props, templateProp) {
-        var functionParams = _.values(context.boundParams).concat(templateProp.arguments);
+        const functionParams = _.values(context.boundParams).concat(templateProp.arguments);
 
-        var oldBoundParams = context.boundParams;
+        const oldBoundParams = context.boundParams;
         context.boundParams = context.boundParams.concat(templateProp.arguments);
 
-        var functionBody = 'return ' + convertHtmlToReact(templateProp.content, context);
+        const functionBody = 'return ' + convertHtmlToReact(templateProp.content, context);
         context.boundParams = oldBoundParams;
 
-        var generatedFuncName = generateInjectedFunc(context, templateProp.prop, functionBody, functionParams);
+        const generatedFuncName = generateInjectedFunc(context, templateProp.prop, functionBody, functionParams);
         props[templateProp.prop] = genBind(generatedFuncName, _.values(context.boundParams));
 
         // Remove the template child from the children definition.
@@ -221,9 +221,9 @@ function generateTemplateProps(node, context) {
  * @return {string}
  */
 function generateProps(node, context) {
-    var props = {};
+    const props = {};
     _.forOwn(node.attribs, function (val, key) {
-        var propKey = reactSupport.attributesMapping[key.toLowerCase()] || key;
+        const propKey = reactSupport.attributesMapping[key.toLowerCase()] || key;
         if (props.hasOwnProperty(propKey) && propKey !== reactSupport.classNameProp) {
             throw RTCodeError.build(context, node, `duplicate definition of ${propKey} ${JSON.stringify(node.attribs)}`);
         }
@@ -235,7 +235,7 @@ function generateProps(node, context) {
             // Processing for both class and rt-class conveniently return strings that
             // represent JS expressions, each evaluating to a space-separated set of class names.
             // We can just join them with another space here.
-            var existing = props[propKey] ? `${props[propKey]} + " " + ` : '';
+            const existing = props[propKey] ? `${props[propKey]} + " " + ` : '';
             if (key === classSetAttr) {
                 props[propKey] = existing + classSetTemplate({classSet: val});
             } else if (key === classAttr || key === reactSupport.classNameProp) {
@@ -252,17 +252,17 @@ function generateProps(node, context) {
 }
 
 function handleEventHandler(val, context, node, key) {
-    var funcParts = val.split('=>');
+    const funcParts = val.split('=>');
     if (funcParts.length !== 2) {
         throw RTCodeError.build(context, node, `when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [${key}='${val}']`);
     }
-    var evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
-    var funcBody = funcParts[1].trim();
-    var params = context.boundParams;
+    const evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
+    const funcBody = funcParts[1].trim();
+    let params = context.boundParams;
     if (evtParams.trim() !== '') {
         params = params.concat([evtParams.trim()]);
     }
-    var generatedFuncName = generateInjectedFunc(context, key, funcBody, params);
+    const generatedFuncName = generateInjectedFunc(context, key, funcBody, params);
     return genBind(generatedFuncName, context.boundParams);
 }
 
@@ -296,7 +296,7 @@ function convertTagNameToConstructor(tagName, context) {
     if (context.options.native) {
         return _.includes(reactNativeSupport[context.options.nativeTargetVersion], tagName) ? 'React.' + tagName : tagName;
     }
-    var isHtmlTag = _.includes(reactDOMSupport[context.options.targetVersion], tagName);
+    let isHtmlTag = _.includes(reactDOMSupport[context.options.targetVersion], tagName);
     if (reactSupport.shouldUseCreateElement(context)) {
         isHtmlTag = isHtmlTag || tagName.match(/^\w+(-\w+)$/);
         return isHtmlTag ? `'${tagName}'` : tagName;
@@ -311,7 +311,7 @@ function convertTagNameToConstructor(tagName, context) {
  * @return {Context}
  */
 function defaultContext(html, options, reportContext) {
-    var defaultDefines = {};
+    const defaultDefines = {};
     defaultDefines[options.reactImportPath] = 'React';
     defaultDefines[options.lodashImportPath] = '_';
     return {
@@ -344,7 +344,7 @@ function convertHtmlToReact(node, context) {
         }, context);
 
         if (node.type === 'tag' && node.name === includeNode) {
-            var srcFile = node.attribs[includeSrcAttr];
+            const srcFile = node.attribs[includeSrcAttr];
             if (!srcFile) {
                 throw RTCodeError.build(context, node, 'rt-include must supply a source attribute');
             }
@@ -360,12 +360,12 @@ function convertHtmlToReact(node, context) {
             return parseAndConvertHtmlToReact(context.html, context);
         }
 
-        var data = {name: convertTagNameToConstructor(node.name, context)};
+        const data = {name: convertTagNameToConstructor(node.name, context)};
 
         // Order matters. We need to add the item and itemIndex to context.boundParams before
         // the rt-scope directive is processed, lest they are not passed to the child scopes
         if (node.attribs[repeatAttr]) {
-            var arr = node.attribs[repeatAttr].split(' in ');
+            const arr = node.attribs[repeatAttr].split(' in ');
             if (arr.length !== 2) {
                 throw RTCodeError.build(context, node, `rt-repeat invalid 'in' expression '${node.attribs[repeatAttr]}'`);
             }
@@ -400,8 +400,8 @@ function convertHtmlToReact(node, context) {
             }
         }
 
-        var children = _.map(node.children, function (child) {
-            var code = convertHtmlToReact(child, context);
+        const children = _.map(node.children, function (child) {
+            const code = convertHtmlToReact(child, context);
             validateJS(code, child, context);
             return code;
         });
@@ -415,8 +415,8 @@ function convertHtmlToReact(node, context) {
         }
 
         if (node.attribs[scopeAttr]) {
-            var functionBody = _.values(data.innerScope.innerMapping).join('\n') + `return ${data.body}`;
-            var generatedFuncName = generateInjectedFunc(context, 'scope' + data.innerScope.scopeName, functionBody, _.keys(data.innerScope.outerMapping));
+            const functionBody = _.values(data.innerScope.innerMapping).join('\n') + `return ${data.body}`;
+            const generatedFuncName = generateInjectedFunc(context, 'scope' + data.innerScope.scopeName, functionBody, _.keys(data.innerScope.outerMapping));
             data.body = `${generatedFuncName}.apply(this, [${_.values(data.innerScope.outerMapping).join(',')}])`;
         }
 
@@ -448,12 +448,12 @@ function handleScopeAttribute(node, context, data) {
     data.innerScope.outerMapping = _.zipObject(context.boundParams, context.boundParams);
 
     _(node.attribs[scopeAttr]).split(';').invokeMap('trim').compact().forEach(scopePart => {
-        var scopeSubParts = _(scopePart).split(' as ').invokeMap('trim').value();
+        const scopeSubParts = _(scopePart).split(' as ').invokeMap('trim').value();
         if (scopeSubParts.length < 2) {
             throw RTCodeError.build(context, node, `invalid scope part '${scopePart}'`);
         }
-        var alias = scopeSubParts[1];
-        var value = scopeSubParts[0];
+        const alias = scopeSubParts[1];
+        const value = scopeSubParts[0];
         validateJS(alias, node, context);
 
         // this adds both parameters to the list of parameters passed further down
@@ -468,8 +468,8 @@ function handleScopeAttribute(node, context, data) {
 }
 
 function validateIfAttribute(node, context, data) {
-    var innerMappingKeys = _.keys(data.innerScope && data.innerScope.innerMapping || {});
-    var ifAttributeTree = null;
+    const innerMappingKeys = _.keys(data.innerScope && data.innerScope.innerMapping || {});
+    let ifAttributeTree = null;
     try {
         ifAttributeTree = esprima.parse(node.attribs[ifAttr]);
     } catch (e) {
@@ -495,7 +495,7 @@ function isTag(node) {
 
 function handleSelfClosingHtmlTags(nodes) {
     return _.flatMap(nodes, function (node) {
-        var externalNodes = [];
+        let externalNodes = [];
         node.children = handleSelfClosingHtmlTags(node.children);
         if (node.type === 'tag' && (_.includes(reactSupport.htmlSelfClosingTags, node.name) ||
             _.includes(reactTemplatesSelfClosingTags, node.name))) {
@@ -508,19 +508,19 @@ function handleSelfClosingHtmlTags(nodes) {
 }
 
 function convertTemplateToReact(html, options) {
-    var context = require('./context');
+    const context = require('./context');
     return convertRT(html, context, options);
 }
 
 function parseAndConvertHtmlToReact(html, context) {
-    var rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
+    const rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
     utils.validate(context.options, context, context.reportContext, rootNode.root()[0]);
-    var rootTags = _.filter(rootNode.root()[0].children, isTag);
+    let rootTags = _.filter(rootNode.root()[0].children, isTag);
     rootTags = handleSelfClosingHtmlTags(rootTags);
     if (!rootTags || rootTags.length === 0) {
         throw new RTCodeError('Document should have a root element');
     }
-    var firstTag = null;
+    let firstTag = null;
     _.forEach(rootTags, function (tag) {
         if (tag.name === 'rt-require') {
             if (!tag.attribs.dependency || !tag.attribs.as) {
@@ -552,14 +552,14 @@ function parseAndConvertHtmlToReact(html, context) {
 function convertRT(html, reportContext, options) {
     options = getOptions(options);
 
-    var context = defaultContext(html, options, reportContext);
-    var body = parseAndConvertHtmlToReact(html, context);
+    const context = defaultContext(html, options, reportContext);
+    const body = parseAndConvertHtmlToReact(html, context);
 
-    var requirePaths = _(context.defines)
+    const requirePaths = _(context.defines)
         .keys()
         .map(def => `"${def}"`)
         .join(',');
-    var buildImport;
+    let buildImport;
     if (options.modules === 'typescript') {
         buildImport = (v, p) => `import ${v} = require('${p}');`;
     } else if (options.modules === 'es6') { // eslint-disable-line
@@ -569,8 +569,8 @@ function convertRT(html, reportContext, options) {
     }
     const header = options.flow ? '/* @flow */\n' : '';
     const vars = header + _(context.defines).map(buildImport).join('\n');
-    var data = {body, injectedFunctions: context.injectedFunctions.join('\n'), requireNames: _.values(context.defines).join(','), requirePaths, vars, name: options.name};
-    var code = generate(data, options);
+    const data = {body, injectedFunctions: context.injectedFunctions.join('\n'), requireNames: _.values(context.defines).join(','), requirePaths, vars, name: options.name};
+    let code = generate(data, options);
     if (options.modules !== 'typescript' && options.modules !== 'jsrt') {
         code = parseJS(code);
     }
@@ -579,7 +579,7 @@ function convertRT(html, reportContext, options) {
 
 function parseJS(code) {
     try {
-        var tree = esprima.parse(code, {range: true, tokens: true, comment: true, sourceType: 'module'});
+        let tree = esprima.parse(code, {range: true, tokens: true, comment: true, sourceType: 'module'});
         tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
         return escodegen.generate(tree, {comment: true});
     } catch (e) {
@@ -590,14 +590,14 @@ function parseJS(code) {
 function convertJSRTToJS(text, reportContext, options) {
     options = getOptions(options);
     options.modules = 'jsrt';
-    var templateMatcherJSRT = /<template>([^]*?)<\/template>/gm;
-    var code = text.replace(templateMatcherJSRT, (template, html) => convertRT(html, reportContext, options).replace(/;$/, ''));
-    code = parseJS(code);
-    return code;
+    const templateMatcherJSRT = /<template>([^]*?)<\/template>/gm;
+    const code = text.replace(templateMatcherJSRT, (template, html) => convertRT(html, reportContext, options).replace(/;$/, ''));
+
+    return parseJS(code);
 }
 
 function generate(data, options) {
-    var template = templates[options.modules];
+    const template = templates[options.modules];
     return template(data);
 }
 

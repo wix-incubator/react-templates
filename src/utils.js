@@ -1,8 +1,8 @@
 'use strict';
-var _ = require('lodash');
-var esprima = require('esprima');
-var rtError = require('./RTCodeError');
-var RTCodeError = rtError.RTCodeError;
+const _ = require('lodash');
+const esprima = require('esprima');
+const rtError = require('./RTCodeError');
+const RTCodeError = rtError.RTCodeError;
 
 /**
  * @param {string} code
@@ -50,7 +50,7 @@ function addIfMissing(array, obj) {
  * @return {string}
  */
 function concatChildren(children) {
-    var res = '';
+    let res = '';
     _.forEach(children, function (child) {
         if (child && !_.startsWith(child, ' /*')) {
             res += ',';
@@ -69,7 +69,7 @@ function concatChildren(children) {
  */
 function validate(options, context, reportContext, node) {
     if (node.type === 'tag' && node.attribs['rt-if'] && !node.attribs.key) {
-        var loc = rtError.getNodeLoc(context, node);
+        const loc = rtError.getNodeLoc(context, node);
         reportContext.warn('rt-if without a key', options.fileName, loc.pos.line, loc.pos.col, loc.start, loc.end);
     }
     if (node.children) {

@@ -1,18 +1,18 @@
 'use strict';
-var test = require('tape');
-var reactTemplates = require('../../src/reactTemplates');
-var context = require('../../src/context');
-var util = require('./util');
-var fsUtil = require('../../src/fsUtil');
-var readFileNormalized = util.readFileNormalized;
-var compareAndWrite = util.compareAndWrite;
-var fs = require('fs');
-var _ = require('lodash');
-var path = require('path');
-var RTCodeError = reactTemplates.RTCodeError;
-var dataPath = path.resolve(__dirname, '..', 'data');
+const test = require('tape');
+const reactTemplates = require('../../src/reactTemplates');
+const context = require('../../src/context');
+const util = require('./util');
+const fsUtil = require('../../src/fsUtil');
+const readFileNormalized = util.readFileNormalized;
+const compareAndWrite = util.compareAndWrite;
+const fs = require('fs');
+const _ = require('lodash');
+const path = require('path');
+const RTCodeError = reactTemplates.RTCodeError;
+const dataPath = path.resolve(__dirname, '..', 'data');
 
-var invalidFiles = [
+const invalidFiles = [
     {file: 'if-with-scope/invalid-if-scope-1.rt', issue: new RTCodeError("invalid scope mapping used in if part 'this.bar(activeUsers.length)'", 0, 160, 1, 1)},
     {file: 'if-with-scope/invalid-if-scope-2.rt', issue: new RTCodeError("invalid scope mapping used in if part 'this.bar[activeUsers || 0]'", 0, 158, 1, 1)},
     {file: 'if-with-scope/invalid-if-scope-3.rt', issue: new RTCodeError("invalid scope mapping used in if part 'this.foo + activeUsers.length > this.bar'", 0, 172, 1, 1)},
@@ -37,9 +37,9 @@ test('invalid tests', function (t) {
     invalidFiles.forEach(check);
 
     function check(testFile) {
-        var filename = path.join(dataPath, testFile.file);
-        var html = util.readFileNormalized(filename);
-        var error = null;
+        const filename = path.join(dataPath, testFile.file);
+        const html = util.readFileNormalized(filename);
+        let error = null;
         try {
             reactTemplates.convertTemplateToReact(html);
         } catch (e) {
@@ -63,15 +63,15 @@ function normalizeError(err) {
 }
 
 test('invalid tests json', function (t) {
-    var cli = require('../../src/cli');
+    const cli = require('../../src/cli');
     t.plan(invalidFiles.length);
 
     invalidFiles.forEach(check);
 
     function check(testFile) {
         context.clear();
-        var filename = path.join(dataPath, testFile.file);
-        var options = {format: 'json', force: true};
+        const filename = path.join(dataPath, testFile.file);
+        const options = {format: 'json', force: true};
         cli.handleSingleFile(options, filename);
         t.deepEqual(normalizeError(context.getMessages()[0]), errorEqualMessage(testFile.issue, filename), 'Expect cli to produce valid output messages');
     }
@@ -100,32 +100,32 @@ function errorEqualMessage(err, file) {
 }
 
 test('rt-if with rt-scope test', function (t) {
-    var files = ['if-with-scope/valid-if-scope.rt'];
+    const files = ['if-with-scope/valid-if-scope.rt'];
     testFiles(t, files);
 });
 
 test('conversion test', function (t) {
-    var files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt', 'require.rt'];
+    const files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt', 'require.rt'];
     testFiles(t, files);
 });
 
 test('prop template conversion test', function (t) {
-    var options = {
+    const options = {
         propTemplates: {
             List: {
                 Row: {prop: 'renderRow', arguments: ['rowData']}
             }
         }
     };
-    var files = ['propTemplates/simpleTemplate.rt', 'propTemplates/templateInScope.rt', 'propTemplates/implicitTemplate.rt', 'propTemplates/twoTemplates.rt'];
+    const files = ['propTemplates/simpleTemplate.rt', 'propTemplates/templateInScope.rt', 'propTemplates/implicitTemplate.rt', 'propTemplates/twoTemplates.rt'];
     testFiles(t, files, options);
 });
 
 function checkFile(t, options, testFile) {
-    var filename = path.join(dataPath, testFile);
-    var html = readFileNormalized(filename);
-    var expected = readFileNormalized(filename + '.js');
-    var actual = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '').trim();
+    const filename = path.join(dataPath, testFile);
+    const html = readFileNormalized(filename);
+    const expected = readFileNormalized(filename + '.js');
+    const actual = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '').trim();
     compareAndWrite(t, actual, expected, filename);
 }
 
@@ -135,7 +135,7 @@ function testFiles(t, files, options) {
 }
 
 test('conversion test - native', function (t) {
-    var options = {
+    const options = {
         propTemplates: {
             MyComp: {
                 Row: {prop: 'renderRow', arguments: ['rowData']}
@@ -143,12 +143,12 @@ test('conversion test - native', function (t) {
         },
         native: true
     };
-    var files = ['nativeView.rt', 'listViewTemplate.rt', 'listViewAndCustomTemplate.rt'];
+    const files = ['nativeView.rt', 'listViewTemplate.rt', 'listViewAndCustomTemplate.rt'];
     testFiles(t, files, options);
 });
 
 test('convert div with all module types', function (t) {
-    var files = [
+    const files = [
         {source: 'div.rt', expected: 'div.rt.commonjs.js', options: {modules: 'commonjs'}},
         {source: 'div.rt', expected: 'div.rt.amd.js', options: {modules: 'amd', name: 'div'}},
         {source: 'div.rt', expected: 'div.rt.globals.js', options: {modules: 'none', name: 'div'}},
@@ -159,32 +159,30 @@ test('convert div with all module types', function (t) {
     files.forEach(check);
 
     function check(testData) {
-        var filename = path.join(dataPath, testData.source);
-        var html = readFileNormalized(filename);
-        var expected = readFileNormalized(path.join(dataPath, testData.expected));
-//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
+        const filename = path.join(dataPath, testData.source);
+        const html = readFileNormalized(filename);
+        const expected = readFileNormalized(path.join(dataPath, testData.expected));
+        const actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
         compareAndWrite(t, actual, expected, filename);
     }
 });
 
 test('convert jsrt and test source results', function (t) {
-    var files = ['simple.jsrt'];
+    const files = ['simple.jsrt'];
     t.plan(files.length);
     files.forEach(check);
 
     function check(file) {
-        var filename = path.join(dataPath, file);
-        var js = readFileNormalized(filename);
-        var expected = readFileNormalized(path.join(dataPath, file.replace('.jsrt', '.js')));
-//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
-        var actual = reactTemplates.convertJSRTToJS(js, context).replace(/\r/g, '').trim();
+        const filename = path.join(dataPath, file);
+        const js = readFileNormalized(filename);
+        const expected = readFileNormalized(path.join(dataPath, file.replace('.jsrt', '.js')));
+        const actual = reactTemplates.convertJSRTToJS(js, context).replace(/\r/g, '').trim();
         compareAndWrite(t, actual, expected, filename);
     }
 });
 
 test('html tests', function (t) {
-    var files = [
+    const files = [
         'scope.rt',
         'scope-trailing-semicolon.rt',
         'scope-variable-references.rt',
@@ -212,20 +210,17 @@ test('html tests', function (t) {
     files.forEach(check);
 
     function check(testFile) {
-        var filename = path.join(dataPath, testFile);
-        var options = {
+        const filename = path.join(dataPath, testFile);
+        const options = {
             readFileSync: fsUtil.createRelativeReadFileSync(filename)
         };
-        var code = '';
+        let code = '';
         try {
-            var html = fs.readFileSync(filename).toString();
-            var expected = readFileNormalized(filename + '.html');
-//        var expected = fs.readFileSync(filename.replace(".html", ".js")).toString();
+            const html = fs.readFileSync(filename).toString();
+            const expected = util.normalizeHtml(readFileNormalized(filename + '.html'));
             code = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '');
-            var actual = util.codeToHtml(code);
-            actual = util.normalizeHtml(actual);
-            expected = util.normalizeHtml(expected);
-            var equal = compareAndWrite(t, actual, expected, filename);
+            const actual = util.normalizeHtml(util.codeToHtml(code));
+            const equal = compareAndWrite(t, actual, expected, filename);
             if (!equal) {
                 fs.writeFileSync(filename + '.code.js', code);
             }
@@ -248,17 +243,17 @@ test('test context', function (t) {
 });
 
 test('test shell', function (t) {
-    var shell = require('../../src/shell');
-    var newContext = _.cloneDeep(context);
-    var outputJSON = '';
+    const shell = require('../../src/shell');
+    const newContext = _.cloneDeep(context);
+    let outputJSON = '';
     newContext.options.format = 'json';
     newContext.report = function (text) { outputJSON = text; };
-    var r = shell.printResults(newContext);
+    let r = shell.printResults(newContext);
     t.equal(r, 0);
     context.error('hi', '', 1, 1);
     r = shell.printResults(newContext);
     t.equal(r, 1);
-    var output = JSON.parse(outputJSON);
+    const output = JSON.parse(outputJSON);
     t.deepEqual(output, [{
         column: 1,
         endOffset: -1,
@@ -274,40 +269,40 @@ test('test shell', function (t) {
 });
 
 test('test shell', function (t) {
-    var filename = path.join(dataPath, 'div.rt');
-    var cli = require('../../src/cli');
-    var r = cli.execute(`${filename} -r --dry-run`);
+    const filename = path.join(dataPath, 'div.rt');
+    const cli = require('../../src/cli');
+    const r = cli.execute(`${filename} -r --dry-run`);
     t.equal(r, 0);
     t.end();
 });
 
 test('test convertText', function (t) {
-    var texts = [
+    const texts = [
         {input: '{}', expected: '()'},
         {input: "a {'b'}", expected: '"a "+(\'b\')'}
     ];
     t.plan(texts.length);
     texts.forEach(check);
     function check(testData) {
-        var r = reactTemplates._test.convertText({}, {}, testData.input);
+        const r = reactTemplates._test.convertText({}, {}, testData.input);
         t.equal(r, testData.expected);
     }
 });
 
 test('util.isStale', function (t) {
-    var a = path.join(dataPath, 'a.tmp');
-    var b = path.join(dataPath, 'b.tmp');
+    const a = path.join(dataPath, 'a.tmp');
+    const b = path.join(dataPath, 'b.tmp');
 
     fs.writeFileSync(a, 'actual');
     fs.writeFileSync(b, 'actual');
 
-    var mtime1 = new Date(1995, 11, 17, 3, 24, 0);
+    const mtime1 = new Date(1995, 11, 17, 3, 24, 0);
     fs.utimesSync(a, mtime1, mtime1);
 
-    var mtime2 = new Date(1995, 11, 17, 3, 24, 1);
+    const mtime2 = new Date(1995, 11, 17, 3, 24, 1);
     fs.utimesSync(b, mtime2, mtime2);
 
-    var actual = fsUtil.isStale(a, b);
+    let actual = fsUtil.isStale(a, b);
     t.equal(actual, false);
     actual = fsUtil.isStale(b, a);
     t.equal(actual, true);

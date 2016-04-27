@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 'use strict';
-var _ = require('lodash');
-var path = require('path');
-var api = require('./api');
-var context = require('./context');
-var shell = require('./shell');
-var pkg = require('../package.json');
-var options = require('./options');
-var reactDOMSupport = require('./reactDOMSupport');
-var reactTemplates = require('./reactTemplates');
-var rtStyle = require('./rtStyle');
+const _ = require('lodash');
+const path = require('path');
+const api = require('./api');
+const context = require('./context');
+const shell = require('./shell');
+const pkg = require('../package.json');
+const options = require('./options');
+const reactDOMSupport = require('./reactDOMSupport');
+const reactTemplates = require('./reactTemplates');
+const rtStyle = require('./rtStyle');
 
 /**
  * @param {Options} currentOptions
  * @return {number}
  */
 function executeOptions(currentOptions) {
-    var ret = 0;
-    var files = currentOptions._;
+    let ret = 0;
+    const files = currentOptions._;
     context.options.format = currentOptions.format || 'stylish';
 
     if (currentOptions.version) {
@@ -40,9 +40,7 @@ function executeOptions(currentOptions) {
 }
 
 function printVersions(currentOptions) {
-    var ret = Object.keys(reactDOMSupport);
-    //const out = currentOptions.format === 'json' ? JSON.stringify(ret, undefined, 2) : ret.join(', ');
-    //console.log(out);
+    const ret = Object.keys(reactDOMSupport);
     if (currentOptions.format === 'json') {
         console.log(JSON.stringify(ret, undefined, 2));
     } else {
@@ -56,8 +54,8 @@ function printVersions(currentOptions) {
  */
 function handleSingleFile(currentOptions, filename) {
     try {
-        var sourceExt = path.extname(filename);
-        var outputFilename;
+        const sourceExt = path.extname(filename);
+        let outputFilename;
         if (sourceExt === '.rt') {
             outputFilename = filename + (currentOptions.modules === 'typescript' ? '.ts' : '.js');
         } else if (sourceExt === '.jsrt') {
@@ -82,7 +80,7 @@ function handleSingleFile(currentOptions, filename) {
  * @returns {int} The exit code for the operation.
  */
 function execute(args) {
-    var currentOptions;
+    let currentOptions;
     try {
         currentOptions = options.parse(args);
     } catch (error) {

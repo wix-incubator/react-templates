@@ -1,6 +1,6 @@
 'use strict';
-var util = require('util');
-var _ = require('lodash');
+const util = require('util');
+const _ = require('lodash');
 
 
 /**
@@ -16,7 +16,7 @@ function getLine(html, node) {
     if (!node) {
         return {line: 1, col: 1};
     }
-    var linesUntil = html.substring(0, node.startIndex).split('\n');
+    const linesUntil = html.substring(0, node.startIndex).split('\n');
     return {line: linesUntil.length, col: linesUntil[linesUntil.length - 1].length + 1};
 }
 
@@ -24,10 +24,10 @@ function getLine(html, node) {
 //    if (!node) {
 //        return 0;
 //    }
-//    var line = 0;
-//    var prev = node.prev;
+//    const line = 0;
+//    const prev = node.prev;
 //    while (prev) {
-//        var nl = prev.data.split('\n').length - 1;
+//        const nl = prev.data.split('\n').length - 1;
 //        line += nl;
 //        prev = prev.prev;
 //    }
@@ -111,7 +111,7 @@ RTCodeError.buildFormat = _.rest(buildFormat, 3);
  * @return {RTCodeError}
  */
 function buildError(context, node, msg) {
-    var loc = getNodeLoc(context, node);
+    const loc = getNodeLoc(context, node);
     return new RTCodeError(msg, loc.start, loc.end, loc.pos.line, loc.pos.col);
 }
 
@@ -121,8 +121,8 @@ function buildError(context, node, msg) {
  * @return {{pos:Pos, start:number, end:number}}
  */
 function getNodeLoc(context, node) {
-    var pos = getLine(context.html, node);
-    var end;
+    const pos = getLine(context.html, node);
+    let end;
     if (node.data) {
         end = node.startIndex + node.data.length;
     } else if (node.next) { // eslint-disable-line

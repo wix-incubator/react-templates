@@ -1,6 +1,7 @@
 {
     "rules": {
-        "strict": [2, "function"]
+        "strict": [2, "function"],
+        "no-var": 0
     },
     "env": {
         "browser": true,

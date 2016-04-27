@@ -1,5 +1,5 @@
 'use strict';
-var map = {
+const map = {
     /*flex*/
     alignItems: 'string', //  "enum('flex-start', 'flex-end', 'center', 'stretch')",
     alignSelf: 'string', //  "enum('auto', 'flex-start', 'flex-end', 'center', 'stretch')",

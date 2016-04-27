@@ -8,10 +8,10 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-var optionator = require('optionator');
-var pkg = require('../package.json');
-var reactDOMSupport = require('./reactDOMSupport');
-var reactNativeSupport = require('./reactNativeSupport');
+const optionator = require('optionator');
+const pkg = require('../package.json');
+const reactDOMSupport = require('./reactDOMSupport');
+const reactNativeSupport = require('./reactNativeSupport');
 
 //------------------------------------------------------------------------------
 // Initialization and Public Interface
