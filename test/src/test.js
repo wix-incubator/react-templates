@@ -95,7 +95,7 @@ function errorEqualMessage(err, file) {
         endOffset: err.endOffset,
         msg: err.message,
         level: 'ERROR',
-        file: file
+        file
     };
 }
 

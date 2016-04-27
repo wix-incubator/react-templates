@@ -47,7 +47,7 @@ function convertFile(source, target, options, context) {
 }
 
 module.exports = {
-    convertFile: convertFile,
+    convertFile,
     context: require('./context'),
     _test: {}
 };

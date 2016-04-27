@@ -56,9 +56,9 @@ const templates = {
 };
 
 module.exports = {
-    htmlSelfClosingTags: htmlSelfClosingTags,
-    attributesMapping: attributesMapping,
-    classNameProp: classNameProp,
-    shouldUseCreateElement: shouldUseCreateElement,
-    templates: templates
+    htmlSelfClosingTags,
+    attributesMapping,
+    classNameProp,
+    shouldUseCreateElement,
+    templates
 };

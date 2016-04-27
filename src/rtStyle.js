@@ -43,6 +43,6 @@ function convertValue(p, v) {
 }
 
 module.exports = {
-    convert: convert,
-    convertBody: convertBody
+    convert,
+    convertBody
 };

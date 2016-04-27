@@ -22,6 +22,6 @@ function createRelativeReadFileSync(baseFile) {
 }
 
 module.exports = {
-    isStale: isStale,
-    createRelativeReadFileSync: createRelativeReadFileSync
+    isStale,
+    createRelativeReadFileSync
 };

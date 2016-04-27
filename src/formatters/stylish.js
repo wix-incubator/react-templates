@@ -158,9 +158,7 @@ module.exports = function (results) {
             }),
             {
                 align: ['', 'r', 'l'],
-                stringLength: function (str) {
-                    return chalk.stripColor(str).length;
-                }
+                stringLength: str => chalk.stripColor(str).length
             }
         ).split('\n').map(function (el) {
             return el.replace(/(\d+)\s+(\d+)/, function (m, p1, p2) {

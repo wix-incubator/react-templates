@@ -317,10 +317,10 @@ function defaultContext(html, options, reportContext) {
     return {
         boundParams: [],
         injectedFunctions: [],
-        html: html,
-        options: options,
+        html,
+        options,
         defines: options.defines ? _.clone(options.defines) : defaultDefines,
-        reportContext: reportContext
+        reportContext
     };
 }
 
@@ -602,12 +602,10 @@ function generate(data, options) {
 }
 
 module.exports = {
-    convertTemplateToReact: convertTemplateToReact,
-    convertRT: convertRT,
-    convertJSRTToJS: convertJSRTToJS,
-    RTCodeError: RTCodeError,
+    convertTemplateToReact,
+    convertRT,
+    convertJSRTToJS,
+    RTCodeError,
     normalizeName: utils.normalizeName,
-    _test: {
-        convertText: convertText
-    }
+    _test: {convertText}
 };

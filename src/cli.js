@@ -91,10 +91,10 @@ function execute(args) {
 }
 
 module.exports = {
-    context: context,
-    execute: execute,
-    executeOptions: executeOptions,
-    handleSingleFile: handleSingleFile,
+    context,
+    execute,
+    executeOptions,
+    handleSingleFile,
     convertTemplateToReact: reactTemplates.convertTemplateToReact,
     convertStyle: rtStyle.convert
 };

@@ -14,6 +14,6 @@ const native = {
 };
 
 module.exports = {
-    native: native,
+    native,
     dom: {}
 };

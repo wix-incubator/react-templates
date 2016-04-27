@@ -1,7 +1,8 @@
 {
     "rules": {
         "strict": [2, "function"],
-        "no-var": 0
+        "no-var": 0,
+        "object-shorthand": 0
     },
     "env": {
         "browser": true,

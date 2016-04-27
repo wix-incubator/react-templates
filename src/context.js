@@ -31,21 +31,21 @@ const context = {
     color: true,
     /** @type {string} */
     cwd: process.cwd(),
-    report: function (msg) {
+    report(msg) {
         console.log(msg);
     },
-    verbose: function (msg) {
+    verbose(msg) {
         if (context.options.verbose) {
             console.log(msg);
         }
     },
-    info: function (msg, file, line, column) {
+    info(msg, file, line, column) {
         context.issue(MESSAGE_LEVEL.INFO, msg, file, line, column);
     },
-    warn: function (msg, file, line, column, startOffset, endOffset) {
+    warn(msg, file, line, column, startOffset, endOffset) {
         context.issue(MESSAGE_LEVEL.WARN, msg, file, line, column, startOffset, endOffset);
     },
-    error: function (msg, file, line, column, startOffset, endOffset) {
+    error(msg, file, line, column, startOffset, endOffset) {
         context.issue(MESSAGE_LEVEL.ERROR, msg, file, line, column, startOffset, endOffset);
     },
     /**
@@ -57,16 +57,16 @@ const context = {
      * @param {number=} startOffset
      * @param {number=} endOffset
      */
-    issue: function (level, msg, file, line, column, startOffset, endOffset) {
+    issue(level, msg, file, line, column, startOffset, endOffset) {
         context.messages.push({level, msg, file: file || null, line: norm(line), column: norm(column), index: norm(startOffset), startOffset: norm(startOffset), endOffset: norm(endOffset)});
     },
-    getMessages: function () {
+    getMessages() {
         return context.messages;
     },
-    clear: function () {
+    clear() {
         context.messages = [];
     },
-    hasErrors: function () {
+    hasErrors() {
         return _.some(context.messages, {level: MESSAGE_LEVEL.ERROR});
     },
     options: {
@@ -74,7 +74,7 @@ const context = {
         outFile: null,
         format: 'stylish'
     },
-    MESSAGE_LEVEL: MESSAGE_LEVEL
+    MESSAGE_LEVEL
 };
 
 module.exports = context;

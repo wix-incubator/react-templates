@@ -121,23 +121,24 @@ function buildError(context, node, msg) {
  * @return {{pos:Pos, start:number, end:number}}
  */
 function getNodeLoc(context, node) {
+    const start = node.startIndex;
     const pos = getLine(context.html, node);
     let end;
     if (node.data) {
-        end = node.startIndex + node.data.length;
+        end = start + node.data.length;
     } else if (node.next) { // eslint-disable-line
         end = node.next.startIndex;
     } else {
         end = context.html.length;
     }
     return {
-        pos: pos,
-        start: node.startIndex,
-        end: end
+        pos,
+        start,
+        end
     };
 }
 
 module.exports = {
-    RTCodeError: RTCodeError,
-    getNodeLoc: getNodeLoc
+    RTCodeError,
+    getNodeLoc
 };

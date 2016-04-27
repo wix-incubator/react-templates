@@ -76,11 +76,11 @@ function codeToHtml(code) {
 }
 
 module.exports = {
-    normalizeHtml: normalizeHtml,
-    compareAndWrite: compareAndWrite,
-    readFileNormalized: readFileNormalized,
-    readFile: readFile,
-    joinDataPath: joinDataPath,
-    rtToHtml: rtToHtml,
-    codeToHtml: codeToHtml
+    normalizeHtml,
+    compareAndWrite,
+    readFileNormalized,
+    readFile,
+    joinDataPath,
+    rtToHtml,
+    codeToHtml
 };
