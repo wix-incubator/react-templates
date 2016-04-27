@@ -170,7 +170,7 @@ function generateInjectedFunc(context, namePrefix, body, params) {
 function generateTemplateProps(node, context) {
     const propTemplateDefinition = context.options.propTemplates[node.name];
     const propertiesTemplates = _(node.children)
-        .map(function (child, index) {
+        .map((child, index) => {
             let templateProp = null;
             if (child.name === templateNode) { // Generic explicit template tag
                 if (!_.has(child.attribs, 'prop')) {
@@ -198,7 +198,7 @@ function generateTemplateProps(node, context) {
         .compact()
         .value();
 
-    return _.transform(propertiesTemplates, function (props, templateProp) {
+    return _.transform(propertiesTemplates, (props, templateProp) => {
         const functionParams = _.values(context.boundParams).concat(templateProp.arguments);
 
         const oldBoundParams = context.boundParams;
@@ -222,7 +222,7 @@ function generateTemplateProps(node, context) {
  */
 function generateProps(node, context) {
     const props = {};
-    _.forOwn(node.attribs, function (val, key) {
+    _.forOwn(node.attribs, (val, key) => {
         const propKey = reactSupport.attributesMapping[key.toLowerCase()] || key;
         if (props.hasOwnProperty(propKey) && propKey !== reactSupport.classNameProp) {
             throw RTCodeError.build(context, node, `duplicate definition of ${propKey} ${JSON.stringify(node.attribs)}`);
@@ -400,7 +400,7 @@ function convertHtmlToReact(node, context) {
             }
         }
 
-        const children = _.map(node.children, function (child) {
+        const children = _.map(node.children, child => {
             const code = convertHtmlToReact(child, context);
             validateJS(code, child, context);
             return code;
@@ -494,7 +494,7 @@ function isTag(node) {
 }
 
 function handleSelfClosingHtmlTags(nodes) {
-    return _.flatMap(nodes, function (node) {
+    return _.flatMap(nodes, node => {
         let externalNodes = [];
         node.children = handleSelfClosingHtmlTags(node.children);
         if (node.type === 'tag' && (_.includes(reactSupport.htmlSelfClosingTags, node.name) ||
@@ -521,7 +521,7 @@ function parseAndConvertHtmlToReact(html, context) {
         throw new RTCodeError('Document should have a root element');
     }
     let firstTag = null;
-    _.forEach(rootTags, function (tag) {
+    _.forEach(rootTags, tag => {
         if (tag.name === 'rt-require') {
             if (!tag.attribs.dependency || !tag.attribs.as) {
                 throw RTCodeError.build(context, tag, "rt-require needs 'dependency' and 'as' attributes");

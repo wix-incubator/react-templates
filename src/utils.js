@@ -51,7 +51,7 @@ function addIfMissing(array, obj) {
  */
 function concatChildren(children) {
     let res = '';
-    _.forEach(children, function (child) {
+    _.forEach(children, child => {
         if (child && !_.startsWith(child, ' /*')) {
             res += ',';
         }

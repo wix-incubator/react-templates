@@ -105,7 +105,7 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', ['eslint:all']);
     grunt.registerTask('test', ['tape']);
 
-    grunt.registerTask('rt', function () {
+    grunt.registerTask('rt', () => {
         const reactTemplates = require('./src/cli');
         const files = grunt.file.expand('playground/*.rt');
         const ret = reactTemplates.execute({modules: 'amd', force: true, _: files});

@@ -31,7 +31,7 @@ const invalidFiles = [
     {file: 'invalid-virtual.rt', issue: new RTCodeError('Document should not have <rt-virtual> as root element', 0, 60, 1, 1)}
 ];
 
-test('invalid tests', function (t) {
+test('invalid tests', t => {
     t.plan(invalidFiles.length);
 
     invalidFiles.forEach(check);
@@ -62,7 +62,7 @@ function normalizeError(err) {
     return err;
 }
 
-test('invalid tests json', function (t) {
+test('invalid tests json', t => {
     const cli = require('../../src/cli');
     t.plan(invalidFiles.length);
 
@@ -99,17 +99,17 @@ function errorEqualMessage(err, file) {
     };
 }
 
-test('rt-if with rt-scope test', function (t) {
+test('rt-if with rt-scope test', t => {
     const files = ['if-with-scope/valid-if-scope.rt'];
     testFiles(t, files);
 });
 
-test('conversion test', function (t) {
+test('conversion test', t => {
     const files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt', 'require.rt'];
     testFiles(t, files);
 });
 
-test('prop template conversion test', function (t) {
+test('prop template conversion test', t => {
     const options = {
         propTemplates: {
             List: {
@@ -134,7 +134,7 @@ function testFiles(t, files, options) {
     files.forEach(checkFile.bind(this, t, options));
 }
 
-test('conversion test - native', function (t) {
+test('conversion test - native', t => {
     const options = {
         propTemplates: {
             MyComp: {
@@ -147,7 +147,7 @@ test('conversion test - native', function (t) {
     testFiles(t, files, options);
 });
 
-test('convert div with all module types', function (t) {
+test('convert div with all module types', t => {
     const files = [
         {source: 'div.rt', expected: 'div.rt.commonjs.js', options: {modules: 'commonjs'}},
         {source: 'div.rt', expected: 'div.rt.amd.js', options: {modules: 'amd', name: 'div'}},
@@ -167,7 +167,7 @@ test('convert div with all module types', function (t) {
     }
 });
 
-test('convert jsrt and test source results', function (t) {
+test('convert jsrt and test source results', t => {
     const files = ['simple.jsrt'];
     t.plan(files.length);
     files.forEach(check);
@@ -181,7 +181,7 @@ test('convert jsrt and test source results', function (t) {
     }
 });
 
-test('html tests', function (t) {
+test('html tests', t => {
     const files = [
         'scope.rt',
         'scope-trailing-semicolon.rt',
@@ -231,7 +231,7 @@ test('html tests', function (t) {
     }
 });
 
-test('test context', function (t) {
+test('test context', t => {
     context.clear();
     t.equal(context.hasErrors(), false);
     context.error('hi', '', 1, 1);
@@ -242,7 +242,7 @@ test('test context', function (t) {
     t.end();
 });
 
-test('test shell', function (t) {
+test('test shell', t => {
     const shell = require('../../src/shell');
     const newContext = _.cloneDeep(context);
     let outputJSON = '';
@@ -268,7 +268,7 @@ test('test shell', function (t) {
     t.end();
 });
 
-test('test shell', function (t) {
+test('test shell', t => {
     const filename = path.join(dataPath, 'div.rt');
     const cli = require('../../src/cli');
     const r = cli.execute(`${filename} -r --dry-run`);
@@ -276,7 +276,7 @@ test('test shell', function (t) {
     t.end();
 });
 
-test('test convertText', function (t) {
+test('test convertText', t => {
     const texts = [
         {input: '{}', expected: '()'},
         {input: "a {'b'}", expected: '"a "+(\'b\')'}
@@ -289,7 +289,7 @@ test('test convertText', function (t) {
     }
 });
 
-test('util.isStale', function (t) {
+test('util.isStale', t => {
     const a = path.join(dataPath, 'a.tmp');
     const b = path.join(dataPath, 'b.tmp');
 

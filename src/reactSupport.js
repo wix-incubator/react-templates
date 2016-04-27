@@ -26,7 +26,7 @@ const reactSupportedAttributes = ['accept', 'acceptCharset', 'accessKey', 'actio
 const classNameProp = 'className';
 const attributesMapping = {'class': classNameProp, 'rt-class': classNameProp, 'for': 'htmlFor'}; //eslint-disable-line quote-props
 
-_.forEach(reactSupportedAttributes, function (attributeReactName) {
+_.forEach(reactSupportedAttributes, attributeReactName => {
     if (attributeReactName !== attributeReactName.toLowerCase()) {
         attributesMapping[attributeReactName.toLowerCase()] = attributeReactName;
     }
