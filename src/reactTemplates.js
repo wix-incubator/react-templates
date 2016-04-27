@@ -119,7 +119,7 @@ function convertText(node, context, txt) {
     var res = '';
     var first = true;
     var concatChar = node.type === 'text' ? ',' : '+';
-    while (txt.indexOf('{') !== -1) {
+    while (_.includes(txt, '{')) {
         var start = txt.indexOf('{');
         var pre = txt.substr(0, start);
         if (pre) {
@@ -227,7 +227,7 @@ function generateProps(node, context) {
         if (props.hasOwnProperty(propKey) && propKey !== reactSupport.classNameProp) {
             throw RTCodeError.build(context, node, `duplicate definition of ${propKey} ${JSON.stringify(node.attribs)}`);
         }
-        if (key.indexOf('on') === 0 && !utils.isStringOnlyCode(val)) {
+        if (_.startsWith(key, 'on') && !utils.isStringOnlyCode(val)) {
             props[propKey] = handleEventHandler(val, context, node, key);
         } else if (key === 'style' && !utils.isStringOnlyCode(val)) {
             props[propKey] = handleStyleProp(val, node, context);
@@ -241,7 +241,7 @@ function generateProps(node, context) {
             } else if (key === classAttr || key === reactSupport.classNameProp) {
                 props[propKey] = existing + convertText(node, context, val.trim());
             }
-        } else if (key.indexOf('rt-') !== 0) {
+        } else if (!_.startsWith(key, 'rt-')) {
             props[propKey] = convertText(node, context, val.trim());
         }
     });
@@ -496,8 +496,7 @@ function isTag(node) {
 }
 
 function handleSelfClosingHtmlTags(nodes) {
-    return _(nodes)
-        .map(function (node) {
+    return _.flatMap(nodes, function (node) {
             var externalNodes = [];
             node.children = handleSelfClosingHtmlTags(node.children);
             if (node.type === 'tag' && (_.includes(reactSupport.htmlSelfClosingTags, node.name) ||
@@ -507,9 +506,7 @@ function handleSelfClosingHtmlTags(nodes) {
                 node.children = _.reject(node.children, isTag);
             }
             return [node].concat(externalNodes);
-        })
-        .flatten()
-        .value();
+        });
 }
 
 function convertTemplateToReact(html, options) {

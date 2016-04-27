@@ -43,7 +43,7 @@ define([
         },
 
         loadMore: function (done) {
-            done = done || function () {};
+            done = done || _.noop;
             if (!this.hasMore) {
                 done();
                 return;

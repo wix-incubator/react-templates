@@ -52,7 +52,7 @@ function addIfMissing(array, obj) {
 function concatChildren(children) {
     var res = '';
     _.forEach(children, function (child) {
-        if (child && child.indexOf(' /*') !== 0) {
+        if (child && !_.startsWith(child, ' /*')) {
             res += ',';
         }
         res += child;

@@ -1,5 +1,5 @@
 {
-    "extends": "wix-editor/node",
+    "extends": ["wix-editor/node", "plugin:lodash/recommended"],
     "plugins": ["lodash", "wix-editor"],
     "rules": {
         "semi": [2, "always"],
@@ -13,29 +13,13 @@
         "no-restricted-syntax": [2, "WithStatement", "ContinueStatement", "ForStatement"],
         "no-negated-condition": 1,
 
-        "lodash/prop-shorthand": 2,
-        "lodash/matches-shorthand": [2, "always"],
-        "lodash/matches-prop-shorthand": [2, "always"],
-        "lodash/prefer-chain": 2,
-        "lodash/preferred-alias": 2,
-        "lodash/no-single-chain": 2,
-        "lodash/prefer-reject": [2, 3],
+
         "lodash/prefer-filter": 0,
-        "lodash/callback-binding": 2,
-        "lodash/unwrap": 2,
-        "lodash/prefer-lodash-chain": 2,
-        "lodash/prefer-compact": 2,
-        "lodash/no-double-unwrap": 2,
+
         "lodash/prefer-map": 0,
-        "lodash/prefer-wrapper-method": 2,
-        "lodash/prefer-thru": 2,
-        "lodash/prefer-get": [2, 3],
-        "lodash/collection-return": 2,
-        "lodash/prefer-times": 2,
-        "lodash/chain-style": [2, "as-needed"],
         "lodash/path-style": 0,
         "lodash/no-extra-args": 2,
-        "lodash/identity-shorthand": [2, "always"],
+        "lodash/prefer-lodash-method": 0,
 
         "wix-editor/augmented-assignment": 1,
         "wix-editor/no-not-not": 1,

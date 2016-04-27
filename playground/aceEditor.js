@@ -19,8 +19,7 @@ define(['react', 'lodash']/*, 'ace'*/, function (React, _/*, ace*/) {
                 editorId: _.uniqueId()
             };
         },
-        componentWillMount: function () {
-        },
+        componentWillMount: _.noop,
         render: function () {
             var props = _.omit(this.props, ['ref', 'key', 'value', 'valueLink', 'onChange']);
             props.id = this.props.id || this.state.editorId;
