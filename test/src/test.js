@@ -184,29 +184,29 @@ test('convert jsrt and test source results', function (t) {
 });
 
 test('html tests', function (t) {
-  var files = [
-    "scope.rt",
-    "scope-trailing-semicolon.rt",
-    "scope-variable-references.rt",
-    "lambda.rt",
-    "eval.rt",
-    "props.rt",
-    "custom-element.rt",
-    "style.rt",
-    "concat.rt",
-    "js-in-attr.rt",
-    "props-class.rt",
-    "rt-class.rt",
-    "className.rt",
-    "svg.rt",
-    "virtual.rt",
-    "scope-evaluated-after-repeat.rt",
-    "scope-evaluated-after-repeat2.rt",
-    "scope-evaluated-after-if.rt",
-    "scope-obj.rt",
-    "repeat-literal-collection.rt",
-    "include.rt"
-  ];
+    var files = [
+        'scope.rt',
+        'scope-trailing-semicolon.rt',
+        'scope-variable-references.rt',
+        'lambda.rt',
+        'eval.rt',
+        'props.rt',
+        'custom-element.rt',
+        'style.rt',
+        'concat.rt',
+        'js-in-attr.rt',
+        'props-class.rt',
+        'rt-class.rt',
+        'className.rt',
+        'svg.rt',
+        'virtual.rt',
+        'scope-evaluated-after-repeat.rt',
+        'scope-evaluated-after-repeat2.rt',
+        'scope-evaluated-after-if.rt',
+        'scope-obj.rt',
+        'repeat-literal-collection.rt',
+        'include.rt'
+    ];
     t.plan(files.length);
 
     files.forEach(check);
@@ -214,7 +214,7 @@ test('html tests', function (t) {
     function check(testFile) {
         var filename = path.join(dataPath, testFile);
         var options = {
-          readFileSync: fsUtil.createRelativeReadFileSync(filename)
+            readFileSync: fsUtil.createRelativeReadFileSync(filename)
         };
         var code = '';
         try {
@@ -259,7 +259,16 @@ test('test shell', function (t) {
     r = shell.printResults(newContext);
     t.equal(r, 1);
     var output = JSON.parse(outputJSON);
-    t.deepEqual(output, [{column: 1, endOffset: -1, file: null, index: -1, level: 'ERROR', line: 1, msg: 'hi', startOffset: -1}]);
+    t.deepEqual(output, [{
+        column: 1,
+        endOffset: -1,
+        file: null,
+        index: -1,
+        level: 'ERROR',
+        line: 1,
+        msg: 'hi',
+        startOffset: -1
+    }]);
     context.clear();
     t.end();
 });
@@ -298,7 +307,6 @@ test('util.isStale', function (t) {
     var mtime2 = new Date(1995, 11, 17, 3, 24, 1);
     fs.utimesSync(b, mtime2, mtime2);
 
-    var fsUtil = require('../../src/fsUtil');
     var actual = fsUtil.isStale(a, b);
     t.equal(actual, false);
     actual = fsUtil.isStale(b, a);

@@ -1,5 +1,5 @@
 {
-    "extends": ["wix-editor/node", "plugin:lodash/recommended"],
+    "extends": ["wix-editor", "wix-editor/node", "plugin:lodash/recommended"],
     "plugins": ["lodash", "wix-editor"],
     "rules": {
         "semi": [2, "always"],
@@ -9,6 +9,7 @@
         "prefer-const": 0,
         "prefer-spread": 0,
         "prefer-template": 0,
+        "consistent-return": 0,
 
         "no-restricted-syntax": [2, "WithStatement", "ContinueStatement", "ForStatement"],
         "no-negated-condition": 1,

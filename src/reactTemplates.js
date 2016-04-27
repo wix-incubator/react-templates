@@ -278,10 +278,10 @@ function handleStyleProp(val, node, context) {
         .filter(i => _.includes(i, ':'))
         .map(i => {
             const pair = i.split(':');
-            //const val = pair[1];
-            const val = pair.slice(1).join(':').trim();
-            return _.camelCase(pair[0].trim()) + ' : ' + convertText(node, context, val.trim());
-            //return stringUtils.convertToCamelCase(pair[0].trim()) + ' : ' + convertText(node, context, val.trim())
+
+            const value = pair.slice(1).join(':').trim();
+            return _.camelCase(pair[0].trim()) + ' : ' + convertText(node, context, value.trim());
+            //return stringUtils.convertToCamelCase(pair[0].trim()) + ' : ' + convertText(node, context, value.trim())
         })
         .join(',');
     return `{${styleStr}}`;
@@ -352,13 +352,12 @@ function convertHtmlToReact(node, context) {
                 throw RTCodeError.build(context, node, 'rt-include needs a readFileSync polyfill on options');
             }
             try {
-                var newHtml = context.options.readFileSync(srcFile);
+                context.html = context.options.readFileSync(srcFile);
             } catch (e) {
                 console.error(e);
                 throw RTCodeError.build(context, node, `rt-include failed to read file '${srcFile}'`);
             }
-            context.html = newHtml;
-            return parseAndConvertHtmlToReact(newHtml, context);
+            return parseAndConvertHtmlToReact(context.html, context);
         }
 
         var data = {name: convertTagNameToConstructor(node.name, context)};
@@ -373,7 +372,7 @@ function convertHtmlToReact(node, context) {
             data.item = arr[0].trim();
             data.collection = arr[1].trim();
             validateJS(data.item, node, context);
-            validateJS("(" + data.collection + ")", node, context);
+            validateJS(`(${data.collection})`, node, context);
             stringUtils.addIfMissing(context.boundParams, data.item);
             stringUtils.addIfMissing(context.boundParams, `${data.item}Index`);
         }
@@ -410,9 +409,8 @@ function convertHtmlToReact(node, context) {
         data.children = utils.concatChildren(children);
 
         if (node.name === virtualNode) { //eslint-disable-line wix-editor/prefer-ternary
-            data.body = "[" + _.compact(children).join(',') + "]";
-        }
-        else {
+            data.body = `[${_.compact(children).join(',')}]`;
+        } else {
             data.body = _.template(getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context)))(data);
         }
 
@@ -497,16 +495,16 @@ function isTag(node) {
 
 function handleSelfClosingHtmlTags(nodes) {
     return _.flatMap(nodes, function (node) {
-            var externalNodes = [];
-            node.children = handleSelfClosingHtmlTags(node.children);
-            if (node.type === 'tag' && (_.includes(reactSupport.htmlSelfClosingTags, node.name) ||
-                _.includes(reactTemplatesSelfClosingTags, node.name))) {
-                externalNodes = _.filter(node.children, isTag);
-                _.forEach(externalNodes, i => i.parent = node);
-                node.children = _.reject(node.children, isTag);
-            }
-            return [node].concat(externalNodes);
-        });
+        var externalNodes = [];
+        node.children = handleSelfClosingHtmlTags(node.children);
+        if (node.type === 'tag' && (_.includes(reactSupport.htmlSelfClosingTags, node.name) ||
+            _.includes(reactTemplatesSelfClosingTags, node.name))) {
+            externalNodes = _.filter(node.children, isTag);
+            _.forEach(externalNodes, i => {i.parent = node;});
+            node.children = _.reject(node.children, isTag);
+        }
+        return [node].concat(externalNodes);
+    });
 }
 
 function convertTemplateToReact(html, options) {

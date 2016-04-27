@@ -1,7 +1,6 @@
 'use strict';
 var css = require('css');
 var _ = require('lodash');
-var stringUtils = require('./stringUtils');
 var rtnData = require('./rt-style-support-data.js');
 
 
