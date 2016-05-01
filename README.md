@@ -13,9 +13,9 @@ Lightweight templates for [React](http://facebook.github.io/react/index.html).
 * Supports AMD, CommonJS, ES6, Typescript and globals.
 
 ## How does it work
-React Templates compiles an *.rt file (react template file - an extended HTML format) into a JavaScript file. 
+React Templates compiles an *.rt file (react template file - an extended HTML format) into a JavaScript file.
 This file, which uses AMD syntax, returns a function. When invoked, this function returns a virtual React DOM based on React.DOM elements and custom user components.
-<p>A common use case would be that a regular React component would require a JavaScript file generated from a template, 
+<p>A common use case would be that a regular React component would require a JavaScript file generated from a template,
 and then perform `func.apply(this)`, causing the template to have that component as its context.
 
 ## Playground
@@ -51,7 +51,7 @@ http://plugins.jetbrains.com/plugin/7648
 * [event handlers](#event-handlers)
 
 ###### Why not use JSX?
-Some love JSX, some don't. We don't. More specifically, it seems to us that JSX is only a good fit for components with very little HTML inside. 
+Some love JSX, some don't. We don't. More specifically, it seems to us that JSX is only a good fit for components with very little HTML inside.
 And this can be accomplished by creating DOM elements in code. Also, we like to separate code and HTML because it just feels right.
 
 ## Installation
@@ -83,7 +83,7 @@ You can get all the react templates functionality and more. [Click here for more
 Any HTML that you write is a valid template, except for inline event handlers ("on" attributes). See the "event handlers" section below for more information.
 
 ## {} to identify JavaScript expressions
-To embed JavaScript expressions in both attribute values and tag content, encapsulate them in {}. 
+To embed JavaScript expressions in both attribute values and tag content, encapsulate them in {}.
 If this is done inside an attribute value, the value still needs to be wrapped in quotes. For directives (see below), {} are not used.
 
 ###### Sample:
@@ -125,7 +125,7 @@ define([
 ```
 
 ## rt-repeat
-Repeats a DOM node with its subtree for each item in an array. The syntax is `rt-repeat="itemVar in arrayExpr"`, where the element, `itemVar`, will be available in JavaScript context, 
+Repeats a DOM node with its subtree for each item in an array. The syntax is `rt-repeat="itemVar in arrayExpr"`, where the element, `itemVar`, will be available in JavaScript context,
 and an `itemVarIndex` will be created to represent the index of the item. By using this naming scheme, repeated expressions have access to all levels of nesting.
 
 ###### Sample:
@@ -148,8 +148,48 @@ define([
 });
 ```
 
+## rt-virtual
+This directive creates as a virtual node, which will not be rendered to the DOM, but can still be used as a root for directives, e.g. `rt-if` and `rt-repeat`.
+
+###### Sample:
+For instance, to repeat several nodes at once without a shared root for each instance:
+```html
+<ul>
+  <rt-virtual rt-repeat="n in [1,2,3]">
+    <li>{n}</li>
+    <li>{n*2}</li>
+  </virtual>
+</ul>
+```
+
+##### Compiled:
+```javascript
+define([
+    'react/addons',
+    'lodash'
+], function (React, _) {
+    'use strict';
+    function repeatN1(n, nIndex) {
+        return [
+            React.createElement('li', {}, n),
+            React.createElement('li', {}, n * 2)
+        ];
+    }
+    return function () {
+        return React.createElement.apply(this, [
+            'ul',
+            {},
+            _.map([
+                1,
+                2,
+                3
+            ], repeatN1.bind(this))
+        ]);
+    };
+});
+```
 ## rt-scope
-This directive creates a new JavaScript scope by creating a new method and invoking it with its current context. The syntax is `rt-scope="expr1 as var1; expr2 as var2`. 
+This directive creates a new JavaScript scope by creating a new method and invoking it with its current context. The syntax is `rt-scope="expr1 as var1; expr2 as var2`.
 This allows for a convenient shorthand to make the code more readable. It also helps to execute an expression only once per scope.
 
 ###### Sample:
@@ -183,7 +223,7 @@ define([
 });
 ```
 
-Subsequent expressions may reference preceding variables, since generated code declares each alias as a `var` (as opposed to a function parameter, which get bound to formal parameter names only after evaluation), 
+Subsequent expressions may reference preceding variables, since generated code declares each alias as a `var` (as opposed to a function parameter, which get bound to formal parameter names only after evaluation),
 so you can do stuff like
 
 ```html
@@ -200,8 +240,8 @@ without risking accessing a field on an `undefined`, or doing something ugly lik
 When used with `rt-repeat`, the `rt-scope` is evaluated for every iteration, so that iteration's `item` and `itemIndex` are in scope.
 
 ## rt-props
-rt-props is used to inject properties into an element programmatically. It will merge the properties with the properties received in the template. 
-This option allows you to build properties based on external logic and pass them to the template. It is also useful when passing properties set on the component to an element within the template. 
+rt-props is used to inject properties into an element programmatically. It will merge the properties with the properties received in the template.
+This option allows you to build properties based on external logic and pass them to the template. It is also useful when passing properties set on the component to an element within the template.
 The expected value of this attribute is an expression returning an object. The keys will be the property name, and the values will be the property values.
 
 ###### Sample:
@@ -230,7 +270,7 @@ define([
 ```
 
 ## rt-class
-To reduce the boilerplate code when setting class names programatically, you can use the rt-class directive. It expects a JSON object with keys as class names, and a Boolean as the value. 
+To reduce the boilerplate code when setting class names programatically, you can use the rt-class directive. It expects a JSON object with keys as class names, and a Boolean as the value.
 If the value is true, the class name will be included.
 
 <p>Note the following:<br/>
@@ -275,7 +315,7 @@ Optionally choose to extract static contents out of rt files.<br>
 rt-include is a "macro" that takes a text file (e.g svg/html/xml) and injects it into the file as if it was part of the original markup.
 
 ###### Sample:
-given `main.rt`: 
+given `main.rt`:
 ```html
 <div>
   <rt-include src="./my-icon.svg" />
@@ -335,11 +375,11 @@ define([
 ```
 
 ## event handlers
-React event handlers accept function references inside of {}, such as `onClick="{this.myClickHandler}"`. When functions are not needed, lambda notation can be used, 
+React event handlers accept function references inside of {}, such as `onClick="{this.myClickHandler}"`. When functions are not needed, lambda notation can be used,
 which will create a React template that creates a function for the included code. There is no performance impact, as the function created is bound to the context instead of being recreated.
-<p>The lambda notation has the form: `onClick="(evt) => console.log(evt)"`. In this example, **evt** is the name of the first argument passed into the inline function. 
-With browser events, this will most likely be the React synthetic event. However, if you expect a property that starts with **on**Something, then React templates will treat it as an event handler. 
-If you have an event handler called **onBoxSelected** that triggers an event with row and column params, you can write `onBoxSelected="(row, col)=>this.doSomething(row,col)"`. 
+<p>The lambda notation has the form: `onClick="(evt) => console.log(evt)"`. In this example, **evt** is the name of the first argument passed into the inline function.
+With browser events, this will most likely be the React synthetic event. However, if you expect a property that starts with **on**Something, then React templates will treat it as an event handler.
+If you have an event handler called **onBoxSelected** that triggers an event with row and column params, you can write `onBoxSelected="(row, col)=>this.doSomething(row,col)"`.
 A no-param version is supported as well: `onClick="()=>console.log('just wanted to know it clicked')"`.
 
 ###### Sample:
@@ -371,9 +411,9 @@ define([
 ```
 
 ## rt-require, and using other components in the template
-In many cases, you'd like to use either external code or other components within your template. An **rt-require** tag lets you include dependencies: `<rt-require dependency="depVarPath" as="depVarName"/>`. 
-Once included, **depVarName** will be in scope. You can only use rt-require tags at the beginning of your template. When including React components, they can be referred to by their tag name inside a template. 
-For example, `<MySlider prop1="val1" onMyChange="{this.onSliderMoved}">`. Nesting is also supported: `<MyContainer><div>child</div><div>another</div></MyContainer>`. 
+In many cases, you'd like to use either external code or other components within your template. An **rt-require** tag lets you include dependencies: `<rt-require dependency="depVarPath" as="depVarName"/>`.
+Once included, **depVarName** will be in scope. You can only use rt-require tags at the beginning of your template. When including React components, they can be referred to by their tag name inside a template.
+For example, `<MySlider prop1="val1" onMyChange="{this.onSliderMoved}">`. Nesting is also supported: `<MyContainer><div>child</div><div>another</div></MyContainer>`.
 Children are accessible from **this.props.children**.
 
 ###### Sample:
