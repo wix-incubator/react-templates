@@ -22,3 +22,4 @@ dist
 internalTasks/release.js
 playground.config.js
 sample/InfiniteScroll.js
+/coverage
