@@ -3,6 +3,7 @@
     "plugins": ["lodash", "wix-editor"],
     "rules": {
         "semi": [2, "always"],
+        "func-style": [2, "declaration", {"allowArrowFunctions": true}],
         "prefer-spread": 0,
         "prefer-template": 0,
         "consistent-return": 0,
