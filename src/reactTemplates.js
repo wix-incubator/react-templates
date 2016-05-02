@@ -346,6 +346,15 @@ function convertHtmlToReact(node, context) {
             }
         }
 
+        // provide a key to virtual node children if missing
+        if (node.name === virtualNode && node.children.length > 1) {
+            _(node.children)
+                .reject('attribs.key')
+                .forEach((child, i) => {
+                    _.set(child, ['attribs', 'key'], `${node.startIndex}${i}`);
+                });
+        }
+
         const children = _.map(node.children, child => {
             const code = convertHtmlToReact(child, context);
             validateJS(code, child, context);
@@ -459,7 +468,12 @@ function convertTemplateToReact(html, options) {
 }
 
 function parseAndConvertHtmlToReact(html, context) {
-    const rootNode = cheerio.load(html, {lowerCaseTags: false, lowerCaseAttributeNames: false, xmlMode: true, withStartIndices: true});
+    const rootNode = cheerio.load(html, {
+        lowerCaseTags: false,
+        lowerCaseAttributeNames: false,
+        xmlMode: true,
+        withStartIndices: true
+    });
     utils.validate(context.options, context, context.reportContext, rootNode.root()[0]);
     let rootTags = _.filter(rootNode.root()[0].children, isTag);
     rootTags = handleSelfClosingHtmlTags(rootTags);
@@ -515,7 +529,14 @@ function convertRT(html, reportContext, options) {
     }
     const header = options.flow ? '/* @flow */\n' : '';
     const vars = header + _(context.defines).map(buildImport).join('\n');
-    const data = {body, injectedFunctions: context.injectedFunctions.join('\n'), requireNames: _.values(context.defines).join(','), requirePaths, vars, name: options.name};
+    const data = {
+        body,
+        injectedFunctions: context.injectedFunctions.join('\n'),
+        requireNames: _.values(context.defines).join(','),
+        requirePaths,
+        vars,
+        name: options.name
+    };
     let code = generate(data, options);
     if (options.modules !== 'typescript' && options.modules !== 'jsrt') {
         code = parseJS(code);
