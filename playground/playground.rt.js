@@ -12,7 +12,11 @@ define([
         return React.createElement('li', {
             'role': 'presentation',
             'key': 'tab' + tabIndex,
-            'className': _.keys(_.pick({ active: this.state.currentTab === tab[0] }, _.identity)).join(' '),
+            'className': _({ active: this.state.currentTab === tab[0] }).transform(function (res, value, key) {
+                if (value) {
+                    res.push(key);
+                }
+            }, []).join(' '),
             'onClick': onClick1.bind(this, tab, tabIndex)
         }, React.createElement('a', { 'aria-controls': tab[1] }, tab[1]));
     }
