@@ -11,7 +11,6 @@ const rtError = require('./RTCodeError');
 const reactSupport = require('./reactSupport');
 const templates = reactSupport.templates;
 const utils = require('./utils');
-const util = require('util');
 const validateJS = utils.validateJS;
 const RTCodeError = rtError.RTCodeError;
 
@@ -214,7 +213,8 @@ function handleEventHandler(val, context, node, key) {
 }
 
 function genBind(func, args) {
-    return util.format('%s.bind(%s)', func, (['this'].concat(args)).join(','));
+    const bindArgs = ['this'].concat(args);
+    return `${func}.bind(${bindArgs.join(',')})`;
 }
 
 function handleStyleProp(val, node, context) {
