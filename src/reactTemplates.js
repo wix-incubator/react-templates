@@ -218,7 +218,6 @@ function genBind(func, args) {
 }
 
 function handleStyleProp(val, node, context) {
-    /*eslint lodash/prefer-lodash-chain:0*/
     const styleStr = _(val)
         .split(';')
         .map(_.trim)
