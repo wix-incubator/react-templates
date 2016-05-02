@@ -25,6 +25,6 @@ define([
                 height: '100%',
                 border: '0'
             }
-        }))), React.createElement('div', {}, 'editor\n        ', !this.props.editorState.previewMode ? React.createElement('div', {}, 'left bar') : null));
+        }))), React.createElement('div', {}, 'editor\n        ', !this.props.editorState.previewMode ? React.createElement('div', { 'key': '440' }, 'left bar') : null));
     };
 });
