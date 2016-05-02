@@ -329,6 +329,9 @@ function convertHtmlToReact(node, context) {
         if (node.attribs[ifAttr]) {
             validateIfAttribute(node, context, data);
             data.condition = node.attribs[ifAttr].trim();
+            if (!node.attribs.key) {
+                _.set(node, ['attribs', 'key'], `${node.startIndex}`);
+            }
         }
 
         data.props = generateProps(node, context);
