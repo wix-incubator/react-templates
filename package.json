@@ -18,7 +18,8 @@
     "buildwp": "webpack --config webpack-production.config.js --progress --profile --colors",
     "babel": "rm -rf build && babel src/ --out-dir dist && babel test/src/ --out-dir dist-test/src && cp -R test/data dist-test/",
     "babel2": "rm -rf build && babel src/ --out-dir build/src && babel test/src/ --out-dir build/test/src && cp -R test/data build/test/data && cp package.json build/",
-    "all": "npm run lint && npm run babel && npm run test"
+    "all": "npm run lint && npm run babel && npm run test",
+    "prepublish": "npm run babel"
   },
   "repository": {
     "type": "git",
