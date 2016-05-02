@@ -124,6 +124,61 @@ function usesScopeName(scopeNames, node) {
     return false;
 }
 
+
+/**
+ * @const
+ */
+const curlyMap = {'{': 1, '}': -1};
+
+/**
+ * @typedef {{boundParams: Array.<string>, injectedFunctions: Array.<string>, html: string, options: *}} Context
+ */
+
+/**
+ * @typedef {{fileName:string,force:boolean,modules:string,defines:*,reactImportPath:string=,lodashImportPath:string=,flow:boolean,name:string,native:boolean,propTemplates:*,format:string,_:*,version:boolean,help:boolean,listTargetVersion:boolean,modules:string, dryRun:boolean}} Options
+ */
+
+/**
+ * @param node
+ * @param {Context} context
+ * @param {string} txt
+ * @return {string}
+ */
+function convertText(node, context, txt) {
+    let res = '';
+    let first = true;
+    const concatChar = node.type === 'text' ? ',' : '+';
+    while (_.includes(txt, '{')) {
+        const start = txt.indexOf('{');
+        const pre = txt.substr(0, start);
+        if (pre) {
+            res += (first ? '' : concatChar) + JSON.stringify(pre);
+            first = false;
+        }
+        let curlyCounter = 1;
+        let end = start;
+        while (++end < txt.length && curlyCounter > 0) {
+            curlyCounter += curlyMap[txt.charAt(end)] || 0;
+        }
+        if (curlyCounter === 0) {
+            const needsParens = start !== 0 || end !== txt.length - 1;
+            res += (first ? '' : concatChar) + (needsParens ? '(' : '') + txt.substr(start + 1, end - start - 2) + (needsParens ? ')' : '');
+            first = false;
+            txt = txt.substr(end);
+        } else {
+            throw RTCodeError.build(context, node, `Failed to parse text '${txt}'`);
+        }
+    }
+    if (txt) {
+        res += (first ? '' : concatChar) + JSON.stringify(txt);
+    }
+    if (res === '') {
+        res = 'true';
+    }
+    return res;
+}
+
+
 module.exports = {
     usesScopeName,
     normalizeName,
@@ -131,5 +186,6 @@ module.exports = {
     isStringOnlyCode,
     concatChildren,
     validate,
-    addIfMissing
+    addIfMissing,
+    convertText
 };
