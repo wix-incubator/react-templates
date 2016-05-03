@@ -20,34 +20,9 @@ function getLine(html, node) {
     return {line: linesUntil.length, col: linesUntil[linesUntil.length - 1].length + 1};
 }
 
-//function getLine(node) {
-//    if (!node) {
-//        return 0;
-//    }
-//    const line = 0;
-//    const prev = node.prev;
-//    while (prev) {
-//        const nl = prev.data.split('\n').length - 1;
-//        line += nl;
-//        prev = prev.prev;
-//    }
-//
-//    line += getLine(node.parent);
-//    return line + 1;
-//}
-
-//function RTCodeError(message, line) {
-//    this.name = 'RTCodeError';
-//    this.message = message || '';
-//    this.line = line || -1;
-//}
-//RTCodeError.prototype = Error.prototype;
-
-// Redefine properties on Error to be enumerable
-/*eslint no-extend-native:0*/
-//Object.defineProperty(Error.prototype, 'message', {configurable: true, enumerable: true});
-//Object.defineProperty(Error.prototype, 'stack', {configurable: true, enumerable: true});
-//Object.defineProperty(Error.prototype, 'line', { configurable: true, enumerable: true });
+function norm(n) {
+    return n === undefined ? -1 : n;
+}
 
 /**
  * @param {string} message
@@ -69,14 +44,7 @@ class RTCodeError extends Error {
         this.line = norm(line);
         this.column = norm(column);
     }
-    //build buildError
 }
-
-function norm(n) {
-    return n === undefined ? -1 : n;
-}
-
-//const norm = n => n === undefined ? -1 : n;
 
 /**
  * @type {buildError}
