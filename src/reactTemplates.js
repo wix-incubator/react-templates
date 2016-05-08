@@ -257,14 +257,14 @@ function convertTagNameToConstructor(tagName, context) {
  */
 function defaultContext(html, options, reportContext) {
     const defaultDefines = {};
-    defaultDefines[options.reactImportPath] = 'React';
-    defaultDefines[options.lodashImportPath] = '_';
+    defaultDefines[options.reactImportPath] = {alias: 'React', member: '*'};
+    defaultDefines[options.lodashImportPath] = {alias: '_', member: '*'};
     return {
         boundParams: [],
         injectedFunctions: [],
         html,
         options,
-        defines: options.defines ? _.clone(options.defines) : defaultDefines,
+        defines: options.defines ? _.clone(options.defines) : defaultDefines,  // TODO fix defines passed as options
         reportContext
     };
 }
@@ -464,6 +464,37 @@ function handleSelfClosingHtmlTags(nodes) {
     });
 }
 
+function handleRequire(tag, context) {
+    let moduleName;
+    let alias;
+    let member;
+    if (tag.children.length) {
+        throw RTCodeError.build(context, tag, 'rt-require may have no children');
+    } else if (tag.attribs.import && tag.attribs.from) {
+        moduleName = tag.attribs.from;
+        const text = tag.attribs.import.split(' as ');
+        if (text.length) {
+            member = text[0];
+            alias = text[1];
+            if (!member) {
+                member = 'default';
+            }
+        } else {
+            member = tag.attribs.import;
+            alias = member;
+        }
+    } else if (tag.attribs.dependency && tag.attribs.as) {
+        // TODO emit deprecated syntax warning
+        moduleName = tag.attribs.dependency;
+        member = '*';
+        alias = tag.attribs.as;
+    }
+    if (!moduleName) {
+        throw RTCodeError.build(context, tag, "rt-require needs 'import' and 'from' attributes");
+    }
+    context.defines[moduleName] = {member, alias};
+}
+
 function convertTemplateToReact(html, options) {
     const context = require('./context');
     return convertRT(html, context, options);
@@ -485,12 +516,7 @@ function parseAndConvertHtmlToReact(html, context) {
     let firstTag = null;
     _.forEach(rootTags, tag => {
         if (tag.name === 'rt-require') {
-            if (!tag.attribs.dependency || !tag.attribs.as) {
-                throw RTCodeError.build(context, tag, "rt-require needs 'dependency' and 'as' attributes");
-            } else if (tag.children.length) {
-                throw RTCodeError.build(context, tag, 'rt-require may have no children');
-            }
-            context.defines[tag.attribs.dependency] = tag.attribs.as;
+            handleRequire(tag, context);
         } else if (firstTag === null) {
             firstTag = tag;
         } else {
@@ -519,22 +545,17 @@ function convertRT(html, reportContext, options) {
 
     const requirePaths = _(context.defines)
         .keys()
-        .map(def => `"${def}"`)
+        .map(moduleName => `"${moduleName}"`)
         .join(',');
-    let buildImport;
-    if (options.modules === 'typescript') {
-        buildImport = (v, p) => `import ${v} = require('${p}');`;
-    } else if (options.modules === 'es6') { // eslint-disable-line
-        buildImport = (v, p) => `import ${v} from '${p}';`;
-    } else {
-        buildImport = (v, p) => `var ${v} = require('${p}');`;
-    }
+    const requireNames = _.values(context.defines).map(v => v.alias).join(','); // eslint-disable-line
+    const buildImport = reactSupport.buildImport[options.modules] || reactSupport.buildImport.commonjs;
+    const requires = _(context.defines).map(buildImport).join('\n');
     const header = options.flow ? '/* @flow */\n' : '';
-    const vars = header + _(context.defines).map(buildImport).join('\n');
+    const vars = header + requires;
     const data = {
         body,
         injectedFunctions: context.injectedFunctions.join('\n'),
-        requireNames: _.values(context.defines).join(','),
+        requireNames,
         requirePaths,
         vars,
         name: options.name
