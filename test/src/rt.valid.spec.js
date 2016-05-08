@@ -29,7 +29,7 @@ module.exports = {
         });
 
         test('conversion test', t => {
-            const files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt', 'require.rt', 'virtual.rt'];
+            const files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt', 'virtual.rt'];
             testFiles(t, files);
         });
 
@@ -63,8 +63,28 @@ module.exports = {
                 {source: 'div.rt', expected: 'div.rt.commonjs.js', options: {modules: 'commonjs'}},
                 {source: 'div.rt', expected: 'div.rt.amd.js', options: {modules: 'amd', name: 'div'}},
                 {source: 'div.rt', expected: 'div.rt.globals.js', options: {modules: 'none', name: 'div'}},
-                {source: 'div.rt', expected: 'div.rt.es6.js', options: {modules: 'es6', name: 'div'}},
+                {source: 'div.rt', expected: 'div.rt.es6.js', options: {modules: 'es6'}},
                 {source: 'div.rt', expected: 'div.rt.typescript.ts', options: {modules: 'typescript'}}
+            ];
+            t.plan(files.length);
+            files.forEach(check);
+
+            function check(testData) {
+                const filename = path.join(dataPath, testData.source);
+                const html = readFileNormalized(filename);
+                const expected = readFileNormalized(path.join(dataPath, testData.expected));
+                const actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
+                compareAndWrite(t, actual, expected, filename);
+            }
+        });
+
+        test('rt-require with all module types', t => {
+            const files = [
+                {source: 'require.rt', expected: 'require.rt.commonjs.js', options: {modules: 'commonjs'}},
+                {source: 'require.rt', expected: 'require.rt.amd.js', options: {modules: 'amd', name: 'div'}},
+                {source: 'require.rt', expected: 'require.rt.globals.js', options: {modules: 'none', name: 'div'}},
+                {source: 'require.rt', expected: 'require.rt.es6.js', options: {modules: 'es6'}},
+                {source: 'require.rt', expected: 'require.rt.typescript.ts', options: {modules: 'typescript'}}
             ];
             t.plan(files.length);
             files.forEach(check);

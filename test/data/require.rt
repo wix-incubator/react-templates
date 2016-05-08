@@ -1,5 +1,9 @@
 <rt-require dependency="comps/myComp" as="myComp"/>
 <rt-require dependency="utils/utils" as="utils"/>
+<rt-require import="member" from="module-name"/>
+<rt-require import="member as alias2" from="module-name"/>
+<rt-require import="* as alias3" from="module-name"/>
+<rt-require import="default as alias4" from="module-name"/>
 <myComp>
 {utils.translate('Hello','es')}
 </myComp>
