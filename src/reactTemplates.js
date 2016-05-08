@@ -265,7 +265,7 @@ function defaultContext(html, options, reportContext) {
         injectedFunctions: [],
         html,
         options,
-        defines: options.defines ? _.clone(options.defines) : defaultDefines,  // TODO fix defines passed as options
+        defines: options.defines ? _.clone(options.defines) : defaultDefines,
         reportContext
     };
 }
