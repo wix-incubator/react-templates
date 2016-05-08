@@ -55,31 +55,31 @@ const templates = {
     jsrt: templateJSRTTemplate
 };
 
-function buildImportTypeScript(v, p) { /* eslint-disable no-else-return */
-    if (v.member === '*') {
-        return `import ${v.alias} = require('${p}');`;
+function buildImportTypeScript(d) { /* eslint-disable no-else-return */
+    if (d.member === '*') {
+        return `import ${d.alias} = require('${d.moduleName}');`;
     } else {
-        return `import ${v.alias} = require('${p}').${v.member};`;
+        return `import ${d.alias} = require('${d.moduleName}').${d.member};`;
     }
     /* eslint-enable */
 }
 
-function buildImportES6(v, p) { /* eslint-disable no-else-return */
-    if (v.member === '*') {
-        return `import * as ${v.alias} from '${p}';`;
-    } else if (v.member === 'default') {
-        return `import ${v.member} from '${p}';`;
+function buildImportES6(d) { /* eslint-disable no-else-return */
+    if (d.member === '*') {
+        return `import * as ${d.alias} from '${d.moduleName}';`;
+    } else if (d.member === 'default') {
+        return `import ${d.alias} from '${d.moduleName}';`;
     } else {
-        return `import { ${v.member} as ${v.alias} } from '${p}';`;
+        return `import { ${d.member} as ${d.alias} } from '${d.moduleName}';`;
     }
     /* eslint-enable */
 }
 
-function buildImportCommonJS(v, p) { /* eslint-disable no-else-return */
-    if (v.member === '*') {
-        return `var ${v.alias} = require('${p}');`;
+function buildImportCommonJS(d) { /* eslint-disable no-else-return */
+    if (d.member === '*') {
+        return `var ${d.alias} = require('${d.moduleName}');`;
     } else {
-        return `var ${v.alias} = require('${p}').${v.member};`;
+        return `var ${d.alias} = require('${d.moduleName}').${d.member};`;
     }
     /* eslint-enable */
 }
