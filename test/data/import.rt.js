@@ -1,4 +1,4 @@
-define('div', [
+define([
     'react/addons',
     'lodash',
     'comps/myComp',

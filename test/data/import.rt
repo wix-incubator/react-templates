@@ -1,0 +1,6 @@
+<rt-import name="member" from="module-name"/>
+<rt-import name="member" as="alias2" from="module-name"/>
+<rt-import name="*" as="alias3" from="module-name"/>
+<rt-import name="default" as="alias4" from="module-name"/>
+<div>
+</div>

@@ -98,6 +98,26 @@ module.exports = {
             }
         });
 
+        test('rt-import with all module types', t => {
+            const files = [
+                {source: 'import.rt', expected: 'import.rt.commonjs.js', options: {modules: 'commonjs'}},
+                {source: 'import.rt', expected: 'import.rt.amd.js', options: {modules: 'amd', name: 'div'}},
+                {source: 'import.rt', expected: 'import.rt.globals.js', options: {modules: 'none', name: 'div'}},
+                {source: 'import.rt', expected: 'import.rt.es6.js', options: {modules: 'es6'}},
+                {source: 'import.rt', expected: 'import.rt.typescript.ts', options: {modules: 'typescript'}}
+            ];
+            t.plan(files.length);
+            files.forEach(check);
+
+            function check(testData) {
+                const filename = path.join(dataPath, testData.source);
+                const html = readFileNormalized(filename);
+                const expected = readFileNormalized(path.join(dataPath, testData.expected));
+                const actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
+                compareAndWrite(t, actual, expected, filename);
+            }
+        });
+
         test('convert jsrt and test source results', t => {
             const files = ['simple.jsrt'];
             t.plan(files.length);
