@@ -74,7 +74,7 @@ function validate(options, context, reportContext, node) {
     }
     if (node.type === 'tag' && node.attribs['rt-require'] && (node.attribs.dependency || node.attribs.as)) {
         const loc = rtError.getNodeLoc(context, node);
-        reportContext.warn("'dependency' syntax for 'rt-require' is obsolete, use 'import' and 'from' instead", options.fileName, loc.pos.line, loc.pos.col, loc.start, loc.end);
+        reportContext.warn("'rt-require' is obsolete, use 'rt-import' instead", options.fileName, loc.pos.line, loc.pos.col, loc.start, loc.end);
     }
     if (node.children) {
         node.children.forEach(validate.bind(this, options, context, reportContext));

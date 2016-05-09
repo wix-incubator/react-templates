@@ -53,6 +53,8 @@ const templateNode = 'rt-template';
 const virtualNode = 'rt-virtual';
 const includeNode = 'rt-include';
 const includeSrcAttr = 'src';
+const requireAttr = 'rt-require';
+const importAttr = 'rt-import';
 
 const reactTemplatesSelfClosingTags = [includeNode];
 
@@ -470,25 +472,39 @@ function handleRequire(tag, context) {
     let alias;
     let member;
     if (tag.children.length) {
-        throw RTCodeError.build(context, tag, 'rt-require may have no children');
-    } else if (tag.attribs.import && tag.attribs.from) {
-        moduleName = tag.attribs.from;
-        const text = tag.attribs.import.split(' as ');
-        if (text.length === 2) {
-            member = text[0];
-            alias = text[1];
-        } else {
-            member = tag.attribs.import;
-            alias = member;
-        }
+        throw RTCodeError.build(context, tag, `'${requireAttr}' may have no children`);
     } else if (tag.attribs.dependency && tag.attribs.as) {
-        // support for old deprecated syntax
         moduleName = tag.attribs.dependency;
         member = '*';
         alias = tag.attribs.as;
     }
     if (!moduleName) {
-        throw RTCodeError.build(context, tag, "rt-require needs 'import' and 'from' attributes");
+        throw RTCodeError.build(context, tag, `'${requireAttr}' needs 'dependency' and 'as' attributes`);
+    }
+    context.defines.push({moduleName, member, alias});
+}
+
+function handleImport(tag, context) {
+    let moduleName;
+    let alias;
+    let member;
+    if (tag.children.length) {
+        throw RTCodeError.build(context, tag, `'${importAttr}' may have no children`);
+    } else if (tag.attribs.name && tag.attribs.from) {
+        moduleName = tag.attribs.from;
+        member = tag.attribs.name;
+        alias = tag.attribs.as;
+        if (!alias) {
+            if (member === '*') {
+                throw RTCodeError.build(context, tag, "'*' imports must have an 'as' attribute");
+            } else if (member === 'default') {
+                throw RTCodeError.build(context, tag, "default imports must have an 'as' attribute");
+            }
+            alias = member;
+        }
+    }
+    if (!moduleName) {
+        throw RTCodeError.build(context, tag, `'${importAttr}' needs 'name' and 'from' attributes`);
     }
     context.defines.push({moduleName, member, alias});
 }
@@ -513,8 +529,10 @@ function parseAndConvertHtmlToReact(html, context) {
     }
     let firstTag = null;
     _.forEach(rootTags, tag => {
-        if (tag.name === 'rt-require') {
+        if (tag.name === requireAttr) {
             handleRequire(tag, context);
+        } else if (tag.name === importAttr) {
+            handleImport(tag, context);
         } else if (firstTag === null) {
             firstTag = tag;
         } else {
