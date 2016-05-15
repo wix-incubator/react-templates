@@ -55,6 +55,7 @@ const includeNode = 'rt-include';
 const includeSrcAttr = 'src';
 const requireAttr = 'rt-require';
 const importAttr = 'rt-import';
+const statelessAttr = 'rt-stateless';
 
 const reactTemplatesSelfClosingTags = [includeNode];
 
@@ -509,6 +510,13 @@ function handleImport(tag, context) {
     context.defines.push({moduleName, member, alias});
 }
 
+function handleStateless(tag, context) {
+    if (tag.children.length) {
+        throw RTCodeError.build(context, tag, `'${statelessAttr}' may have no children`);
+    }
+    context.isStatelessComponent = true;
+}
+
 function convertTemplateToReact(html, options) {
     const context = require('./context');
     return convertRT(html, context, options);
@@ -533,6 +541,8 @@ function parseAndConvertHtmlToReact(html, context) {
             handleRequire(tag, context);
         } else if (tag.name === importAttr) {
             handleImport(tag, context);
+        } else if (tag.name === statelessAttr) {
+            handleStateless(tag, context);
         } else if (firstTag === null) {
             firstTag = tag;
         } else {
@@ -565,13 +575,15 @@ function convertRT(html, reportContext, options) {
     const requires = _.map(context.defines, buildImport).join('\n');
     const header = options.flow ? '/* @flow */\n' : '';
     const vars = header + requires;
+    const renderArguments = context.isStatelessComponent ? 'props, context' : '';
     const data = {
         body,
         injectedFunctions: context.injectedFunctions.join('\n'),
         requireNames,
         requirePaths,
         vars,
-        name: options.name
+        name: options.name,
+        renderArguments
     };
     let code = generate(data, options);
     if (options.modules !== 'typescript' && options.modules !== 'jsrt') {

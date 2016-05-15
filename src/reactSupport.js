@@ -35,16 +35,16 @@ _.forEach(reactSupportedAttributes, attributeReactName => {
 const htmlSelfClosingTags = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
 
-const templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(){ return <%= body %>};\n});");
-const templateCommonJSTemplate = _.template("'use strict';\n<%= vars %>\n\n<%= injectedFunctions %>\nmodule.exports = function(){ return <%= body %>};\n");
-const templateES6Template = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nexport default function(){ return <%= body %>}\n');
-const templatePJSTemplate = _.template(`var <%= name %> = function () {
+const templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(<%= renderArguments %>){ return <%= body %>};\n});");
+const templateCommonJSTemplate = _.template("'use strict';\n<%= vars %>\n\n<%= injectedFunctions %>\nmodule.exports = function(<%= renderArguments %>){ return <%= body %>};\n");
+const templateES6Template = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nexport default function(<%= renderArguments %>){ return <%= body %>}\n');
+const templatePJSTemplate = _.template(`var <%= name %> = function (<%= renderArguments %>) {
 <%= injectedFunctions %>
 return <%= body %>
 };
 `);
-const templateTypescriptTemplate = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nvar fn = function() { return <%= body %> };\nexport = fn\n');
-const templateJSRTTemplate = _.template('(function () {\n <%= injectedFunctions %>\n return function(){\nreturn <%= body %>}}\n)()');
+const templateTypescriptTemplate = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nvar fn = function(<%= renderArguments %>) { return <%= body %> };\nexport = fn\n');
+const templateJSRTTemplate = _.template('(function () {\n <%= injectedFunctions %>\n return function(<%= renderArguments %>){\nreturn <%= body %>}}\n)()');
 
 const templates = {
     amd: templateAMDTemplate,

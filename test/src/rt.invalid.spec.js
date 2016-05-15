@@ -30,7 +30,8 @@ module.exports = {
             {file: 'invalid-rt-import-3.rt', issue: new RTCodeError("'rt-import' needs 'name' and 'from' attributes", 0, 13, 1, 1)},
             {file: 'invalid-brace.rt', issue: new RTCodeError('Unexpected end of input', 128, 163, 5, 11)},
             {file: 'invalid-style.rt', issue: new RTCodeError('Unexpected token ILLEGAL', 10, 39, 2, 5)},
-            {file: 'invalid-virtual.rt', issue: new RTCodeError('Document should not have <rt-virtual> as root element', 0, 60, 1, 1)}
+            {file: 'invalid-virtual.rt', issue: new RTCodeError('Document should not have <rt-virtual> as root element', 0, 60, 1, 1)},
+            {file: 'invalid-rt-stateless.rt', issue: new RTCodeError("'rt-stateless' may have no children", 0, 36, 1, 1)}
         ];
 
         test('invalid tests', t => {
