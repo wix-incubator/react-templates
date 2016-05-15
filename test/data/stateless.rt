@@ -1,0 +1,1 @@
+<div rt-stateless>Hello {props.person}</div>

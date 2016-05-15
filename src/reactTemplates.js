@@ -54,6 +54,7 @@ const includeNode = 'rt-include';
 const includeSrcAttr = 'src';
 const requireAttr = 'rt-require';
 const importAttr = 'rt-import';
+const statelessAttr = 'rt-stateless';
 
 const reactTemplatesSelfClosingTags = [includeNode];
 
@@ -530,6 +531,9 @@ function parseAndConvertHtmlToReact(html, context) {
             handleImport(tag, context);
         } else if (firstTag === null) {
             firstTag = tag;
+            if (_.hasIn(tag, ['attribs', statelessAttr])) {
+                context.stateless = true;
+            }
         } else {
             throw RTCodeError.build(context, tag, 'Document should have no more than a single root element');
         }
@@ -566,7 +570,8 @@ function convertRT(html, reportContext, options) {
         requireNames,
         requirePaths,
         vars,
-        name: options.name
+        name: options.name,
+        statelessProps: context.stateless ? 'props' : ''
     };
     let code = templates[options.modules](data);
     if (options.modules !== 'typescript' && options.modules !== 'jsrt') {

@@ -375,6 +375,29 @@ define([
 });
 ```
 
+## stateless components
+Since React v0.14, [React allows defining a component as a pure function of its props](https://facebook.github.io/react/docs/reusable-components.html#stateless-functions).
+To enable creating a stateless component using react templates, add the `rt-stateless` attribute to the template's root element.
+Using `rt-stateless` generates a stateless functional component instead of a render function. 
+The resulting function receives a `props` parameter to be used in the template instead of `this.props`.
+
+###### Sample:
+```html
+<div rt-stateless>Hello {props.person}</div>
+```
+###### Compiled:
+```html
+define([
+    'react',
+    'lodash'
+], function (React, _) {
+    'use strict';
+    return function (props) {
+        return React.createElement('div', {}, 'Hello ', props.person);
+    };
+});
+```
+
 ## event handlers
 React event handlers accept function references inside of {}, such as `onClick="{this.myClickHandler}"`. When functions are not needed, lambda notation can be used,
 which will create a React template that creates a function for the included code. There is no performance impact, as the function created is bound to the context instead of being recreated.
