@@ -6,7 +6,6 @@ const escodegen = require('escodegen');
 const reactDOMSupport = require('./reactDOMSupport');
 const reactNativeSupport = require('./reactNativeSupport');
 const reactPropTemplates = require('./reactPropTemplates');
-const stringUtils = require('./stringUtils');
 const rtError = require('./RTCodeError');
 const reactSupport = require('./reactSupport');
 const templates = reactSupport.templates;
@@ -65,19 +64,18 @@ const reactTemplatesSelfClosingTags = [includeNode];
 function getOptions(options) {
     options = options || {};
     const defaultOptions = {
-        modules: options.native ? 'commonjs' : 'amd',
         version: false,
         force: false,
         format: 'stylish',
         targetVersion: reactDOMSupport.default,
-        reactImportPath: reactImport(options),
         lodashImportPath: 'lodash',
         native: false,
-        nativeTargetVersion: reactNativeSupport.default,
-        flow: options.flow
+        nativeTargetVersion: reactNativeSupport.default
     };
 
     const finalOptions = _.defaults({}, options, defaultOptions);
+    finalOptions.reactImportPath = finalOptions.reactImportPath || reactImport(finalOptions);
+    finalOptions.modules = finalOptions.modules || (finalOptions.native ? 'commonjs' : 'amd');
 
     const defaultPropTemplates = finalOptions.native ?
         reactPropTemplates.native[finalOptions.nativeTargetVersion] :
@@ -321,8 +319,11 @@ function convertHtmlToReact(node, context) {
             data.collection = arr[1].trim();
             validateJS(data.item, node, context);
             validateJS(`(${data.collection})`, node, context);
-            stringUtils.addIfMissing(context.boundParams, data.item);
-            stringUtils.addIfMissing(context.boundParams, `${data.item}Index`);
+            [data.item, `${data.item}Index`].forEach(param => {
+                if (!_.includes(context.boundParams, param)) {
+                    context.boundParams.push(param);
+                }
+            });
         }
 
         if (node.attribs[scopeAttr]) {
@@ -383,7 +384,7 @@ function convertHtmlToReact(node, context) {
         // Order matters here. Each rt-repeat iteration wraps over the rt-scope, so
         // the scope variables are evaluated in context of the current iteration.
         if (node.attribs[repeatAttr]) {
-            data.repeatFunction = generateInjectedFunc(context, 'repeat' + stringUtils.capitalize(data.item), 'return ' + data.body);
+            data.repeatFunction = generateInjectedFunc(context, 'repeat' + _.upperFirst(data.item), 'return ' + data.body);
             data.repeatBinds = ['this'].concat(_.reject(context.boundParams, p => p === data.item || p === data.item + 'Index' || data.innerScope && p in data.innerScope.innerMapping));
             data.body = repeatTemplate(data);
         }
@@ -419,9 +420,11 @@ function handleScopeAttribute(node, context, data) {
         // this adds both parameters to the list of parameters passed further down
         // the scope chain, as well as variables that are locally bound before any
         // function call, as with the ones we generate for rt-scope.
-        stringUtils.addIfMissing(context.boundParams, alias);
+        if (!_.includes(context.boundParams, alias)) {
+            context.boundParams.push(alias);
+        }
 
-        data.innerScope.scopeName += stringUtils.capitalize(alias);
+        data.innerScope.scopeName += _.upperFirst(alias);
         data.innerScope.innerMapping[alias] = `var ${alias} = ${value};`;
         validateJS(data.innerScope.innerMapping[alias], node, context);
     });
@@ -445,23 +448,15 @@ function validateIfAttribute(node, context, data) {
     }
 }
 
-/**
- * @param node
- * @return {boolean}
- */
-function isTag(node) {
-    return node.type === 'tag';
-}
-
 function handleSelfClosingHtmlTags(nodes) {
     return _.flatMap(nodes, node => {
         let externalNodes = [];
         node.children = handleSelfClosingHtmlTags(node.children);
         if (node.type === 'tag' && (_.includes(reactSupport.htmlSelfClosingTags, node.name) ||
             _.includes(reactTemplatesSelfClosingTags, node.name))) {
-            externalNodes = _.filter(node.children, isTag);
+            externalNodes = _.filter(node.children, {type: 'tag'});
             _.forEach(externalNodes, i => {i.parent = node;});
-            node.children = _.reject(node.children, isTag);
+            node.children = _.reject(node.children, {type: 'tag'});
         }
         return [node].concat(externalNodes);
     });
@@ -522,7 +517,7 @@ function parseAndConvertHtmlToReact(html, context) {
         withStartIndices: true
     });
     utils.validate(context.options, context, context.reportContext, rootNode.root()[0]);
-    let rootTags = _.filter(rootNode.root()[0].children, isTag);
+    let rootTags = _.filter(rootNode.root()[0].children, {type: 'tag'});
     rootTags = handleSelfClosingHtmlTags(rootTags);
     if (!rootTags || rootTags.length === 0) {
         throw new RTCodeError('Document should have a root element');
@@ -573,7 +568,7 @@ function convertRT(html, reportContext, options) {
         vars,
         name: options.name
     };
-    let code = generate(data, options);
+    let code = templates[options.modules](data);
     if (options.modules !== 'typescript' && options.modules !== 'jsrt') {
         code = parseJS(code);
     }
@@ -597,11 +592,6 @@ function convertJSRTToJS(text, reportContext, options) {
     const code = text.replace(templateMatcherJSRT, (template, html) => convertRT(html, reportContext, options).replace(/;$/, ''));
 
     return parseJS(code);
-}
-
-function generate(data, options) {
-    const template = templates[options.modules];
-    return template(data);
 }
 
 module.exports = {

@@ -62,7 +62,7 @@ function rtToHtml(rt) {
 }
 
 function codeToHtml(code) {
-    const defineMap = {'react/addons': React, lodash: _};
+    const defineMap = {react: React, lodash: _};
     //noinspection JSUnusedLocalSymbols
     const define = function (requirementsNames, content) { //eslint-disable-line no-unused-vars,func-style
         const requirements = _.map(requirementsNames, reqName => defineMap[reqName]);

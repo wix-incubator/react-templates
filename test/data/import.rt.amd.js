@@ -1,5 +1,5 @@
 define('div', [
-    'react/addons',
+    'react',
     'lodash',
     'module-name',
     'module-name',

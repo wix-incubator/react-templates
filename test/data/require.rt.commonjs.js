@@ -1,5 +1,5 @@
 'use strict';
-var React = require('react/addons');
+var React = require('react');
 var _ = require('lodash');
 var myComp = require('comps/myComp');
 var utils = require('utils/utils');

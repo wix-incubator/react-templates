@@ -1,5 +1,5 @@
 define([
-    'react/addons',
+    'react',
     'lodash',
     'comps/myComp',
     'utils/utils'

@@ -1,5 +1,5 @@
 define([
-    'react/addons',
+    'react',
     'lodash'
 ], function (React, _) {
     'use strict';

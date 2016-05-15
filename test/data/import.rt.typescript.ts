@@ -1,4 +1,4 @@
-import React = require('react/addons');
+import React = require('react');
 import _ = require('lodash');
 import member = require('module-name').member;
 import alias2 = require('module-name').member;

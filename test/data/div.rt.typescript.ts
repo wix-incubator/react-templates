@@ -1,4 +1,4 @@
-import React = require('react/addons');
+import React = require('react');
 import _ = require('lodash');
 
 
