@@ -23,7 +23,11 @@ module.exports = {
             {file: 'invalid-js.rt', issue: new RTCodeError('Unexpected token ILLEGAL', 0, 32, 1, 1)},
             {file: 'invalid-single-root.rt', issue: new RTCodeError('Document should have no more than a single root element', 12, 23, 2, 1)},
             {file: 'invalid-repeat.rt', issue: new RTCodeError('rt-repeat invalid \'in\' expression \'a in b in c\'', 0, 35, 1, 1)},
-            {file: 'invalid-rt-require.rt', issue: new RTCodeError("rt-require needs 'dependency' and 'as' attributes", 0, 14, 1, 1)},
+            {file: 'invalid-rt-require-1.rt', issue: new RTCodeError("'rt-require' needs 'dependency' and 'as' attributes", 0, 14, 1, 1)},
+            {file: 'invalid-rt-require-2.rt', issue: new RTCodeError("'rt-require' may have no children", 0, 32, 1, 1)},
+            {file: 'invalid-rt-import-1.rt', issue: new RTCodeError("'*' imports must have an 'as' attribute", 0, 36, 1, 1)},
+            {file: 'invalid-rt-import-2.rt', issue: new RTCodeError("default imports must have an 'as' attribute", 0, 42, 1, 1)},
+            {file: 'invalid-rt-import-3.rt', issue: new RTCodeError("'rt-import' needs 'name' and 'from' attributes", 0, 13, 1, 1)},
             {file: 'invalid-brace.rt', issue: new RTCodeError('Unexpected end of input', 128, 163, 5, 11)},
             {file: 'invalid-style.rt', issue: new RTCodeError('Unexpected token ILLEGAL', 10, 39, 2, 5)},
             {file: 'invalid-virtual.rt', issue: new RTCodeError('Document should not have <rt-virtual> as root element', 0, 60, 1, 1)}

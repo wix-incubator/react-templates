@@ -55,10 +55,49 @@ const templates = {
     jsrt: templateJSRTTemplate
 };
 
+function buildImportTypeScript(d) { /* eslint-disable no-else-return */
+    if (d.member === '*') {
+        return `import ${d.alias} = require('${d.moduleName}');`;
+    } else {
+        return `import ${d.alias} = require('${d.moduleName}').${d.member};`;
+    }
+    /* eslint-enable */
+}
+
+function buildImportES6(d) { /* eslint-disable no-else-return */
+    if (d.member === '*') {
+        return `import * as ${d.alias} from '${d.moduleName}';`;
+    } else if (d.member === 'default') {
+        return `import ${d.alias} from '${d.moduleName}';`;
+    } else {
+        return `import { ${d.member} as ${d.alias} } from '${d.moduleName}';`;
+    }
+    /* eslint-enable */
+}
+
+function buildImportCommonJS(d) { /* eslint-disable no-else-return */
+    if (d.member === '*') {
+        return `var ${d.alias} = require('${d.moduleName}');`;
+    } else {
+        return `var ${d.alias} = require('${d.moduleName}').${d.member};`;
+    }
+    /* eslint-enable */
+}
+
+const buildImport = {
+    typescript: buildImportTypeScript,
+    es6: buildImportES6,
+    commonjs: buildImportCommonJS,
+    amd: buildImportCommonJS,
+    none: buildImportCommonJS,
+    jsrt: buildImportCommonJS
+};
+
 module.exports = {
     htmlSelfClosingTags,
     attributesMapping,
     classNameProp,
     shouldUseCreateElement,
-    templates
+    templates,
+    buildImport
 };

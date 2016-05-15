@@ -53,6 +53,8 @@ const templateNode = 'rt-template';
 const virtualNode = 'rt-virtual';
 const includeNode = 'rt-include';
 const includeSrcAttr = 'src';
+const requireAttr = 'rt-require';
+const importAttr = 'rt-import';
 
 const reactTemplatesSelfClosingTags = [includeNode];
 
@@ -256,9 +258,10 @@ function convertTagNameToConstructor(tagName, context) {
  * @return {Context}
  */
 function defaultContext(html, options, reportContext) {
-    const defaultDefines = {};
-    defaultDefines[options.reactImportPath] = 'React';
-    defaultDefines[options.lodashImportPath] = '_';
+    const defaultDefines = [
+        {moduleName: options.reactImportPath, alias: 'React', member: '*'},
+        {moduleName: options.lodashImportPath, alias: '_', member: '*'}
+    ];
     return {
         boundParams: [],
         injectedFunctions: [],
@@ -464,6 +467,48 @@ function handleSelfClosingHtmlTags(nodes) {
     });
 }
 
+function handleRequire(tag, context) {
+    let moduleName;
+    let alias;
+    let member;
+    if (tag.children.length) {
+        throw RTCodeError.build(context, tag, `'${requireAttr}' may have no children`);
+    } else if (tag.attribs.dependency && tag.attribs.as) {
+        moduleName = tag.attribs.dependency;
+        member = '*';
+        alias = tag.attribs.as;
+    }
+    if (!moduleName) {
+        throw RTCodeError.build(context, tag, `'${requireAttr}' needs 'dependency' and 'as' attributes`);
+    }
+    context.defines.push({moduleName, member, alias});
+}
+
+function handleImport(tag, context) {
+    let moduleName;
+    let alias;
+    let member;
+    if (tag.children.length) {
+        throw RTCodeError.build(context, tag, `'${importAttr}' may have no children`);
+    } else if (tag.attribs.name && tag.attribs.from) {
+        moduleName = tag.attribs.from;
+        member = tag.attribs.name;
+        alias = tag.attribs.as;
+        if (!alias) {
+            if (member === '*') {
+                throw RTCodeError.build(context, tag, "'*' imports must have an 'as' attribute");
+            } else if (member === 'default') {
+                throw RTCodeError.build(context, tag, "default imports must have an 'as' attribute");
+            }
+            alias = member;
+        }
+    }
+    if (!moduleName) {
+        throw RTCodeError.build(context, tag, `'${importAttr}' needs 'name' and 'from' attributes`);
+    }
+    context.defines.push({moduleName, member, alias});
+}
+
 function convertTemplateToReact(html, options) {
     const context = require('./context');
     return convertRT(html, context, options);
@@ -484,13 +529,10 @@ function parseAndConvertHtmlToReact(html, context) {
     }
     let firstTag = null;
     _.forEach(rootTags, tag => {
-        if (tag.name === 'rt-require') {
-            if (!tag.attribs.dependency || !tag.attribs.as) {
-                throw RTCodeError.build(context, tag, "rt-require needs 'dependency' and 'as' attributes");
-            } else if (tag.children.length) {
-                throw RTCodeError.build(context, tag, 'rt-require may have no children');
-            }
-            context.defines[tag.attribs.dependency] = tag.attribs.as;
+        if (tag.name === requireAttr) {
+            handleRequire(tag, context);
+        } else if (tag.name === importAttr) {
+            handleImport(tag, context);
         } else if (firstTag === null) {
             firstTag = tag;
         } else {
@@ -517,24 +559,16 @@ function convertRT(html, reportContext, options) {
     const context = defaultContext(html, options, reportContext);
     const body = parseAndConvertHtmlToReact(html, context);
 
-    const requirePaths = _(context.defines)
-        .keys()
-        .map(def => `"${def}"`)
-        .join(',');
-    let buildImport;
-    if (options.modules === 'typescript') {
-        buildImport = (v, p) => `import ${v} = require('${p}');`;
-    } else if (options.modules === 'es6') { // eslint-disable-line
-        buildImport = (v, p) => `import ${v} from '${p}';`;
-    } else {
-        buildImport = (v, p) => `var ${v} = require('${p}');`;
-    }
+    const requirePaths = _.map(context.defines, d => `"${d.moduleName}"`).join(',');
+    const requireNames = _.map(context.defines, d => `${d.alias}`).join(',');
+    const buildImport = reactSupport.buildImport[options.modules] || reactSupport.buildImport.commonjs;
+    const requires = _.map(context.defines, buildImport).join('\n');
     const header = options.flow ? '/* @flow */\n' : '';
-    const vars = header + _(context.defines).map(buildImport).join('\n');
+    const vars = header + requires;
     const data = {
         body,
         injectedFunctions: context.injectedFunctions.join('\n'),
-        requireNames: _.values(context.defines).join(','),
+        requireNames,
         requirePaths,
         vars,
         name: options.name
