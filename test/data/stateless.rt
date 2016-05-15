@@ -1,0 +1,4 @@
+<rt-stateless />
+<div>
+   This is a stateless component showing {props.someProp} and {context.someContextData}
+</div>
