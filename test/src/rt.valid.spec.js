@@ -29,7 +29,7 @@ module.exports = {
         });
 
         test('conversion test', t => {
-            const files = ['div.rt', 'test.rt', 'repeat.rt', 'inputs.rt', 'virtual.rt', 'stateless.rt'];
+            const files = ['div.rt', 'test.rt', 'repeat.rt', 'repeat-with-index.rt', 'inputs.rt', 'virtual.rt', 'stateless.rt'];
             testFiles(t, files);
         });
 

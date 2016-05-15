@@ -316,11 +316,16 @@ function convertHtmlToReact(node, context) {
             if (arr.length !== 2) {
                 throw RTCodeError.build(context, node, `rt-repeat invalid 'in' expression '${node.attribs[repeatAttr]}'`);
             }
-            data.item = arr[0].trim();
+            const repeaterParams = arr[0].split(',').map(s => s.trim());
+            data.item = repeaterParams[0];
+            data.index = repeaterParams[1] || `${data.item}Index`;
             data.collection = arr[1].trim();
-            validateJS(data.item, node, context);
+            const bindParams = [data.item, data.index];
+            _.forEach(bindParams, param => {
+                validateJS(param, node, context);
+            });
             validateJS(`(${data.collection})`, node, context);
-            [data.item, `${data.item}Index`].forEach(param => {
+            _.forEach(bindParams, param => {
                 if (!_.includes(context.boundParams, param)) {
                     context.boundParams.push(param);
                 }

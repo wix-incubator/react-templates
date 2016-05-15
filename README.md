@@ -126,8 +126,9 @@ define([
 ```
 
 ## rt-repeat
-Repeats a DOM node with its subtree for each item in an array. The syntax is `rt-repeat="itemVar in arrayExpr"`, where the element, `itemVar`, will be available in JavaScript context,
+Repeats a DOM node with its subtree for each item in an array. The syntax is `rt-repeat="itemVar, indexVar in arrayExpr"`, where the element, `itemVar`, will be available in JavaScript context,
 and an `itemVarIndex` will be created to represent the index of the item. By using this naming scheme, repeated expressions have access to all levels of nesting.
+It is also possible to declare a custom index variable using the syntax `rt-repeat="itemVar, indexVar in arrayExpr"`, in which case the index variable will be `indexVar`.
 
 ###### Sample:
 ```html
