@@ -55,34 +55,24 @@ const templates = {
     jsrt: templateJSRTTemplate
 };
 
-function buildImportTypeScript(d) { /* eslint-disable no-else-return */
-    if (d.member === '*') {
-        return `import ${d.alias} = require('${d.moduleName}');`;
-    } else {
-        return `import ${d.alias} = require('${d.moduleName}').${d.member};`;
-    }
-    /* eslint-enable */
-}
+const isImportAsterisk = _.matches({member: '*'});
+const defaultCase = _.constant(true);
 
-function buildImportES6(d) { /* eslint-disable no-else-return */
-    if (d.member === '*') {
-        return `import * as ${d.alias} from '${d.moduleName}';`;
-    } else if (d.member === 'default') {
-        return `import ${d.alias} from '${d.moduleName}';`;
-    } else {
-        return `import { ${d.member} as ${d.alias} } from '${d.moduleName}';`;
-    }
-    /* eslint-enable */
-}
+const buildImportTypeScript = _.cond([
+    [isImportAsterisk, d => `import ${d.alias} = require('${d.moduleName}');`],
+    [defaultCase, d => `import ${d.alias} = require('${d.moduleName}').${d.member};`]
+]);
 
-function buildImportCommonJS(d) { /* eslint-disable no-else-return */
-    if (d.member === '*') {
-        return `var ${d.alias} = require('${d.moduleName}');`;
-    } else {
-        return `var ${d.alias} = require('${d.moduleName}').${d.member};`;
-    }
-    /* eslint-enable */
-}
+const buildImportES6 = _.cond([
+    [isImportAsterisk, d => `import * as ${d.alias} from '${d.moduleName}';`],
+    [_.matches({member: 'default'}), d => `import ${d.alias} from '${d.moduleName}';`],
+    [defaultCase, d => `import { ${d.member} as ${d.alias} } from '${d.moduleName}';`]
+]);
+
+const buildImportCommonJS = _.cond([
+    [isImportAsterisk, d => `var ${d.alias} = require('${d.moduleName}');`],
+    [defaultCase, d => `var ${d.alias} = require('${d.moduleName}').${d.member};`]
+]);
 
 const buildImport = {
     typescript: buildImportTypeScript,
