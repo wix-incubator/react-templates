@@ -3,7 +3,7 @@ define([
     'lodash'
 ], function (React, _) {
     'use strict';
-    return function (props) {
+    return function (props, context) {
         return React.createElement('div', {}, 'Hello ', props.person);
     };
 });

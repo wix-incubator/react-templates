@@ -576,7 +576,7 @@ function convertRT(html, reportContext, options) {
         requirePaths,
         vars,
         name: options.name,
-        statelessProps: context.stateless ? 'props' : ''
+        statelessParams: context.stateless ? 'props, context' : ''
     };
     let code = templates[options.modules](data);
     if (options.modules !== 'typescript' && options.modules !== 'jsrt') {

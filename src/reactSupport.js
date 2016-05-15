@@ -35,10 +35,10 @@ _.forEach(reactSupportedAttributes, attributeReactName => {
 const htmlSelfClosingTags = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
 
-const templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(<%= statelessProps %>){ return <%= body %>};\n});");
-const templateCommonJSTemplate = _.template("'use strict';\n<%= vars %>\n\n<%= injectedFunctions %>\nmodule.exports = function(<%= statelessProps %>){ return <%= body %>};\n");
-const templateES6Template = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nexport default function(<%= statelessProps %>){ return <%= body %>}\n');
-const templatePJSTemplate = _.template(`var <%= name %> = function (<%= statelessProps %>) {
+const templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(<%= statelessParams %>){ return <%= body %>};\n});");
+const templateCommonJSTemplate = _.template("'use strict';\n<%= vars %>\n\n<%= injectedFunctions %>\nmodule.exports = function(<%= statelessParams %>){ return <%= body %>};\n");
+const templateES6Template = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nexport default function(<%= statelessParams %>){ return <%= body %>}\n');
+const templatePJSTemplate = _.template(`var <%= name %> = function (<%= statelessParams %>) {
 <%= injectedFunctions %>
 return <%= body %>
 };
