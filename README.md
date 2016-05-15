@@ -35,7 +35,7 @@ https://github.com/wix/react-templates-transform-boilerplate
 http://plugins.jetbrains.com/plugin/7648
 
 
-###### Basic concepts for React templates
+## Basic concepts for React templates
 * Any valid HTML (including comments) is a template
 * {} to identify JS expression
 * Built-in directives:
@@ -44,13 +44,14 @@ http://plugins.jetbrains.com/plugin/7648
     * [rt-scope](#rt-scope)
     * [rt-props](#rt-props)
     * [rt-class](#rt-class)
-    * [rt-require](#rt-require-and-using-other-components-in-the-template)
+    * [rt-import](#using-other-components-in-the-template)
+    * ~~rt-require~~ (deprecated, use rt-import)
     * [rt-template](#rt-template-and-defining-properties-template-functions)
     * [rt-include](#rt-include)
 * [styles](#styles)
 * [event handlers](#event-handlers)
 
-###### Why not use JSX?
+## Why not use JSX?
 Some love JSX, some don't. We don't. More specifically, it seems to us that JSX is only a good fit for components with very little HTML inside.
 And this can be accomplished by creating DOM elements in code. Also, we like to separate code and HTML because it just feels right.
 
@@ -410,63 +411,79 @@ define([
 });
 ```
 
-## rt-require, and using other components in the template
-In many cases, you'd like to use either external code or other components within your template. An **rt-require** tag lets you include dependencies: `<rt-require dependency="depVarPath" as="depVarName"/>`.
-Once included, **depVarName** will be in scope. You can only use rt-require tags at the beginning of your template. When including React components, they can be referred to by their tag name inside a template.
+## rt-import and using other components in the template
+In many cases, you'd like to use either external code or other components within your template.
+To do so, you can use an `rt-import` tag that lets you include dependencies in a syntax similar to ES6 imports:
+```xml
+<rt-import name="*" as="depVarName" from="depName"/>
+
+```
+Once included, **depVarName** will be in scope.
+You can only use rt-import tags at the beginning of your template. When including React components, they can be referred to by their tag name inside a template.
 For example, `<MySlider prop1="val1" onMyChange="{this.onSliderMoved}">`. Nesting is also supported: `<MyContainer><div>child</div><div>another</div></MyContainer>`.
+
 Children are accessible from **this.props.children**.
 
 ###### Sample:
+```xml
+<rt-import name="member" from="module-name"/>
+<rt-import name="member" as="alias2" from="module-name"/>
+<rt-import name="*" as="alias3" from="module-name"/>
+<rt-import name="default" as="alias4" from="module-name"/>
+<div>
+</div>
+```
+###### Compiled (ES6 flag):
+```javascript
+import * as React from 'react/addons';
+import * as _ from 'lodash';
+import { member } from 'module-name';
+import { member as alias2 } from 'module-name';
+import * as alias3 from 'module-name';
+import alias4 from 'module-name';
+export default function () {
+    return React.createElement('div', {});
+}
+```
+###### Compiled (AMD):
+```javascript
+define('div', [
+    'react/addons',
+    'lodash',
+    'module-name',
+    'module-name',
+    'module-name',
+    'module-name'
+], function (React, _, member, alias2, alias3, alias4) {
+    'use strict';
+    return function () {
+        return React.createElement('div', {});
+    };
+});
+```
+###### Compiled (with CommonJS flag):
+```javascript
+'use strict';
+var React = require('react/addons');
+var _ = require('lodash');
+var member = require('module-name').member;
+var alias2 = require('module-name').member;
+var alias3 = require('module-name');
+var alias4 = require('module-name').default;
+module.exports = function () {
+    return React.createElement('div', {});
+};
+```
+
+#### deprecated: rt-require
+The tag `rt-require` is deprecated and replaced with `rt-import`.
+Its syntax is similar to `rt-import` but does not allow default imports:
 ```html
 <rt-require dependency="comps/myComp" as="MyComp"/>
 <rt-require dependency="utils/utils" as="utils"/>
 <MyComp rt-repeat="item in items">
     <div>{utils.toLower(item.name)}</div>
 </MyComp>
-```
-###### Compiled (AMD):
-```javascript
-define([
-    'react/addons',
-    'lodash',
-    'comps/myComp',
-    'utils/utils'
-], function (React, _, MyComp, utils) {
-    'use strict';
-    function repeatItem1(item, itemIndex) {
-        return React.createElement(MyComp, {}, React.createElement('div', {}, utils.toLower(item.name)));
-    }
-    return function () {
-        return _.map(items, repeatItem1.bind(this));
-    };
-});
-```
-###### Compiled (with CommonJS flag):
-```javascript
-var React = require('react/addons');
-var _ = require('lodash');
-var MyComp = require('comps/myComp');
-var utils = require('utils/utils');
-'use strict';
-function repeatItem1(item, itemIndex) {
-    return React.createElement(MyComp, {}, React.createElement('div', {}, utils.toLower(item.name)));
-}
-module.exports = function () {
-    return _.map(items, repeatItem1.bind(this));
-};
-```
-###### Compiled (with ES6 flag):
-```javascript
-import React from 'react/addons';
-import _ from 'lodash';
-import MyComp from 'comps/myComp';
-import utils from 'utils/utils';
-function repeatItem1(item, itemIndex) {
-    return React.createElement(MyComp, {}, React.createElement('div', {}, utils.toLower(item.name)));
-}
-export default function () {
-    return _.map(items, repeatItem1.bind(this));
-};
 ```
 
 ## Inline Templates

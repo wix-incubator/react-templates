@@ -25,9 +25,9 @@ define([
             'id': 'weatherExample',
             'direction': 'horizontal'
         }, this.state.samples.weather))), React.createElement('div', {
-            'id': 'rt-require',
+            'id': 'rt-import',
             'className': 'example'
-        }, React.createElement('h3', {}, 'rt-require'), React.createElement('p', {}, '\n            This example shows how to load other React components and libraries into a React template and then use them within the template.\n        '), React.createElement(viewer, _.assign({}, { 'mode': 'javascript' }, this.state.rtRequire))), React.createElement('div', {
+        }, React.createElement('h3', {}, 'rt-import'), React.createElement('p', {}, '\n            This example shows how to load other React components and libraries into a React template and then use them within the template.\n        '), React.createElement(viewer, _.assign({}, { 'mode': 'javascript' }, this.state.rtImport))), React.createElement('div', {
             'id': 'amd',
             'className': 'example'
         }, React.createElement('h3', {}, 'AMD'), React.createElement('p', {}, '\n            This example shows the rt-require sample output with AMD support.\n        '), React.createElement(viewer, _.assign({}, { 'mode': 'javascript' }, this.state.amd))), React.createElement('div', {

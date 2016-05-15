@@ -44,12 +44,12 @@
         </p>
         <playground id="weatherExample" rt-props="this.state.samples.weather" direction="horizontal"></playground>
     </div>
-    <div id="rt-require" class="example">
-        <h3>rt-require</h3>
+    <div id="rt-import" class="example">
+        <h3>rt-import</h3>
         <p>
             This example shows how to load other React components and libraries into a React template and then use them within the template.
         </p>
-        <viewer rt-props="this.state.rtRequire" mode="javascript" />
+        <viewer rt-props="this.state.rtImport" mode="javascript" />
     </div>
     <div id="amd" class="example">
         <h3>AMD</h3>

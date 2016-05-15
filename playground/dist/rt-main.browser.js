@@ -27,34 +27,9 @@ function getLine(html, node) {
     return { line: linesUntil.length, col: linesUntil[linesUntil.length - 1].length + 1 };
 }
 
-//function getLine(node) {
-//    if (!node) {
-//        return 0;
-//    }
-//    const line = 0;
-//    const prev = node.prev;
-//    while (prev) {
-//        const nl = prev.data.split('\n').length - 1;
-//        line += nl;
-//        prev = prev.prev;
-//    }
-//
-//    line += getLine(node.parent);
-//    return line + 1;
-//}
-
-//function RTCodeError(message, line) {
-//    this.name = 'RTCodeError';
-//    this.message = message || '';
-//    this.line = line || -1;
-//}
-//RTCodeError.prototype = Error.prototype;
-
-// Redefine properties on Error to be enumerable
-/*eslint no-extend-native:0*/
-//Object.defineProperty(Error.prototype, 'message', {configurable: true, enumerable: true});
-//Object.defineProperty(Error.prototype, 'stack', {configurable: true, enumerable: true});
-//Object.defineProperty(Error.prototype, 'line', { configurable: true, enumerable: true });
+function norm(n) {
+    return n === undefined ? -1 : n;
+}
 
 /**
  * @param {string} message
@@ -83,21 +58,15 @@ var RTCodeError = function (_Error) {
         _this.column = norm(column);
         return _this;
     }
-    //build buildError
-
 
     return RTCodeError;
 }(Error);
 
-function norm(n) {
-    return n === undefined ? -1 : n;
-}
-
-//const norm = n => n === undefined ? -1 : n;
-
 /**
  * @type {buildError}
  */
+
+
 RTCodeError.build = buildError;
 RTCodeError.norm = norm;
 
@@ -348,12 +317,45 @@ var templates = {
     jsrt: templateJSRTTemplate
 };
 
+var isImportAsterisk = _.matches({ member: '*' });
+var defaultCase = _.constant(true);
+
+var buildImportTypeScript = _.cond([[isImportAsterisk, function (d) {
+    return 'import ' + d.alias + ' = require(\'' + d.moduleName + '\');';
+}], [defaultCase, function (d) {
+    return 'import ' + d.alias + ' = require(\'' + d.moduleName + '\').' + d.member + ';';
+}]]);
+
+var buildImportES6 = _.cond([[isImportAsterisk, function (d) {
+    return 'import * as ' + d.alias + ' from \'' + d.moduleName + '\';';
+}], [_.matches({ member: 'default' }), function (d) {
+    return 'import ' + d.alias + ' from \'' + d.moduleName + '\';';
+}], [defaultCase, function (d) {
+    return 'import { ' + d.member + ' as ' + d.alias + ' } from \'' + d.moduleName + '\';';
+}]]);
+
+var buildImportCommonJS = _.cond([[isImportAsterisk, function (d) {
+    return 'var ' + d.alias + ' = require(\'' + d.moduleName + '\');';
+}], [defaultCase, function (d) {
+    return 'var ' + d.alias + ' = require(\'' + d.moduleName + '\').' + d.member + ';';
+}]]);
+
+var buildImport = {
+    typescript: buildImportTypeScript,
+    es6: buildImportES6,
+    commonjs: buildImportCommonJS,
+    amd: buildImportCommonJS,
+    none: buildImportCommonJS,
+    jsrt: buildImportCommonJS
+};
+
 module.exports = {
     htmlSelfClosingTags: htmlSelfClosingTags,
     attributesMapping: attributesMapping,
     classNameProp: classNameProp,
     shouldUseCreateElement: shouldUseCreateElement,
-    templates: templates
+    templates: templates,
+    buildImport: buildImport
 };
 },{"lodash":101}],7:[function(require,module,exports){
 'use strict';
@@ -403,6 +405,8 @@ var templateNode = 'rt-template';
 var virtualNode = 'rt-virtual';
 var includeNode = 'rt-include';
 var includeSrcAttr = 'src';
+var requireAttr = 'rt-require';
+var importAttr = 'rt-import';
 
 var reactTemplatesSelfClosingTags = [includeNode];
 
@@ -564,7 +568,6 @@ function genBind(func, args) {
 }
 
 function handleStyleProp(val, node, context) {
-    /*eslint lodash/prefer-lodash-chain:0*/
     var styleStr = _(val).split(';').map(_.trim).filter(function (i) {
         return _.includes(i, ':');
     }).map(function (i) {
@@ -600,9 +603,7 @@ function convertTagNameToConstructor(tagName, context) {
  * @return {Context}
  */
 function defaultContext(html, options, reportContext) {
-    var defaultDefines = {};
-    defaultDefines[options.reactImportPath] = 'React';
-    defaultDefines[options.lodashImportPath] = '_';
+    var defaultDefines = [{ moduleName: options.reactImportPath, alias: 'React', member: '*' }, { moduleName: options.lodashImportPath, alias: '_', member: '*' }];
     return {
         boundParams: [],
         injectedFunctions: [],
@@ -678,6 +679,9 @@ function convertHtmlToReact(node, context) {
             if (node.attribs[ifAttr]) {
                 validateIfAttribute(node, context, data);
                 data.condition = node.attribs[ifAttr].trim();
+                if (!node.attribs.key) {
+                    _.set(node, ['attribs', 'key'], '' + node.startIndex);
+                }
             }
 
             data.props = generateProps(node, context);
@@ -817,6 +821,48 @@ function handleSelfClosingHtmlTags(nodes) {
     });
 }
 
+function handleRequire(tag, context) {
+    var moduleName = void 0;
+    var alias = void 0;
+    var member = void 0;
+    if (tag.children.length) {
+        throw RTCodeError.build(context, tag, '\'' + requireAttr + '\' may have no children');
+    } else if (tag.attribs.dependency && tag.attribs.as) {
+        moduleName = tag.attribs.dependency;
+        member = '*';
+        alias = tag.attribs.as;
+    }
+    if (!moduleName) {
+        throw RTCodeError.build(context, tag, '\'' + requireAttr + '\' needs \'dependency\' and \'as\' attributes');
+    }
+    context.defines.push({ moduleName: moduleName, member: member, alias: alias });
+}
+
+function handleImport(tag, context) {
+    var moduleName = void 0;
+    var alias = void 0;
+    var member = void 0;
+    if (tag.children.length) {
+        throw RTCodeError.build(context, tag, '\'' + importAttr + '\' may have no children');
+    } else if (tag.attribs.name && tag.attribs.from) {
+        moduleName = tag.attribs.from;
+        member = tag.attribs.name;
+        alias = tag.attribs.as;
+        if (!alias) {
+            if (member === '*') {
+                throw RTCodeError.build(context, tag, "'*' imports must have an 'as' attribute");
+            } else if (member === 'default') {
+                throw RTCodeError.build(context, tag, "default imports must have an 'as' attribute");
+            }
+            alias = member;
+        }
+    }
+    if (!moduleName) {
+        throw RTCodeError.build(context, tag, '\'' + importAttr + '\' needs \'name\' and \'from\' attributes');
+    }
+    context.defines.push({ moduleName: moduleName, member: member, alias: alias });
+}
+
 function convertTemplateToReact(html, options) {
     var context = require('./context');
     return convertRT(html, context, options);
@@ -837,13 +883,10 @@ function parseAndConvertHtmlToReact(html, context) {
     }
     var firstTag = null;
     _.forEach(rootTags, function (tag) {
-        if (tag.name === 'rt-require') {
-            if (!tag.attribs.dependency || !tag.attribs.as) {
-                throw RTCodeError.build(context, tag, "rt-require needs 'dependency' and 'as' attributes");
-            } else if (tag.children.length) {
-                throw RTCodeError.build(context, tag, 'rt-require may have no children');
-            }
-            context.defines[tag.attribs.dependency] = tag.attribs.as;
+        if (tag.name === requireAttr) {
+            handleRequire(tag, context);
+        } else if (tag.name === importAttr) {
+            handleImport(tag, context);
         } else if (firstTag === null) {
             firstTag = tag;
         } else {
@@ -870,30 +913,20 @@ function convertRT(html, reportContext, options) {
     var context = defaultContext(html, options, reportContext);
     var body = parseAndConvertHtmlToReact(html, context);
 
-    var requirePaths = _(context.defines).keys().map(function (def) {
-        return '"' + def + '"';
+    var requirePaths = _.map(context.defines, function (d) {
+        return '"' + d.moduleName + '"';
     }).join(',');
-    var buildImport = void 0;
-    if (options.modules === 'typescript') {
-        buildImport = function buildImport(v, p) {
-            return 'import ' + v + ' = require(\'' + p + '\');';
-        };
-    } else if (options.modules === 'es6') {
-        // eslint-disable-line
-        buildImport = function buildImport(v, p) {
-            return 'import ' + v + ' from \'' + p + '\';';
-        };
-    } else {
-        buildImport = function buildImport(v, p) {
-            return 'var ' + v + ' = require(\'' + p + '\');';
-        };
-    }
+    var requireNames = _.map(context.defines, function (d) {
+        return '' + d.alias;
+    }).join(',');
+    var buildImport = reactSupport.buildImport[options.modules] || reactSupport.buildImport.commonjs;
+    var requires = _.map(context.defines, buildImport).join('\n');
     var header = options.flow ? '/* @flow */\n' : '';
-    var vars = header + _(context.defines).map(buildImport).join('\n');
+    var vars = header + requires;
     var data = {
         body: body,
         injectedFunctions: context.injectedFunctions.join('\n'),
-        requireNames: _.values(context.defines).join(','),
+        requireNames: requireNames,
         requirePaths: requirePaths,
         vars: vars,
         name: options.name
@@ -1038,6 +1071,10 @@ function validate(options, context, reportContext, node) {
     if (node.type === 'tag' && node.attribs['rt-if'] && !node.attribs.key) {
         var loc = rtError.getNodeLoc(context, node);
         reportContext.warn('rt-if without a key', options.fileName, loc.pos.line, loc.pos.col, loc.start, loc.end);
+    }
+    if (node.type === 'tag' && node.attribs['rt-require'] && (node.attribs.dependency || node.attribs.as)) {
+        var _loc = rtError.getNodeLoc(context, node);
+        reportContext.warn("'rt-require' is obsolete, use 'rt-import' instead", options.fileName, _loc.pos.line, _loc.pos.col, _loc.start, _loc.end);
     }
     if (node.children) {
         node.children.forEach(validate.bind(this, options, context, reportContext));
