@@ -18,7 +18,6 @@ function convertBody(text) {
     //source
     const obj = css.parse(text, {silent: false});
     const result = _.reduce(obj.stylesheet.rules, processRule2, {});
-    console.log(result);
     return JSON.stringify(result, undefined, 2);
 }
 
