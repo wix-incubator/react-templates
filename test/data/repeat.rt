@@ -2,6 +2,7 @@
     <div rt-repeat="items in this.props.things">
         <span style="width:auto;line-height: 5px;"
               onClick="(evt)=>this.happend(evt);return false;"
-              onMouseDown="()=>this.happend();return false;">Mock</span>
+              onMouseDown="()=>this.happend();return false;"
+              onKeyDown="this.handleKeyDown">Mock</span>
     </div>
 </p>
