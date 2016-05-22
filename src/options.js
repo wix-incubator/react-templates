@@ -116,5 +116,10 @@ $ rt <filename> [<filename> ...] [<args>]`,
         type: 'String',
         default: reactNativeSupport.default,
         description: `'React native version to generate code for (${Object.keys(reactNativeSupport).join(', ')})'`
+    }, {
+        option: 'autobind',
+        type: 'Boolean',
+        default: 'false',
+        description: 'Automatically bind event handlers to components'
     }]
 });

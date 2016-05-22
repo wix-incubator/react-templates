@@ -201,8 +201,12 @@ function generateProps(node, context) {
 function handleEventHandler(val, context, node, key) {
     let handlerString;
     if (_.startsWith(val, 'this.')) {
-        handlerString = `${val}.bind(this)`;        
-    } else {            
+        if (context.options.autobind) {
+            handlerString = `${val}.bind(this)`;
+        } else {
+            throw RTCodeError.build(context, node, "'this.handler' syntax allowed only when the --autobind is on, use {} to return a callback function.");
+        }
+    } else {
         const funcParts = val.split('=>');
         if (funcParts.length !== 2) {
             throw RTCodeError.build(context, node, `when using 'on' events, use lambda '(p1,p2)=>body' notation or 'this.handler'; otherwise use {} to return a callback function. error: [${key}='${val}']`);

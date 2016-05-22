@@ -18,8 +18,7 @@ define([
                 lineHeight: '5px'
             },
             'onClick': onClick1.bind(this, items, itemsIndex),
-            'onMouseDown': onMouseDown2.bind(this, items, itemsIndex),
-            'onKeyDown': this.handleKeyDown.bind(this)
+            'onMouseDown': onMouseDown2.bind(this, items, itemsIndex)
         }, 'Mock'));
     }
     return function () {
