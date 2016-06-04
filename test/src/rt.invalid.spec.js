@@ -28,6 +28,8 @@ module.exports = {
             {file: 'invalid-rt-import-1.rt', issue: new RTCodeError("'*' imports must have an 'as' attribute", 0, 36, 1, 1)},
             {file: 'invalid-rt-import-2.rt', issue: new RTCodeError("default imports must have an 'as' attribute", 0, 42, 1, 1)},
             {file: 'invalid-rt-import-3.rt', issue: new RTCodeError("'rt-import' needs 'name' and 'from' attributes", 0, 13, 1, 1)},
+            {file: 'invalid-rt-template-1.rt', issue: new RTCodeError("'rt-template' should have a single non-text element as direct child", 9, 88, 2, 4)},
+            {file: 'invalid-rt-template-2.rt', issue: new RTCodeError("'rt-template' should have a single non-text element as direct child", 9, 90, 2, 4)},
             {file: 'invalid-brace.rt', issue: new RTCodeError('Unexpected end of input', 128, 163, 5, 11)},
             {file: 'invalid-style.rt', issue: new RTCodeError('Unexpected token ILLEGAL', 10, 39, 2, 5)},
             {file: 'invalid-virtual.rt', issue: new RTCodeError('Document should not have <rt-virtual> as root element', 0, 60, 1, 1)}

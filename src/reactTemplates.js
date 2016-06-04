@@ -123,6 +123,9 @@ function generateTemplateProps(node, context) {
                 if (!_.has(child.attribs, 'prop')) {
                     throw RTCodeError.build(context, child, 'rt-template must have a prop attribute');
                 }
+                if (_.filter(child.children, {type: 'tag'}).length !== 1) {
+                    throw RTCodeError.build(context, child, "'rt-template' should have a single non-text element as direct child");
+                }
 
                 const childTemplate = _.find(context.options.propTemplates, {prop: child.attribs.prop}) || {arguments: []};
                 templateProp = {
