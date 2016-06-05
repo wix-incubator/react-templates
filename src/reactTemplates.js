@@ -293,6 +293,10 @@ function convertHtmlToReact(node, context) {
             boundParams: _.clone(context.boundParams)
         }, context);
 
+        if (node.type === 'tag' && node.name === importAttr) {
+            throw RTCodeError.build(context, node, "'rt-import' must be a toplevel node");
+        }
+
         if (node.type === 'tag' && node.name === includeNode) {
             const srcFile = node.attribs[includeSrcAttr];
             if (!srcFile) {
