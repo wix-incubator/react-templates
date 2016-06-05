@@ -565,6 +565,9 @@ function convertRT(html, reportContext, options) {
 
     const context = defaultContext(html, options, reportContext);
     const body = parseAndConvertHtmlToReact(html, context);
+    const injectedFunctions = context.injectedFunctions.join('\n');
+    const statelessParams = context.stateless ? 'props, context' : '';
+    const renderFunction = `function(${statelessParams}) { ${injectedFunctions}return ${body} }`;
 
     const requirePaths = _.map(context.defines, d => `"${d.moduleName}"`).join(',');
     const requireNames = _.map(context.defines, d => `${d.alias}`).join(',');
@@ -573,13 +576,11 @@ function convertRT(html, reportContext, options) {
     const header = options.flow ? '/* @flow */\n' : '';
     const vars = header + requires;
     const data = {
-        body,
-        injectedFunctions: context.injectedFunctions.join('\n'),
+        renderFunction,
         requireNames,
         requirePaths,
         vars,
-        name: options.name,
-        statelessParams: context.stateless ? 'props, context' : ''
+        name: options.name
     };
     let code = templates[options.modules](data);
     if (options.modules !== 'typescript' && options.modules !== 'jsrt') {
