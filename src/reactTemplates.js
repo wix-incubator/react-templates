@@ -228,7 +228,10 @@ function handleStyleProp(val, node, context) {
         .filter(i => _.includes(i, ':'))
         .map(i => {
             const pair = i.split(':');
-
+            const key = pair[0].trim();
+            if (/\{|\}/g.test(key)) {
+                throw RTCodeError.build(context, node, 'style attribute keys cannot contain { } expressions');
+            }
             const value = pair.slice(1).join(':').trim();
             const parsedKey = /(^-moz-)|(^-o-)|(^-webkit-)/ig.test(key) ? _.upperFirst(_.camelCase(key)) : _.camelCase(key);
             return parsedKey + ' : ' + utils.convertText(node, context, value.trim());

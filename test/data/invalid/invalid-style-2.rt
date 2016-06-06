@@ -1,0 +1,3 @@
+<div rt-scope="'ground' as g">
+    <span style="back{g}:red"></span>
+</div>

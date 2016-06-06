@@ -33,6 +33,7 @@ module.exports = {
             {file: 'invalid-rt-template-2.rt', issue: new RTCodeError("'rt-template' should have a single non-text element as direct child", 9, 90, 2, 4)},
             {file: 'invalid-brace.rt', issue: new RTCodeError('Unexpected end of input', 128, 163, 5, 11)},
             {file: 'invalid-style-1.rt', issue: new RTCodeError('Unexpected token ILLEGAL', 10, 39, 2, 5)},
+            {file: 'invalid-style-2.rt', issue: new RTCodeError('style attribute keys cannot contain { } expressions', 35, 68, 2, 5)},
             {file: 'invalid-virtual.rt', issue: new RTCodeError('Document should not have <rt-virtual> as root element', 0, 60, 1, 1)}
         ];
 
