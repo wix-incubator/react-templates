@@ -1,4 +1,4 @@
-define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
+define(['react', 'react-dom', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
         './CMLint',
         './libs/codemirror-4.8/mode/javascript/javascript',
         './libs/codemirror-4.8/addon/hint/html-hint',
@@ -10,7 +10,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
         //'./libs/codemirror-4.8/mode/css/css',
         './libs/codemirror-4.8/addon/runmode/runmode'
         //'./libs/codemirror-4.8/addon/display/placeholder'
-], function (React, _, $, CodeMirror, CMLint) {
+], function (React, ReactDOM, _, $, CodeMirror, CMLint) {
     'use strict';
     //codeMirror: 'libs/codemirror-4.8/lib/codemirror',
     //htmlmixed: 'libs/codemirror-4.8/mode/htmlmixed/htmlmixed',
@@ -134,7 +134,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
                 //options.lint = true;
             }
 
-            this.editor = CodeMirror.fromTextArea(this.getDOMNode(), options);
+            this.editor = CodeMirror.fromTextArea(ReactDOM.findDOMNode(this), options);
 
             if (!this.props.readOnly) {
                 this.editor.on('change', function (/*e*/) {

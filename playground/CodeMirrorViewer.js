@@ -1,8 +1,8 @@
-define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
+define(['react', 'react-dom', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
         './libs/codemirror-4.8/mode/javascript/javascript',
         './libs/codemirror-4.8/mode/xml/xml',
         './libs/codemirror-4.8/addon/runmode/runmode'
-], function (React, _, $, CodeMirror) {
+], function (React, ReactDOM, _, $, CodeMirror) {
     'use strict';
     return React.createClass({
         displayName: 'CodeMirrorViewer',
@@ -37,7 +37,7 @@ define(['react', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
             if (this.props.mode === 'html') {
                 mode = 'text/html';
             }
-            this.editor = CodeMirror.runMode(value, mode, this.getDOMNode());
+            this.editor = CodeMirror.runMode(value, mode, ReactDOM.findDOMNode(this));
         },
         componentWillUnmount: function () {
             this.editor.toTextArea();
