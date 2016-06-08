@@ -34,7 +34,7 @@ _.forEach(reactSupportedAttributes, attributeReactName => {
 
 const htmlSelfClosingTags = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
-const templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\nreturn <%= renderFunction %>;\n});");
+const templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= AMDArguments %>) {\n'use strict';\n<%= AMDSubstitutions %>return <%= renderFunction %>;\n});");
 const templateCommonJSTemplate = _.template("'use strict';\n<%= vars %>\nmodule.exports = <%= renderFunction %>;\n");
 const templateES6Template = _.template('<%= vars %>\nexport default <%= renderFunction %>\n');
 const templatePJSTemplate = _.template('var <%= name %> = <%= renderFunction %>');

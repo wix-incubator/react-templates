@@ -579,6 +579,8 @@ function convertRT(html, reportContext, options) {
 
     const requirePaths = _.map(context.defines, d => `"${d.moduleName}"`).join(',');
     const requireNames = _.map(context.defines, d => `${d.alias}`).join(',');
+    const AMDArguments = _.map(context.defines, (d, i) => (d.member === '*' ? `${d.alias}` : `$${i}`)).join(','); //eslint-disable-line
+    const AMDSubstitutions = _.map(context.defines, (d, i) => (d.member === '*' ? null : `var ${d.alias} = $${i}.${d.member};`)).join('\n'); //eslint-disable-line
     const buildImport = reactSupport.buildImport[options.modules] || reactSupport.buildImport.commonjs;
     const requires = _.map(context.defines, buildImport).join('\n');
     const header = options.flow ? '/* @flow */\n' : '';
@@ -587,6 +589,8 @@ function convertRT(html, reportContext, options) {
         renderFunction,
         requireNames,
         requirePaths,
+        AMDArguments,
+        AMDSubstitutions,
         vars,
         name: options.name
     };
