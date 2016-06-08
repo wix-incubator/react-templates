@@ -379,7 +379,7 @@ define([
 ## stateless components
 Since React v0.14, [React allows defining a component as a pure function of its props](https://facebook.github.io/react/docs/reusable-components.html#stateless-functions).
 To enable creating a stateless component using react templates, add the `rt-stateless` attribute to the template's root element.
-Using `rt-stateless` generates a stateless functional component instead of a render function. 
+Using `rt-stateless` generates a stateless functional component instead of a render function.
 The resulting function receives `props` and `context` parameters to be used in the template instead of `this.props`.
 
 ###### Sample:
@@ -472,14 +472,17 @@ export default function () {
 ###### Compiled (AMD):
 ```javascript
 define('div', [
-    'react/addons',
+    'react',
     'lodash',
     'module-name',
     'module-name',
     'module-name',
     'module-name'
-], function (React, _, member, alias2, alias3, alias4) {
+], function (React, _, $2, $3, alias3, $5) {
     'use strict';
+    var member = $2.member;
+    var alias2 = $3.member;
+    var alias4 = $5.default;
     return function () {
         return React.createElement('div', {});
     };
