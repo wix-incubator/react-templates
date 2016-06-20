@@ -410,7 +410,8 @@ function convertHtmlToReact(node, context) {
         }
         return data.body;
     } else if (node.type === 'comment') {
-        return commentTemplate(node);
+        const sanitizedComment = node.data.split('*/').join('* /');
+        return commentTemplate({data: sanitizedComment});
     } else if (node.type === 'text') {
         return node.data.trim() ? utils.convertText(node, context, node.data) : '';
     }
