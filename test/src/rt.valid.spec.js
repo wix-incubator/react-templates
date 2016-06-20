@@ -78,6 +78,23 @@ module.exports = {
             }
         });
 
+        test('convert comment with AMD and ES6 modules', t => {
+            const files = [
+                {source: 'comment.rt', expected: 'comment.rt.amd.js', options: {modules: 'amd'}},
+                {source: 'comment.rt', expected: 'comment.rt.es6.js', options: {modules: 'es6'}}
+            ];
+            t.plan(files.length);
+            files.forEach(check);
+
+            function check(testData) {
+                const filename = path.join(dataPath, testData.source);
+                const html = readFileNormalized(filename);
+                const expected = readFileNormalized(path.join(dataPath, testData.expected));
+                const actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
+                compareAndWrite(t, actual, expected, filename);
+            }
+        });
+
         test('rt-require with all module types', t => {
             const files = [
                 {source: 'require.rt', expected: 'require.rt.commonjs.js', options: {modules: 'commonjs'}},
