@@ -597,15 +597,21 @@ function convertRT(html, reportContext, options) {
     };
     let code = templates[options.modules](data);
     if (options.modules !== 'typescript' && options.modules !== 'jsrt') {
-        code = parseJS(code);
+        code = parseJS(code, options);
     }
     return code;
 }
 
-function parseJS(code) {
+function parseJS(code, options) {
     try {
         let tree = esprima.parse(code, {range: true, tokens: true, comment: true, sourceType: 'module'});
-        tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
+        // fix for https://github.com/wix/react-templates/issues/157
+        // do not include comments for es6 modules due to bug in dependency "escodegen"
+        // to be removed when https://github.com/estools/escodegen/issues/263 will be fixed
+        // remove also its test case "test/data/comment.rt.es6.js"
+        if (options.modules !== 'es6') {
+            tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
+        }
         return escodegen.generate(tree, {comment: true});
     } catch (e) {
         throw new RTCodeError(e.message, e.index, -1);
@@ -618,7 +624,7 @@ function convertJSRTToJS(text, reportContext, options) {
     const templateMatcherJSRT = /<template>([^]*?)<\/template>/gm;
     const code = text.replace(templateMatcherJSRT, (template, html) => convertRT(html, reportContext, options).replace(/;$/, ''));
 
-    return parseJS(code);
+    return parseJS(code, options);
 }
 
 module.exports = {
