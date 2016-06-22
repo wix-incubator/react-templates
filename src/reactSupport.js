@@ -38,7 +38,7 @@ const templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '
 const templateCommonJSTemplate = _.template("'use strict';\n<%= vars %>\nmodule.exports = <%= renderFunction %>;\n");
 const templateES6Template = _.template('<%= vars %>\nexport default <%= renderFunction %>\n');
 const templatePJSTemplate = _.template('var <%= name %> = <%= renderFunction %>');
-const templateTypescriptTemplate = _.template('<%= vars %>\nvar fn = <%= renderFunction %>;\nexport = fn\n');
+const templateTypescriptTemplate = _.template('<%= vars %>\nexport = <%= renderFunction %>;\n');
 const templateJSRTTemplate = _.template('<%= renderFunction %>');
 
 const templates = {
