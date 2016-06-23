@@ -402,7 +402,7 @@ function convertHtmlToReact(node, context) {
         // the scope variables are evaluated in context of the current iteration.
         if (node.attribs[repeatAttr]) {
             data.repeatFunction = generateInjectedFunc(context, 'repeat' + _.upperFirst(data.item), 'return ' + data.body);
-            data.repeatBinds = ['this'].concat(_.reject(context.boundParams, p => p === data.item || p === data.item + 'Index' || data.innerScope && p in data.innerScope.innerMapping));
+            data.repeatBinds = ['this'].concat(_.reject(context.boundParams, p => p === data.item || p === data.index || data.innerScope && p in data.innerScope.innerMapping));
             data.body = repeatTemplate(data);
         }
         if (node.attribs[ifAttr]) {

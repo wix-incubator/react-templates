@@ -10,7 +10,7 @@ define([
         return React.createElement.apply(this, [
             'ul',
             {},
-            _.map(this.props.collection, repeatItem1.bind(this, customIndex))
+            _.map(this.props.collection, repeatItem1.bind(this))
         ]);
     };
 });
