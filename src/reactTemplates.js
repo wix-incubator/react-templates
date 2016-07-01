@@ -115,6 +115,7 @@ function generateInjectedFunc(context, namePrefix, body, params) {
 }
 
 function generateTemplateProps(node, context) {
+    let templatePropCount = 0;
     const propTemplateDefinition = context.options.propTemplates[node.name];
     const propertiesTemplates = _(node.children)
         .map((child, index) => {
@@ -137,7 +138,7 @@ function generateTemplateProps(node, context) {
             }
 
             if (templateProp) {
-                _.assign(templateProp, {childIndex: index, content: _.find(child.children, {type: 'tag'})});
+                _.assign(templateProp, {childIndex: index - templatePropCount++, content: _.find(child.children, {type: 'tag'})});
             }
 
             return templateProp;

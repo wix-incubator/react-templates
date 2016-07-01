@@ -45,7 +45,8 @@ module.exports = {
                 'simpleTemplate.rt',
                 'templateInScope.rt',
                 'implicitTemplate.rt',
-                'twoTemplates.rt'
+                'twoTemplates.rt',
+                'siblingTemplates.rt'
             ].map(file => path.join('propTemplates', file));
             testFiles(t, files, options);
         });
