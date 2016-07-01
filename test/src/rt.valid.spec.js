@@ -41,7 +41,12 @@ module.exports = {
                     }
                 }
             };
-            const files = ['propTemplates/simpleTemplate.rt', 'propTemplates/templateInScope.rt', 'propTemplates/implicitTemplate.rt', 'propTemplates/twoTemplates.rt'];
+            const files = [
+                'simpleTemplate.rt',
+                'templateInScope.rt',
+                'implicitTemplate.rt',
+                'twoTemplates.rt'
+            ].map(file => path.join('propTemplates', file));
             testFiles(t, files, options);
         });
 
