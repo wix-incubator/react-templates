@@ -1,5 +1,5 @@
 /*eslint-env browser*/
-define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'], function (React, $, _, pgFiddleTemplate, playgroundTemplate) {
+define(['react', 'react-dom', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'], function (React, ReactDOM, $, _, pgFiddleTemplate, playgroundTemplate) {
     'use strict';
     //function emptyFunc() {
     //    return null;
@@ -171,20 +171,20 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             //this.sample = React.createFactory(React.createClass(classBase));
         },
         showError: function (e, editor) {
-            var mountNode = this.refs.mount.getDOMNode();
+            var mountNode = this.refs.mount;
             this.setTimeout(function () {
                 showMessage(editor, e.message);
-                React.render(
+                ReactDOM.render(
                     React.createElement('div', {className: 'playground-error'}, e.toString()),
                     mountNode
                 );
             }, 500);
         },
         showErrorAnnotation: function (annot, editor) {
-            var mountNode = this.refs.mount.getDOMNode();
+            var mountNode = this.refs.mount;
             this.setTimeout(function () {
                 editor.annotate(annot);
-                React.render(
+                ReactDOM.render(
                     React.createElement('div', {className: 'playground-error'}, annot.message),
                     mountNode
                 );
@@ -233,9 +233,9 @@ define(['react', 'jquery', 'lodash', './playground-fiddle.rt', './playground.rt'
             this.renderSample();
         },
         renderSample: function () {
-            var mountNode = this.refs.mount.getDOMNode();
+            var mountNode = this.refs.mount;
             if (this.sample) {
-                React.render(this.sample, mountNode);
+                ReactDOM.render(this.sample, mountNode);
             }
         },
         componentDidUpdate: function () {
