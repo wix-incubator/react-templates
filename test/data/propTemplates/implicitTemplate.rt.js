@@ -3,10 +3,10 @@ define([
     'lodash'
 ], function (React, _) {
     'use strict';
-    function renderRow1(rowData) {
-        return React.createElement('div', {}, rowData);
-    }
     return function () {
+        function renderRow1(rowData) {
+            return React.createElement('div', {}, rowData);
+        }
         return React.createElement('div', {}, React.createElement(List, {
             'data': [
                 1,

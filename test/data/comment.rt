@@ -1,0 +1,6 @@
+<div>
+    <!-- this is a comment -->
+    <div>hello</div>
+    <!-- /* this is another comment */ -->
+    <div>hello</div>
+</div>

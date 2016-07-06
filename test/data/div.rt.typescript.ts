@@ -1,6 +1,4 @@
 import React = require('react');
 import _ = require('lodash');
+export = function() { return React.createElement('div',{}) };
 
-
-var fn = function() { return React.createElement('div',{}) };
-export = fn

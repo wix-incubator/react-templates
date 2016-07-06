@@ -1,0 +1,5 @@
+<div>
+   <rt-template prop="some">
+      text children are not allowed
+   </rt-template>
+</div>

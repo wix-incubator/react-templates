@@ -34,17 +34,12 @@ _.forEach(reactSupportedAttributes, attributeReactName => {
 
 const htmlSelfClosingTags = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
-
-const templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= requireNames %>) {\n'use strict';\n <%= injectedFunctions %>\nreturn function(<%= statelessParams %>){ return <%= body %>};\n});");
-const templateCommonJSTemplate = _.template("'use strict';\n<%= vars %>\n\n<%= injectedFunctions %>\nmodule.exports = function(<%= statelessParams %>){ return <%= body %>};\n");
-const templateES6Template = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nexport default function(<%= statelessParams %>){ return <%= body %>}\n');
-const templatePJSTemplate = _.template(`var <%= name %> = function (<%= statelessParams %>) {
-<%= injectedFunctions %>
-return <%= body %>
-};
-`);
-const templateTypescriptTemplate = _.template('<%= vars %>\n\n<%= injectedFunctions %>\nvar fn = function() { return <%= body %> };\nexport = fn\n');
-const templateJSRTTemplate = _.template('(function () {\n <%= injectedFunctions %>\n return function(){\nreturn <%= body %>}}\n)()');
+const templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '' %>[<%= requirePaths %>], function (<%= AMDArguments %>) {\n'use strict';\n<%= AMDSubstitutions %>return <%= renderFunction %>;\n});");
+const templateCommonJSTemplate = _.template("'use strict';\n<%= vars %>\nmodule.exports = <%= renderFunction %>;\n");
+const templateES6Template = _.template('<%= vars %>\nexport default <%= renderFunction %>\n');
+const templatePJSTemplate = _.template('var <%= name %> = <%= renderFunction %>');
+const templateTypescriptTemplate = _.template('<%= vars %>\nexport = <%= renderFunction %>;\n');
+const templateJSRTTemplate = _.template('<%= renderFunction %>');
 
 const templates = {
     amd: templateAMDTemplate,
@@ -60,7 +55,8 @@ const defaultCase = _.constant(true);
 
 const buildImportTypeScript = _.cond([
     [isImportAsterisk, d => `import ${d.alias} = require('${d.moduleName}');`],
-    [defaultCase, d => `import ${d.alias} = require('${d.moduleName}').${d.member};`]
+    [_.matches({member: 'default'}), d => `import ${d.alias} from '${d.moduleName}';`],
+    [defaultCase, d => `import { ${d.member} as ${d.alias} } from '${d.moduleName}';`]
 ]);
 
 const buildImportES6 = _.cond([

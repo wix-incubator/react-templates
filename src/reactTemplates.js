@@ -123,6 +123,9 @@ function generateTemplateProps(node, context) {
                 if (!_.has(child.attribs, 'prop')) {
                     throw RTCodeError.build(context, child, 'rt-template must have a prop attribute');
                 }
+                if (_.filter(child.children, {type: 'tag'}).length !== 1) {
+                    throw RTCodeError.build(context, child, "'rt-template' should have a single non-text element as direct child");
+                }
 
                 const childTemplate = _.find(context.options.propTemplates, {prop: child.attribs.prop}) || {arguments: []};
                 templateProp = {
@@ -225,9 +228,13 @@ function handleStyleProp(val, node, context) {
         .filter(i => _.includes(i, ':'))
         .map(i => {
             const pair = i.split(':');
-
+            const key = pair[0].trim();
+            if (/\{|\}/g.test(key)) {
+                throw RTCodeError.build(context, node, 'style attribute keys cannot contain { } expressions');
+            }
             const value = pair.slice(1).join(':').trim();
-            return _.camelCase(pair[0].trim()) + ' : ' + utils.convertText(node, context, value.trim());
+            const parsedKey = /(^-moz-)|(^-o-)|(^-webkit-)/ig.test(key) ? _.upperFirst(_.camelCase(key)) : _.camelCase(key);
+            return parsedKey + ' : ' + utils.convertText(node, context, value.trim());
         })
         .join(',');
     return `{${styleStr}}`;
@@ -289,6 +296,10 @@ function convertHtmlToReact(node, context) {
         context = _.defaults({
             boundParams: _.clone(context.boundParams)
         }, context);
+
+        if (node.type === 'tag' && node.name === importAttr) {
+            throw RTCodeError.build(context, node, "'rt-import' must be a toplevel node");
+        }
 
         if (node.type === 'tag' && node.name === includeNode) {
             const srcFile = node.attribs[includeSrcAttr];
@@ -391,7 +402,7 @@ function convertHtmlToReact(node, context) {
         // the scope variables are evaluated in context of the current iteration.
         if (node.attribs[repeatAttr]) {
             data.repeatFunction = generateInjectedFunc(context, 'repeat' + _.upperFirst(data.item), 'return ' + data.body);
-            data.repeatBinds = ['this'].concat(_.reject(context.boundParams, p => p === data.item || p === data.item + 'Index' || data.innerScope && p in data.innerScope.innerMapping));
+            data.repeatBinds = ['this'].concat(_.reject(context.boundParams, p => p === data.item || p === data.index || data.innerScope && p in data.innerScope.innerMapping));
             data.body = repeatTemplate(data);
         }
         if (node.attribs[ifAttr]) {
@@ -399,7 +410,8 @@ function convertHtmlToReact(node, context) {
         }
         return data.body;
     } else if (node.type === 'comment') {
-        return commentTemplate(node);
+        const sanitizedComment = node.data.split('*/').join('* /');
+        return commentTemplate({data: sanitizedComment});
     } else if (node.type === 'text') {
         return node.data.trim() ? utils.convertText(node, context, node.data) : '';
     }
@@ -562,33 +574,44 @@ function convertRT(html, reportContext, options) {
 
     const context = defaultContext(html, options, reportContext);
     const body = parseAndConvertHtmlToReact(html, context);
+    const injectedFunctions = context.injectedFunctions.join('\n');
+    const statelessParams = context.stateless ? 'props, context' : '';
+    const renderFunction = `function(${statelessParams}) { ${injectedFunctions}return ${body} }`;
 
     const requirePaths = _.map(context.defines, d => `"${d.moduleName}"`).join(',');
     const requireNames = _.map(context.defines, d => `${d.alias}`).join(',');
+    const AMDArguments = _.map(context.defines, (d, i) => (d.member === '*' ? `${d.alias}` : `$${i}`)).join(','); //eslint-disable-line
+    const AMDSubstitutions = _.map(context.defines, (d, i) => (d.member === '*' ? null : `var ${d.alias} = $${i}.${d.member};`)).join('\n'); //eslint-disable-line
     const buildImport = reactSupport.buildImport[options.modules] || reactSupport.buildImport.commonjs;
     const requires = _.map(context.defines, buildImport).join('\n');
     const header = options.flow ? '/* @flow */\n' : '';
     const vars = header + requires;
     const data = {
-        body,
-        injectedFunctions: context.injectedFunctions.join('\n'),
+        renderFunction,
         requireNames,
         requirePaths,
+        AMDArguments,
+        AMDSubstitutions,
         vars,
-        name: options.name,
-        statelessParams: context.stateless ? 'props, context' : ''
+        name: options.name
     };
     let code = templates[options.modules](data);
     if (options.modules !== 'typescript' && options.modules !== 'jsrt') {
-        code = parseJS(code);
+        code = parseJS(code, options);
     }
     return code;
 }
 
-function parseJS(code) {
+function parseJS(code, options) {
     try {
         let tree = esprima.parse(code, {range: true, tokens: true, comment: true, sourceType: 'module'});
-        tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
+        // fix for https://github.com/wix/react-templates/issues/157
+        // do not include comments for es6 modules due to bug in dependency "escodegen"
+        // to be removed when https://github.com/estools/escodegen/issues/263 will be fixed
+        // remove also its test case "test/data/comment.rt.es6.js"
+        if (options.modules !== 'es6') {
+            tree = escodegen.attachComments(tree, tree.comments, tree.tokens);
+        }
         return escodegen.generate(tree, {comment: true});
     } catch (e) {
         throw new RTCodeError(e.message, e.index, -1);
@@ -601,7 +624,7 @@ function convertJSRTToJS(text, reportContext, options) {
     const templateMatcherJSRT = /<template>([^]*?)<\/template>/gm;
     const code = text.replace(templateMatcherJSRT, (template, html) => convertRT(html, reportContext, options).replace(/;$/, ''));
 
-    return parseJS(code);
+    return parseJS(code, options);
 }
 
 module.exports = {
