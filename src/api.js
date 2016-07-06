@@ -32,12 +32,13 @@ function convertFile(source, target, options, context) {
         }
         return;
     }
-    const shouldAddName = options.modules === 'none' && !options.name;
+    const modules = options.modules || 'none';
+    const shouldAddName = modules === 'none' && !options.name;
     if (shouldAddName) {
         options.name = reactTemplates.normalizeName(path.basename(source, path.extname(source))) + 'RT';
     }
     options.readFileSync = fsUtil.createRelativeReadFileSync(source);
-    const js = options.modules === 'jsrt' ? convertJSRTToJS(html, context, options) : convertRT(html, context, options);
+    const js = modules === 'jsrt' ? convertJSRTToJS(html, context, options) : convertRT(html, context, options);
     if (!options.dryRun) {
         fs.writeFileSync(target, js);
     }

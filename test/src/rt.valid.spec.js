@@ -25,12 +25,12 @@ module.exports = {
 
         test('rt-if with rt-scope test', t => {
             const files = ['if-with-scope/valid-if-scope.rt'];
-            testFiles(t, files);
+            testFiles(t, files, {modules: 'amd'});
         });
 
         test('conversion test', t => {
             const files = ['div.rt', 'test.rt', 'repeat.rt', 'repeat-with-index.rt', 'inputs.rt', 'virtual.rt', 'stateless.rt', 'style-vendor-prefix.rt'];
-            testFiles(t, files);
+            testFiles(t, files, {modules: 'amd'});
         });
 
         test('prop template conversion test', t => {
@@ -39,7 +39,8 @@ module.exports = {
                     List: {
                         Row: {prop: 'renderRow', arguments: ['rowData']}
                     }
-                }
+                },
+                modules: 'amd'
             };
             const files = ['propTemplates/simpleTemplate.rt', 'propTemplates/templateInScope.rt', 'propTemplates/implicitTemplate.rt', 'propTemplates/twoTemplates.rt'];
             testFiles(t, files, options);
@@ -180,7 +181,8 @@ module.exports = {
             function check(testFile) {
                 const filename = path.join(dataPath, testFile);
                 const options = {
-                    readFileSync: fsUtil.createRelativeReadFileSync(filename)
+                    readFileSync: fsUtil.createRelativeReadFileSync(filename),
+                    modules: 'amd'
                 };
                 let code = '';
                 try {

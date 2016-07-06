@@ -43,8 +43,8 @@ $ rt <filename> [<filename> ...] [<args>]`,
     }, {
         option: 'modules',
         alias: 'm',
-        default: 'none',
         type: 'String',
+        enum: ['amd', 'commonjs', 'none', 'es6', 'typescript', 'jsrt'],
         description: 'Use output modules. (amd|commonjs|none|es6|typescript|jsrt)'
     }, {
         option: 'name',
@@ -93,7 +93,6 @@ $ rt <filename> [<filename> ...] [<args>]`,
         description: 'Show stack trace on errors.'
     }, {
         option: 'react-import-path',
-        default: 'react/addons',
         type: 'String',
         description: 'Dependency path for importing React.'
     }, {

@@ -75,8 +75,8 @@ function getOptions(options) {
     };
 
     const finalOptions = _.defaults({}, options, defaultOptions);
-    finalOptions.reactImportPath = finalOptions.reactImportPath || reactImport(finalOptions);
-    finalOptions.modules = finalOptions.modules || (finalOptions.native ? 'commonjs' : 'amd');
+    finalOptions.reactImportPath = reactImport(finalOptions);
+    finalOptions.modules = finalOptions.modules || (finalOptions.native ? 'commonjs' : 'none');
 
     const defaultPropTemplates = finalOptions.native ?
         reactPropTemplates.native[finalOptions.nativeTargetVersion] :
@@ -90,7 +90,7 @@ function reactImport(options) {
     if (options.native) {
         return 'react-native';
     }
-    if (options.targetVersion === '0.14.0' || options.targetVersion === '0.15.0' || options.targetVersion === '15.0.0' || options.targetVersion === '15.0.1') {
+    if (_.includes(['0.14.0', '0.15.0', '15.0.0', '15.0.1'], options.targetVersion)) {
         return 'react';
     }
     return 'react/addons';
