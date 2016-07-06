@@ -202,18 +202,28 @@ function generateProps(node, context) {
 }
 
 function handleEventHandler(val, context, node, key) {
-    const funcParts = val.split('=>');
-    if (funcParts.length !== 2) {
-        throw RTCodeError.build(context, node, `when using 'on' events, use lambda '(p1,p2)=>body' notation or use {} to return a callback function. error: [${key}='${val}']`);
+    let handlerString;
+    if (_.startsWith(val, 'this.')) {
+        if (context.options.autobind) {
+            handlerString = `${val}.bind(this)`;
+        } else {
+            throw RTCodeError.build(context, node, "'this.handler' syntax allowed only when the --autobind is on, use {} to return a callback function.");
+        }
+    } else {
+        const funcParts = val.split('=>');
+        if (funcParts.length !== 2) {
+            throw RTCodeError.build(context, node, `when using 'on' events, use lambda '(p1,p2)=>body' notation or 'this.handler'; otherwise use {} to return a callback function. error: [${key}='${val}']`);
+        }
+        const evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
+        const funcBody = funcParts[1].trim();
+        let params = context.boundParams;
+        if (evtParams.trim() !== '') {
+            params = params.concat([evtParams.trim()]);
+        }
+        const generatedFuncName = generateInjectedFunc(context, key, funcBody, params);
+        handlerString = genBind(generatedFuncName, context.boundParams);
     }
-    const evtParams = funcParts[0].replace('(', '').replace(')', '').trim();
-    const funcBody = funcParts[1].trim();
-    let params = context.boundParams;
-    if (evtParams.trim() !== '') {
-        params = params.concat([evtParams.trim()]);
-    }
-    const generatedFuncName = generateInjectedFunc(context, key, funcBody, params);
-    return genBind(generatedFuncName, context.boundParams);
+    return handlerString;
 }
 
 function genBind(func, args) {
