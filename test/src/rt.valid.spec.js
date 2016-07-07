@@ -1,4 +1,5 @@
 'use strict';
+const _ = require('lodash');
 const reactTemplates = require('../../src/reactTemplates');
 const testUtils = require('./testUtils');
 const readFileNormalized = testUtils.readFileNormalized;
@@ -54,9 +55,27 @@ module.exports = {
                     }
                 },
                 native: true
-            };
-            const files = ['native/nativeView.rt', 'native/listViewTemplate.rt', 'native/listViewAndCustomTemplate.rt'];
-            testFiles(t, files, options);
+            };        
+            const optionsNew = _.assign({nativeTargetVersion: '0.29.0'}, options);             
+               
+            const files = [
+                {source: 'native/nativeView.rt', expected: 'native/nativeView.rt.js', options},
+                {source: 'native/listViewTemplate.rt', expected: 'native/listViewTemplate.rt.js', options},
+                {source: 'native/listViewAndCustomTemplate.rt', expected: 'native/listViewAndCustomTemplate.rt.js', options},
+                {source: 'native/nativeView.rt', expected: 'native/nativeView.rt.v029.js', options: optionsNew},
+                {source: 'native/listViewTemplate.rt', expected: 'native/listViewTemplate.rt.v029.js', options: optionsNew},
+                {source: 'native/listViewAndCustomTemplate.rt', expected: 'native/listViewAndCustomTemplate.rt.v029.js', options: optionsNew}
+            ];
+            t.plan(files.length);
+            files.forEach(check);
+
+            function check(testData) {
+                const filename = path.join(dataPath, testData.source);
+                const html = readFileNormalized(filename);
+                const expected = readFileNormalized(path.join(dataPath, testData.expected));
+                const actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
+                compareAndWrite(t, actual, expected, filename);
+            }
         });
 
         test('convert div with all module types', t => {
