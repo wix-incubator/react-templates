@@ -87,8 +87,8 @@ function getOptions(options) {
 }
 
 function reactImport(options) {
-    if (options.native) {
-        return 'react-native';
+    if (options.native) {        
+        return reactNativeSupport[options.nativeTargetVersion].react.module;
     }
     if (_.includes(['0.14.0', '0.15.0', '15.0.0', '15.0.1'], options.targetVersion)) {
         return 'react';
@@ -247,7 +247,8 @@ function handleStyleProp(val, node, context) {
  */
 function convertTagNameToConstructor(tagName, context) {
     if (context.options.native) {
-        return _.includes(reactNativeSupport[context.options.nativeTargetVersion], tagName) ? 'React.' + tagName : tagName;
+        const targetSupport = reactNativeSupport[context.options.nativeTargetVersion];
+        return _.includes(targetSupport.components, tagName) ? `${targetSupport.reactNative.name}.${tagName}` : tagName;
     }
     let isHtmlTag = _.includes(reactDOMSupport[context.options.targetVersion], tagName);
     if (reactSupport.shouldUseCreateElement(context)) {
@@ -268,6 +269,12 @@ function defaultContext(html, options, reportContext) {
         {moduleName: options.reactImportPath, alias: 'React', member: '*'},
         {moduleName: options.lodashImportPath, alias: '_', member: '*'}
     ];
+    if (options.native) {
+        const targetSupport = reactNativeSupport[options.nativeTargetVersion];
+        if (targetSupport.reactNative.module !== targetSupport.react.module) {
+            defaultDefines.splice(0, 0, {moduleName: targetSupport.reactNative.module, alias: targetSupport.reactNative.name, member: '*'});
+        }
+    }
     return {
         boundParams: [],
         injectedFunctions: [],
