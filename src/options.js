@@ -113,7 +113,8 @@ $ rt <filename> [<filename> ...] [<args>]`,
         option: 'native-target-version',
         alias: 'rnv',
         type: 'String',
-        default: reactNativeSupport.default,
-        description: `'React native version to generate code for (${Object.keys(reactNativeSupport).join(', ')})'`
+        enum: Object.keys(reactNativeSupport),
+        default: reactNativeSupport.default,        
+        description: `React native version to generate code for (${Object.keys(reactNativeSupport).join(', ')})`
     }]
 });
