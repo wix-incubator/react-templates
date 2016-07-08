@@ -48,6 +48,7 @@ http://plugins.jetbrains.com/plugin/7648
     * ~~rt-require~~ (deprecated, use rt-import)
     * [rt-template](#rt-template)
     * [rt-include](#rt-include)
+    * [rt-pre](#rt-pre)
 * [styles](#styles)
 * [event handlers](#event-handlers)
 
@@ -338,6 +339,34 @@ is equivalent to:
       <rect height="50" width="50" style="fill: #00f"/>
   </svg>
 </div>
+```
+
+## rt-pre
+
+When using the option `--normalize-html-whitespace` it allows to override the whitespace removal behaviour on a specific tag.
+
+###### Sample:
+given `main.rt`:
+```html
+<span rt-pre>
+    here   repeating   whitespaces   are   preserved
+    even   if  --normalize-html-whitespace   is   on  
+</span>
+<span>    
+    here   repeating   whitespaces   are   removed
+    if  --normalize-html-whitespace   is   on   
+</span>
+```
+
+`rt-pre` is applied automatically on `<pre>` and `<textarea>` tags.
+
+###### Sample:
+given `main.rt`:
+```html
+<pre>
+    here   repeating   whitespaces   are   preserved
+    even   if  --normalize-html-whitespace   is   on  
+</span>
 ```
 
 ## style
