@@ -358,7 +358,7 @@ given `main.rt`:
 </span>
 ```
 
-`rt-pre` is applied automatically on `<pre>` and `<textarea>` tags.
+`rt-pre` is applied automatically on `<pre>` and `<textarea>` tags:
 
 ###### Sample:
 given `main.rt`:
@@ -366,7 +366,7 @@ given `main.rt`:
 <pre>
     here   repeating   whitespaces   are   preserved
     even   if  --normalize-html-whitespace   is   on  
-</span>
+</pre>
 ```
 
 ## style
