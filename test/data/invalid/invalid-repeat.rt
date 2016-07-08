@@ -1,1 +1,0 @@
-<div rt-repeat="a in b in c"></div>

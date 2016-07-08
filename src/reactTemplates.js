@@ -584,6 +584,8 @@ function parseAndConvertHtmlToReact(html, context) {
         throw RTCodeError.build(context, rootNode.root()[0], 'Document should have a single root element');
     } else if (firstTag.name === virtualNode) {
         throw RTCodeError.build(context, firstTag, `Document should not have <${virtualNode}> as root element`);
+    } else if (_.includes(_.keys(firstTag.attribs), repeatAttr)) {
+        throw RTCodeError.build(context, firstTag, "root element may not have a 'rt-repeat' attribute");
     }
     return convertHtmlToReact(firstTag, context);
 }
