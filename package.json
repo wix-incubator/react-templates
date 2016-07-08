@@ -36,6 +36,7 @@
     "escodegen": "^1.8.0",
     "esprima": "^2.7.1",
     "lodash": "^4.11.1",
+    "normalize-html-whitespace": "^0.2.0",
     "optionator": "^0.8.0",
     "text-table": "^0.2.0"
   },
