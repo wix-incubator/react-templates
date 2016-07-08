@@ -90,6 +90,12 @@ module.exports = {
             files.forEach(file => check(t, file));
         });
 
+        test('normalize whitespace', t => {
+            const files = ['whitespace.rt'];
+            const options = {normalizeHtmlWhitespace: true, modules: 'amd'};    
+            testFiles(t, files, options);
+        });
+        
         test('convert comment with AMD and ES6 modules', t => {
             const files = [
                 {source: 'comment.rt', expected: 'comment.rt.amd.js', options: {modules: 'amd'}},
