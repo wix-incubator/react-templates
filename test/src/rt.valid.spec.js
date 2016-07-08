@@ -11,27 +11,35 @@ const fs = require('fs');
 
 module.exports = {
     runTests(test, dataPath) {
-        function checkFile(t, options, testFile) {
-            const filename = path.join(dataPath, testFile);
+        function check(t, testData) {
+            const filename = path.join(dataPath, testData.source);
             const html = readFileNormalized(filename);
-            const expected = readFileNormalized(filename + '.js');
-            const actual = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '').trim();
+            const expected = readFileNormalized(path.join(dataPath, testData.expected));
+            const actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
             compareAndWrite(t, actual, expected, filename);
         }
 
         function testFiles(t, files, options) {
             t.plan(files.length);
-            files.forEach(checkFile.bind(this, t, options));
+            files.forEach(testFile => {
+                check(t, {
+                    source: testFile,
+                    expected: testFile + '.js',
+                    options
+                });
+            });
         }
 
         test('rt-if with rt-scope test', t => {
             const files = ['if-with-scope/valid-if-scope.rt'];
-            testFiles(t, files, {modules: 'amd'});
+            const options = {modules: 'amd'}; 
+            testFiles(t, files, options);
         });
 
         test('conversion test', t => {
             const files = ['div.rt', 'test.rt', 'repeat.rt', 'repeat-with-index.rt', 'inputs.rt', 'virtual.rt', 'stateless.rt', 'style-vendor-prefix.rt', 'non-breaking-space.rt'];
-            testFiles(t, files, {modules: 'amd'});
+            const options = {modules: 'amd'}; 
+            testFiles(t, files, options);
         });
 
         test('prop template conversion test', t => {
@@ -67,15 +75,7 @@ module.exports = {
                 {source: 'native/listViewAndCustomTemplate.rt', expected: 'native/listViewAndCustomTemplate.rt.v029.js', options: optionsNew}
             ];
             t.plan(files.length);
-            files.forEach(check);
-
-            function check(testData) {
-                const filename = path.join(dataPath, testData.source);
-                const html = readFileNormalized(filename);
-                const expected = readFileNormalized(path.join(dataPath, testData.expected));
-                const actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
-                compareAndWrite(t, actual, expected, filename);
-            }
+            files.forEach(file => check(t, file));
         });
 
         test('convert div with all module types', t => {
@@ -87,15 +87,7 @@ module.exports = {
                 {source: 'div.rt', expected: 'div.rt.typescript.ts', options: {modules: 'typescript'}}
             ];
             t.plan(files.length);
-            files.forEach(check);
-
-            function check(testData) {
-                const filename = path.join(dataPath, testData.source);
-                const html = readFileNormalized(filename);
-                const expected = readFileNormalized(path.join(dataPath, testData.expected));
-                const actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
-                compareAndWrite(t, actual, expected, filename);
-            }
+            files.forEach(file => check(t, file));
         });
 
         test('convert comment with AMD and ES6 modules', t => {
@@ -104,15 +96,7 @@ module.exports = {
                 {source: 'comment.rt', expected: 'comment.rt.es6.js', options: {modules: 'es6'}}
             ];
             t.plan(files.length);
-            files.forEach(check);
-
-            function check(testData) {
-                const filename = path.join(dataPath, testData.source);
-                const html = readFileNormalized(filename);
-                const expected = readFileNormalized(path.join(dataPath, testData.expected));
-                const actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
-                compareAndWrite(t, actual, expected, filename);
-            }
+            files.forEach(file => check(t, file));
         });
 
         test('rt-require with all module types', t => {
@@ -124,15 +108,7 @@ module.exports = {
                 {source: 'require.rt', expected: 'require.rt.typescript.ts', options: {modules: 'typescript'}}
             ];
             t.plan(files.length);
-            files.forEach(check);
-
-            function check(testData) {
-                const filename = path.join(dataPath, testData.source);
-                const html = readFileNormalized(filename);
-                const expected = readFileNormalized(path.join(dataPath, testData.expected));
-                const actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
-                compareAndWrite(t, actual, expected, filename);
-            }
+            files.forEach(file => check(t, file));
         });
 
         test('rt-import with all module types', t => {
@@ -144,29 +120,19 @@ module.exports = {
                 {source: 'import.rt', expected: 'import.rt.typescript.ts', options: {modules: 'typescript'}}
             ];
             t.plan(files.length);
-            files.forEach(check);
-
-            function check(testData) {
-                const filename = path.join(dataPath, testData.source);
-                const html = readFileNormalized(filename);
-                const expected = readFileNormalized(path.join(dataPath, testData.expected));
-                const actual = reactTemplates.convertTemplateToReact(html, testData.options).replace(/\r/g, '').trim();
-                compareAndWrite(t, actual, expected, filename);
-            }
+            files.forEach(file => check(t, file));
         });
 
         test('convert jsrt and test source results', t => {
             const files = ['simple.jsrt'];
             t.plan(files.length);
-            files.forEach(check);
-
-            function check(file) {
+            files.forEach(file => {
                 const filename = path.join(dataPath, file);
                 const js = readFileNormalized(filename);
                 const expected = readFileNormalized(path.join(dataPath, file.replace('.jsrt', '.js')));
                 const actual = reactTemplates.convertJSRTToJS(js, context).replace(/\r/g, '').trim();
                 compareAndWrite(t, actual, expected, filename);
-            }
+            });
         });
 
         test('html tests', t => {
@@ -195,9 +161,7 @@ module.exports = {
             ];
             t.plan(files.length);
 
-            files.forEach(check);
-
-            function check(testFile) {
+            files.forEach(testFile => {
                 const filename = path.join(dataPath, testFile);
                 const options = {
                     readFileSync: fsUtil.createRelativeReadFileSync(filename),
@@ -217,7 +181,7 @@ module.exports = {
                     console.log(testFile, e);
                     fs.writeFileSync(filename + '.code.js', code);
                 }
-            }
+            });
         });
     }
 };
