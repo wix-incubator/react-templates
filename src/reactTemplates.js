@@ -366,7 +366,7 @@ function convertHtmlToReact(node, context) {
         if (node.attribs[ifAttr]) {
             validateIfAttribute(node, context, data);
             data.condition = node.attribs[ifAttr].trim();
-            if (!node.attribs.key) {
+            if (!node.attribs.key && node.name !== virtualNode) {
                 _.set(node, ['attribs', 'key'], `${node.startIndex}`);
             }
         }
@@ -384,14 +384,23 @@ function convertHtmlToReact(node, context) {
                 }
             }
         }
+        
+        if (node.name === virtualNode) {                                    
+            const invalidAttributes = _.without(_.keys(node.attribs), scopeAttr, ifAttr, repeatAttr);            
+            if (invalidAttributes.length > 0) {                                
+                throw RTCodeError.build(context, node, "<rt-virtual> may not contain attributes other than 'rt-scope', 'rt-if' and 'rt-repeat'");
+            }
 
-        // provide a key to virtual node children if missing
-        if (node.name === virtualNode && node.children.length > 1) {
-            _(node.children)
-                .reject('attribs.key')
-                .forEach((child, i) => {
-                    _.set(child, ['attribs', 'key'], `${node.startIndex}${i}`);
-                });
+            // provide a key to virtual node children if missing
+            if (node.children.length > 1) {
+                _(node.children)
+                    .reject('attribs.key')
+                    .forEach((child, i) => {                        
+                        if (child.type === 'tag' && child.name !== virtualNode) {                            
+                            _.set(child, ['attribs', 'key'], `${node.startIndex}${i}`);
+                        }
+                    });
+            }
         }
 
         const children = _.map(node.children, child => {

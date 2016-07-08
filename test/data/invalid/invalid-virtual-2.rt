@@ -1,0 +1,5 @@
+<div>
+   <rt-virtual rt-scope="'42' as fortytwo" onClick={console.log}>
+      The answer is {fortytwo}
+   </rt-virtual>
+</div>
