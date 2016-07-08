@@ -294,6 +294,15 @@ function hasNonSimpleChildren(node) {
 }
 
 /**
+ * Trims a string the same way as String.prototype.trim(), but preserving all non breaking spaces ('\xA0') 
+ * @param {string} text
+ * @return {string}
+ */
+function trimHtmlText(text) {
+    return text.replace(/^[ \f\n\r\t\v\u1680\u180e\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+|[ \f\n\r\t\v\u1680\u180e\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+$/g, '');
+}
+
+/**
  * @param node
  * @param {Context} context
  * @return {string}
@@ -420,7 +429,7 @@ function convertHtmlToReact(node, context) {
         const sanitizedComment = node.data.split('*/').join('* /');
         return commentTemplate({data: sanitizedComment});
     } else if (node.type === 'text') {
-        return node.data.trim() ? utils.convertText(node, context, node.data) : '';
+        return trimHtmlText(node.data) ? utils.convertText(node, context, node.data) : '';        
     }
 }
 
