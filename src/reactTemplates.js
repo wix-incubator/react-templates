@@ -88,7 +88,7 @@ function getOptions(options) {
 }
 
 function reactImport(options) {
-    if (options.native) {        
+    if (options.native) {
         return reactNativeSupport[options.nativeTargetVersion].react.module;
     }
     if (_.includes(['0.14.0', '0.15.0', '15.0.0', '15.0.1'], options.targetVersion)) {
@@ -295,7 +295,7 @@ function hasNonSimpleChildren(node) {
 }
 
 /**
- * Trims a string the same way as String.prototype.trim(), but preserving all non breaking spaces ('\xA0') 
+ * Trims a string the same way as String.prototype.trim(), but preserving all non breaking spaces ('\xA0')
  * @param {string} text
  * @return {string}
  */
@@ -385,10 +385,10 @@ function convertHtmlToReact(node, context) {
                 }
             }
         }
-        
-        if (node.name === virtualNode) {                                    
-            const invalidAttributes = _.without(_.keys(node.attribs), scopeAttr, ifAttr, repeatAttr);            
-            if (invalidAttributes.length > 0) {                                
+
+        if (node.name === virtualNode) {
+            const invalidAttributes = _.without(_.keys(node.attribs), scopeAttr, ifAttr, repeatAttr);
+            if (invalidAttributes.length > 0) {
                 throw RTCodeError.build(context, node, "<rt-virtual> may not contain attributes other than 'rt-scope', 'rt-if' and 'rt-repeat'");
             }
 
@@ -396,8 +396,8 @@ function convertHtmlToReact(node, context) {
             if (node.children.length > 1) {
                 _(node.children)
                     .reject('attribs.key')
-                    .forEach((child, i) => {                        
-                        if (child.type === 'tag' && child.name !== virtualNode) {                            
+                    .forEach((child, i) => {
+                        if (child.type === 'tag' && child.name !== virtualNode) {
                             _.set(child, ['attribs', 'key'], `${node.startIndex}${i}`);
                         }
                     });
