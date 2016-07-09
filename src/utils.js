@@ -1,6 +1,7 @@
 'use strict';
 const _ = require('lodash');
 const esprima = require('esprima');
+const normalizeHtmlWhitespace = require('normalize-html-whitespace');
 const rtError = require('./RTCodeError');
 const RTCodeError = rtError.RTCodeError;
 
@@ -143,12 +144,23 @@ const curlyMap = {'{': 1, '}': -1};
  */
 
 /**
+ * @param {string} txt
+ * @param {boolean} removeWhitespaces
+ * @return {string}
+ */
+function jsonText(txt, normalizeWhitespaces) {
+    const text = normalizeWhitespaces ? normalizeHtmlWhitespace(txt) : txt;
+    return JSON.stringify(text);
+}
+
+/**
  * @param node
  * @param {Context} context
  * @param {string} txt
+ * @param {boolean} [removeWhitespaces]
  * @return {string}
  */
-function convertText(node, context, txt) {
+function convertText(node, context, txt, normalizeWhitespaces) {
     let res = '';
     let first = true;
     const concatChar = node.type === 'text' ? ',' : '+';
@@ -156,7 +168,7 @@ function convertText(node, context, txt) {
         const start = txt.indexOf('{');
         const pre = txt.substr(0, start);
         if (pre) {
-            res += (first ? '' : concatChar) + JSON.stringify(pre);
+            res += (first ? '' : concatChar) + jsonText(pre, normalizeWhitespaces);
             first = false;
         }
         let curlyCounter = 1;
@@ -174,7 +186,7 @@ function convertText(node, context, txt) {
         }
     }
     if (txt) {
-        res += (first ? '' : concatChar) + JSON.stringify(txt);
+        res += (first ? '' : concatChar) + jsonText(txt, normalizeWhitespaces);
     }
     if (res === '') {
         res = 'true';

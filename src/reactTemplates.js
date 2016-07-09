@@ -3,7 +3,6 @@ const cheerio = require('cheerio');
 const _ = require('lodash');
 const esprima = require('esprima');
 const escodegen = require('escodegen');
-const normalizeHtmlWhitespace = require('normalize-html-whitespace');
 const reactDOMSupport = require('./reactDOMSupport');
 const reactNativeSupport = require('./reactNativeSupport');
 const reactPropTemplates = require('./reactPropTemplates');
@@ -440,15 +439,11 @@ function convertHtmlToReact(node, context) {
         const sanitizedComment = node.data.split('*/').join('* /');
         return commentTemplate({data: sanitizedComment});
     } else if (node.type === 'text') {
-        let text = node.data;
         const parentNode = node.parent;
-        if (parentNode !== undefined) {
-            const preserveWhitespaces = parentNode.name === 'pre' || parentNode.name === 'textarea' || _.has(parentNode.attribs, preAttr);
-            if (context.options.normalizeHtmlWhitespace && !preserveWhitespaces) {
-                text = normalizeHtmlWhitespace(text);
-            }
-        }        
-        return trimHtmlText(text) ? utils.convertText(node, context, text) : '';        
+        const overrideNormalize = parentNode !== undefined && (parentNode.name === 'pre' || parentNode.name === 'textarea' || _.has(parentNode.attribs, preAttr));
+        const normalizeWhitespaces = context.options.normalizeHtmlWhitespace && !overrideNormalize;
+        const text = node.data;
+        return trimHtmlText(text) ? utils.convertText(node, context, text, normalizeWhitespaces) : '';
     }
 }
 
