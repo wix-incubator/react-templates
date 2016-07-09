@@ -144,23 +144,16 @@ const curlyMap = {'{': 1, '}': -1};
  */
 
 /**
- * @param {string} txt
- * @param {boolean} removeWhitespaces
- * @return {string}
- */
-function jsonText(txt, normalizeWhitespaces) {
-    const text = normalizeWhitespaces ? normalizeHtmlWhitespace(txt) : txt;
-    return JSON.stringify(text);
-}
-
-/**
  * @param node
  * @param {Context} context
  * @param {string} txt
- * @param {boolean} [removeWhitespaces]
+ * @param {boolean} [normalizeWhitespaces]
  * @return {string}
  */
 function convertText(node, context, txt, normalizeWhitespaces) {
+    function jsonText(text) {
+        return JSON.stringify(normalizeWhitespaces ? normalizeHtmlWhitespace(text) : text);
+    }
     let res = '';
     let first = true;
     const concatChar = node.type === 'text' ? ',' : '+';
@@ -168,7 +161,7 @@ function convertText(node, context, txt, normalizeWhitespaces) {
         const start = txt.indexOf('{');
         const pre = txt.substr(0, start);
         if (pre) {
-            res += (first ? '' : concatChar) + jsonText(pre, normalizeWhitespaces);
+            res += (first ? '' : concatChar) + jsonText(pre);
             first = false;
         }
         let curlyCounter = 1;
@@ -186,7 +179,7 @@ function convertText(node, context, txt, normalizeWhitespaces) {
         }
     }
     if (txt) {
-        res += (first ? '' : concatChar) + jsonText(txt, normalizeWhitespaces);
+        res += (first ? '' : concatChar) + jsonText(txt);
     }
     if (res === '') {
         res = 'true';
