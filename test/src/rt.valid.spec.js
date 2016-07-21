@@ -6,8 +6,6 @@ const readFileNormalized = testUtils.readFileNormalized;
 const compareAndWrite = testUtils.compareAndWrite;
 const path = require('path');
 const context = require('../../src/context');
-const fsUtil = require('../../src/fsUtil');
-const fs = require('fs');
 
 module.exports = {
     runTests(test, dataPath) {
@@ -24,7 +22,7 @@ module.exports = {
             files.forEach(testFile => {
                 check(t, {
                     source: testFile,
-                    expected: testFile + '.js',
+                    expected: `${testFile}.js`,
                     options
                 });
             });
@@ -32,13 +30,13 @@ module.exports = {
 
         test('rt-if with rt-scope test', t => {
             const files = ['if-with-scope/valid-if-scope.rt'];
-            const options = {modules: 'amd'}; 
+            const options = {modules: 'amd'};
             testFiles(t, files, options);
         });
 
         test('conversion test', t => {
             const files = ['div.rt', 'test.rt', 'repeat.rt', 'repeat-with-index.rt', 'inputs.rt', 'virtual.rt', 'stateless.rt', 'style-vendor-prefix.rt', 'non-breaking-space.rt'];
-            const options = {modules: 'amd'}; 
+            const options = {modules: 'amd'};
             testFiles(t, files, options);
         });
 
@@ -63,9 +61,9 @@ module.exports = {
                     }
                 },
                 native: true
-            };        
-            const optionsNew = _.assign({nativeTargetVersion: '0.29.0'}, options);             
-               
+            };
+            const optionsNew = _.assign({nativeTargetVersion: '0.29.0'}, options);
+
             const files = [
                 {source: 'native/nativeView.rt', expected: 'native/nativeView.rt.js', options},
                 {source: 'native/listViewTemplate.rt', expected: 'native/listViewTemplate.rt.js', options},
@@ -92,10 +90,10 @@ module.exports = {
 
         test('normalize whitespace', t => {
             const files = ['whitespace.rt'];
-            const options = {normalizeHtmlWhitespace: true, modules: 'amd'};    
+            const options = {normalizeHtmlWhitespace: true, modules: 'amd'};
             testFiles(t, files, options);
         });
-        
+
         test('convert comment with AMD and ES6 modules', t => {
             const files = [
                 {source: 'comment.rt', expected: 'comment.rt.amd.js', options: {modules: 'amd'}},
@@ -138,55 +136,6 @@ module.exports = {
                 const expected = readFileNormalized(path.join(dataPath, file.replace('.jsrt', '.js')));
                 const actual = reactTemplates.convertJSRTToJS(js, context).replace(/\r/g, '').trim();
                 compareAndWrite(t, actual, expected, filename);
-            });
-        });
-
-        test('html tests', t => {
-            const files = [
-                'scope.rt',
-                'scope-trailing-semicolon.rt',
-                'scope-variable-references.rt',
-                'lambda.rt',
-                'eval.rt',
-                'props.rt',
-                'custom-element.rt',
-                'style.rt',
-                'concat.rt',
-                'js-in-attr.rt',
-                'props-class.rt',
-                'rt-class.rt',
-                'className.rt',
-                'svg.rt',
-                'virtual.rt',
-                'scope-evaluated-after-repeat.rt',
-                'scope-evaluated-after-repeat2.rt',
-                'scope-evaluated-after-if.rt',
-                'scope-obj.rt',
-                'repeat-literal-collection.rt',
-                'include.rt'
-            ];
-            t.plan(files.length);
-
-            files.forEach(testFile => {
-                const filename = path.join(dataPath, testFile);
-                const options = {
-                    readFileSync: fsUtil.createRelativeReadFileSync(filename),
-                    modules: 'amd'
-                };
-                let code = '';
-                try {
-                    const html = fs.readFileSync(filename).toString();
-                    const expected = testUtils.normalizeHtml(readFileNormalized(filename + '.html'));
-                    code = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '');
-                    const actual = testUtils.normalizeHtml(testUtils.codeToHtml(code));
-                    const equal = compareAndWrite(t, actual, expected, filename);
-                    if (!equal) {
-                        fs.writeFileSync(filename + '.code.js', code);
-                    }
-                } catch (e) {
-                    console.log(testFile, e);
-                    fs.writeFileSync(filename + '.code.js', code);
-                }
             });
         });
     }

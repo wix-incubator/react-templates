@@ -35,6 +35,41 @@ function compareAndWrite(t, actual, expected, filename) {
 }
 
 /**
+ * @param {*} t
+ * @param {string} actual
+ * @param {string} expected
+ * @param {string} filename
+ * @return {boolean} whether actual is equal to expected
+ */
+function compareAndWriteHtml(t, actual, expected, filename) {
+    const $actual = cheerio.load(actual, {normalizeWhitespace: true});
+    const $expected = cheerio.load(expected, {normalizeWhitespace: true});
+    compareNodesList(t, $actual.root(), $expected.root(), filename);
+    // t.equal(actual, expected, filename);
+    // if (actual !== expected) {
+    //     fs.writeFileSync(filename + '.actual.js', actual);
+    //     return false;
+    // }
+    // return true;
+}
+
+function compareNodes(t, a, b, filename) {
+    _.forEach(a.attribs, (v, k) => {
+        if (v !== b.attribs[k]) {
+            console.log(`${v} is not ${b.attribs[k]}`);
+        }
+        t.equal(v, b.attribs[k], filename);
+    });
+    compareNodesList(t, a.children, b.children);
+}
+
+function compareNodesList(t, a, b, filename) {
+    _.forEach(a, (v, i) => {
+        compareNodes(t, v, b[i], filename);
+    });
+}
+
+/**
  * @param {string} filename
  * @return {string}
  */
@@ -82,5 +117,6 @@ module.exports = {
     readFile,
     joinDataPath,
     rtToHtml,
-    codeToHtml
+    codeToHtml,
+    compareAndWriteHtml
 };
