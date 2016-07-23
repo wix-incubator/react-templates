@@ -14,6 +14,9 @@ const validateJS = utils.validateJS;
 const RTCodeError = rtError.RTCodeError;
 
 const repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
+const repeatFilterTemplate = _.template('_.map(<%= collection %>.filter(<%= filterFn %>),<%= repeatFunction %>.bind(<%= repeatBinds %>))');
+const repeatFilterFn = _.template('function(<%= arg %>) {return <%= expr %>;}.bind(this)');
+
 const ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
 const propsTemplateSimple = _.template('_.assign({}, <%= generatedProps %>, <%= rtProps %>)');
 const propsTemplate = _.template('mergeProps( <%= generatedProps %>, <%= rtProps %>)');
@@ -43,6 +46,7 @@ function getTagTemplateString(simpleTagTemplate, shouldCreateElement) {
 const commentTemplate = _.template(' /* <%= data %> */ ');
 
 const repeatAttr = 'rt-repeat';
+const repeatFilterAttr = 'filter:';
 const ifAttr = 'rt-if';
 const classSetAttr = 'rt-class';
 const classAttr = 'class';
@@ -345,6 +349,18 @@ function convertHtmlToReact(node, context) {
             if (arr.length !== 2) {
                 throw RTCodeError.build(context, node, `rt-repeat invalid 'in' expression '${node.attribs[repeatAttr]}'`);
             }
+
+            const filterExpr = arr[1].split(' | ');
+            if (filterExpr.length > 2) {
+                throw RTCodeError.build(context, node, `rt-repeat invalid ' | ' expression '${node.attribs[repeatAttr]}'`);
+            }
+
+            if (filterExpr.length === 2) {
+                arr[1] = filterExpr[0];
+                const expr = filterExpr[1].replace(repeatFilterAttr, '');
+                data.filterFn = repeatFilterFn({arg: arr[0], expr});
+            }
+
             const repeaterParams = arr[0].split(',').map(s => s.trim());
             data.item = repeaterParams[0];
             data.index = repeaterParams[1] || `${data.item}Index`;
@@ -430,7 +446,7 @@ function convertHtmlToReact(node, context) {
         if (node.attribs[repeatAttr]) {
             data.repeatFunction = generateInjectedFunc(context, 'repeat' + _.upperFirst(data.item), 'return ' + data.body);
             data.repeatBinds = ['this'].concat(_.reject(context.boundParams, p => p === data.item || p === data.index || data.innerScope && p in data.innerScope.innerMapping));
-            data.body = repeatTemplate(data);
+            data.body = data.filterFn ? repeatFilterTemplate(data) : repeatTemplate(data);
         }
         if (node.attribs[ifAttr]) {
             data.body = ifTemplate(data);
