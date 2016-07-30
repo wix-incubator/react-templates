@@ -31,6 +31,7 @@ module.exports = {
                 'scope-evaluated-after-repeat2.rt',
                 'scope-evaluated-after-if.rt',
                 'scope-obj.rt',
+                'scope-reserved-tokens.rt',
                 'repeat-literal-collection.rt',
                 'include.rt'
             ];

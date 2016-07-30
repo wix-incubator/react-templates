@@ -448,6 +448,35 @@ function convertHtmlToReact(node, context) {
     }
 }
 
+/**
+ * Parses the rt-scope attribute returning an array of parsed sections
+ *
+ * @param {String} scope The scope attribute to parse
+ * @returns {Array} an array of {expression,identifier}
+ * @throws {String} the part of the string that failed to parse
+ */
+function parseScopeSyntax(text) {
+    // in plain english, this regex scans for:
+    //    any character + one or more space + "as" + one or more space + JavaScript identifier +
+    //    zero or more space + semicolon or end of line + zero or more space
+    // it captures "any character" as the scope expression, "JavaScript identifier" as the identifier
+    const regex = RegExp('([\\s\\S]*?)(?: )+as(?: )+([$_a-zA-Z]+[$_a-zA-Z0-9]*)(?: )*(?:;|$)(?: )*', 'g');
+    const res = [];
+    do {
+        const idx = regex.lastIndex;
+        const match = regex.exec(text);
+        if (regex.lastIndex === idx || match === null) {
+            throw text.substr(idx);
+        }
+        if (match.index === regex.lastIndex) {
+            regex.lastIndex++;
+        }
+        res.push({expression: match[1].trim(), identifier: match[2]});
+    } while (regex.lastIndex < text.length);
+
+    return res;
+}
+
 function handleScopeAttribute(node, context, data) {
     data.innerScope = {
         scopeName: '',
@@ -457,25 +486,26 @@ function handleScopeAttribute(node, context, data) {
 
     data.innerScope.outerMapping = _.zipObject(context.boundParams, context.boundParams);
 
-    _(node.attribs[scopeAttr]).split(';').invokeMap('trim').compact().forEach(scopePart => {
-        const scopeSubParts = _(scopePart).split(' as ').invokeMap('trim').value();
-        if (scopeSubParts.length < 2) {
-            throw RTCodeError.build(context, node, `invalid scope part '${scopePart}'`);
-        }
-        const alias = scopeSubParts[1];
-        const value = scopeSubParts[0];
-        validateJS(alias, node, context);
+    let scopes;
+    try {
+        scopes = parseScopeSyntax(node.attribs[scopeAttr]);
+    } catch (scopePart) {
+        throw RTCodeError.build(context, node, `invalid scope part '${scopePart}'`);
+    }
+
+    scopes.forEach(({expression, identifier}) => {
+        validateJS(identifier, node, context);
 
         // this adds both parameters to the list of parameters passed further down
         // the scope chain, as well as variables that are locally bound before any
         // function call, as with the ones we generate for rt-scope.
-        if (!_.includes(context.boundParams, alias)) {
-            context.boundParams.push(alias);
+        if (!_.includes(context.boundParams, identifier)) {
+            context.boundParams.push(identifier);
         }
 
-        data.innerScope.scopeName += _.upperFirst(alias);
-        data.innerScope.innerMapping[alias] = `var ${alias} = ${value};`;
-        validateJS(data.innerScope.innerMapping[alias], node, context);
+        data.innerScope.scopeName += _.upperFirst(identifier);
+        data.innerScope.innerMapping[identifier] = `var ${identifier} = ${expression};`;
+        validateJS(data.innerScope.innerMapping[identifier], node, context);
     });
 }
 
