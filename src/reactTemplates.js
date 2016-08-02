@@ -456,10 +456,19 @@ function convertHtmlToReact(node, context) {
  * @throws {String} the part of the string that failed to parse
  */
 function parseScopeSyntax(text) {
-    // in plain english, this regex scans for:
-    //    any character + one or more space + "as" + one or more space + JavaScript identifier +
-    //    zero or more space + semicolon or end of line + zero or more space
-    // it captures "any character" as the scope expression, "JavaScript identifier" as the identifier
+    // the regex below was built using the following pseudo-code:
+    // double_quoted_string = `"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"` 
+    // single_quoted_string = `'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'` 
+    // text_out_of_quotes = `[^"']*?`
+    // expr_parts = double_quoted_string + "|" + single_quoted_string + "|" + text_out_of_quotes
+    // expression = zeroOrMore(nonCapture(expr_parts)) + "?"
+    // id = "[$_a-zA-Z]+[$_a-zA-Z0-9]*"   
+    // as = " as" + OneOrMore(" ")
+    // optional_spaces = zeroOrMore(" ")
+    // semicolon = nonCapture(or(text(";"), "$"))
+    //
+    // regex = capture(expression) + as + capture(id) + optional_spaces + semicolon + optional_spaces
+    
     const regex = RegExp("((?:(?:\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*\"|'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'|[^\"']*?))*?) as(?: )+([$_a-zA-Z]+[$_a-zA-Z0-9]*)(?: )*(?:;|$)(?: )*", 'g');
     const res = [];
     do {
