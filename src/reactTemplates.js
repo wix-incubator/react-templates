@@ -460,12 +460,12 @@ function parseScopeSyntax(text) {
     //    any character + one or more space + "as" + one or more space + JavaScript identifier +
     //    zero or more space + semicolon or end of line + zero or more space
     // it captures "any character" as the scope expression, "JavaScript identifier" as the identifier
-    const regex = RegExp('([\\s\\S]*?)(?: )+as(?: )+([$_a-zA-Z]+[$_a-zA-Z0-9]*)(?: )*(?:;|$)(?: )*', 'g');
+    const regex = RegExp("((?:(?:\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*\"|'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'|[^\"']*?))*?) as(?: )+([$_a-zA-Z]+[$_a-zA-Z0-9]*)(?: )*(?:;|$)(?: )*", 'g');
     const res = [];
     do {
         const idx = regex.lastIndex;
         const match = regex.exec(text);
-        if (regex.lastIndex === idx || match === null) {
+        if (regex.lastIndex === idx || match === null || match.index !== idx) {
             throw text.substr(idx);
         }
         if (match.index === regex.lastIndex) {
