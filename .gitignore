@@ -27,3 +27,5 @@ npm-debug.log
 ### Test Output ###
 test/data/**/*.rt.actual.js
 test/data/**/*.code.js
+test/data/**/*.actual.html
+
