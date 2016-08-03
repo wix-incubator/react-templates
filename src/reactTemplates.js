@@ -30,7 +30,7 @@ const propsMergeFunction = `function mergeProps(inline,external) {
 }
 `;
 
-const classSetTemplate = _.template('_(<%= classSet %>).transform(function(res, value, key){ if(value){ res.push(key); } }, []).join(" ")');
+const classSetTemplate = _.template('_.transform(<%= classSet %>, function(res, value, key){ if(value){ res.push(key); } }, []).join(" ")');
 
 function getTagTemplateString(simpleTagTemplate, shouldCreateElement) {
     if (simpleTagTemplate) {
