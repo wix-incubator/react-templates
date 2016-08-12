@@ -109,6 +109,15 @@ module.exports = {
             files.forEach(file => check(t, file));
         });
 
+        test('convert option --create-element-alias', t => {
+            const files = [
+                {source: 'createElement.rt', expected: 'createElement.rt.commonjs.js', options: {modules: 'commonjs', createElementAlias: 'h'}},
+                {source: 'createElement.rt', expected: 'createElement.rt.amd.js', options: {modules: 'amd', createElementAlias: 'h'}}
+            ];
+            t.plan(files.length);
+            files.forEach(file => check(t, file));
+        });
+
         test('rt-require with all module types', t => {
             const files = [
                 {source: 'require.rt', expected: 'require.rt.commonjs.js', options: {modules: 'commonjs'}},

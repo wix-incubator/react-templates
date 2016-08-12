@@ -40,6 +40,7 @@ Options:
   --flow                       Add /* @flow */ to the top of the generated file
   --native-target-version, --rnv String  React native version to generate code for (0.9.0, 0.29.0, default) - either: 0.9.0, 0.29.0, or default - default: 0.9.0
   --normalize-html-whitespace  Remove repeating whitespace from HTML text. - default: false
+  --create-element-alias       Use an alias name for "React.createElement()"
 ```
 
 ### `-h`, `--help`
@@ -115,4 +116,18 @@ the size of the generated JavaScript file.
 
 Whitespace removal is not applied on `<pre>` and `<textarea>` tags, or when the special attribute `rt-pre` is specified on a tag.
 
- 
+### `--create-element-alias`
+
+Use an alias name for "React.createElement()", allowing shorter function calls in the generated JavaScript code.
+
+Example:
+```
+rt foo.rt --create-element-alias h
+```
+will generate:
+```
+var h = require('react').createElement;
+module.exports = function () {
+    return h('div', {}, h('span', {}, 'Hello'));
+};
+```

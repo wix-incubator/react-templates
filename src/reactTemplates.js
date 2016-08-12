@@ -32,11 +32,12 @@ const propsMergeFunction = `function mergeProps(inline,external) {
 
 const classSetTemplate = _.template('_.transform(<%= classSet %>, function(res, value, key){ if(value){ res.push(key); } }, []).join(" ")');
 
-function getTagTemplateString(simpleTagTemplate, shouldCreateElement) {
+function getTagTemplateString(simpleTagTemplate, shouldCreateElement, opts) {
+    const createElement = opts.createElementAlias || 'React.createElement'; 
     if (simpleTagTemplate) {
-        return shouldCreateElement ? 'React.createElement(<%= name %>,<%= props %><%= children %>)' : '<%= name %>(<%= props %><%= children %>)';
+        return shouldCreateElement ? createElement + '(<%= name %>,<%= props %><%= children %>)' : '<%= name %>(<%= props %><%= children %>)';
     }
-    return shouldCreateElement ? 'React.createElement.apply(this, [<%= name %>,<%= props %><%= children %>])' : '<%= name %>.apply(this, [<%= props %><%= children %>])';
+    return shouldCreateElement ? createElement + '.apply(this, [<%= name %>,<%= props %><%= children %>])' : '<%= name %>.apply(this, [<%= props %><%= children %>])';
 }
 
 
@@ -268,7 +269,7 @@ function convertTagNameToConstructor(tagName, context) {
  */
 function defaultContext(html, options, reportContext) {
     const defaultDefines = [
-        {moduleName: options.reactImportPath, alias: 'React', member: '*'},
+        options.createElementAlias ? {moduleName: options.reactImportPath, alias: options.createElementAlias, member: 'createElement'} : {moduleName: options.reactImportPath, alias: 'React', member: '*'},
         {moduleName: options.lodashImportPath, alias: '_', member: '*'}
     ];
     if (options.native) {
@@ -416,7 +417,8 @@ function convertHtmlToReact(node, context) {
         if (node.name === virtualNode) { //eslint-disable-line wix-editor/prefer-ternary
             data.body = `[${_.compact(children).join(',')}]`;
         } else {
-            data.body = _.template(getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context)))(data);
+            const templateString = getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context), context.options); 
+            data.body = _.template(templateString)(data);
         }
 
         if (node.attribs[scopeAttr]) {

@@ -114,12 +114,17 @@ $ rt <filename> [<filename> ...] [<args>]`,
         alias: 'rnv',
         type: 'String',
         enum: Object.keys(reactNativeSupport),
-        default: reactNativeSupport.default,        
+        default: reactNativeSupport.default,
         description: `React native version to generate code for (${Object.keys(reactNativeSupport).join(', ')})`
     }, {
         option: 'normalize-html-whitespace',
         type: 'Boolean',
         default: 'false',
         description: 'Remove repeating whitespace from HTML text.'
+    }, {
+        option: 'create-element-alias',
+        default: '',
+        type: 'String',
+        description: 'Use an alias name for "React.createElement()".'
     }]
 });
