@@ -54,7 +54,7 @@ The option enable or disable color in the output.
 
 Use output modules. Valid targets are: `amd`, `commonjs`, `none`, `es6`, `typescript`, or `jsrt`.
 
-### `-n`, `--name` 
+### `-n`, `--name`
 
 When using globals, the name for the variable. The default is the [file name]RT, when using amd, the name of the module.
 
@@ -70,7 +70,7 @@ This option allows to override the output file even if there are no changes.
 
 Use a specific output format (`stylish` or `json`).
 
-### `-t`, `--target-version`   
+### `-t`, `--target-version`
 
 React version to generate code for (15.0.1, 15.0.0, 0.14.0, 0.13.1, 0.12.2, 0.12.1, 0.12.0, 0.11.2, 0.11.1, 0.11.0, 0.10.0, default). default: 0.14.0
 
@@ -92,13 +92,13 @@ Dependency path for importing React.
 
 ### `--lodash-import-path`
 
-Dependency path for importing lodash. 
+Dependency path for importing lodash.
 
 ### `--native`, `--rn`
 
 Renders react native templates.
 
-### `--native-target-version`, `--rnv` 
+### `--native-target-version`, `--rnv`
 
 React native version to generate code for (0.9.0, 0.29.0, default) - either: 0.9.0, 0.29.0, or default - default: 0.9.0
 
@@ -106,9 +106,9 @@ React native version to generate code for (0.9.0, 0.29.0, default) - either: 0.9
 
 Add /* @flow */ to the top of the generated file
 
-### `--normalize-html-whitespace`  
+### `--normalize-html-whitespace`
 
-Remove repeating whitespace from HTML text. 
+Remove repeating whitespace from HTML text.
 
 Repeating whitespaces normally are not displayed and thus can be removed in order to reduce
 the size of the generated JavaScript file.
