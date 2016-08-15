@@ -91,10 +91,11 @@ function reactImport(options) {
     if (options.native) {
         return reactNativeSupport[options.nativeTargetVersion].react.module;
     }
-    if (_.includes(['0.14.0', '0.15.0', '15.0.0', '15.0.1'], options.targetVersion)) {
-        return 'react';
+    if (!options.reactImportPath) {
+        const isNewReact = _.includes(['0.14.0', '0.15.0', '15.0.0', '15.0.1'], options.targetVersion);
+        return isNewReact ? 'react' : 'react/addons';
     }
-    return 'react/addons';
+    return options.reactImportPath;
 }
 
 /**
