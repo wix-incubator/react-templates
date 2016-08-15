@@ -33,7 +33,7 @@ const propsMergeFunction = `function mergeProps(inline,external) {
 const classSetTemplate = _.template('_.transform(<%= classSet %>, function(res, value, key){ if(value){ res.push(key); } }, []).join(" ")');
 
 function getTagTemplateString(simpleTagTemplate, shouldCreateElement, opts) {
-    const createElement = opts.createElementAlias || 'React.createElement'; 
+    const createElement = opts.createElementAlias || 'React.createElement';
     if (simpleTagTemplate) {
         return shouldCreateElement ? createElement + '(<%= name %>,<%= props %><%= children %>)' : '<%= name %>(<%= props %><%= children %>)';
     }
@@ -418,7 +418,7 @@ function convertHtmlToReact(node, context) {
         if (node.name === virtualNode) { //eslint-disable-line wix-editor/prefer-ternary
             data.body = `[${_.compact(children).join(',')}]`;
         } else {
-            const templateString = getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context), context.options); 
+            const templateString = getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context), context.options);
             data.body = _.template(templateString)(data);
         }
 
@@ -460,18 +460,18 @@ function convertHtmlToReact(node, context) {
  */
 function parseScopeSyntax(text) {
     // the regex below was built using the following pseudo-code:
-    // double_quoted_string = `"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"` 
-    // single_quoted_string = `'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'` 
+    // double_quoted_string = `"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"`
+    // single_quoted_string = `'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'`
     // text_out_of_quotes = `[^"']*?`
     // expr_parts = double_quoted_string + "|" + single_quoted_string + "|" + text_out_of_quotes
     // expression = zeroOrMore(nonCapture(expr_parts)) + "?"
-    // id = "[$_a-zA-Z]+[$_a-zA-Z0-9]*"   
+    // id = "[$_a-zA-Z]+[$_a-zA-Z0-9]*"
     // as = " as" + OneOrMore(" ")
     // optional_spaces = zeroOrMore(" ")
     // semicolon = nonCapture(or(text(";"), "$"))
     //
     // regex = capture(expression) + as + capture(id) + optional_spaces + semicolon + optional_spaces
-    
+
     const regex = RegExp("((?:(?:\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*\"|'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'|[^\"']*?))*?) as(?: )+([$_a-zA-Z]+[$_a-zA-Z0-9]*)(?: )*(?:;|$)(?: )*", 'g');
     const res = [];
     do {
