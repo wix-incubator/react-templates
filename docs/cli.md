@@ -118,15 +118,30 @@ Whitespace removal is not applied on `<pre>` and `<textarea>` tags, or when the 
 
 ### `--create-element-alias`
 
-Use an alias name for "React.createElement()", allowing shorter function calls in the generated JavaScript code.
+Use an alias name for `React.createElement()`, allowing shorter function calls in the generated JavaScript code.
 
-Example:
+Example, use `h` instead of `React.createElement()`:
 ```
 rt foo.rt --create-element-alias h
 ```
 will generate:
 ```
 var h = require('react').createElement;
+module.exports = function () {
+    return h('div', {}, h('span', {}, 'Hello'));
+};
+```
+
+If using a different library than `React` and the element-creating function is not named `createElement`,
+the actual name of the function can be specified by adding a comma after the alias:
+
+Example, use `h` from library `preact`:
+```
+rt foo.rt --react-import-path preact --create-element-alias h,h
+```
+will generate:
+```
+var h = require('preact').h;
 module.exports = function () {
     return h('div', {}, h('span', {}, 'Hello'));
 };

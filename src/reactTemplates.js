@@ -33,11 +33,11 @@ const propsMergeFunction = `function mergeProps(inline,external) {
 const classSetTemplate = _.template('_.transform(<%= classSet %>, function(res, value, key){ if(value){ res.push(key); } }, []).join(" ")');
 
 function getTagTemplateString(simpleTagTemplate, shouldCreateElement, opts) {
-    const createElement = opts.createElementAlias || 'React.createElement';
+    const createElement = parseCreateElementAlias(opts) || {alias: 'React.createElement'};
     if (simpleTagTemplate) {
-        return shouldCreateElement ? createElement + '(<%= name %>,<%= props %><%= children %>)' : '<%= name %>(<%= props %><%= children %>)';
+        return shouldCreateElement ? createElement.alias + '(<%= name %>,<%= props %><%= children %>)' : '<%= name %>(<%= props %><%= children %>)';
     }
-    return shouldCreateElement ? createElement + '.apply(this, [<%= name %>,<%= props %><%= children %>])' : '<%= name %>.apply(this, [<%= props %><%= children %>])';
+    return shouldCreateElement ? createElement.alias + '.apply(this, [<%= name %>,<%= props %><%= children %>])' : '<%= name %>.apply(this, [<%= props %><%= children %>])';
 }
 
 
@@ -97,6 +97,20 @@ function reactImport(options) {
         return isNewReact ? 'react' : 'react/addons';
     }
     return options.reactImportPath;
+}
+
+/**
+ * parse the command line `--create-element-alias=alias,createElement`
+ * where the ",createElement" part is optional
+ *
+ * @return {object} the parsed {alias,name} object or undefined if the option was not specified
+ */
+function parseCreateElementAlias(opts) {
+    const opt = opts.createElementAlias;
+    if (opt) {
+        const s = opt.split(',');
+        return {alias: s[0], name: s[1] || 'createElement'};
+    }
 }
 
 /**
@@ -269,8 +283,10 @@ function convertTagNameToConstructor(tagName, context) {
  * @return {Context}
  */
 function defaultContext(html, options, reportContext) {
+    const createElement = parseCreateElementAlias(options);
+
     const defaultDefines = [
-        options.createElementAlias ? {moduleName: options.reactImportPath, alias: options.createElementAlias, member: 'createElement'} : {moduleName: options.reactImportPath, alias: 'React', member: '*'},
+        createElement ? {moduleName: options.reactImportPath, alias: createElement.alias, member: createElement.name} : {moduleName: options.reactImportPath, alias: 'React', member: '*'},
         {moduleName: options.lodashImportPath, alias: '_', member: '*'}
     ];
     if (options.native) {

@@ -112,7 +112,9 @@ module.exports = {
         test('convert option --create-element-alias', t => {
             const files = [
                 {source: 'createElement.rt', expected: 'createElement.rt.commonjs.js', options: {modules: 'commonjs', createElementAlias: 'h'}},
-                {source: 'createElement.rt', expected: 'createElement.rt.amd.js', options: {modules: 'amd', createElementAlias: 'h'}}
+                {source: 'createElement.rt', expected: 'createElement.rt.amd.js', options: {modules: 'amd', createElementAlias: 'h'}},
+                {source: 'createElement.rt', expected: 'createElement.rt.1.commonjs.js', options: {modules: 'commonjs', createElementAlias: 'h,h', reactImportPath: 'preact'}},
+                {source: 'createElement.rt', expected: 'createElement.rt.1.amd.js', options: {modules: 'amd', createElementAlias: 'h,h', reactImportPath: 'preact'}}
             ];
             t.plan(files.length);
             files.forEach(file => check(t, file));
