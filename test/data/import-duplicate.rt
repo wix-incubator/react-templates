@@ -1,0 +1,4 @@
+<rt-import name="*" as="_" from="lodash"/>
+<div>
+   <span rt-repeat="a in [1,2,3]">{a}</span>
+</div>

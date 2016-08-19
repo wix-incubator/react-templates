@@ -35,7 +35,7 @@ module.exports = {
         });
 
         test('conversion test', t => {
-            const files = ['div.rt', 'test.rt', 'repeat.rt', 'repeat-with-index.rt', 'inputs.rt', 'virtual.rt', 'stateless.rt', 'style-vendor-prefix.rt', 'non-breaking-space.rt'];
+            const files = ['div.rt', 'test.rt', 'repeat.rt', 'repeat-with-index.rt', 'inputs.rt', 'virtual.rt', 'stateless.rt', 'style-vendor-prefix.rt', 'non-breaking-space.rt', 'import-duplicate.rt'];
             const options = {modules: 'amd'};
             testFiles(t, files, options);
         });
