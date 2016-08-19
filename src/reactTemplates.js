@@ -13,24 +13,11 @@ const utils = require('./utils');
 const validateJS = utils.validateJS;
 const RTCodeError = rtError.RTCodeError;
 
-const repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
-const ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
-const propsTemplateSimple = _.template('_.assign({}, <%= generatedProps %>, <%= rtProps %>)');
-const propsTemplate = _.template('mergeProps( <%= generatedProps %>, <%= rtProps %>)');
-
-const propsMergeFunction = `function mergeProps(inline,external) {
-    var res = _.assign({},inline,external)
-    if (inline.hasOwnProperty('style')) {
-        res.style = _.defaults(res.style, inline.style);
-    }
-    if (inline.hasOwnProperty('className') && external.hasOwnProperty('className')) {
-        res.className = external.className + ' ' + inline.className;
-    }
-    return res;
-}
-`;
-
-const classSetTemplate = _.template('_.transform(<%= classSet %>, function(res, value, key){ if(value){ res.push(key); } }, []).join(" ")');
+let repeatTemplate;
+let propsTemplateSimple;
+let propsTemplate;
+let classSetTemplate;
+let propsMergeFunction;
 
 function getTagTemplateString(simpleTagTemplate, shouldCreateElement, opts) {
     const createElement = parseCreateElementAlias(opts) || {alias: 'React.createElement'};
@@ -40,7 +27,7 @@ function getTagTemplateString(simpleTagTemplate, shouldCreateElement, opts) {
     return shouldCreateElement ? createElement.alias + '.apply(this, [<%= name %>,<%= props %><%= children %>])' : '<%= name %>.apply(this, [<%= props %><%= children %>])';
 }
 
-
+const ifTemplate = _.template('((<%= condition %>)?(<%= body %>):null)');
 const commentTemplate = _.template(' /* <%= data %> */ ');
 
 const repeatAttr = 'rt-repeat';
@@ -110,6 +97,54 @@ function parseCreateElementAlias(opts) {
     if (opt) {
         const s = opt.split(',');
         return {alias: s[0], name: s[1] || 'createElement'};
+    }
+}
+
+function assignHelpers(options) {
+    if (options.externalHelpers) {
+        repeatTemplate = _.template('__rtmap(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
+        classSetTemplate = _.template('__rtclass(<%= classSet %>)');
+        propsTemplateSimple = _.template('__rtassign({}, <%= generatedProps %>, <%= rtProps %>)');
+        propsTemplate = _.template('__rtmergeprops(<%= generatedProps %>, <%= rtProps %>)');
+    } else {
+        repeatTemplate = _.template('_.map(<%= collection %>,<%= repeatFunction %>.bind(<%= repeatBinds %>))');
+        classSetTemplate = _.template('_.transform(<%= classSet %>, function(res, value, key){ if(value){ res.push(key); } }, []).join(" ")');
+        propsTemplateSimple = _.template('_.assign({}, <%= generatedProps %>, <%= rtProps %>)');
+        propsTemplate = _.template('mergeProps(<%= generatedProps %>, <%= rtProps %>)');
+        propsMergeFunction = `function mergeProps(inline,external) {
+            var res = _.assign({},inline,external)
+            if (inline.hasOwnProperty('style')) {
+                res.style = _.defaults(res.style, inline.style);
+            }
+            if (inline.hasOwnProperty('className') && external.hasOwnProperty('className')) {
+                res.className = external.className + ' ' + inline.className;
+            }
+            return res;
+        }
+        `;
+    }
+}
+
+/**
+ * Add the appropriate helper to the list of imports, (either 'lodash' or external helper),
+ * checking if it's already imported.
+ *
+ */
+function requireHelper(helper, context) {
+    if (context.options.externalHelpers) {
+        const helperDefine = {moduleName: context.options.externalHelpers, alias: helper, member: helper};
+        if (!_.some(context.defines, helperDefine)) {
+            context.defines.push(helperDefine);
+        }
+    } else if (helper === '__rtmergeprops') {
+        if (!_.includes(context.injectedFunctions, propsMergeFunction)) {
+            context.injectedFunctions.push(propsMergeFunction);
+        }
+    } else {
+        const lodashDefine = {moduleName: context.options.lodashImportPath, alias: '_', member: '*'};
+        if (!_.some(context.defines, lodashDefine)) {
+            context.defines.push(lodashDefine);
+        }
     }
 }
 
@@ -206,6 +241,7 @@ function generateProps(node, context) {
             const existing = props[propKey] ? `${props[propKey]} + " " + ` : '';
             if (key === classSetAttr) {
                 props[propKey] = existing + classSetTemplate({classSet: val});
+                requireHelper('__rtclass', context);
             } else if (key === classAttr || key === reactSupport.classNameProp) {
                 props[propKey] = existing + utils.convertText(node, context, val.trim());
             }
@@ -285,16 +321,21 @@ function convertTagNameToConstructor(tagName, context) {
 function defaultContext(html, options, reportContext) {
     const createElement = parseCreateElementAlias(options);
 
-    const defaultDefines = [
-        createElement ? {moduleName: options.reactImportPath, alias: createElement.alias, member: createElement.name} : {moduleName: options.reactImportPath, alias: 'React', member: '*'},
-        {moduleName: options.lodashImportPath, alias: '_', member: '*'}
-    ];
+    const defaultDefines = [];
+
+    if (createElement) {
+        defaultDefines.push({moduleName: options.reactImportPath, alias: createElement.alias, member: createElement.name});
+    } else {
+        defaultDefines.push({moduleName: options.reactImportPath, alias: 'React', member: '*'});
+    }
+
     if (options.native) {
         const targetSupport = reactNativeSupport[options.nativeTargetVersion];
         if (targetSupport.reactNative.module !== targetSupport.react.module) {
             defaultDefines.splice(0, 0, {moduleName: targetSupport.reactNative.module, alias: targetSupport.reactNative.name, member: '*'});
         }
     }
+
     return {
         boundParams: [],
         injectedFunctions: [],
@@ -396,12 +437,11 @@ function convertHtmlToReact(node, context) {
             if (data.props === '{}') {
                 data.props = node.attribs[propsAttr];
             } else if (!node.attribs.style && !node.attribs.class) {
+                requireHelper('__rtassign', context);
                 data.props = propsTemplateSimple({generatedProps: data.props, rtProps: node.attribs[propsAttr]});
             } else {
+                requireHelper('__rtmergeprops', context);
                 data.props = propsTemplate({generatedProps: data.props, rtProps: node.attribs[propsAttr]});
-                if (!_.includes(context.injectedFunctions, propsMergeFunction)) {
-                    context.injectedFunctions.push(propsMergeFunction);
-                }
             }
         }
 
@@ -450,6 +490,7 @@ function convertHtmlToReact(node, context) {
             data.repeatFunction = generateInjectedFunc(context, 'repeat' + _.upperFirst(data.item), 'return ' + data.body);
             data.repeatBinds = ['this'].concat(_.reject(context.boundParams, p => p === data.item || p === data.index || data.innerScope && p in data.innerScope.innerMapping));
             data.body = repeatTemplate(data);
+            requireHelper('__rtmap', context);
         }
         if (node.attribs[ifAttr]) {
             data.body = ifTemplate(data);
@@ -608,7 +649,10 @@ function handleImport(tag, context) {
     if (!moduleName) {
         throw RTCodeError.build(context, tag, `'${importAttr}' needs 'name' and 'from' attributes`);
     }
-    context.defines.push({moduleName, member, alias});
+    const def = {moduleName, member, alias};
+    if (!_.some(context.defines, def)) {
+        context.defines.push(def);
+    }
 }
 
 function convertTemplateToReact(html, options) {
@@ -662,6 +706,7 @@ function parseAndConvertHtmlToReact(html, context) {
  */
 function convertRT(html, reportContext, options) {
     options = getOptions(options);
+    assignHelpers(options);
 
     const context = defaultContext(html, options, reportContext);
     const body = parseAndConvertHtmlToReact(html, context);
@@ -711,6 +756,7 @@ function parseJS(code, options) {
 
 function convertJSRTToJS(text, reportContext, options) {
     options = getOptions(options);
+    assignHelpers(options);
     options.modules = 'jsrt';
     const templateMatcherJSRT = /<template>([^]*?)<\/template>/gm;
     const code = text.replace(templateMatcherJSRT, (template, html) => convertRT(html, reportContext, options).replace(/;$/, ''));

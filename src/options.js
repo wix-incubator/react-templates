@@ -126,5 +126,10 @@ $ rt <filename> [<filename> ...] [<args>]`,
         default: '',
         type: 'String',
         description: 'Use an alias name for "React.createElement()".'
+    }, {
+        option: 'external-helpers',
+        default: '',
+        type: 'String',
+        description: "Emit helper functions as external dependency (and do not rely on 'lodash')"        
     }]
 });

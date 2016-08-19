@@ -41,6 +41,7 @@ Options:
   --native-target-version, --rnv String  React native version to generate code for (0.9.0, 0.29.0, default) - either: 0.9.0, 0.29.0, or default - default: 0.9.0
   --normalize-html-whitespace  Remove repeating whitespace from HTML text. - default: false
   --create-element-alias       Use an alias name for "React.createElement()"
+  --external-helpers           Emit helper functions as external dependency (and do not rely on 'lodash').
 ```
 
 ### `-h`, `--help`
@@ -146,3 +147,33 @@ module.exports = function () {
     return h('div', {}, h('span', {}, 'Hello'));
 };
 ```
+
+### `--external-helpers`
+
+Specify an external module from where to load the runtime helper functions.
+
+Normally `react-templates` uses `lodash` to perform some utility functions, indeed `lodash`
+is the only needed dependency apart from the obvious `react`.
+
+By using `--external-helpers`, the utility functions will not be taken from `lodash` or
+embedded in the code, but will be loaded separately as a module, thus allowing
+to reduce or fine-tune the dependency from `lodash`.
+
+Example:
+```
+rt foo.rt --external-helpers react-templates-helpers
+```
+loads the utility functions from `react-templates-helpers` module (which is the
+standard one that falls back on `lodash`).
+
+The specified external module must export the following helper functions:
+```
+__rtmap(collection, function);  // loops over a collection
+__rtclass(object);              // turns a map object into a HTML class-attribute
+__rtassign(dest,...objs)        // assign properties to destination object
+__rtmergeprops(dest,...objs)    // as above, but considering "style" and "className"
+```
+
+
+
+
