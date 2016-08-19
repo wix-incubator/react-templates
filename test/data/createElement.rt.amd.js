@@ -1,7 +1,4 @@
-define([
-    'react',
-    'lodash'
-], function ($0, _) {
+define(['react'], function ($0) {
     'use strict';
     var h = $0.createElement;
     return function () {

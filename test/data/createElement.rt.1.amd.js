@@ -1,7 +1,4 @@
-define([
-    'preact',
-    'lodash'
-], function ($0, _) {
+define(['preact'], function ($0) {
     'use strict';
     var h = $0.h;
     return function () {

@@ -1,7 +1,4 @@
-define('div', [
-    'react',
-    'lodash'
-], function (React, _) {
+define('div', ['react'], function (React) {
     'use strict';
     return function () {
         return React.createElement('div', {});

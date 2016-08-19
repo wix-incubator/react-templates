@@ -1,6 +1,5 @@
 'use strict';
 var React = require('react');
-var _ = require('lodash');
 var member = require('module-name').member;
 var alias2 = require('module-name').member;
 var alias3 = require('module-name');
