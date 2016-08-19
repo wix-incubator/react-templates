@@ -1,0 +1,13 @@
+<div>
+   <!-- tests __rtmap helper -->
+   <div rt-repeat="a in [1,2,3]">{a}</div>
+
+   <!-- tests __rtassign helper -->
+   <ChildComp rt-props="{a:1, b:2}" c="3"></ChildComp>
+   
+   <!-- tests __rtmergeprops helper -->
+   <ChildComp style="height:10px;width:3px;" rt-props="{style:{width:'5px'}, type:'text', className: 'clsB'}" class="clsA"></ChildComp>
+
+   <!-- tests __rtclass helper -->
+   <div rt-class="{a:true, b:true}"></div>
+</div>

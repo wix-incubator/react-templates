@@ -120,6 +120,17 @@ module.exports = {
             files.forEach(file => check(t, file));
         });
 
+        test('convert option --external-helpers', t => {
+            const files = [
+                {source: 'externalHelpers.rt', expected: 'externalHelpers.rt.commonjs.js', options: {modules: 'commonjs', externalHelpers: 'react-templates-helpers'}},
+                {source: 'externalHelpers.rt', expected: 'externalHelpers.rt.amd.js', options: {modules: 'amd', externalHelpers: 'react-templates-helpers'}},
+                {source: 'externalHelpers.rt', expected: 'externalHelpers.rt.noHelpers.commonjs.js', options: {modules: 'commonjs'}},
+                {source: 'externalHelpers.rt', expected: 'externalHelpers.rt.noHelpers.amd.js', options: {modules: 'amd'}}
+            ];
+            t.plan(files.length);
+            files.forEach(file => check(t, file));
+        });
+
         test('rt-require with all module types', t => {
             const files = [
                 {source: 'require.rt', expected: 'require.rt.commonjs.js', options: {modules: 'commonjs'}},
