@@ -258,8 +258,9 @@ function convertTagNameToConstructor(tagName, context) {
         const targetSupport = reactNativeSupport[context.options.nativeTargetVersion];
         return _.includes(targetSupport.components, tagName) ? `${targetSupport.reactNative.name}.${tagName}` : tagName;
     }
-    const isHtmlTag = _.includes(reactDOMSupport[context.options.targetVersion], tagName) || isCustomElement(tagName);
+    let isHtmlTag = _.includes(reactDOMSupport[context.options.targetVersion], tagName) || isCustomElement(tagName);
     if (reactSupport.shouldUseCreateElement(context)) {
+        isHtmlTag = isHtmlTag || tagName.match(/^\w+(-\w+)+$/);
         return isHtmlTag ? `'${tagName}'` : tagName;
     }
     return isHtmlTag ? `React.DOM.${tagName}` : tagName;
