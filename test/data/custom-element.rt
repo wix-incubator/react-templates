@@ -1,3 +1,4 @@
 <div>
     <custom-element></custom-element>
+    <my-custom-element></my-custom-element>
 </div>

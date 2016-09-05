@@ -306,7 +306,7 @@ function convertTagNameToConstructor(tagName, context) {
     }
     let isHtmlTag = _.includes(reactDOMSupport[context.options.targetVersion], tagName);
     if (reactSupport.shouldUseCreateElement(context)) {
-        isHtmlTag = isHtmlTag || tagName.match(/^\w+(-\w+)$/);
+        isHtmlTag = isHtmlTag || tagName.match(/^\w+(-\w+)+$/);
         return isHtmlTag ? `'${tagName}'` : tagName;
     }
     return isHtmlTag ? 'React.DOM.' + tagName : tagName;
