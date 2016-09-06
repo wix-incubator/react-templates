@@ -1,9 +1,7 @@
 'use strict';
-// const _ = require('lodash');
 const reactTemplates = require('../../src/reactTemplates');
 const testUtils = require('./testUtils');
 const readFileNormalized = testUtils.readFileNormalized;
-const compareAndWriteHtml = testUtils.compareAndWriteHtml;
 const path = require('path');
 const fsUtil = require('../../src/fsUtil');
 const fs = require('fs');
@@ -31,10 +29,10 @@ module.exports = {
                 'scope-evaluated-after-repeat2.rt',
                 'scope-evaluated-after-if.rt',
                 'scope-obj.rt',
+                'scope-reserved-tokens.rt',
                 'repeat-literal-collection.rt',
                 'include.rt'
-            ];
-            // t.plan(files.length);
+            ];            
 
             files.forEach(testFile => {
                 const filename = path.join(dataPath, testFile);
@@ -42,20 +40,20 @@ module.exports = {
                     readFileSync: fsUtil.createRelativeReadFileSync(filename),
                     modules: 'amd'
                 };
-                let code = '';
+                let actual = '';
+                let equal = false;
                 try {
                     const html = fs.readFileSync(filename).toString();
                     const expected = testUtils.normalizeHtml(readFileNormalized(filename + '.html'));
-                    code = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '');
-                    const actual = testUtils.normalizeHtml(testUtils.codeToHtml(code));
-                    const equal = compareAndWriteHtml(t, actual, expected, filename);
-                    if (!equal) {
-                        fs.writeFileSync(filename + '.code.js', code);
-                    }
+                    const code = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '');
+                    actual = testUtils.normalizeHtml(testUtils.codeToHtml(code));
+                    equal = t.equal(actual, expected);
                 } catch (e) {
-                    console.log(testFile, e);
-                    fs.writeFileSync(filename + '.code.js', code);
+                    console.log(testFile, e);                    
                     t.fail(e);
+                }
+                if (!equal) {
+                    fs.writeFileSync(filename + '.actual.html', actual);
                 }
             });
             t.end();

@@ -1,7 +1,4 @@
-define([
-    'react',
-    'lodash'
-], function (React, _) {
+define(['react'], function (React) {
     'use strict';
     return function () {
         function templateProp21(arg1, inner1, inner2) {

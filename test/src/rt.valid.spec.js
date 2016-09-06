@@ -35,7 +35,7 @@ module.exports = {
         });
 
         test('conversion test', t => {
-            const files = ['div.rt', 'test.rt', 'repeat.rt', 'repeat-with-index.rt', 'inputs.rt', 'virtual.rt', 'stateless.rt', 'style-vendor-prefix.rt', 'non-breaking-space.rt'];
+            const files = ['div.rt', 'test.rt', 'repeat.rt', 'repeat-with-index.rt', 'inputs.rt', 'virtual.rt', 'stateless.rt', 'style-vendor-prefix.rt', 'non-breaking-space.rt', 'import-duplicate.rt'];
             const options = {modules: 'amd'};
             testFiles(t, files, options);
         });
@@ -104,6 +104,28 @@ module.exports = {
             const files = [
                 {source: 'comment.rt', expected: 'comment.rt.amd.js', options: {modules: 'amd'}},
                 {source: 'comment.rt', expected: 'comment.rt.es6.js', options: {modules: 'es6'}}
+            ];
+            t.plan(files.length);
+            files.forEach(file => check(t, file));
+        });
+
+        test('convert option --create-element-alias', t => {
+            const files = [
+                {source: 'createElement.rt', expected: 'createElement.rt.commonjs.js', options: {modules: 'commonjs', createElementAlias: 'h'}},
+                {source: 'createElement.rt', expected: 'createElement.rt.amd.js', options: {modules: 'amd', createElementAlias: 'h'}},
+                {source: 'createElement.rt', expected: 'createElement.rt.1.commonjs.js', options: {modules: 'commonjs', createElementAlias: 'h,h', reactImportPath: 'preact'}},
+                {source: 'createElement.rt', expected: 'createElement.rt.1.amd.js', options: {modules: 'amd', createElementAlias: 'h,h', reactImportPath: 'preact'}}
+            ];
+            t.plan(files.length);
+            files.forEach(file => check(t, file));
+        });
+
+        test('convert option --external-helpers', t => {
+            const files = [
+                {source: 'externalHelpers.rt', expected: 'externalHelpers.rt.commonjs.js', options: {modules: 'commonjs', externalHelpers: 'react-templates-helpers'}},
+                {source: 'externalHelpers.rt', expected: 'externalHelpers.rt.amd.js', options: {modules: 'amd', externalHelpers: 'react-templates-helpers'}},
+                {source: 'externalHelpers.rt', expected: 'externalHelpers.rt.noHelpers.commonjs.js', options: {modules: 'commonjs'}},
+                {source: 'externalHelpers.rt', expected: 'externalHelpers.rt.noHelpers.amd.js', options: {modules: 'amd'}}
             ];
             t.plan(files.length);
             files.forEach(file => check(t, file));

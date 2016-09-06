@@ -1,0 +1,4 @@
+<div rt-scope="'x as id;' as id;'y\'y as id2' as id2">
+	{id}{id2}
+</div>
+

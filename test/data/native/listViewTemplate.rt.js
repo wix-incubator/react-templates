@@ -1,6 +1,5 @@
 'use strict';
 var React = require('react-native');
-var _ = require('lodash');
 module.exports = function () {
     function renderRow1(rowData) {
         return React.createElement(React.Text, {}, rowData);
