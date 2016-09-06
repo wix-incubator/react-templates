@@ -199,6 +199,12 @@ function generateProps(node, context) {
     });
     _.assign(props, generateTemplateProps(node, context));
 
+    // map 'className' back into 'class' for custom elements
+    if (props[reactSupport.classNameProp] && isCustomElement(node.name)) {
+        props[classAttr] = props[reactSupport.classNameProp];
+        delete props[reactSupport.classNameProp];
+    }
+
     const propStr = _.map(props, (v, k) => `${JSON.stringify(k)} : ${v}`).join(',');
     return `{${propStr}}`;
 }
@@ -252,12 +258,15 @@ function convertTagNameToConstructor(tagName, context) {
         const targetSupport = reactNativeSupport[context.options.nativeTargetVersion];
         return _.includes(targetSupport.components, tagName) ? `${targetSupport.reactNative.name}.${tagName}` : tagName;
     }
-    let isHtmlTag = _.includes(reactDOMSupport[context.options.targetVersion], tagName);
+    const isHtmlTag = _.includes(reactDOMSupport[context.options.targetVersion], tagName) || isCustomElement(tagName);
     if (reactSupport.shouldUseCreateElement(context)) {
-        isHtmlTag = isHtmlTag || tagName.match(/^\w+(-\w+)$/);
         return isHtmlTag ? `'${tagName}'` : tagName;
     }
     return isHtmlTag ? `React.DOM.${tagName}` : tagName;
+}
+
+function isCustomElement(tagName) {
+    return tagName.match(/^\w+(-\w+)+$/);
 }
 
 /**
