@@ -82,8 +82,6 @@ function handleSingleFile(currentOptions, filename) {
 function execute(args) {
     try {
         const currentOptions = options.parse(args);
-        console.log(JSON.stringify(currentOptions));
-
         return executeOptions(currentOptions);
     } catch (error) {
         console.error(error.message);
