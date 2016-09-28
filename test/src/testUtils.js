@@ -28,7 +28,7 @@ function normalizeHtml(html) {
 function compareAndWrite(t, actual, expected, filename) {
     t.equal(actual, expected, filename);
     if (actual !== expected) {
-        fs.writeFileSync(filename + '.actual.js', actual);
+        fs.writeFileSync(`${filename}.actual.js`, actual);
         return false;
     }
     return true;

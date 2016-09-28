@@ -231,7 +231,7 @@ function handleStyleProp(val, node, context) {
         .map(i => {
             const pair = i.split(':');
             const key = pair[0].trim();
-            if (/\{|\}/g.test(key)) {
+            if (/\{|}/g.test(key)) {
                 throw RTCodeError.build(context, node, 'style attribute keys cannot contain { } expressions');
             }
             const value = pair.slice(1).join(':').trim();
@@ -257,7 +257,7 @@ function convertTagNameToConstructor(tagName, context) {
         isHtmlTag = isHtmlTag || tagName.match(/^\w+(-\w+)$/);
         return isHtmlTag ? `'${tagName}'` : tagName;
     }
-    return isHtmlTag ? 'React.DOM.' + tagName : tagName;
+    return isHtmlTag ? `React.DOM.${tagName}` : tagName;
 }
 
 /**

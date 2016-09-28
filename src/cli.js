@@ -80,14 +80,15 @@ function handleSingleFile(currentOptions, filename) {
  * @returns {int} The exit code for the operation.
  */
 function execute(args) {
-    let currentOptions;
     try {
-        currentOptions = options.parse(args);
+        const currentOptions = options.parse(args);
+        console.log(JSON.stringify(currentOptions));
+
+        return executeOptions(currentOptions);
     } catch (error) {
         console.error(error.message);
         return 1;
     }
-    return executeOptions(currentOptions);
 }
 
 module.exports = {

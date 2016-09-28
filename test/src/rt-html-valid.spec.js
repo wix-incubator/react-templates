@@ -45,16 +45,16 @@ module.exports = {
                 let code = '';
                 try {
                     const html = fs.readFileSync(filename).toString();
-                    const expected = testUtils.normalizeHtml(readFileNormalized(filename + '.html'));
+                    const expected = testUtils.normalizeHtml(readFileNormalized(`${filename}.html`));
                     code = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '');
                     const actual = testUtils.normalizeHtml(testUtils.codeToHtml(code));
                     const equal = compareAndWriteHtml(t, actual, expected, filename);
                     if (!equal) {
-                        fs.writeFileSync(filename + '.code.js', code);
+                        fs.writeFileSync(`${filename}.code.js`, code);
                     }
                 } catch (e) {
                     console.log(testFile, e);
-                    fs.writeFileSync(filename + '.code.js', code);
+                    fs.writeFileSync(`${filename}.code.js`, code);
                     t.fail(e);
                 }
             });
