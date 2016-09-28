@@ -11,6 +11,7 @@ playground3/**
 playground3/dist/**
 playground3/libs/**
 playground3/**/*.rt.js
+playground4
 
 web/**
 
