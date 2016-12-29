@@ -47,7 +47,7 @@ module.exports = {
                     const expected = testUtils.normalizeHtml(readFileNormalized(filename + '.html'));
                     const code = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '');
                     actual = testUtils.normalizeHtml(testUtils.codeToHtml(code));
-                    equal = t.equal(actual, expected);
+                    equal = t.equal(actual, expected, `${testFile}`);
                 } catch (e) {
                     console.log(testFile, e);
                     t.fail(e);
