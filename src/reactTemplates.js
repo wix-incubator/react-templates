@@ -427,7 +427,7 @@ function convertHtmlToReact(node, context) {
         if (node.name === virtualNode) { //eslint-disable-line wix-editor/prefer-ternary
             data.body = `[${_.compact(children).join(',')}]`;
         } else {
-            data.body = _.template( getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context)))(data);
+            data.body = _.template(getTagTemplateString(!hasNonSimpleChildren(node), reactSupport.shouldUseCreateElement(context)))(data);
         }
 
         if (node.attribs[scopeAttr]) {
