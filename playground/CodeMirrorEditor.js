@@ -1,15 +1,16 @@
-define(['react', 'react-dom', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
-        './CMLint',
-        './libs/codemirror-4.8/mode/javascript/javascript',
-        './libs/codemirror-4.8/addon/hint/html-hint',
-        './libs/codemirror-4.8/addon/hint/show-hint',
-        './libs/codemirror-4.8/addon/hint/xml-hint',
-        './libs/codemirror-4.8/addon/hint/html-hint',
-        //'./libs/codemirror-4.8/addon/display/panel',
-        './libs/codemirror-4.8/mode/xml/xml',
-        //'./libs/codemirror-4.8/mode/css/css',
-        './libs/codemirror-4.8/addon/runmode/runmode'
-        //'./libs/codemirror-4.8/addon/display/placeholder'
+define([
+    'react', 'react-dom', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
+    './CMLint',
+    './libs/codemirror-4.8/mode/javascript/javascript',
+    './libs/codemirror-4.8/addon/hint/html-hint',
+    './libs/codemirror-4.8/addon/hint/show-hint',
+    './libs/codemirror-4.8/addon/hint/xml-hint',
+    './libs/codemirror-4.8/addon/hint/html-hint',
+    //'./libs/codemirror-4.8/addon/display/panel',
+    './libs/codemirror-4.8/mode/xml/xml',
+    //'./libs/codemirror-4.8/mode/css/css',
+    './libs/codemirror-4.8/addon/runmode/runmode'
+    //'./libs/codemirror-4.8/addon/display/placeholder'
 ], function (React, ReactDOM, _, $, CodeMirror, CMLint) {
     'use strict';
     //codeMirror: 'libs/codemirror-4.8/lib/codemirror',

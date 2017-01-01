@@ -13,7 +13,7 @@
 
 
         "lodash/prefer-filter": 0,
-
+        "lodash/chaining": [2, "always"],
         "lodash/prefer-map": 0,
         "lodash/path-style": 0,
         "lodash/no-extra-args": 2,

@@ -1,7 +1,7 @@
 define(['react', 'react-dom', 'lodash', 'jquery', './libs/codemirror-4.8/lib/codemirror',
-        './libs/codemirror-4.8/mode/javascript/javascript',
-        './libs/codemirror-4.8/mode/xml/xml',
-        './libs/codemirror-4.8/addon/runmode/runmode'
+    './libs/codemirror-4.8/mode/javascript/javascript',
+    './libs/codemirror-4.8/mode/xml/xml',
+    './libs/codemirror-4.8/addon/runmode/runmode'
 ], function (React, ReactDOM, _, $, CodeMirror) {
     'use strict';
     return React.createClass({

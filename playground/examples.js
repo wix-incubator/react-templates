@@ -1,11 +1,11 @@
 define(['lodash', 'react', './examples.rt',
-        'text!./samples/hello.code', 'text!./samples/hello.rt',
-        'text!./samples/todo.code', 'text!./samples/todo.rt',
-        'text!./samples/rt-if.code', 'text!./samples/rt-if.rt',
-        'text!./samples/rt-props.code', 'text!./samples/rt-props.rt',
-        'text!./samples/rt-repeat.code', 'text!./samples/rt-repeat.rt',
-        'text!./samples/weather.code', 'text!./samples/weather.rt',
-        'text!./samples/rt-import.rt'
+    'text!./samples/hello.code', 'text!./samples/hello.rt',
+    'text!./samples/todo.code', 'text!./samples/todo.rt',
+    'text!./samples/rt-if.code', 'text!./samples/rt-if.rt',
+    'text!./samples/rt-props.code', 'text!./samples/rt-props.rt',
+    'text!./samples/rt-repeat.code', 'text!./samples/rt-repeat.rt',
+    'text!./samples/weather.code', 'text!./samples/weather.rt',
+    'text!./samples/rt-import.rt'
 ], function (_, React, examplesTemplate, helloCode, helloRT, todoCode, todoRT, rtIfCode, rtIfRT, rtPropsCode, rtPropsRT, rtRepeatCode, rtRepeatRT, weatherCode, weatherRT, rtImportRT) {
     'use strict';
     var samples = {
