@@ -24,7 +24,7 @@ module.exports = optionator({
 ${pkg.description}
 
 Usage:
-$ rt <filename> [<filename> ...] [<args>]`,
+$ rt <filename|glob> [<filename|glob> ...] [<args>]`,
     concatRepeatedArrays: true,
     mergeRepeatedObjects: true,
     options: [{
@@ -114,7 +114,7 @@ $ rt <filename> [<filename> ...] [<args>]`,
         alias: 'rnv',
         type: 'String',
         enum: Object.keys(reactNativeSupport),
-        default: reactNativeSupport.default,        
+        default: reactNativeSupport.default,
         description: `React native version to generate code for (${Object.keys(reactNativeSupport).join(', ')})`
     }, {
         option: 'normalize-html-whitespace',

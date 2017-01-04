@@ -2,6 +2,7 @@
 'use strict';
 const _ = require('lodash');
 const path = require('path');
+// const fs = require('fs');
 const api = require('./api');
 const context = require('./context');
 const shell = require('./shell');
@@ -10,6 +11,7 @@ const options = require('./options');
 const reactDOMSupport = require('./reactDOMSupport');
 const reactTemplates = require('./reactTemplates');
 const rtStyle = require('./rtStyle');
+const glob = require('glob');
 
 /**
  * @param {Options} currentOptions
@@ -31,7 +33,19 @@ function executeOptions(currentOptions) {
     } else if (currentOptions.listTargetVersion) {
         printVersions(currentOptions);
     } else if (files.length) {
-        _.forEach(files, handleSingleFile.bind(this, currentOptions));
+        // console.log(files);
+        // console.log(files.length);
+        // const allFiles = _.flatMap(files, f => {
+        //     const fp = path.resolve(context.cwd, f);
+        //     if (fs.statSync(fp).isDirectory()) {
+        //         // TODO: consider removing glob and simply walk the directory
+        //         return glob.sync(`${fp}/**/*.rt`, {cwd: context.cwd});
+        //     }
+        //     return fp;
+        // });
+        const allFiles = _.flatMap(files, f => glob.sync(f, {cwd: context.cwd}));
+        // console.log(allFiles.length);
+        _.forEach(allFiles, handleSingleFile.bind(this, currentOptions));
         ret = shell.printResults(context);
     } else {
         console.log(options.generateHelp());

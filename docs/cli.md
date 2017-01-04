@@ -7,12 +7,21 @@ npm install react-templates -g
 
 ## Usage
 ```shell
-rt [file.rt|dir]* [options]
+rt [file.rt|glob]* [options]
 ```
 
 Such as:
 ```shell
 rt dir/file.rt
+```
+
+Please note that when passing a glob as a parameter, it will be expanded by your shell. 
+The results of the expansion can vary depending on your shell, and its configuration. 
+If you want to use node glob syntax, you have to quote your parameter (using double quotes if you need it to run in Windows), as follows:
+
+
+```shell
+rt 'src/**/*.rt'
 ```
 
 ## Options
