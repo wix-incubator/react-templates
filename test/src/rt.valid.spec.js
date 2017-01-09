@@ -40,6 +40,14 @@ module.exports = {
             testFiles(t, files, options);
         });
 
+        test('autobinding conversion test', t => {
+            const options = {
+                autobind: true
+            };
+            const files = ['autobind.rt'];
+            testFiles(t, files, options);
+        });
+
         test('prop template conversion test', t => {
             const options = {
                 propTemplates: {

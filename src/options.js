@@ -121,5 +121,10 @@ $ rt <filename|glob> [<filename|glob> ...] [<args>]`,
         type: 'Boolean',
         default: 'false',
         description: 'Remove repeating whitespace from HTML text.'
+    }, {
+        option: 'autobind',
+        type: 'Boolean',
+        default: 'false',
+        description: 'Automatically bind event handlers to components'
     }]
 });

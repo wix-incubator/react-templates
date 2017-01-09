@@ -1,0 +1,4 @@
+<div onKeyDown="this.handleKeyDown">
+   This should trigger an error because evaluated with no autobinding (--autobind=false)
+</div>
+
