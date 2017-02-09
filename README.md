@@ -49,6 +49,7 @@ http://plugins.jetbrains.com/plugin/7648
     * [rt-template](#rt-template)
     * [rt-include](#rt-include)
     * [rt-pre](#rt-pre)
+    * [rt-virtual](#rt-virtual)    
 * [styles](#styles)
 * [event handlers](#event-handlers)
 
@@ -161,7 +162,7 @@ For instance, to repeat several nodes at once without a shared root for each ins
   <rt-virtual rt-repeat="n in [1,2,3]">
     <li>{n}</li>
     <li>{n*2}</li>
-  </virtual>
+  </rt-virtual>
 </ul>
 ```
 
