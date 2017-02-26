@@ -38,7 +38,7 @@ const templateAMDTemplate = _.template("define(<%= name ? '\"'+name + '\", ' : '
 const templateCommonJSTemplate = _.template("'use strict';\n<%= vars %>\nmodule.exports = <%= renderFunction %>;\n");
 const templateES6Template = _.template('<%= vars %>\nexport default <%= renderFunction %>\n');
 const templatePJSTemplate = _.template('var <%= name %> = <%= renderFunction %>');
-const templateTypescriptTemplate = _.template('<%= vars %>\nexport = <%= renderFunction %>;\n');
+const templateTypescriptTemplate = _.template('<%= vars %>\nexport default <%= renderFunction %>;\n');
 const templateJSRTTemplate = _.template('<%= renderFunction %>');
 
 const templates = {
@@ -54,7 +54,7 @@ const isImportAsterisk = _.matches({member: '*'});
 const defaultCase = _.constant(true);
 
 const buildImportTypeScript = _.cond([
-    [isImportAsterisk, d => `import ${d.alias} = require('${d.moduleName}');`],
+    [isImportAsterisk, d => `'import * as ' ${d.alias} from ' ${d.moduleName};`],
     [_.matches({member: 'default'}), d => `import ${d.alias} from '${d.moduleName}';`],
     [defaultCase, d => `import { ${d.member} as ${d.alias} } from '${d.moduleName}';`]
 ]);
