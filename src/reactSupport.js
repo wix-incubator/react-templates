@@ -54,7 +54,7 @@ const isImportAsterisk = _.matches({member: '*'});
 const defaultCase = _.constant(true);
 
 const buildImportTypeScript = _.cond([
-    [isImportAsterisk, d => `'import * as ' ${d.alias} from ' ${d.moduleName};`],
+    [isImportAsterisk, d => `'import * as ${d.alias} from '${d.moduleName}';`],
     [_.matches({member: 'default'}), d => `import ${d.alias} from '${d.moduleName}';`],
     [defaultCase, d => `import { ${d.member} as ${d.alias} } from '${d.moduleName}';`]
 ]);
