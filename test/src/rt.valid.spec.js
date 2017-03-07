@@ -42,6 +42,7 @@ module.exports = {
 
         test('autobinding conversion test', t => {
             const options = {
+                modules: 'amd',
                 autobind: true
             };
             const files = ['autobind.rt'];
@@ -62,7 +63,9 @@ module.exports = {
                 'templateInScope.rt',
                 'implicitTemplate.rt',
                 'twoTemplates.rt',
-                'siblingTemplates.rt'
+                'siblingTemplates.rt',
+                'inplaceTemplate.rt',
+                'inplaceTemplateInScope.rt'
             ].map(file => path.join('propTemplates', file));
             testFiles(t, files, options);
         });

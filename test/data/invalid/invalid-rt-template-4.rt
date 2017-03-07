@@ -1,0 +1,5 @@
+<div>
+   <rt-template prop="some" arguments="" in-place>
+      <div>1</div>
+   </rt-template>
+</div>
