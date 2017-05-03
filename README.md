@@ -1,8 +1,6 @@
-[![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
-[![Coverage Status][coveralls-image]][coveralls-url]
 
-# React Templates
+
+# MEDIA JOCKEY
 
 Lightweight templates for [React](http://facebook.github.io/react/index.html).
 
