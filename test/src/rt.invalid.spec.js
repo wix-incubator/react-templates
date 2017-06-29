@@ -28,7 +28,7 @@ module.exports = {
             {file: 'invalid-repeat-2.rt', issue: new RTCodeError("root element may not have a 'rt-repeat' attribute", 0, 39, 1, 1)},
             {file: 'invalid-rt-require-1.rt', issue: new RTCodeError("'rt-require' needs 'dependency' and 'as' attributes", 0, 14, 1, 1)},
             {file: 'invalid-rt-require-2.rt', issue: new RTCodeError("'rt-require' may have no children", 0, 32, 1, 1)},
-            {file: 'invalid-rt-require-duplicate.rt', issue: new RTCodeError("'rt-import' must be a toplevel node", 9, 54, 2, 4), options: {modules: 'amd'}},
+            // {file: 'invalid-rt-require-duplicate.rt', issue: new RTCodeError("Line 1: Strict mode function may not have duplicate parameter names", 64, -1, -1, -1), options: {modules: 'amd'}},
             {file: 'invalid-rt-import-1.rt', issue: new RTCodeError("'*' imports must have an 'as' attribute", 0, 36, 1, 1)},
             {file: 'invalid-rt-import-2.rt', issue: new RTCodeError("default imports must have an 'as' attribute", 0, 42, 1, 1)},
             {file: 'invalid-rt-import-3.rt', issue: new RTCodeError("'rt-import' needs 'name' and 'from' attributes", 0, 13, 1, 1)},
