@@ -673,8 +673,8 @@ function convertRT(html, reportContext, options) {
 
     const requirePaths = _.map(context.defines, d => `"${d.moduleName}"`).join(',')
     const requireNames = _.map(context.defines, d => `${d.alias}`).join(',')
-    const AMDArguments = _.map(context.defines, (d, i) => d.member === '*' ? `${d.alias}` : `$${i}`).join(',')
-    const AMDSubstitutions = _.map(context.defines, (d, i) => d.member === '*' ? null : `var ${d.alias} = $${i}.${d.member};`).join('\n')
+    const AMDArguments = _.map(context.defines, (d, i) => d.member === '*' ? `${d.alias}` : `$${i}`).join(',') //eslint-disable-line no-confusing-arrow
+    const AMDSubstitutions = _.map(context.defines, (d, i) => d.member === '*' ? null : `var ${d.alias} = $${i}.${d.member};`).join('\n') //eslint-disable-line no-confusing-arrow
     const buildImport = reactSupport.buildImport[options.modules] || reactSupport.buildImport.commonjs
     const requires = _.map(context.defines, buildImport).join('\n')
     const header = options.flow ? '/* @flow */\n' : ''
