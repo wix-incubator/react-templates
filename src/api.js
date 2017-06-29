@@ -1,12 +1,12 @@
-'use strict';
+'use strict'
 
-const fs = require('fs');
-const path = require('path');
-const chalk = require('chalk');
-const reactTemplates = require('./reactTemplates');
-const fsUtil = require('./fsUtil');
-const convertRT = reactTemplates.convertRT;
-const convertJSRTToJS = reactTemplates.convertJSRTToJS;
+const fs = require('fs')
+const path = require('path')
+const chalk = require('chalk')
+const reactTemplates = require('./reactTemplates')
+const fsUtil = require('./fsUtil')
+const convertRT = reactTemplates.convertRT
+const convertJSRTToJS = reactTemplates.convertJSRTToJS
 
 /**
  * @param {string} source
@@ -15,35 +15,35 @@ const convertJSRTToJS = reactTemplates.convertJSRTToJS;
  * @param {CONTEXT} context
  */
 function convertFile(source, target, options, context) {
-    options = options || {};
-    options.fileName = source;
+    options = options || {}
+    options.fileName = source
 
     if (!options.force && !fsUtil.isStale(source, target)) {
-        context.verbose(`target file ${chalk.cyan(target)} is up to date, skipping`);
-        return;
+        context.verbose(`target file ${chalk.cyan(target)} is up to date, skipping`)
+        return
     }
 
-    const html = fs.readFileSync(source).toString();
+    const html = fs.readFileSync(source).toString()
     if (path.extname(source) === '.rts') {
-        const rtStyle = require('./rtStyle');
-        const out = rtStyle.convert(html);
+        const rtStyle = require('./rtStyle')
+        const out = rtStyle.convert(html)
         if (!options.dryRun) {
-            fs.writeFileSync(target, out);
+            fs.writeFileSync(target, out)
         }
-        return;
+        return
     }
-    const modules = options.modules || 'none';
-    const shouldAddName = modules === 'none' && !options.name;
+    const modules = options.modules || 'none'
+    const shouldAddName = modules === 'none' && !options.name
     if (shouldAddName) {
-        options.name = reactTemplates.normalizeName(path.basename(source, path.extname(source))) + 'RT';
+        options.name = reactTemplates.normalizeName(path.basename(source, path.extname(source))) + 'RT'
     }
-    options.readFileSync = fsUtil.createRelativeReadFileSync(source);
-    const js = modules === 'jsrt' ? convertJSRTToJS(html, context, options) : convertRT(html, context, options);
+    options.readFileSync = fsUtil.createRelativeReadFileSync(source)
+    const js = modules === 'jsrt' ? convertJSRTToJS(html, context, options) : convertRT(html, context, options)
     if (!options.dryRun) {
-        fs.writeFileSync(target, js);
+        fs.writeFileSync(target, js)
     }
     if (shouldAddName) {
-        delete options.name;
+        delete options.name
     }
 }
 
@@ -51,4 +51,4 @@ module.exports = {
     convertFile,
     context: require('./context'),
     _test: {}
-};
+}

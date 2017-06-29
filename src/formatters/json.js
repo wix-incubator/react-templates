@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = function (results/*, config*/) {
-    return JSON.stringify(results, undefined, 2);
-};
+    return JSON.stringify(results, undefined, 2)
+}

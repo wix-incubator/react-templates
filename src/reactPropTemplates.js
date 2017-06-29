@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const native = {
     '0.9.0': {
@@ -21,9 +21,9 @@ const native = {
             Separator: {prop: 'renderSeparator', arguments: ['sectionID', 'rowID', 'adjacentRowHighlighted']}
         }
     }
-};
+}
 
 module.exports = {
     native,
     dom: {}
-};
+}

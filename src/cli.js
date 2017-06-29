@@ -1,36 +1,36 @@
-'use strict';
-const _ = require('lodash');
-const path = require('path');
+'use strict'
+const _ = require('lodash')
+const path = require('path')
 // const fs = require('fs');
-const api = require('./api');
-const context = require('./context');
-const shell = require('./shell');
-const pkg = require('../package.json');
-const options = require('./options');
-const reactDOMSupport = require('./reactDOMSupport');
-const reactTemplates = require('./reactTemplates');
-const rtStyle = require('./rtStyle');
-const glob = require('glob');
+const api = require('./api')
+const context = require('./context')
+const shell = require('./shell')
+const pkg = require('../package.json')
+const options = require('./options')
+const reactDOMSupport = require('./reactDOMSupport')
+const reactTemplates = require('./reactTemplates')
+const rtStyle = require('./rtStyle')
+const glob = require('glob')
 
 /**
  * @param {Options} currentOptions
  * @return {number}
  */
 function executeOptions(currentOptions) {
-    let ret = 0;
-    const files = currentOptions._;
-    context.options.format = currentOptions.format || 'stylish';
+    let ret = 0
+    const files = currentOptions._
+    context.options.format = currentOptions.format || 'stylish'
 
     if (currentOptions.version) {
-        console.log(`v${pkg.version}`);
+        console.log(`v${pkg.version}`)
     } else if (currentOptions.help) {
         if (files.length) {
-            console.log(options.generateHelpForOption(files[0]));
+            console.log(options.generateHelpForOption(files[0]))
         } else {
-            console.log(options.generateHelp());
+            console.log(options.generateHelp())
         }
     } else if (currentOptions.listTargetVersion) {
-        printVersions(currentOptions);
+        printVersions(currentOptions)
     } else if (files.length) {
         // console.log(files);
         // console.log(files.length);
@@ -42,22 +42,22 @@ function executeOptions(currentOptions) {
         //     }
         //     return fp;
         // });
-        const allFiles = _.flatMap(files, f => glob.sync(f, {cwd: context.cwd}));
+        const allFiles = _.flatMap(files, f => glob.sync(f, {cwd: context.cwd}))
         // console.log(allFiles.length);
-        _.forEach(allFiles, handleSingleFile.bind(this, currentOptions));
-        ret = shell.printResults(context);
+        _.forEach(allFiles, handleSingleFile.bind(this, currentOptions))
+        ret = shell.printResults(context)
     } else {
-        console.log(options.generateHelp());
+        console.log(options.generateHelp())
     }
-    return ret;
+    return ret
 }
 
 function printVersions(currentOptions) {
-    const ret = Object.keys(reactDOMSupport);
+    const ret = Object.keys(reactDOMSupport)
     if (currentOptions.format === 'json') {
-        console.log(JSON.stringify(ret, undefined, 2));
+        console.log(JSON.stringify(ret, undefined, 2))
     } else {
-        console.log(ret.join(', '));
+        console.log(ret.join(', '))
     }
 }
 
@@ -67,23 +67,23 @@ function printVersions(currentOptions) {
  */
 function handleSingleFile(currentOptions, filename) {
     try {
-        const sourceExt = path.extname(filename);
-        let outputFilename;
+        const sourceExt = path.extname(filename)
+        let outputFilename
         if (sourceExt === '.rt') {
-            outputFilename = filename + (currentOptions.modules === 'typescript' ? '.ts' : '.js');
+            outputFilename = filename + (currentOptions.modules === 'typescript' ? '.ts' : '.js')
         } else if (sourceExt === '.jsrt') {
-            outputFilename = filename.replace(/\.jsrt$/, '.js');
-            currentOptions = _.assign({}, currentOptions, {modules: 'jsrt'});
+            outputFilename = filename.replace(/\.jsrt$/, '.js')
+            currentOptions = _.assign({}, currentOptions, {modules: 'jsrt'})
         } else if (sourceExt === '.rts') {
-            outputFilename = filename + '.js';
-            currentOptions = _.assign({}, currentOptions, {modules: 'rts'});
+            outputFilename = filename + '.js'
+            currentOptions = _.assign({}, currentOptions, {modules: 'rts'})
         } else {
-            context.error('invalid file, only handle rt/jsrt files', filename);
-            return;
+            context.error('invalid file, only handle rt/jsrt files', filename)
+            return
         }
-        api.convertFile(filename, outputFilename, currentOptions, context);
+        api.convertFile(filename, outputFilename, currentOptions, context)
     } catch (e) {
-        context.error(e.message, filename, e.line, e.column, e.startOffset, e.endOffset);
+        context.error(e.message, filename, e.line, e.column, e.startOffset, e.endOffset)
     }
 }
 
@@ -94,11 +94,11 @@ function handleSingleFile(currentOptions, filename) {
  */
 function execute(args) {
     try {
-        const currentOptions = options.parse(args);
-        return executeOptions(currentOptions);
+        const currentOptions = options.parse(args)
+        return executeOptions(currentOptions)
     } catch (error) {
-        console.error(error.message);
-        return 1;
+        console.error(error.message)
+        return 1
     }
 }
 
@@ -109,4 +109,4 @@ module.exports = {
     handleSingleFile,
     convertTemplateToReact: reactTemplates.convertTemplateToReact,
     convertStyle: rtStyle.convert
-};
+}

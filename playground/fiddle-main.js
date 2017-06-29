@@ -20,10 +20,10 @@ requirejs.config({
     map: {
         '*': {'react/addons': 'react'}
     }
-});
+})
 
 requirejs(['fiddle', 'react', 'react-dom', 'jquery', 'bootstrap'], function (fiddle, React, ReactDOM) {
-    'use strict';
-    var elem = React.createElement(fiddle);
-    window.fiddle = ReactDOM.render(elem, document.getElementById('container'));
-});
+    'use strict'
+    var elem = React.createElement(fiddle)
+    window.fiddle = ReactDOM.render(elem, document.getElementById('container'))
+})

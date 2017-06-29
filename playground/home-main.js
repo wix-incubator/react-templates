@@ -21,10 +21,10 @@ requirejs.config({
     map: {
         '*': {'react/addons': 'react'}
     }
-});
+})
 
 requirejs(['./examples', 'react', 'react-dom', 'jquery'], function (Examples, React, ReactDOM) {
-    'use strict';
-    var elem = React.createElement(Examples);
-    ReactDOM.render(elem, document.getElementById('home-section'));
-});
+    'use strict'
+    var elem = React.createElement(Examples)
+    ReactDOM.render(elem, document.getElementById('home-section'))
+})

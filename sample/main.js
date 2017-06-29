@@ -10,9 +10,9 @@ requirejs.config({
         jquery: {exports: '$'},
         react: {exports: 'React'}
     }
-});
+})
 
 requirejs(['jquery', 'react', 'ImageSearch'], function ($, React, ImageSearch) {
-    'use strict';
-    React.renderComponent(ImageSearch(), $('#main').get(0)); //eslint-disable-line new-cap
-});
+    'use strict'
+    React.renderComponent(ImageSearch(), $('#main').get(0)) //eslint-disable-line new-cap
+})

@@ -1,9 +1,9 @@
 /*eslint strict:0*/
-'use strict';
+'use strict'
 /*eslint-env browser*/
-/*var _ = */require('lodash');
-var reactTemplates = require('../dist/reactTemplates');
-window.reactTemplates = reactTemplates;
+/*var _ = */require('lodash')
+var reactTemplates = require('../dist/reactTemplates')
+window.reactTemplates = reactTemplates
 
 
 

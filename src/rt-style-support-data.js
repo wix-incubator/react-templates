@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 const map = {
     /*flex*/
     alignItems: 'string', //  "enum('flex-start', 'flex-end', 'center', 'stretch')",
@@ -42,6 +42,6 @@ const map = {
     overflow: 'string', // enum('visible', 'hidden')
     tintColor: 'string',
     opacity: 'number'
-};
+}
 
-module.exports = map;
+module.exports = map

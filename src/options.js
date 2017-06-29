@@ -2,16 +2,16 @@
  * @fileoverview Options configuration for optionator.
  * @author idok
  */
-'use strict';
+'use strict'
 
 //------------------------------------------------------------------------------
 // Requirements
 //------------------------------------------------------------------------------
 
-const optionator = require('optionator');
-const pkg = require('../package.json');
-const reactDOMSupport = require('./reactDOMSupport');
-const reactNativeSupport = require('./reactNativeSupport');
+const optionator = require('optionator')
+const pkg = require('../package.json')
+const reactDOMSupport = require('./reactDOMSupport')
+const reactNativeSupport = require('./reactNativeSupport')
 
 //------------------------------------------------------------------------------
 // Initialization and Public Interface
@@ -127,4 +127,4 @@ $ rt <filename|glob> [<filename|glob> ...] [<args>]`,
         default: 'false',
         description: 'Automatically bind event handlers to components'
     }]
-});
+})

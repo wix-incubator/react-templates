@@ -1,9 +1,9 @@
-'use strict';
-const _ = require('lodash');
-const esprima = require('esprima');
-const normalizeHtmlWhitespace = require('normalize-html-whitespace');
-const rtError = require('./RTCodeError');
-const RTCodeError = rtError.RTCodeError;
+'use strict'
+const _ = require('lodash')
+const esprima = require('esprima')
+const normalizeHtmlWhitespace = require('normalize-html-whitespace')
+const rtError = require('./RTCodeError')
+const RTCodeError = rtError.RTCodeError
 
 /**
  * @param {string} code
@@ -12,9 +12,9 @@ const RTCodeError = rtError.RTCodeError;
  */
 function validateJS(code, node, context) {
     try {
-        esprima.parse(code);
+        esprima.parse(code)
     } catch (e) {
-        throw RTCodeError.build(context, node, e.description);
+        throw RTCodeError.build(context, node, e.description)
     }
 }
 
@@ -23,7 +23,7 @@ function validateJS(code, node, context) {
  * @return {string}
  */
 function normalizeName(name) {
-    return name.replace(/-/g, '_');
+    return name.replace(/-/g, '_')
 }
 
 /**
@@ -31,7 +31,7 @@ function normalizeName(name) {
  * @return {boolean}
  */
 function isStringOnlyCode(txt) {
-    return /^\s*\{.*}\s*$/g.test(txt);
+    return /^\s*\{.*}\s*$/g.test(txt)
     //txt = txt.trim();
     //return txt.length && txt.charAt(0) === '{' && txt.charAt(txt.length - 1) === '}';
 }
@@ -42,7 +42,7 @@ function isStringOnlyCode(txt) {
  */
 function addIfMissing(array, obj) {
     if (!_.includes(array, obj)) {
-        array.push(obj);
+        array.push(obj)
     }
 }
 
@@ -51,14 +51,14 @@ function addIfMissing(array, obj) {
  * @return {string}
  */
 function concatChildren(children) {
-    let res = '';
+    let res = ''
     _.forEach(children, child => {
         if (child && !_.startsWith(child, ' /*')) {
-            res += ',';
+            res += ','
         }
-        res += child;
-    });
-    return res;
+        res += child
+    })
+    return res
 }
 
 /**
@@ -70,15 +70,16 @@ function concatChildren(children) {
  */
 function validate(options, context, reportContext, node) {
     if (node.type === 'tag' && node.attribs['rt-if'] && !node.attribs.key) {
-        const loc = rtError.getNodeLoc(context, node);
-        reportContext.warn('rt-if without a key', options.fileName, loc.pos.line, loc.pos.col, loc.start, loc.end);
+        const loc = rtError.getNodeLoc(context, node)
+        reportContext.warn('rt-if without a key', options.fileName, loc.pos.line, loc.pos.col, loc.start, loc.end)
     }
     if (node.type === 'tag' && node.attribs['rt-require'] && (node.attribs.dependency || node.attribs.as)) {
-        const loc = rtError.getNodeLoc(context, node);
-        reportContext.warn("'rt-require' is obsolete, use 'rt-import' instead", options.fileName, loc.pos.line, loc.pos.col, loc.start, loc.end);
+        const loc = rtError.getNodeLoc(context, node)
+        reportContext.warn("'rt-require' is obsolete, use 'rt-import' instead", options.fileName, loc.pos.line, loc.pos.col, loc.start, loc.end)
     }
+    // TODO check for duplicate import/require
     if (node.children) {
-        node.children.forEach(validate.bind(this, options, context, reportContext));
+        node.children.forEach(validate.bind(this, options, context, reportContext))
     }
 }
 
@@ -89,51 +90,51 @@ function validate(options, context, reportContext, node) {
  */
 function usesScopeName(scopeNames, node) {
     function usesScope(root) {
-        return usesScopeName(scopeNames, root);
+        return usesScopeName(scopeNames, root)
     }
     if (_.isEmpty(scopeNames)) {
-        return false;
+        return false
     }
     // rt-if="x"
     if (node.type === 'Identifier') {
-        return _.includes(scopeNames, node.name);
+        return _.includes(scopeNames, node.name)
     }
     // rt-if="e({key1: value1})"
     if (node.type === 'Property') {
-        return usesScope(node.value);
+        return usesScope(node.value)
     }
     // rt-if="e.x" or rt-if="e1[e2]"
     if (node.type === 'MemberExpression') {
-        return node.computed ? usesScope(node.object) || usesScope(node.property) : usesScope(node.object);
+        return node.computed ? usesScope(node.object) || usesScope(node.property) : usesScope(node.object)
     }
     // rt-if="!e"
     if (node.type === 'UnaryExpression') {
-        return usesScope(node.argument);
+        return usesScope(node.argument)
     }
     // rt-if="e1 || e2" or rt-if="e1 | e2"
     if (node.type === 'LogicalExpression' || node.type === 'BinaryExpression') {
-        return usesScope(node.left) || usesScope(node.right);
+        return usesScope(node.left) || usesScope(node.right)
     }
     // rt-if="e1(e2, ... eN)"
     if (node.type === 'CallExpression') {
-        return usesScope(node.callee) || _.some(node.arguments, usesScope);
+        return usesScope(node.callee) || _.some(node.arguments, usesScope)
     }
     // rt-if="f({e1: e2})"
     if (node.type === 'ObjectExpression') {
-        return _.some(node.properties, usesScope);
+        return _.some(node.properties, usesScope)
     }
     // rt-if="e1[e2]"
     if (node.type === 'ArrayExpression') {
-        return _.some(node.elements, usesScope);
+        return _.some(node.elements, usesScope)
     }
-    return false;
+    return false
 }
 
 
 /**
  * @const
  */
-const curlyMap = {'{': 1, '}': -1};
+const curlyMap = {'{': 1, '}': -1}
 
 /**
  * @typedef {{boundParams: Array.<string>, injectedFunctions: Array.<string>, html: string, options: *}} Context
@@ -152,39 +153,39 @@ const curlyMap = {'{': 1, '}': -1};
  */
 function convertText(node, context, txt, normalizeWhitespaces) {
     function jsonText(text) {
-        return JSON.stringify(normalizeWhitespaces ? normalizeHtmlWhitespace(text) : text);
+        return JSON.stringify(normalizeWhitespaces ? normalizeHtmlWhitespace(text) : text)
     }
-    let res = '';
-    let first = true;
-    const concatChar = node.type === 'text' ? ',' : '+';
+    let res = ''
+    let first = true
+    const concatChar = node.type === 'text' ? ',' : '+'
     while (_.includes(txt, '{')) {
-        const start = txt.indexOf('{');
-        const pre = txt.substr(0, start);
+        const start = txt.indexOf('{')
+        const pre = txt.substr(0, start)
         if (pre) {
-            res += (first ? '' : concatChar) + jsonText(pre);
-            first = false;
+            res += (first ? '' : concatChar) + jsonText(pre)
+            first = false
         }
-        let curlyCounter = 1;
-        let end = start;
+        let curlyCounter = 1
+        let end = start
         while (++end < txt.length && curlyCounter > 0) {
-            curlyCounter += curlyMap[txt.charAt(end)] || 0;
+            curlyCounter += curlyMap[txt.charAt(end)] || 0
         }
         if (curlyCounter === 0) {
-            const needsParens = start !== 0 || end !== txt.length - 1;
-            res += (first ? '' : concatChar) + (needsParens ? '(' : '') + txt.substr(start + 1, end - start - 2) + (needsParens ? ')' : '');
-            first = false;
-            txt = txt.substr(end);
+            const needsParens = start !== 0 || end !== txt.length - 1
+            res += (first ? '' : concatChar) + (needsParens ? '(' : '') + txt.substr(start + 1, end - start - 2) + (needsParens ? ')' : '')
+            first = false
+            txt = txt.substr(end)
         } else {
-            throw RTCodeError.build(context, node, `Failed to parse text '${txt}'`);
+            throw RTCodeError.build(context, node, `Failed to parse text '${txt}'`)
         }
     }
     if (txt) {
-        res += (first ? '' : concatChar) + jsonText(txt);
+        res += (first ? '' : concatChar) + jsonText(txt)
     }
     if (res === '') {
-        res = 'true';
+        res = 'true'
     }
-    return res;
+    return res
 }
 
 
@@ -197,4 +198,4 @@ module.exports = {
     validate,
     addIfMissing,
     convertText
-};
+}

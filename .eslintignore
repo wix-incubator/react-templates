@@ -7,6 +7,7 @@ playground/**/*.rt.js
 playground/dist/**
 playground/libs/**
 
+playground2/**
 playground3/**
 playground3/dist/**
 playground3/libs/**

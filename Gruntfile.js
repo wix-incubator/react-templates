@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = function (grunt) {
     grunt.initConfig({
         clean: {
@@ -88,33 +88,33 @@ module.exports = function (grunt) {
                 options: readConfig('./playground.config.js')
             }
         }
-    });
+    })
 
     function readConfig(file) {
-        return eval(require('fs').readFileSync(file).toString()); // eslint-disable-line no-eval
+        return eval(require('fs').readFileSync(file).toString()) // eslint-disable-line no-eval
     }
 
-    grunt.loadNpmTasks('grunt-tape');
-    grunt.loadNpmTasks('grunt-browserify');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-requirejs');
-    grunt.loadNpmTasks('grunt-eslint');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-tape')
+    grunt.loadNpmTasks('grunt-browserify')
+    grunt.loadNpmTasks('grunt-contrib-watch')
+    grunt.loadNpmTasks('grunt-contrib-requirejs')
+    grunt.loadNpmTasks('grunt-eslint')
+    grunt.loadNpmTasks('grunt-contrib-uglify')
 
-    grunt.registerTask('default', ['eslint:all']);
-    grunt.registerTask('lint', ['eslint:all']);
-    grunt.registerTask('test', ['tape']);
+    grunt.registerTask('default', ['eslint:all'])
+    grunt.registerTask('lint', ['eslint:all'])
+    grunt.registerTask('test', ['tape'])
 
     grunt.registerTask('rt', () => {
-        const reactTemplates = require('./src/cli');
-        const files = grunt.file.expand('playground/*.rt');
-        const ret = reactTemplates.execute({modules: 'amd', force: true, _: files});
-        return ret === 0;
-    });
+        const reactTemplates = require('./src/cli')
+        const files = grunt.file.expand('playground/*.rt')
+        const ret = reactTemplates.execute({modules: 'amd', force: true, _: files})
+        return ret === 0
+    })
 
-    grunt.registerTask('build', ['rt', 'browserify:pg']);
-    grunt.registerTask('home', ['rt', 'browserify:home']);
-    grunt.registerTask('pgall', ['rt', 'browserify', 'uglify', 'requirejs']);
+    grunt.registerTask('build', ['rt', 'browserify:pg'])
+    grunt.registerTask('home', ['rt', 'browserify:home'])
+    grunt.registerTask('pgall', ['rt', 'browserify', 'uglify', 'requirejs'])
 
-    grunt.registerTask('all', ['default', 'test']);
-};
+    grunt.registerTask('all', ['default', 'test'])
+}

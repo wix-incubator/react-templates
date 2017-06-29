@@ -2,7 +2,7 @@
     "extends": ["wix-editor", "wix-editor/node", "plugin:lodash/recommended"],
     "plugins": ["lodash", "wix-editor"],
     "rules": {
-        "semi": [2, "always"],
+        "semi": [2, "never"],
         "func-style": [2, "declaration", {"allowArrowFunctions": true}],
         "prefer-spread": 0,
         "prefer-template": 0,

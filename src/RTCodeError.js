@@ -1,6 +1,6 @@
-'use strict';
-const util = require('util');
-const _ = require('lodash');
+'use strict'
+const util = require('util')
+const _ = require('lodash')
 
 
 /**
@@ -14,14 +14,14 @@ const _ = require('lodash');
  */
 function getLine(html, node) {
     if (!node) {
-        return {line: 1, col: 1};
+        return {line: 1, col: 1}
     }
-    const linesUntil = html.substring(0, node.startIndex).split('\n');
-    return {line: linesUntil.length, col: linesUntil[linesUntil.length - 1].length + 1};
+    const linesUntil = html.substring(0, node.startIndex).split('\n')
+    return {line: linesUntil.length, col: linesUntil[linesUntil.length - 1].length + 1}
 }
 
 function norm(n) {
-    return n === undefined ? -1 : n;
+    return n === undefined ? -1 : n
 }
 
 /**
@@ -34,23 +34,23 @@ function norm(n) {
  */
 class RTCodeError extends Error {
     constructor(message, startOffset, endOffset, line, column) {
-        super();
-        Error.captureStackTrace(this, RTCodeError);
-        this.name = 'RTCodeError';
-        this.message = message || '';
-        this.index = norm(startOffset);
-        this.startOffset = norm(startOffset);
-        this.endOffset = norm(endOffset);
-        this.line = norm(line);
-        this.column = norm(column);
+        super()
+        Error.captureStackTrace(this, RTCodeError)
+        this.name = 'RTCodeError'
+        this.message = message || ''
+        this.index = norm(startOffset)
+        this.startOffset = norm(startOffset)
+        this.endOffset = norm(endOffset)
+        this.line = norm(line)
+        this.column = norm(column)
     }
 }
 
 /**
  * @type {buildError}
  */
-RTCodeError.build = buildError;
-RTCodeError.norm = norm;
+RTCodeError.build = buildError
+RTCodeError.norm = norm
 
 /**
  * @param {*} context
@@ -60,7 +60,7 @@ RTCodeError.norm = norm;
  * @return {RTCodeError}
  */
 function buildFormat(context, node, msg, args) {
-    return buildError(context, node, util.format.apply(this, [msg].concat(args)));
+    return buildError(context, node, util.format.apply(this, [msg].concat(args)))
 }
 
 /**
@@ -70,7 +70,7 @@ function buildFormat(context, node, msg, args) {
  * @param {Array.<string>} args
  * @return {RTCodeError}
  */
-RTCodeError.buildFormat = _.rest(buildFormat, 3);
+RTCodeError.buildFormat = _.rest(buildFormat, 3)
 
 /**
  * @param {*} context
@@ -79,8 +79,8 @@ RTCodeError.buildFormat = _.rest(buildFormat, 3);
  * @return {RTCodeError}
  */
 function buildError(context, node, msg) {
-    const loc = getNodeLoc(context, node);
-    return new RTCodeError(msg, loc.start, loc.end, loc.pos.line, loc.pos.col);
+    const loc = getNodeLoc(context, node)
+    return new RTCodeError(msg, loc.start, loc.end, loc.pos.line, loc.pos.col)
 }
 
 /**
@@ -89,24 +89,24 @@ function buildError(context, node, msg) {
  * @return {{pos:Pos, start:number, end:number}}
  */
 function getNodeLoc(context, node) {
-    const start = node.startIndex;
-    const pos = getLine(context.html, node);
-    let end;
+    const start = node.startIndex
+    const pos = getLine(context.html, node)
+    let end
     if (node.data) {
-        end = start + node.data.length;
+        end = start + node.data.length
     } else if (node.next) { // eslint-disable-line
-        end = node.next.startIndex;
+        end = node.next.startIndex
     } else {
-        end = context.html.length;
+        end = context.html.length
     }
     return {
         pos,
         start,
         end
-    };
+    }
 }
 
 module.exports = {
     RTCodeError,
     getNodeLoc
-};
+}

@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 /**
  * @typedef {{color: boolean, cwd: string, report: function(string), issue: function(string, string,string,number,number,number=,number=), warn: function(string), verbose: function(string), getMessages: function():Array.<MESSAGE>, options:Options, messages: Array.<MESSAGE>}} CONTEXT
  */
@@ -14,11 +14,11 @@ const MESSAGE_LEVEL = {
     ERROR: 'ERROR',
     WARN: 'WARN',
     INFO: 'INFO'
-};
+}
 
-const _ = require('lodash');
-const err = require('./RTCodeError');
-const norm = err.RTCodeError.norm;
+const _ = require('lodash')
+const err = require('./RTCodeError')
+const norm = err.RTCodeError.norm
 
 
 /**
@@ -32,21 +32,21 @@ const context = {
     /** @type {string} */
     cwd: process.cwd(),
     report(msg) {
-        console.log(msg);
+        console.log(msg)
     },
     verbose(msg) {
         if (context.options.verbose) {
-            console.log(msg);
+            console.log(msg)
         }
     },
     info(msg, file, line, column) {
-        context.issue(MESSAGE_LEVEL.INFO, msg, file, line, column);
+        context.issue(MESSAGE_LEVEL.INFO, msg, file, line, column)
     },
     warn(msg, file, line, column, startOffset, endOffset) {
-        context.issue(MESSAGE_LEVEL.WARN, msg, file, line, column, startOffset, endOffset);
+        context.issue(MESSAGE_LEVEL.WARN, msg, file, line, column, startOffset, endOffset)
     },
     error(msg, file, line, column, startOffset, endOffset) {
-        context.issue(MESSAGE_LEVEL.ERROR, msg, file, line, column, startOffset, endOffset);
+        context.issue(MESSAGE_LEVEL.ERROR, msg, file, line, column, startOffset, endOffset)
     },
     /**
      * @param {MESSAGE_LEVEL} level
@@ -58,16 +58,16 @@ const context = {
      * @param {number=} endOffset
      */
     issue(level, msg, file, line, column, startOffset, endOffset) {
-        context.messages.push({level, msg, file: file || null, line: norm(line), column: norm(column), index: norm(startOffset), startOffset: norm(startOffset), endOffset: norm(endOffset)});
+        context.messages.push({level, msg, file: file || null, line: norm(line), column: norm(column), index: norm(startOffset), startOffset: norm(startOffset), endOffset: norm(endOffset)})
     },
     getMessages() {
-        return context.messages;
+        return context.messages
     },
     clear() {
-        context.messages = [];
+        context.messages = []
     },
     hasErrors() {
-        return _.some(context.messages, {level: MESSAGE_LEVEL.ERROR});
+        return _.some(context.messages, {level: MESSAGE_LEVEL.ERROR})
     },
     options: {
         verbose: false,
@@ -75,6 +75,6 @@ const context = {
         format: 'stylish'
     },
     MESSAGE_LEVEL
-};
+}
 
-module.exports = context;
+module.exports = context
