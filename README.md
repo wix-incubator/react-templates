@@ -656,6 +656,35 @@ export default function () {
 };
 ```
 
+### defining in-place child properties
+In cases you'd like to set a renderable React component itself (not a function) as a child property,
+You should use a **rt-template** tag with **in-place** attribute: `<rt-template prop="propName" in-place/>`.
+Note that **argument** attribute and **in-place** attribute cannot be set simulatenously.
+
+###### Sample:
+```html
+<div>
+    <rt-template prop="templateProp" in-place>
+        <div>some</div>
+    </rt-template>
+</div>
+```
+###### Compiled (AMD):
+```javascript
+define([
+    'react',
+    'lodash'
+], function (React, _) {
+    'use strict';
+    return function () {
+        function templateProp1() {
+            return React.createElement('div', {}, 'some');
+        }
+        return React.createElement('div', { 'templateProp': templateProp1.call(this) });
+    };
+});
+```
+
 ## Contributing
 
 See the [Contributing page](CONTRIBUTING.md).

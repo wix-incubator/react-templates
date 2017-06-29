@@ -49,6 +49,9 @@ const classAttr = 'class';
 const scopeAttr = 'rt-scope';
 const propsAttr = 'rt-props';
 const templateNode = 'rt-template';
+const templateNode_PropAttr = 'prop';
+const templateNode_ArgumentsAttr = 'arguments';
+const templateNode_InPlaceAttr = 'in-place';
 const virtualNode = 'rt-virtual';
 const includeNode = 'rt-include';
 const includeSrcAttr = 'src';
@@ -123,17 +126,21 @@ function generateTemplateProps(node, context) {
         .map((child, index) => {
             let templateProp = null;
             if (child.name === templateNode) { // Generic explicit template tag
-                if (!_.has(child.attribs, 'prop')) {
-                    throw RTCodeError.build(context, child, 'rt-template must have a prop attribute');
+                if (!_.has(child.attribs, templateNode_PropAttr)) {
+                    throw RTCodeError.build(context, child, "'rt-template' should have a " + templateNode_PropAttr + ' attribute');
                 }
                 if (_.filter(child.children, {type: 'tag'}).length !== 1) {
                     throw RTCodeError.build(context, child, "'rt-template' should have a single non-text element as direct child");
                 }
+                if (_.has(child.attribs, templateNode_ArgumentsAttr) && _.has(child.attribs, templateNode_InPlaceAttr)) {
+                    throw RTCodeError.build(context, child, "'" + templateNode_ArgumentsAttr + "' and '" + templateNode_InPlaceAttr + "' cannot coexist together");
+                }
 
-                const childTemplate = _.find(context.options.propTemplates, {prop: child.attribs.prop}) || {arguments: []};
+                const childTemplate = _.find(context.options.propTemplates, {prop: child.attribs[templateNode_PropAttr]}) || {arguments: []};
                 templateProp = {
-                    prop: child.attribs.prop,
-                    arguments: (child.attribs.arguments ? child.attribs.arguments.split(',') : childTemplate.arguments) || []
+                    prop: child.attribs[templateNode_PropAttr],
+                    arguments: (child.attribs[templateNode_ArgumentsAttr] ? child.attribs[templateNode_ArgumentsAttr].split(',') : childTemplate.arguments) || [],
+                    inplace: _.has(child.attribs, templateNode_InPlaceAttr)
                 };
             } else if (propTemplateDefinition && propTemplateDefinition[child.name]) { // Implicit child template from configuration
                 templateProp = {
@@ -161,7 +168,7 @@ function generateTemplateProps(node, context) {
         context.boundParams = oldBoundParams;
 
         const generatedFuncName = generateInjectedFunc(context, templateProp.prop, functionBody, functionParams);
-        props[templateProp.prop] = genBind(generatedFuncName, _.values(context.boundParams));
+        props[templateProp.prop] = templateProp.inplace ? genCall(generatedFuncName, _.values(context.boundParams)) : genBind(generatedFuncName, _.values(context.boundParams));
 
         // Remove the template child from the children definition.
         node.children.splice(templateProp.childIndex, 1);
@@ -238,6 +245,11 @@ function handleEventHandler(val, context, node, key) {
 function genBind(func, args) {
     const bindArgs = ['this'].concat(args);
     return `${func}.bind(${bindArgs.join(',')})`;
+}
+
+function genCall(func, args) {
+    const bindArgs = ['this'].concat(args);
+    return `${func}.call(${bindArgs.join(',')})`;
 }
 
 function handleStyleProp(val, node, context) {

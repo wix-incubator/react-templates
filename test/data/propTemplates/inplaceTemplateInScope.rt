@@ -1,0 +1,5 @@
+<div rt-scope="'boten' as name">
+    <rt-template prop="templateProp" in-place>
+        <div>Name: {name} some</div>
+    </rt-template>
+</div>
