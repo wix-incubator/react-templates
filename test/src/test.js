@@ -3,8 +3,7 @@ const test = require('tape')
 const path = require('path')
 const dataPath = path.resolve(__dirname, '..', 'data')
 
-// const specs = ['rt.invalid', 'rt.valid', 'rt-html-valid', 'utils', 'shell', 'rtStyle', 'fsUtil'];
-const specs = ['rt.invalid']
+const specs = ['rt.invalid', 'rt.valid', 'rt-html-valid', 'utils', 'shell', 'rtStyle', 'fsUtil'];
 
 specs
     .map(file => require(`./${file}.spec`))
