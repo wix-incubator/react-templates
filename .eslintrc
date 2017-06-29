@@ -1,11 +1,11 @@
 {
-    "extends": ["wix-editor", "wix-editor/node", "plugin:lodash/recommended"],
+    "extends": ["wix-editor", "wix-editor/node", "plugin:lodash/canonical"],
     "plugins": ["lodash", "wix-editor"],
     "rules": {
         "semi": [2, "never"],
         "func-style": [2, "declaration", {"allowArrowFunctions": true}],
-        "prefer-spread": 0,
-        "prefer-template": 0,
+        "prefer-spread": 1,
+        "prefer-template": 1,
         "consistent-return": 0,
 
         "no-restricted-syntax": [2, "WithStatement", "ContinueStatement", "ForStatement"],

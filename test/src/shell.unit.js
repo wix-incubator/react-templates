@@ -2,33 +2,32 @@
 const context = require('../../src/context')
 const _ = require('lodash')
 const path = require('path')
+const assert = require('assert')
 
-module.exports = {
-    runTests(test, dataPath) {
-        test('test context', t => {
+describe('rtStyle', () => {
+    it('should convertBody style successfully', () => {
+        it('should convertBody style successfully', () => {
             context.clear()
-            t.equal(context.hasErrors(), false)
+            assert.equal(context.hasErrors(), false)
             context.error('hi', '', 1, 1)
-            t.equal(context.hasErrors(), true)
+            assert.equal(context.hasErrors(), true)
             context.clear()
-            t.equal(context.hasErrors(), false)
-
-            t.end()
+            assert.equal(context.hasErrors(), false)
         })
 
-        test('test shell', t => {
+        it('test shell', () => {
             const shell = require('../../src/shell')
             const newContext = _.cloneDeep(context)
             let outputJSON = ''
             newContext.options.format = 'json'
             newContext.report = function (text) { outputJSON = text }
             let r = shell.printResults(newContext)
-            t.equal(r, 0)
+            assert.equal(r, 0)
             context.error('hi', '', 1, 1)
             r = shell.printResults(newContext)
-            t.equal(r, 1)
+            assert.equal(r, 1)
             const output = JSON.parse(outputJSON)
-            t.deepEqual(output, [{
+            assert.deepEqual(output, [{
                 column: 1,
                 endOffset: -1,
                 file: null,
@@ -39,15 +38,13 @@ module.exports = {
                 startOffset: -1
             }])
             context.clear()
-            t.end()
         })
 
-        test('test shell', t => {
+        it('test shell', () => {
             const filename = path.join(dataPath, 'div.rt')
             const cli = require('../../src/cli')
             const r = cli.execute(`${filename} -r --dry-run`)
-            t.equal(r, 0)
-            t.end()
+            assert.equal(r, 0)
         })
-    }
-}
+    })
+})

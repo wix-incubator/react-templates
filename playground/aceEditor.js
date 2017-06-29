@@ -33,7 +33,7 @@ define(['react', 'lodash']/*, 'ace'*/, function (React, _/*, ace*/) {
         },
         componentDidMount: function () {
             this.editor = ace.edit(this.props.id || this.state.editorId)
-//        this.editor.setTheme('ace/theme/monokai');
+            // this.editor.setTheme('ace/theme/monokai');
             this.editor.setTheme('ace/theme/solarized_light')
             if (this.props.mode === 'html') {
                 this.editor.getSession().setMode('ace/mode/html')

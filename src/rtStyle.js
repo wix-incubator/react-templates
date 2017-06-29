@@ -5,7 +5,7 @@ const rtnData = require('./rt-style-support-data.js')
 
 
 const templateCommonJSTemplate = _.template(
-`'use strict';
+    `'use strict';
 var style = <%= body %>;
 module.exports = style;
 `)

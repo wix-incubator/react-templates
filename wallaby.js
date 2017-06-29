@@ -5,11 +5,10 @@
 module.exports = function (/*wallaby*/) {
     return {
         files: [
-            'src/**/*.js'
-            // {pattern: 'lib/data/*.*', instrument: false},
-            // 'lib/formatters/*.js',
-            // {pattern: 'test/testData/**/*.*', instrument: false},
-            // {pattern: 'test/src/utils/*.js', instrument: false}
+            'src/**/*.js',
+            'test/src/utils/**/*.js',
+            {pattern: 'test/data/**/*', instrument: false},
+            {pattern: 'package.json', instrument: false}
         ],
         tests: [
             'test/**/*.unit.js'
@@ -30,10 +29,10 @@ module.exports = function (/*wallaby*/) {
             //runner: '/usr/local/bin/jasmine-node'
             // or
             // runner: 'path to the desired node version'
-//            params: {
-//                runner: '--harmony --harmony_arrow_functions',
-//                env: 'PARAM1=true;PARAM2=false'
-//            }
+            // params: {
+            //     runner: '--harmony --harmony_arrow_functions',
+            //     env: 'PARAM1=true;PARAM2=false'
+            // }
         },
         setup: function (w) {
             // require(path.resolve(__dirname, './spec/support/unit-init.js'))

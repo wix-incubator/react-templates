@@ -2,10 +2,11 @@
 const cheerio = require('cheerio')
 const fs = require('fs')
 const path = require('path')
-const reactTemplates = require('../../src/reactTemplates')
+const reactTemplates = require('../../../src/reactTemplates')
 const React = require('react')
 const ReactDOMServer = require('react-dom/server')
 const _ = require('lodash')
+const assert = require('assert')
 
 /**
  * @param {string} html
@@ -25,8 +26,8 @@ function normalizeHtml(html) {
  * @param {string} filename
  * @return {boolean} whether actual is equal to expected
  */
-function compareAndWrite(t, actual, expected, filename) {
-    t.equal(actual, expected, filename)
+function compareAndWrite(actual, expected, filename) {
+    assert.equal(actual, expected, filename)
     if (actual !== expected) {
         fs.writeFileSync(`${filename}.actual.js`, actual)
         return false
