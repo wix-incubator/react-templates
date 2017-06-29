@@ -665,9 +665,9 @@ Copyright (c) 2015 Wix. Licensed under the MIT license.
 
 [npm-image]: https://img.shields.io/npm/v/react-templates.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/react-templates
-[travis-image]: https://img.shields.io/travis/wix/react-templates/gh-pages.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/wix/react-templates/master.svg?style=flat-square
 [travis-url]: https://travis-ci.org/wix/react-templates
-[coveralls-image]: https://img.shields.io/coveralls/wix/react-templates/gh-pages.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/wix/react-templates?branch=gh-pages
+[coveralls-image]: https://img.shields.io/coveralls/wix/react-templates/master.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/wix/react-templates?branch=master
 [downloads-image]: http://img.shields.io/npm/dm/react-templates.svg?style=flat-square
 [downloads-url]: https://npmjs.org/package/react-templates

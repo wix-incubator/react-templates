@@ -18,7 +18,7 @@ script:
 
 branches:
   only:
-    - gh-pages
+    - master
 #after_success:
 #    - npm run coveralls
 
