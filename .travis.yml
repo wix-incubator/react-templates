@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+  - 4
+  - 5
+  - 6
+
+sudo: false
+
+#before_script:
+#  - npm install -g grunt-cli
+
+install:
+  - npm install
+
+script:
+  - npm run lint
+  - npm run test-cov
+
+branches:
+  only:
+    - gh-pages
+#after_success:
+#    - npm run coveralls
+
+#after_success:
+#  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js

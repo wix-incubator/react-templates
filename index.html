@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>React Templates</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Light weight templates for React.">
+
+    <link rel="shortcut icon" href="https://facebook.github.io/react/favicon.ico">
+    <link href='//fonts.googleapis.com/css?family=Lato:100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">-->
+
+    <link rel="stylesheet" href="playground/libs/codemirror-4.8/lib/codemirror.css"/>
+    <link rel="stylesheet" href="playground/libs/codemirror-4.8/theme/solarized.css"/>
+    <link rel="stylesheet" href="playground/libs/codemirror-4.8/addon/hint/show-hint.css">
+    <link rel="stylesheet" href="playground/libs/codemirror-4.8/addon/lint/lint.css">
+
+    <link rel="stylesheet" href="playground/css/playground.css"/>
+    <link rel="stylesheet" href="playground/css/home.css"/>
+    <!--<link rel="stylesheet" href="playground/dist/css/tidy.css"/>-->
+</head>
+<body>
+
+<div class="container">
+
+    <div class="nav-main">
+        <div class="wrap">
+            <a class="nav-home" href="index.html">
+                <img class="nav-logo" src="https://wix.github.io/react-templates/img/logo-rt.svg" width="56" height="24" />
+                <span>React Templates</span>
+            </a>
+            <ul class="nav-site">
+                <li><a href="fiddle.html">Playground</a></li>
+                <li><a href="https://github.com/wix/react-templates#template-directives-and-syntax">docs</a></li>
+                <li><a href="https://github.com/wix/react-templates#installation">download</a></li>
+                <li><a href="https://github.com/wix/react-templates">github</a>
+            </ul>
+        </div>
+    </div>
+    <a href="https://github.com/wix/react-templates" target="_blank">
+        <img class="img-fork-github" src="img/github-fork-me.png" alt="Fork me on GitHub" />
+    </a>
+
+    <div class="hero">
+        <div class="wrap">
+            <div class="text">React Templates</div>
+            <div class="minitext">
+                Lightweight Templates for React
+            </div>
+            <div class="buttons-unit">
+                <a href="fiddle.html" class="button">Check Out the Playground</a>
+            </div>
+        </div>
+    </div>
+
+    <section class="content wrap">
+        <section class="love-list">
+            <ul>
+                <li>No runtime libraries. No magic. Simply precompile your way to clear React code.</li>
+                <li>Easy syntax that's similar to HTML, supported by most IDEs.</li>
+                <li>Clear separation of presentation and logic - almost zero HTML in component files.</li>
+                <li>Declarative coding ensures that the HTML that you write and the HTML you inspect look nearly identical.</li>
+                <li>Supports <a href="#amd">AMD</a>, <a href="#commonjs">CommonJS</a>, <a href="#es6">ES6</a>, Typescript and globals.</li>
+            </ul>
+        </section>
+        <section id="home-section" class="home-section">
+            <div id="loading">
+                Loading...
+            </div>
+        </section>
+    </section>
+
+    <footer class="footer">
+        <span>Sponsored by </span> <a href="//wix.com" class="wf-white-logo"></a>
+    </footer>
+</div>
+
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="playground/dist/rt-main.browser.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.20/require.min.js"></script>
+<!--<script src="playground/home-main.js"></script>-->
+<script src="playground/dist/home.min.js"></script>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-58169705-1', 'auto');
+ga('send', 'pageview');
+</script>
+</body>
+</html>

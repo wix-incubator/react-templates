@@ -1,0 +1,75 @@
+<!--suppress CheckEmptyScriptTag -->
+<rt-require dependency="./playground" as="playground"/>
+<rt-require dependency="./CodeMirrorViewer" as="viewer"/>
+<div id="examples">
+    <div class="example">
+        <h3>Hello world in React Templates</h3>
+        <p>
+            Simple "Hello world" HTML transformed into React JavaScript code.
+        </p>
+        <playground id="helloExample" rt-props="this.state.samples.hello" direction="horizontal"></playground>
+    </div>
+    <div class="example">
+        <h3>rt-if</h3>
+        <p>
+            This shows the use of rt-if.
+        </p>
+        <playground id="ifExample" rt-props="this.state.samples.rtIf" direction="horizontal"></playground>
+    </div>
+    <div class="example">
+        <h3>rt-repeat</h3>
+        <p>
+            This uses rt-repeat to show multiple items and rt-scope to create a reusable name for multiple calculations.
+        </p>
+        <playground id="repeatExample" rt-props="this.state.samples.repeat" direction="horizontal"></playground>
+    </div>
+    <div class="example">
+        <h3>rt-props</h3>
+        <p>
+            rt-props is used to pass all the original properties set on this component (except the ones used for the component logic: onClick and eventId) to the element that will actually represent this component.
+        </p>
+        <playground id="propsExample" rt-props="this.state.samples.props" direction="horizontal"></playground>
+    </div>
+    <div class="example">
+        <h3>Improved todo list</h3>
+        <p>
+            Every project needs a todo list example, so here is ours.
+        </p>
+        <playground id="todoExample" rt-props="this.state.samples.todo" direction="horizontal"></playground>
+    </div>
+    <div class="example">
+        <h3>Weather</h3>
+        <p>
+            This example shows working with async events, the usage of regular event handler function pointers instead of lambda expression, and working with two-way binding.
+        </p>
+        <playground id="weatherExample" rt-props="this.state.samples.weather" direction="horizontal"></playground>
+    </div>
+    <div id="rt-import" class="example">
+        <h3>rt-import</h3>
+        <p>
+            This example shows how to load other React components and libraries into a React template and then use them within the template.
+        </p>
+        <viewer rt-props="this.state.rtImport" mode="javascript" />
+    </div>
+    <div id="amd" class="example">
+        <h3>AMD</h3>
+        <p>
+            This example shows the rt-require sample output with AMD support.
+        </p>
+        <viewer rt-props="this.state.amd" mode="javascript" />
+    </div>
+    <div id="commonjs" class="example">
+        <h3>CommonJS</h3>
+        <p>
+            This example shows the rt-require sample output with CommonJS support.
+        </p>
+        <viewer rt-props="this.state.cjs" mode="javascript" />
+    </div>
+    <div id="es6" class="example">
+        <h3>ES6</h3>
+        <p>
+            This example shows the rt-require sample output with ES6 support.
+        </p>
+        <viewer rt-props="this.state.es6" mode="javascript" />
+    </div>
+</div>

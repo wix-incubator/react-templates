@@ -1,0 +1,16 @@
+var <%= name %> = React.createClass({
+    mixins: [React.addons.LinkedStateMixin],
+    getInitialState: function() {
+        return { key: 'color', val: 'blue' };
+    },
+    getProps: function() {
+        var ret = { style: {
+          color: 'black',
+          backgroundColor: 'white',
+          borderColor: 'black'
+        }};
+        ret.style[this.state.key] = this.state.val;
+        return ret;
+    },
+    render: <%= name %>RT
+});

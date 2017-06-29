@@ -1,0 +1,30 @@
+{
+    "extends": ["wix-editor", "wix-editor/node", "plugin:lodash/recommended"],
+    "plugins": ["lodash", "wix-editor"],
+    "rules": {
+        "semi": [2, "never"],
+        "func-style": [2, "declaration", {"allowArrowFunctions": true}],
+        "prefer-spread": 0,
+        "prefer-template": 0,
+        "consistent-return": 0,
+
+        "no-restricted-syntax": [2, "WithStatement", "ContinueStatement", "ForStatement"],
+        "no-negated-condition": 1,
+
+
+        "lodash/prefer-filter": 0,
+        "lodash/chaining": [2, "always"],
+        "lodash/prefer-map": 0,
+        "lodash/path-style": 0,
+        "lodash/no-extra-args": 2,
+        "lodash/prefer-lodash-method": 0,
+
+        "wix-editor/augmented-assignment": 1,
+        "wix-editor/no-not-not": 1,
+        "wix-editor/no-unneeded-match": 1,
+        "wix-editor/prefer-filter": 1,
+        "wix-editor/prefer-ternary": 1,
+        "wix-editor/return-boolean": 1,
+        "wix-editor/simplify-boolean-expression": 1
+    }
+}

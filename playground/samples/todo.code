@@ -1,0 +1,31 @@
+var <%= name %> = React.createClass({
+    mixins: [React.addons.LinkedStateMixin],
+    getInitialState: function () {
+        return {edited: '', todos: [], counter: 0};
+    },
+    add: function () {
+        if (this.state.edited.trim().length === 0) {
+            return;
+        }
+        var newTodo = {value: this.state.edited, done: false, key: this.state.counter};
+        this.setState({todos: this.state.todos.concat(newTodo), edited: '', counter: this.state.counter + 1});
+    },
+    remove: function (todo) {
+        this.setState({todos: _.reject(this.state.todos, todo)});
+    },
+    toggleChecked: function (index) {
+        var todos = _.cloneDeep(this.state.todos);
+        todos[index].done = !todos[index].done;
+        this.setState({todos: todos});
+    },
+    clearDone: function () {
+        this.setState({todos: this.getPending()});
+    },
+    getDone: function () {
+        return _.filter(this.state.todos, {done: true});
+    },
+    getPending: function () {
+        return _.filter(this.state.todos, {done: false});
+    },
+    render: <%= name %>RT
+});

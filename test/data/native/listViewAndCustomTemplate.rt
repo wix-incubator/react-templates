@@ -1,0 +1,12 @@
+<View>
+    <ListView dataSource="{this.state.dataSource}">
+        <Row arguments="rowData">
+            <Text>{rowData}</Text>
+        </Row>
+    </ListView>
+    <MyComp data="{[1,2,3]}">
+        <Row arguments="item">
+            <Text>{item}</Text>
+        </Row>
+    </MyComp>
+</View>

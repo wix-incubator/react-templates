@@ -1,0 +1,6 @@
+<div>
+   <rt-template prop="some">
+      <div>1</div>
+      <div>2</div>
+   </rt-template>
+</div>

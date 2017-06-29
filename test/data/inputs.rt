@@ -1,0 +1,5 @@
+<!doctype rt>
+<div>
+    <input type="text" name="first">
+    <input type="text" name="second">
+</div>

@@ -1,0 +1,82 @@
+{
+  "name": "react-templates",
+  "version": "0.6.1",
+  "description": "Light weight templates for react -> write html get valid react code",
+  "main": "./dist/cli.js",
+  "bin": {
+    "rt": "./bin/rt.js"
+  },
+  "scripts": {
+    "build": "npm run lint && npm run test",
+    "lint": "eslint .",
+    "test": "babel-node test/src/test.js",
+    "test-cov": "istanbul cover test/src/test.js -- --require test/support/env --reporter dot --check-leaks test/ test/acceptance/",
+    "patch": "npm version patch -m\"update version to %s\" && git push && git push --tags",
+    "minor": "npm version minor -m\"update version to %s\" && git push && git push --tags",
+    "major": "npm version major -m\"update version to %s\" && git push && git push --tags",
+    "buildwp": "webpack --config webpack-production.config.js --progress --profile --colors",
+    "babel": "rm -rf dist && babel src/ --out-dir dist",
+    "all": "npm run lint && npm run test",
+    "prepublish": "npm run babel"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wix/react-templates.git"
+  },
+  "author": "Avi Marcus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wix/react-templates/issues"
+  },
+  "homepage": "https://github.com/wix/react-templates",
+  "dependencies": {
+    "chalk": "1.1.3",
+    "cheerio": "0.22.0",
+    "css": "2.2.1",
+    "escodegen": "1.8.1",
+    "esprima": "3.1.3",
+    "glob": "7.1.1",
+    "lodash": "4.17.4",
+    "normalize-html-whitespace": "0.2.0",
+    "optionator": "0.8.2",
+    "text-table": "0.2.0"
+  },
+  "devDependencies": {
+    "babel-cli": "6.18.0",
+    "babel-core": "6.21.0",
+    "babel-loader": "6.2.10",
+    "babel-preset-es2015": "6.18.0",
+    "brace": "0.9.1",
+    "brfs": "1.4.3",
+    "coveralls": "2.11.15",
+    "eslint": "3.12.2",
+    "eslint-config-wix-editor": "0.2.3",
+    "eslint-plugin-lodash": "2.2.5",
+    "eslint-plugin-react": "6.8.0",
+    "eslint-plugin-wix-editor": "1.1.1",
+    "grunt": "1.0.1",
+    "grunt-babel": "6.0.0",
+    "grunt-browserify": "5.0.0",
+    "grunt-contrib-requirejs": "1.0.0",
+    "grunt-contrib-uglify": "2.0.0",
+    "grunt-contrib-watch": "1.0.0",
+    "grunt-eslint": "19.0.0",
+    "grunt-tape": "0.1.0",
+    "istanbul": "0.4.5",
+    "json-loader": "0.5.4",
+    "react": "15.3.2",
+    "react-dom": "15.3.2",
+    "react-native": "0.39.2",
+    "tape": "4.6.3",
+    "webpack": "1.14.0"
+  },
+  "keywords": [
+    "templates",
+    "react-templates",
+    "react",
+    "reactjs",
+    "react.js",
+    "react-component",
+    "react component"
+  ]
+}

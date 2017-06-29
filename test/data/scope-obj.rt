@@ -1,0 +1,3 @@
+<div rt-scope="{first: 'Jack', last: 'Sparrow'} as user">
+    {user.first}
+</div>

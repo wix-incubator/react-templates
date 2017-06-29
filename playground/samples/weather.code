@@ -1,0 +1,34 @@
+var <%= name %> = React.createClass({
+    mixins: [React.addons.LinkedStateMixin],
+    getInitialState: function() {
+        this.cityIds = [5391959,293397,2643743];
+        this.fetchWeather();
+        return { loading: true, cityToAdd: '', info: [] };
+    },
+    addCity: function() {
+        if (this.state.cityToAdd.trim() == '') {
+            return;
+        }
+        this.setState({ loading: true, cityToAdd: '' });
+        $.get('http://api.openweathermap.org/data/2.5/weather?q=' + this.state.cityToAdd, this.findCityCallback);
+    },
+    findCityCallback: function(result) {
+        if (result.id && !_.contains(this.cityIds, result.id)) {
+            this.cityIds.unshift(result.id);
+            this.fetchWeather();
+        } else {
+            this.setState({ loading: false });
+        }
+    },
+    refresh: function() {
+        this.setState({ loading:true });
+        this.fetchWeather();
+    },
+    fetchWeather: function() {
+       $.get('http://api.openweathermap.org/data/2.5/group?id=' + this.cityIds.join(',') + '&units=metric', this.fetchWeatherCallback);
+    },
+    fetchWeatherCallback: function(result) {
+        this.setState({ loading:false, info: result.list });
+    },
+    render: <%= name %>RT
+});

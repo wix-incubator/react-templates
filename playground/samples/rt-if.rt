@@ -1,0 +1,7 @@
+<div>
+    <h4 style="cursor:pointer" onClick="()=>this.toggle()">
+        Click to {this.state.open ? 'close' : 'open'}
+    </h4>
+    <p rt-if="this.state.open">This is my paragraph. It opens and
+                               closes</p>
+</div>

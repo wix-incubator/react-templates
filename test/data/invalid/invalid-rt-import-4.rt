@@ -1,0 +1,3 @@
+<div>
+   <rt-import name="*" as="React" from="react"/>
+</div>

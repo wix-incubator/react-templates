@@ -1,0 +1,8 @@
+var <%= name %> = React.createClass({
+    getInitialState: function () {
+        return {
+            items: ['One', 'Two', 'Three']
+        };
+    },
+    render: <%= name %>RT
+});

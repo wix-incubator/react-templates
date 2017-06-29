@@ -1,0 +1,14 @@
+<div>
+  <rt-virtual rt-scope="'rendered' as verb">
+    <rt-virtual rt-if="1<0">
+        <div>this is not {verb}</div>
+    </rt-virtual>
+    <rt-virtual rt-if="1>0">
+        <div>this is {verb}</div>
+    </rt-virtual>
+    <rt-virtual rt-repeat="n in [1,2]">
+        <div>{verb} {n}-a</div>
+        <div>{verb} {n}-b</div>
+    </rt-virtual>
+  </rt-virtual>
+</div>

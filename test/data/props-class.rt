@@ -1,0 +1,1 @@
+<input style="height:10px;width:3px;" rt-props="{style:{width:'5px'}, type:'text', className: 'clsB'}" class="clsA"/>

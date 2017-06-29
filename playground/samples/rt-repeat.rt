@@ -1,0 +1,5 @@
+<div>
+    <ul>
+        <li rt-repeat="item in this.state.items">{item}</li>
+    </ul>
+</div>

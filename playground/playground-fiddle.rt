@@ -1,0 +1,36 @@
+<!--suppress CheckEmptyScriptTag -->
+<rt-require dependency="./CodeMirrorEditor" as="CodeEditor"/>
+<div class="playground">
+    <div class="fiddle-row">
+        <div class="code-area" id="area-rt">
+            <CodeEditor ref="editorRT" id="editor-rt" class="large-text-area"
+                        value="{this.state.templateHTML}"
+                        mode="html"
+                        onChange="(e)=>this.setState({templateHTML:e.target.value})" />
+        </div>
+        <div class="code-area" id="area-code">
+            <CodeEditor ref="editorCode" id="editor-code" class="large-text-area"
+                        value="{this.state.templateProps}"
+                        mode="javascript"
+                        onChange="(e)=>this.setState({templateProps:e.target.value})" />
+        </div>
+    </div>
+    <div class="fiddle-row">
+        <div class="code-area" id="area-generated">
+            <CodeEditor id="editor-generated" class="large-text-area"
+                        ref="editorGenerated"
+                        value="{this.templateSource}"
+                        mode="javascript"
+                        readOnly="{true}" />
+        </div>
+        <div class="code-area" id="area-result">
+        <!--<div id="result-container" class="result-area">-->
+            <div id="result-area" key="result-area" class="sample-view">
+                <form class="result-area-form" ref="mount" onSubmit="(e)=>e.preventDefault();">
+                    <!--<this.sample key="sample">-->
+                    <!--</this.sample>-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,4 @@
+<div rt-scope="'as fast as possible' as message;';' as semicolon;'as' as as">
+	{message}{semicolon}{as}
+</div>
+

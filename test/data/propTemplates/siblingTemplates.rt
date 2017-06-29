@@ -1,0 +1,12 @@
+<div>
+    <rt-template prop="templateProp1" arguments="brother">
+        <div>Brother: {brother}</div>
+    </rt-template>
+    <rt-template prop="templateProp2" arguments="sister">
+        <div>Sister: {sister}</div>
+    </rt-template>
+    <div>Separator</div>
+    <rt-template prop="templateProp3" arguments="other">
+        <div>Other: {other}</div>
+    </rt-template>
+</div>

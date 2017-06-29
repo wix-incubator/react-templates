@@ -1,0 +1,1 @@
+<div rt-repeat="a in [1,2,3]">{a}</div>

@@ -16,16 +16,10 @@ npm-debug.log
 ### bower ###
 /bower_components/*
 
-### babel ###
-/dist
-/dist-test
+### tests ###
+/test
 
+### gh-pages content ###
+/index.html
+/playground
 /web
-/target
-/coverage
-
-### Test Output ###
-test/data/**/*.rt.actual.js
-test/data/**/*.code.js
-test/data/**/*.actual.html
-

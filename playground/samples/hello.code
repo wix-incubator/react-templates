@@ -1,0 +1,3 @@
+var <%= name %> = React.createClass({
+    render: <%= name %>RT
+});

@@ -1,0 +1,4 @@
+<div>
+    <custom-element></custom-element>
+    <my-custom-element class="a" className="b" rt-class="{c:1}" rt-props="{d:2}"></my-custom-element>
+</div>

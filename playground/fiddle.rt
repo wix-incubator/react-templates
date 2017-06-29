@@ -1,0 +1,43 @@
+<!--suppress CheckEmptyScriptTag -->
+<rt-require dependency="./playground" as="playground"/>
+<div class="fiddle">
+    <div id="header">
+        <div id="header-title">
+            <a href="index.html" class="title-link">
+                <img class="nav-logo" src="https://wix.github.io/react-templates/img/logo-rt.svg" width="56" height="24" />
+            </a>
+            RT Playground
+        </div>
+        <div id="buttons-bar">
+            <button type="button" class="btn btn-default" onClick="(evt)=>evt.preventDefault();this.save()">
+                <span class="glyphicon glyphicon-star button-icon" aria-hidden="true"></span>Save fiddle
+            </button>
+            <button type="button" class="btn btn-default" onClick="(evt)=>evt.preventDefault();this.clear()">
+                <span class="glyphicon glyphicon-trash button-icon" aria-hidden="true"></span>Clear
+            </button>
+
+            <div class="dropdown toolbar-dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                    Load Sample
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onClick="(evt)=>evt.preventDefault();this.loadSample('rt-if')">rt-if</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onClick="(evt)=>evt.preventDefault();this.loadSample('rt-repeat')">rt-repeat</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onClick="(evt)=>evt.preventDefault();this.loadSample('rt-props')">rt-props</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onClick="(evt)=>evt.preventDefault();this.loadSample('todo')">Todo</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onClick="(evt)=>evt.preventDefault();this.loadSample('weather')">Weather</a></li>
+                </ul>
+            </div>
+        </div>
+        <ul class="nav-site">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="https://github.com/wix/react-templates#template-directives-and-syntax">docs</a></li>
+            <li><a href="https://github.com/wix/react-templates#installation">download</a></li>
+            <li><a href="https://github.com/wix/react-templates">github</a>
+        </ul>
+    </div>
+    <div class="playground-container">
+        <playground ref="playground" direction="vertical" fiddle="{true}" />
+    </div>
+</div>

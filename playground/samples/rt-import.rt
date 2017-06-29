@@ -1,0 +1,5 @@
+<rt-import name="myComp" from="comps" />
+<rt-import name="*" as="utils" from="utils/utils" />
+<div>
+    <myComp customProp="{utils.doSomething()}">myComp is just a regular tag</myComp>
+</div>

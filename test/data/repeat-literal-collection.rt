@@ -1,0 +1,5 @@
+<div>
+  <div rt-repeat="items in {a:1, b:2}">
+    {items}
+  </div>
+</div>

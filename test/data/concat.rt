@@ -1,0 +1,1 @@
+<div>Hello RT!{React.DOM.span({},'test')}</div>
