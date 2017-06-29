@@ -1,0 +1,4 @@
+<rt-require dependency="util" as="util"/>
+<rt-require dependency="util" as="util"/>
+<div>
+</div>
