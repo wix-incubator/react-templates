@@ -20,19 +20,25 @@ function getLine(html, node) {
     return {line: linesUntil.length, col: linesUntil[linesUntil.length - 1].length + 1}
 }
 
+/**
+ * @param {number} n
+ * @return {number}
+ */
 function norm(n) {
     return n === undefined ? -1 : n
 }
 
 /**
- * @param {string} message
- * @param {number=} startOffset
- * @param {number=} endOffset
- * @param {number=} line
- * @param {number=} column
- * @constructor
+ *
  */
 class RTCodeError extends Error {
+    /**
+     * @param {string} message
+     * @param {number=} startOffset
+     * @param {number=} endOffset
+     * @param {number=} line
+     * @param {number=} column
+     */
     constructor(message, startOffset, endOffset, line, column) {
         super()
         Error.captureStackTrace(this, RTCodeError)
