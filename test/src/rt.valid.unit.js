@@ -6,7 +6,7 @@ const readFileNormalized = testUtils.readFileNormalized
 const compareAndWrite = testUtils.compareAndWrite
 const path = require('path')
 const context = require('../../src/context')
-const assert = require('assert')
+// const assert = require('assert')
 const dataPath = path.resolve(__dirname, '..', 'data')
 
 /**

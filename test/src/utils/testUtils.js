@@ -20,7 +20,6 @@ function normalizeHtml(html) {
 }
 
 /**
- * @param {*} t
  * @param {string} actual
  * @param {string} expected
  * @param {string} filename

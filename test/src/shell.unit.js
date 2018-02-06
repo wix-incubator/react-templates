@@ -3,6 +3,7 @@ const context = require('../../src/context')
 const _ = require('lodash')
 const path = require('path')
 const assert = require('assert')
+const dataPath = path.resolve(__dirname, '..', 'data')
 
 describe('rtStyle', () => {
     it('should convertBody style successfully', () => {

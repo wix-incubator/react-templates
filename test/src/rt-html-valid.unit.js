@@ -46,7 +46,7 @@ describe('utils', () => {
                 let equal = false
                 try {
                     const html = fs.readFileSync(filename).toString()
-                    const expected = testUtils.normalizeHtml(readFileNormalized(filename + '.html'))
+                    const expected = testUtils.normalizeHtml(readFileNormalized(`${filename}.html`))
                     const code = reactTemplates.convertTemplateToReact(html, options).replace(/\r/g, '')
                     actual = testUtils.normalizeHtml(testUtils.codeToHtml(code))
                     equal = assert.equal(actual, expected, `${testFile}`)
@@ -55,7 +55,7 @@ describe('utils', () => {
                     assert.fail(e)
                 }
                 if (!equal) {
-                    fs.writeFileSync(filename + '.actual.html', actual)
+                    fs.writeFileSync(`${filename}.actual.html`, actual)
                 }
             })
         })
