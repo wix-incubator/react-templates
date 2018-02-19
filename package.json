@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "test1": "babel-node test/src/test.js",
     "test": "mocha test/src/**/*.unit.js",
-    "test-cov": "istanbul cover test/src/test.js -- --require test/support/env --reporter dot --check-leaks test/ test/acceptance/",
+    "test-cov": "nyc mocha -- test/src/**/*.unit.js --require test/support/env --reporter dot --check-leaks test/ test/acceptance/",
     "patch": "npm version patch -m\"update version to %s\" && git push && git push --tags",
     "minor": "npm version minor -m\"update version to %s\" && git push && git push --tags",
     "major": "npm version major -m\"update version to %s\" && git push && git push --tags",
@@ -39,6 +39,7 @@
     "glob": "7.1.2",
     "lodash": "4.17.4",
     "normalize-html-whitespace": "0.2.0",
+    "nyc": "^11.4.1",
     "optionator": "0.8.2",
     "text-table": "0.2.0"
   },
