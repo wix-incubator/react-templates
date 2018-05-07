@@ -1,6 +1,6 @@
 {
   "name": "react-templates",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Light weight templates for react -> write html get valid react code",
   "main": "./dist/cli.js",
   "bin": {
@@ -30,7 +30,8 @@
     "url": "https://github.com/wix/react-templates/issues"
   },
   "files": [
-    "dist", "bin"
+    "dist",
+    "bin"
   ],
   "homepage": "https://github.com/wix/react-templates",
   "dependencies": {
