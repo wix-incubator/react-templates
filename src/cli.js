@@ -75,7 +75,7 @@ function handleSingleFile(currentOptions, filename) {
             outputFilename = filename.replace(/\.jsrt$/, '.js')
             currentOptions = _.assign({}, currentOptions, {modules: 'jsrt'})
         } else if (sourceExt === '.rts') {
-            outputFilename = filename + '.js'
+            outputFilename = `${filename}.js`
             currentOptions = _.assign({}, currentOptions, {modules: 'rts'})
         } else {
             context.error('invalid file, only handle rt/jsrt files', filename)

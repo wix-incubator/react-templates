@@ -23,6 +23,7 @@ npm-debug.log
 /web
 /target
 /coverage
+/.nyc_output
 
 ### Test Output ###
 test/data/**/*.rt.actual.js
