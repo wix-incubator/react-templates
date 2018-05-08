@@ -73,7 +73,7 @@ module.exports = function (results) {
                 align: ['', 'r', 'l'],
                 stringLength: str => chalk.stripColor(str).length
             }
-        ).split('\n').map(el => el.replace(/(\d+)\s+(\d+)/, (m, p1, p2) => chalk.gray(p1 + ':' + p2))).join('\n') + '\n\n'
+        ).split('\n').map(el => el.replace(/(\d+)\s+(\d+)/, (m, p1, p2) => chalk.gray(`${p1}:${p2}`))).join('\n') + '\n\n'
     })
 
     if (total > 0) {

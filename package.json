@@ -8,8 +8,9 @@
   },
   "scripts": {
     "build": "npm run lint && npm run test",
-    "lint": "eslint .",
+    "lint": "eslint . --cache",
     "test1": "babel-node test/src/test.js",
+    "pretest": "npm run lint",
     "test": "mocha test/src/**/*.unit.js",
     "test-cov": "nyc mocha -- test/src/**/*.unit.js --require test/support/env --reporter dot --check-leaks test/ test/acceptance/",
     "patch": "npm version patch -m\"update version to %s\" && git push && git push --tags",
@@ -43,7 +44,6 @@
     "glob": "^7.1.2",
     "lodash": "^4.17.10",
     "normalize-html-whitespace": "^0.2.0",
-    "nyc": "^11.7.1",
     "optionator": "^0.8.2",
     "text-table": "^0.2.0"
   },
@@ -60,6 +60,7 @@
     "eslint-plugin-lodash": "^2.7.0",
     "eslint-plugin-react": "^7.7.0",
     "eslint-plugin-wix-editor": "^1.1.1",
+    "nyc": "^11.7.1",
     "grunt": "^1.0.2",
     "grunt-babel": "^7.0.0",
     "grunt-browserify": "5.3.0",
