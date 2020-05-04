@@ -19,7 +19,8 @@
     "buildwp": "webpack --config webpack-production.config.js --progress --profile --colors",
     "babel": "rm -rf dist && babel src/ --out-dir dist",
     "all": "npm run lint && npm run test",
-    "prepublish": "npm run babel"
+    "prepublish": "npm run snyk-protect && npm run babel",
+    "snyk-protect": "snyk protect"
   },
   "repository": {
     "type": "git",
@@ -45,7 +46,8 @@
     "lodash": "^4.17.10",
     "normalize-html-whitespace": "^0.2.0",
     "optionator": "^0.8.2",
-    "text-table": "^0.2.0"
+    "text-table": "^0.2.0",
+    "snyk": "^1.317.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -84,5 +86,6 @@
     "react.js",
     "react-component",
     "react component"
-  ]
+  ],
+  "snyk": true
 }
