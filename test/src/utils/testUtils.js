@@ -7,6 +7,7 @@ const React = require('react')
 const ReactDOMServer = require('react-dom/server')
 const _ = require('lodash')
 const assert = require('assert')
+const createReactClass = require('create-react-class')
 
 /**
  * @param {string} html
@@ -84,7 +85,7 @@ function codeToHtml(code) {
         const requirements = _.map(requirementsNames, reqName => defineMap[reqName])
         return content.apply(this, requirements)
     }
-    const comp = React.createFactory(React.createClass({
+    const comp = React.createFactory(createReactClass({
         displayName: 'testClass',
         render: eval(code) //eslint-disable-line no-eval
     }))
