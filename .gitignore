@@ -29,6 +29,5 @@ npm-debug.log
 test/data/**/*.rt.actual.js
 test/data/**/*.code.js
 test/data/**/*.actual.html
-/package-lock.json
 /yarn.lock
 /yarn-error.log

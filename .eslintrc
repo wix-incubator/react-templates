@@ -1,7 +1,10 @@
 {
+    "parser": "babel-eslint",
     "extends": ["wix-editor", "wix-editor/node", "plugin:lodash/canonical"],
     "plugins": ["lodash", "wix-editor"],
     "rules": {
+        "strict": 0,
+
         "semi": [2, "never"],
         "func-style": [2, "declaration", {"allowArrowFunctions": true}],
         "prefer-spread": 1,
@@ -19,7 +22,6 @@
         "lodash/no-extra-args": 2,
         "lodash/prefer-lodash-method": 0,
 
-        "wix-editor/augmented-assignment": 1,
         "wix-editor/no-not-not": 1,
         "wix-editor/no-unneeded-match": 1,
         "wix-editor/prefer-filter": 1,
