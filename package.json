@@ -37,7 +37,7 @@
   "homepage": "https://github.com/wix/react-templates",
   "dependencies": {
     "chalk": "^4.1.0",
-    "cheerio": "^1.0.0-rc.3",
+    "cheerio": "^1.0.0-rc.5",
     "css": "^3.0.0",
     "escodegen": "^2.0.0",
     "esprima": "^4.0.1",
