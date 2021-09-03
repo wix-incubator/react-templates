@@ -1,6 +1,6 @@
 {
     "rules": {
-        "strict": [2, "function"],
+        "strict": 0,
         "no-var": 0,
         "object-shorthand": 0,
         "prefer-arrow-callback": 0

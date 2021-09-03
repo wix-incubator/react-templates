@@ -27,6 +27,9 @@
         "wix-editor/prefer-filter": 1,
         "wix-editor/prefer-ternary": 1,
         "wix-editor/return-boolean": 1,
-        "wix-editor/simplify-boolean-expression": 1
+        "wix-editor/simplify-boolean-expression": 1,
+
+        "prefer-destructuring": 0,
+        "prefer-regex-literals": 0
     }
 }
