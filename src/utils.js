@@ -1,6 +1,6 @@
 'use strict'
 const _ = require('lodash')
-const esprima = require('esprima')
+const esprima = require('nightly-esprima')
 const normalizeHtmlWhitespace = require('normalize-html-whitespace')
 const rtError = require('./RTCodeError')
 const RTCodeError = rtError.RTCodeError

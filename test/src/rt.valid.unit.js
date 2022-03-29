@@ -48,6 +48,12 @@ describe('utils', () => {
             testFiles(files, options)
         })
 
+        it('ex-next test', () => {
+            const files = ['es-next-optional-chaining.rt']
+            const options = {modules: 'amd'}
+            testFiles(files, options)
+        })
+
         it('autobinding conversion test', () => {
             const options = {
                 modules: 'amd',

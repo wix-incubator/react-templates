@@ -1,7 +1,7 @@
 'use strict'
 const cheerio = require('cheerio')
 const _ = require('lodash')
-const esprima = require('esprima')
+const esprima = require('nightly-esprima')
 const escodegen = require('escodegen')
 const reactDOMSupport = require('./reactDOMSupport')
 const reactNativeSupport = require('./reactNativeSupport')
